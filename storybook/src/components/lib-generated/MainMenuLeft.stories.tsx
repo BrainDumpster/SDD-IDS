@@ -114,7 +114,9 @@ function SpecAccurateFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
         minHeight: 0,
       }}
     >
-      <IdsMainMenuLeft {...props} />
+      <div style={{ height: "100%", flexShrink: 0 }}>
+        <IdsMainMenuLeft {...props} />
+      </div>
       <div
         style={{
           flex: 1,
@@ -139,9 +141,82 @@ export const SpecAccurateDesign: Story = {
   args: specAccurateArgs,
 };
 
-/** Collapsed icon-only rail (**64px**, Figma `11099:56206`). */
-export const Collapsed: Story = {
+/** Primary row with a long label that wraps to two lines and then truncates. */
+export const LongPrimaryLabel: Story = {
+  name: "Long Primary Label",
   render: (args) => <SpecAccurateFrame {...args} />,
+  args: {
+    ...specAccurateArgs,
+    items: specAccurateItems.map((item) =>
+      item.id === "alerts"
+        ? {
+            ...item,
+            name: "Alerts and Events with an unusually long and descriptive label that should wrap to two lines and then truncate",
+          }
+        : item,
+    ),
+  },
+};
+
+/** Secondary rows with long labels under an expanded primary parent. */
+export const LongSecondaryLabels: Story = {
+  name: "Long Secondary Labels",
+  render: (args) => <SpecAccurateFrame {...args} />,
+  args: {
+    ...specAccurateArgs,
+    items: specAccurateItems.map((item) =>
+      item.id === "infrastructure"
+        ? {
+            ...item,
+            childrenMenu: "expanded" as const,
+            children: (item.children ?? []).map((child, index) => ({
+              ...child,
+              name: `Very long secondary item label ${index + 1} that also wraps to two lines and may truncate if it is too long`,
+            })),
+          }
+        : item,
+    ),
+  },
+};
+
+/** Rail column matches the collapsed 64px width so a hover-expand overlays the
+ *  page content (drop shadow) instead of pushing it. */
+function CollapsedRailFrame(props: ComponentProps<typeof IdsMainMenuLeft>) {
+  return (
+    <div
+      style={{
+        height: "100vh",
+        boxSizing: "border-box",
+        display: "flex",
+        background: "var(--color-background-surface-primary)",
+        minHeight: 0,
+      }}
+    >
+      <div style={{ height: "100%", flexShrink: 0 }}>
+        <IdsMainMenuLeft {...props} />
+      </div>
+      <div
+        style={{
+          flex: 1,
+          minWidth: 0,
+          padding: 24,
+          color: "var(--color-text-gray-neutral-strong)",
+          fontSize: 14,
+        }}
+      >
+        <p style={{ margin: 0, opacity: 0.85 }}>
+          Main content area — hover the collapsed rail: it expands as an overlay
+          over this content (with a drop shadow) and collapses on mouse leave.
+        </p>
+      </div>
+    </div>
+  );
+}
+
+/** Collapsed icon-only rail (**64px**, Figma `11099:56206`). Hover the rail to
+ *  expand it as an overlay over the content; it collapses on mouse leave. */
+export const Collapsed: Story = {
+  render: (args) => <CollapsedRailFrame {...args} />,
   args: { ...specAccurateArgs, expanded: false },
 };
 

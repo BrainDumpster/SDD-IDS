@@ -47,16 +47,33 @@ export const WithPageContent: Story = {
     <div style={{ display: "flex", gap: 32, padding: 24 }}>
       <div style={{ flex: 1, color: "var(--color-text-gray-neutral-strong)" }}>
         {specAccurateItems.map((item) => (
-          <h2
+          <section
             key={item.href}
             id={item.href.replace("#", "")}
-            style={{ marginBottom: 120 }}
+            style={{ minHeight: 500, paddingBottom: 120 }}
           >
-            {item.label}
-          </h2>
+            <h2 style={{ marginBottom: 24 }}>{item.label}</h2>
+            <p>Sample content for {item.label} section.</p>
+          </section>
         ))}
       </div>
-      <IdsAnchorMenu items={[...specAccurateItems]} sticky />
+      <div style={{ position: "sticky", top: 24, alignSelf: "flex-start" }}>
+        <IdsAnchorMenu items={[...specAccurateItems]} />
+      </div>
     </div>
   ),
+};
+
+export const LongLabels: Story = {
+  name: "Long Labels",
+  args: {
+    items: [
+      { label: "Overview", href: "#overview" },
+      { label: "Types and classifications of anchor menu patterns", href: "#types" },
+      { label: "A deliberately extremely long anchor menu section title that overflows the two-line clamp and shows an ellipsis on the third line", href: "#anatomy", active: true },
+      { label: "Usage Rules", href: "#usage-rules" },
+      { label: "States and Colors", href: "#states-and-colors" },
+      { label: "Redlines", href: "#redlines" },
+    ],
+  },
 };

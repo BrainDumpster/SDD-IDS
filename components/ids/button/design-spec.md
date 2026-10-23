@@ -5,70 +5,107 @@
 - Design system: IDS
 - Category: Formelements
 - Spec path: `components/ids/button/design-spec.md`
-- Primary Figma URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41894-116183&m=dev
-- Primary node id: `41894:116183`
+- Status: active
+- Primary Figma URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41894-116123&m=dev
+- Primary node id: `41894:116123` (Button documentation board)
 - States matrix URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-25120&m=dev
-- States matrix node id: `9662:25120`
-- Focus state reference URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26377&m=dev
-- Focus state node id: `9662:26377` (Primary Large, Focus — control + outer ring)
+- States matrix node id: `9662:25120` (text Button component set — Type × State × Size)
+- Icon Button set URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=52172-249499&m=dev
+- Icon Button set node id: `52172:249499` (icon-only mode source; Types Primary/Secondary/Tertiary/Ghost — **no Destructive**; docs row label for Ghost is **Ghost Neutral**)
+- Focus state reference URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-25507&m=dev
+- Focus state node id: `9662:25507` (text Button Primary Large Focus — hover fill + dual drop-shadow rings)
+- Icon Button focus reference: `9662:25541` (Icon Button Primary Large Focus — same dual-ring contract)
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
-- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`)
-- Verified at: 2026-09-01 (focus ring geometry re-verified on `9662:26377`; prior full matrix `2026-06-18`)
+- Verification method: Figma MCP (`get_metadata`, `get_variable_defs`, `use_figma` Plugin API)
+- Verified at: 2026-10-12 (Icon Button set `52172:249499`; docs label **Ghost Neutral** for `Type=Ghost` live-verified)
 ## Anatomy
 - `ButtonRoot` (interactive control surface; native `button` in web targets)
 - `ButtonLabel` (optional for icon-only mode)
-- `ButtonLeadingIcon` (optional; icon slug driven)
+- `ButtonLeadingIcon` (optional; toggled by Figma `Show Icon` / runtime projection or `iconSlug`)
 
 Deterministic order:
 1. `ButtonRoot`
 2. optional `ButtonLeadingIcon`
 3. optional `ButtonLabel`
+
+Figma component properties (text Button set `9662:25120`):
+- `Show Icon` (BOOLEAN, default `false`) — controls leading-icon visibility
+- `Select Icon` (INSTANCE_SWAP) — swaps the leading icon instance
+- Variant axes: `Type` × `State` × `Size`
+- **Destructive** variants have no leading-icon slot in Figma (do not render `ButtonLeadingIcon` for `destructive`)
+
+Figma component properties (Icon Button set `52172:249499`):
+- `Select Icon` (INSTANCE_SWAP) — required icon instance (default demo: `shape-plus`)
+- Variant axes: `Type` × `State` × `Size`
+- `Type` options: `Primary` | `Secondary` | `Tertiary` | `Ghost` (**no `Destructive`**)
+- Docs row label for `Type=Ghost`: **Ghost Neutral** (Labels frame `52188:184316` — text node characters `Ghost Neutral`). Runtime API name: `ghostNeutral` (alias `ghost`).
+- `State` options: `Default` | `Hover` | `Press` | `Focus` | `Disabled`
+- `Size` options: `Small` | `Medium` | `Large` (default `Large`)
 ## Layout & Measurements
 - Control corner radius: `var(--button-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-2)` / 2px).
 - Horizontal gap between icon and label: `var(--spacing-space-8)`.
-- Horizontal padding (all text and icon-text variants): `16px` left and right.
+- Horizontal padding (text and icon+text modes): `16px` left and right.
 - Width is content-driven with product-level guidance:
-  - minimum width `56px`
-  - maximum width `320px`
-- Size signatures:
+  - minimum width `56px` (text / icon+text)
+  - maximum width `320px` (text / icon+text)
+- Size signatures (text / icon+text):
   - `small`: height `24px`, vertical padding `2px`
   - `medium`: height `32px`, vertical padding `6px`
   - `large`: height `40px`, vertical padding `10px`
-- Icon-only signatures:
-  - `medium`: height `32px`, vertical padding `8px`
-  - `large`: height `40px`, vertical padding `12px`
-- Icon glyph size: `16px x 16px`.
-- Control border (`1px`) is an **inside stroke** and must NOT add to the control's height/width. The size signatures above are total box dimensions, stroke included. Do not use CSS `border` when `box-sizing: border-box` is active globally — render the stroke via `box-shadow: inset` (or `outline`) so heights stay exact.
-- Focus ring geometry (focus-visible):
-  - outer ring stroke: `var(--border-width-border-1)`
-  - ring offset from control edge: `var(--button-focus-ring-offset)`
-  - ring corner radius: `var(--button-focus-ring-radius)` (outer ring only; control uses `var(--button-control-radius)`)
-  - Render via `::after`, not `outline` — see Implementation Notes → Focus ring for the technique and the offset compensation.
+- Icon+text glyph size: `16px × 16px` (all sizes).
+- Icon-only signatures (Figma Icon Button set `52172:249499` — **square** control, padding none):
+
+  | Size | Control (square) | Glyph (Primary / Secondary / Tertiary) | Glyph (Ghost Neutral) |
+  | --- | --- | --- | --- |
+  | `small` | **24×24** (`var(--sizing-size-24)`) | **12×12** (`var(--ui-icon-spacing-icon-12)`) | **12×12** |
+  | `medium` | **32×32** (`var(--sizing-size-32)`) | **14×14** (`var(--ui-icon-spacing-icon-14)`) | **14×14** |
+  | `large` | **40×40** (`var(--sizing-size-40)`) | **16×16** (`var(--ui-icon-spacing-icon-16)`) | **14×14** (`var(--ui-icon-spacing-icon-14)`) — Figma Large Ghost → `icon-14`, not `icon-16` |
+
+  - Padding bound to `var(--padding-padding-none)` (all sides `0`)
+  - Runtime: `iconOnly=true` **requires** `ariaLabel` (or native `aria-label`) — no visible label to name the control
+- Control border (`1px` / `Border Width/border-default`) is an **inside stroke** and must NOT add to the control's height/width. Render via `box-shadow: inset` (not CSS `border` under global `border-box`).
+- Focus ring geometry (focus-visible) — **dual drop shadows** on `ButtonRoot` (not `::after`, not `outline`). Use **Figma tokens only** (no invented `--button-focus-*` aliases):
+  - Inner gap ring spread: `var(--scale-2)` — Figma `Focus Drop Shadow/Spread/Inner Ring` → `Scale/2`
+  - Outer brand ring spread: `var(--scale-4)` — Figma `Focus Drop Shadow/Spread/Outer Ring` → `Scale/4`
+  - Gap paint: `var(--color-border-gray-white)` — Figma `Color/Border/Focus/Ring 1` resolves to **White** in light (Figma WEB codeSyntax on Ring 1 incorrectly says `brand-base`; do not follow that for the gap)
+  - Outer paint: `var(--color-border-brand-base)` — Figma `Color/Border/Focus/Ring 2`
+  - Rings follow the control corner radius; legacy Figma `focus` rectangle layer is **hidden** — do not implement it
+  - Icon Button Focus variants use the same dual-ring contract (evidence: `9662:25541`)
 
 ### Slot geometry (Figma-verified)
 
 | Slot / layer | Property | Token / contract | Figma node | Live evidence |
 | --- | --- | --- | --- | --- |
-| `ButtonRoot` | `border-radius` | `var(--button-control-radius)` → `var(--corner-radius-radius-2)` (**2px**) | `9662:26377` | MCP `get_variable_defs` → `Corner Radius/radius-2` = 2 |
-| Focus ring (`::after`) | `border-radius` | `var(--button-focus-ring-radius)` → `var(--corner-radius-radius-4)` (**4px**) | `9662:26379` (`focus` overlay) | MCP `get_variable_defs` → `Corner Radius/radius-4` = 4; MCP `get_design_context` → `rounded-[4px]` on focus layer |
-| Focus ring (`::after`) | gap to control edge | `var(--button-focus-ring-offset)` (**2px**) | `9662:26379` | MCP `get_design_context` → focus layer `inset-[-3px]` on 1px stroke control (= 2px gap + 1px ring stroke compensation) |
-| Focus ring (`::after`) | stroke | `var(--border-width-border-1)` solid `var(--color-border-brand-base)` | `9662:26379` | MCP `get_variable_defs` → `Border Width/border-default` = 1, `var(--color-border-brand-base)` = `#0672cb` |
+| `ButtonRoot` | `border-radius` | `var(--button-control-radius)` → `var(--corner-radius-radius-2)` (**2px**) | `9662:25539` | Icon Button Primary Large Default; `Corner Radius/radius-2` |
+| Focus rings | inner spread | `var(--scale-2)` (**2px**) | `9662:25541` | `Focus Drop Shadow/Spread/Inner Ring` → `Scale/2` |
+| Focus rings | outer spread | `var(--scale-4)` (**4px**) | `9662:25541` | `Focus Drop Shadow/Spread/Outer Ring` → `Scale/4` |
+| Focus rings | gap color | `var(--color-border-gray-white)` | `9662:25541` | Inner DROP_SHADOW → `Color/Border/Focus/Ring 1` → White |
+| Focus rings | outer color | `var(--color-border-brand-base)` | `9662:25541` | Outer DROP_SHADOW → `Color/Border/Focus/Ring 2` |
+| Icon-only Large | box | `var(--sizing-size-40)` (**40×40**), padding `var(--padding-padding-none)` | `9662:25539` | Plugin API + variable bindings |
+| Icon-only Medium | box | `var(--sizing-size-32)` (**32×32**), padding `var(--padding-padding-none)` | `9662:25362` | Plugin API + variable bindings |
+| Icon-only Small | box | `var(--sizing-size-24)` (**24×24**), padding `var(--padding-padding-none)` | `52172:249509` | Plugin API + variable bindings |
+| Icon-only Large glyph (non-Ghost) | size | `var(--ui-icon-spacing-icon-16)` (**16×16**) | `9662:25539` | `UI Icon Spacing/icon-16` |
+| Icon-only Medium glyph | size | `var(--ui-icon-spacing-icon-14)` (**14×14**) | `9662:25362` | `UI Icon Spacing/icon-14` |
+| Icon-only Small glyph | size | `var(--ui-icon-spacing-icon-12)` (**12×12**) | `52172:249509` | `UI Icon Spacing/icon-12` |
+| Icon-only Ghost Neutral Large glyph | size | `var(--ui-icon-spacing-icon-14)` (**14×14**) | `52173:249627` | Figma `Type=Ghost`; Width/Height → `UI Icon Spacing/icon-14` |
 
 **Geometry authoring rules (mandatory):**
-- Document **control shell** and **focus ring** separately — radii differ (2px vs 4px).
-- Theme aliases (`--button-control-radius`, `--button-focus-ring-radius`, `--button-focus-ring-offset`) are **implementation wiring only** after Figma values are verified; resolved alias values must match this table.
-- Aliases **must** be defined in `components/ids-theme.css` (light + dark blocks). Referencing an alias in component CSS without a theme definition is a spec violation even when the Tokens table documents the intended value.
+- Focus is **dual drop shadows** stacked with the inset control stroke on `box-shadow` (inset stroke first, then gap ring, then outer ring).
+- Do **not** use `::after` / `outline` for the IDS Button focus ring.
+- Do **not** invent component-prefixed CSS variables for focus (`--button-focus-ring-*`). Bind to Figma-synced tokens (`--scale-*`, `--color-border-*`, `--corner-radius-*`).
 ## Tokens
 - Typography:
   - `Body 2` (`14/20`, font-weight: `400`) for button text.
 ### Layout aliases (theme-resolvable)
-Programmes override these **same alias names** in programme theme CSS (`components/synapse-theme.css`, `components/dap-theme.css`). Component specs and generated CSS reference aliases only — not programme-specific scale tokens.
+Only programme-overridable control shell radius uses a component alias. Focus geometry uses Figma tokens directly.
 
-| Alias | IDS default (`components/ids-theme.css`) |
+| Alias / token | IDS default / Figma source |
 |---|---|
-| `--button-control-radius` | `var(--corner-radius-radius-2)` |
-| `--button-focus-ring-radius` | `var(--corner-radius-radius-4)` |
-| `--button-focus-ring-offset` | `2px` |
+| `--button-control-radius` | `var(--corner-radius-radius-2)` — Figma `Corner Radius/radius-2` (programme override point only) |
+| Focus inner spread | `var(--scale-2)` — Figma `Scale/2` |
+| Focus outer spread | `var(--scale-4)` — Figma `Scale/4` |
+| Focus gap paint | `var(--color-border-gray-white)` — Figma Ring 1 → White |
+| Focus outer paint | `var(--color-border-brand-base)` — Figma Ring 2 |
 
 - Core primary tokens:
   - `var(--color-background-controls-base)`
@@ -77,23 +114,35 @@ Programmes override these **same alias names** in programme theme CSS (`componen
   - `var(--color-border-brand-transparent-brand)`
   - `var(--color-text-gray-white)`
 - Secondary/tertiary tokens:
-  - `var(--color-background-controls-lighter)`
   - `var(--color-background-controls-light)`
   - `var(--color-border-brand-base)`
+  - `var(--color-border-brand-strong)` (text Button secondary **press** only)
   - `var(--color-text-brand-strong)`
 - Destructive tokens:
   - `var(--color-background-alerting-critical-base)`
   - `var(--color-background-alerting-critical-strong)`
   - `var(--color-background-alerting-critical-stronger)`
   - `var(--color-border-alerting-critical-transparent-base)`
+- Ghost Neutral (icon-only only; Figma `Type=Ghost`) tokens:
+  - `var(--color-background-gray-neutral-lighter)` at **10%** opacity (hover/focus fill)
+  - `var(--color-background-gray-neutral-lighter)` at **20%** opacity (press fill)
+  - `var(--color-icon-gray-neutral-base)` (default icon)
+  - `var(--color-icon-gray-neutral-strong)` (hover/focus/press icon)
 - Disabled tokens:
   - `var(--color-background-gray-lighter)`
   - `var(--color-border-gray-disabled)`
   - `var(--color-text-gray-disabled)`
   - `var(--color-icon-gray-disabled)`
 - Icon tokens:
-  - `var(--color-icon-brand-base)`
-  - `var(--color-icon-gray-white)`
+  - `var(--color-icon-gray-white)` (Primary)
+  - `var(--color-icon-brand-base)` (Secondary default; text Button secondary/tertiary leading icon)
+  - `var(--color-icon-brand-strong)` (Icon Button Secondary hover/focus; Tertiary default/hover/focus)
+  - `var(--color-icon-brand-stronger)` (Icon Button Secondary/Tertiary press)
+  - `var(--color-icon-gray-neutral-base)` / `var(--color-icon-gray-neutral-strong)` (Ghost Neutral)
+- Icon-only layout tokens (Figma Icon Button bindings):
+  - `var(--sizing-size-24)` / `var(--sizing-size-32)` / `var(--sizing-size-40)`
+  - `var(--padding-padding-none)`
+  - `var(--ui-icon-spacing-icon-12)` / `var(--ui-icon-spacing-icon-14)` / `var(--ui-icon-spacing-icon-16)`
 ## States (Light Theme)
 | Variant | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
@@ -101,66 +150,58 @@ Programmes override these **same alias names** in programme theme CSS (`componen
 | primary | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
 | primary | press | `var(--color-background-controls-stronger)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
 | primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| primary | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
+| primary | focus-visible | `var(--color-background-controls-strong)` (same as hover) | control border unchanged + dual focus rings | text/icon unchanged |
 | secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | hover | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-strong)` |
+| secondary | press | `var(--color-background-controls-light)` | text Button: `var(--color-border-brand-strong)` · icon-only: `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-stronger)` |
 | secondary | disabled | transparent | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| secondary | focus-visible | same as current interactive base state | control border `var(--color-border-brand-base)` + outer brand focus outline | text/icon unchanged |
-| tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
+| secondary | focus-visible | `var(--color-background-controls-light)` (same as hover) | `var(--color-border-brand-base)` + dual focus rings | text/icon same as hover for mode |
+| tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-strong)` |
+| tertiary | hover | `var(--color-background-controls-light)` | transparent | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-strong)` |
+| tertiary | press | `var(--color-background-controls-light)` | transparent | `var(--color-text-brand-strong)` / text: `var(--color-icon-brand-base)` · icon-only: `var(--color-icon-brand-stronger)` |
 | tertiary | disabled | transparent | transparent | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| tertiary | focus-visible | same as current interactive base state | control border by state + outer brand focus outline | text/icon unchanged |
-| destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| destructive | focus-visible | same as current interactive base state | control border unchanged + outer brand focus outline | text/icon unchanged |
+| tertiary | focus-visible | `var(--color-background-controls-light)` (same as hover) | transparent + dual focus rings | text/icon same as hover for mode |
+| destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / n/a (no icon slot) |
+| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / n/a |
+| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / n/a |
+| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / n/a |
+| destructive | focus-visible | `var(--color-background-alerting-critical-strong)` (same as hover) | control border unchanged + dual focus rings | text unchanged |
+| ghostNeutral | default | transparent | transparent | n/a / `var(--color-icon-gray-neutral-base)` |
+| ghostNeutral | hover | `var(--color-background-gray-neutral-lighter)` @ 10% | transparent | n/a / `var(--color-icon-gray-neutral-strong)` |
+| ghostNeutral | press | `var(--color-background-gray-neutral-lighter)` @ 20% | transparent | n/a / `var(--color-icon-gray-neutral-strong)` |
+| ghostNeutral | disabled | transparent | transparent | n/a / `var(--color-icon-gray-disabled)` |
+| ghostNeutral | focus-visible | `var(--color-background-gray-neutral-lighter)` @ 10% (same as hover) | transparent + dual focus rings | n/a / `var(--color-icon-gray-neutral-strong)` |
+
+Notes:
+- `ghostNeutral` is **icon-only only**. Figma component-set axis value is `Type=Ghost`; documentation row label is **Ghost Neutral**. Do not use with a label. Alias `ghost` resolves to `ghostNeutral`.
+- `destructive` is **text / icon+text only** (not present on Icon Button set `52172:249499`).
+- Icon Button actions/states are only those on the set: Default, Hover, Press, Focus, Disabled — no additional actions.
+- Ghost Neutral Disabled in Figma Large (`52173:249621`) still carries dual DROP_SHADOW effects (file quirk). Runtime **must not** paint focus rings when disabled.
 ## States (Dark Theme)
-| Variant | State | Background | Border | Text/Icon |
-|---|---|---|---|---|
-| primary | default | `var(--color-background-controls-base)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| primary | hover | `var(--color-background-controls-strong)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| primary | press | `var(--color-background-controls-stronger)` | `var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| primary | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| primary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
-| secondary | default | transparent | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| secondary | disabled | transparent | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| secondary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
-| tertiary | default | transparent | transparent | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | hover | `var(--color-background-controls-lighter)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | press | `var(--color-background-controls-light)` | `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` / `var(--color-icon-brand-base)` |
-| tertiary | disabled | transparent | transparent | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| tertiary | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
-| destructive | default | `var(--color-background-alerting-critical-base)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| destructive | hover | `var(--color-background-alerting-critical-strong)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| destructive | press | `var(--color-background-alerting-critical-stronger)` | `var(--color-border-alerting-critical-transparent-base)` | `var(--color-text-gray-white)` / `var(--color-icon-gray-white)` |
-| destructive | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` / `var(--color-icon-gray-disabled)` |
-| destructive | focus-visible | same semantic token mapping as light | same semantic token mapping as light | same semantic token mapping as light |
+Same semantic `var(--...)` names as **States (Light Theme)** for every row. Resolved dark values live in `components/ids-theme.css` under `[data-theme="dark"]` / `.ids-theme-dark`. Do not duplicate the matrix here unless a dark row uses a different `var(--...)` name.
 ## Interactions
 - Trigger: pointer click, `Enter`, and `Space`.
 - `hover` appears on pointer hover for interactive buttons.
 - `press` appears while pointer or keyboard activation is held.
-- `focus-visible` appears for keyboard modality with an outer brand focus outline.
-- Disabled state blocks all interaction and event emission.
+- `focus-visible` uses **hover fill** + dual drop-shadow focus rings (keyboard / forced `data-state`).
+- Disabled state blocks all interaction and event emission (no focus rings while disabled, even if Figma Ghost Neutral Disabled still shows leftover DROP_SHADOW layers).
 - Runtime default must remain interactive.
 - Forced state attributes for demo/testing are allowed (`data-state`), but they must not replace runtime interaction logic.
+- Icon Button supports only the Figma State axis actions: hover, press, focus-visible, disabled — no other interaction modes.
 ## Composition & API (runtime)
 - Suggested runtime component: `IdsButton`.
 
 Inputs:
-- `label?: string` (required unless `iconOnly=true`)
-- `variant?: "primary" | "secondary" | "tertiary" | "destructive"` (default `primary`)
-- `size?: "small" | "medium" | "large"` (default `large`)
-- `iconSlug?: string` (optional; user-defined icon slug from `/asset/icons/<slug>.svg`)
-- `iconOnly?: boolean` (default `false`)
+- `label?: string` (required unless `iconOnly=true`; React/Angular may project `IdsButtonLabel` / default slot instead)
+- `variant?: "primary" | "secondary" | "tertiary" | "destructive" | "ghostNeutral" | "ghost"` (default `primary`; `ghostNeutral` / alias `ghost` requires `iconOnly=true`)
+- `size?: "small" | "medium" | "large"` (default `large`; icon-only supports all three)
+- `iconSlug?: string` (optional; maps to Figma `Select Icon` / `/asset/icons/<slug>.svg`)
+- `iconOnly?: boolean` (default `false`; maps to Icon Button set when true — square control: small 24×24 / medium 32×32 / large 40×40; glyph 12 / 14 / 16 except Ghost Neutral large = 14)
+- `showIcon?: boolean` (optional convenience; when false, hide leading icon even if projected/`iconSlug` present — Figma `Show Icon` default false)
 - `disabled?: boolean` (default `false`)
 - `loading?: boolean` (default `false`; if true, interactions are blocked)
 - `type?: "button" | "submit" | "reset"` (default `button`)
-- `ariaLabel?: string` (required when `iconOnly=true`)
+- `ariaLabel?: string` (**required** when `iconOnly=true` or `variant` is `ghostNeutral` / `ghost`; native `aria-label` also satisfies the contract)
 - `name?: string`
 - `value?: string`
 - `autofocus?: boolean`
@@ -175,137 +216,140 @@ Outputs / events:
 - `onPressStart(event)` — optional convenience event for press lifecycle.
 - `onPressEnd(event)` — optional convenience event for press lifecycle.
 ## Codegen Contract (Framework-Agnostic Blueprint)
-Deterministic structure:
+### Deterministic structure
   1. `ButtonRoot`
   2. optional `ButtonLeadingIcon`
   3. optional `ButtonLabel`
-Variant matrix:
-  - `variant`: `primary | secondary | tertiary | destructive`
+### Variant matrix
+  - `variant`: `primary | secondary | tertiary | destructive | ghostNeutral` (`ghost` alias → `ghostNeutral`)
   - `size`: `small | medium | large`
-  - icon modes: `iconSlug omitted` / `iconSlug present with label` / `iconOnly with iconSlug`
+  - icon modes: label-only / icon+label (`Show Icon`) / icon-only
   - states: `default | hover | press | focus-visible | disabled`
-- Per-slot style contract:
-  - `ButtonRoot`: height, padding, radius, border, background, and typography from tokens and size contract.
-  - `ButtonLeadingIcon`: `16x16`. Icon color per variant: primary → `var(--color-icon-gray-white)`; secondary/tertiary → `var(--color-icon-brand-base)`; destructive → `var(--color-icon-gray-white)`; disabled (all variants) → `var(--color-icon-gray-disabled)`. Must render via mask (not `<img>`) so CSS `color` applies.
+  - constraints: `ghostNeutral` ⇒ `iconOnly`; `destructive` ⇒ no leading icon; `iconOnly` ⇒ no `destructive`
+### Per-slot style contract
+  - `ButtonRoot`: height/padding (or square icon-only via `var(--sizing-size-*)` + `var(--padding-padding-none)`), radius, inset border, background, typography from tokens and size contract; focus via dual drop-shadow rings.
+  - `ButtonLeadingIcon`: icon+text `16×16`; icon-only Primary/Secondary/Tertiary `var(--ui-icon-spacing-icon-12|14|16)` by size; Ghost Neutral Large/Medium `icon-14`, Small `icon-12`. Colors per States table (icon-only Secondary/Tertiary use brand-strong / brand-stronger ladders). Mask rendering required.
   - `ButtonLabel`: `Body 2` (`14/20`, font-weight: `400`).
 ### Theme & programme resolution
-- Generators **must** emit component layout aliases (`var(--button-control-radius)`, `var(--button-focus-ring-radius)`, `var(--button-focus-ring-offset)`), never raw `px` or programme-specific scale token names in component CSS.
+- Generators **must** emit Figma tokens for focus: `var(--scale-2)`, `var(--scale-4)`, `var(--color-border-gray-white)`, `var(--color-border-brand-base)`.
+- Control radius may use programme alias `var(--button-control-radius)` (defaults to `var(--corner-radius-radius-2)`).
 - Theme selection by programme:
   - IDS → `components/ids-theme.css`
   - Synapse → `components/synapse-theme.css`
   - DAP → `components/dap-theme.css`
-- Layer precedence: `program_theme_delta` overrides `ids_theme` (see `generation/component_context_compiler.py`).
-- Programme fork specs document **which aliases differ** in the programme deltas table; implementations rely on programme theme CSS — not duplicate alias values in component CSS.
-- `ButtonRoot` layout bindings:
+- Layer precedence: `program_theme_delta` overrides `ids_theme`.
 
 | CSS property | Token |
 |---|---|
-| `border-radius` | `var(--button-control-radius)` |
-| focus ring `border-radius` | `var(--button-focus-ring-radius)` |
-| focus ring offset | `var(--button-focus-ring-offset)` |
-- Behavior contract:
+| `border-radius` | `var(--button-control-radius)` → `var(--corner-radius-radius-2)` |
+| focus gap ring spread | `var(--scale-2)` |
+| focus outer ring spread | `var(--scale-4)` |
+| focus gap ring color | `var(--color-border-gray-white)` |
+| focus outer ring color | `var(--color-border-brand-base)` |
+### Behavior contract
   - `disabled || loading` blocks activation and output events.
   - `iconOnly=true` requires accessible label.
   - `press` state is transient and cleared on pointer/key release.
-  - `iconOnly=true` is supported for `medium` and `large` sizes only.
-- Accessibility contract:
+  - `iconOnly=true` supports `small | medium | large`.
+  - `ghostNeutral` (or alias `ghost`) without `iconOnly` → validation error (or coerce `iconOnly=true` only if product enables coercion).
+### Accessibility contract
   - Native `button` semantics.
+  - `iconOnly=true` (including coerced Ghost Neutral) **must** set `ariaLabel` / `aria-label` — validation error if missing.
   - `aria-disabled` mirrors disabled state for non-native fallbacks.
   - Keyboard parity: `Enter` and `Space` activate.
-  - Visible `focus-visible` treatment required.
-- Asset resolution + bundling:
+  - Visible `focus-visible` treatment required (dual rings).
+### Asset resolution + bundling contract
   - Icon input uses slug: `iconSlug`.
   - Resolve icon from `/asset/icons/<iconSlug>.svg`.
-  - Unknown slug fallback: hide icon slot and continue rendering label.
-- Fallback/error rules:
+  - Unknown slug fallback: hide icon slot and continue rendering label (text mode).
+### Fallback/error rules
   - Unknown `variant` -> `primary`.
   - Unknown `size` -> `large`.
+  - Alias `ghost` -> `ghostNeutral`.
   - `iconOnly=true` and missing `ariaLabel` -> validation error.
-  - `iconOnly=true` and missing `iconSlug` -> validation error.
-  - `iconOnly=true` with `size=small` -> validation error (or coerce to `medium` only if product explicitly enables coercion).
-- Validation checklist:
-  - [ ] All variant x size x state combinations resolve tokenized styles.
-  - [ ] Layout uses component aliases (`--button-control-radius`, etc.), not hardcoded px.
-  - [ ] Aliases defined in `components/ids-theme.css` (both light and dark selectors) and documented in Tokens — **grep theme file before marking ready**.
-  - [ ] Focus ring uses `::after` + `var(--button-focus-ring-radius)`; **no** CSS `outline` / `outline-offset` on the control or in StateHarness demos.
-  - [ ] Programme fork deltas list alias overrides when values differ (Synapse/DAP).
-  - [ ] Icon slug path resolution works and gracefully handles missing slugs.
+  - `iconOnly=true` and missing icon -> validation error.
+  - `variant=ghostNeutral` (or `ghost`) without `iconOnly` -> validation error.
+  - `variant=destructive` with leading icon -> hide icon (Figma has no destructive icon slot).
+### Validation checklist
+  - [ ] All variant × size × state combinations resolve tokenized styles.
+  - [ ] Focus uses Figma tokens only (`--scale-2`, `--scale-4`, `--color-border-gray-white`, `--color-border-brand-base`) — no invented `--button-focus-*` vars.
+  - [ ] Focus uses dual `box-shadow` rings (inner gap + outer brand); **no** `::after` / `outline` focus chrome.
+  - [ ] Focus fill matches hover for each variant.
+  - [ ] Secondary/tertiary hover/press use `controls-light`; tertiary has no control border on hover/press/focus.
+  - [ ] Icon-only square sizes use `sizing-size-24/32/40` + `padding-padding-none`; glyphs use `ui-icon-spacing-icon-12/14/16` (Ghost Neutral Large = `icon-14`).
+  - [ ] Icon-only Secondary/Tertiary icon colors follow brand-base → brand-strong → brand-stronger ladder from set `52172:249499`.
+  - [ ] Ghost Neutral icon-only states documented and implemented; disabled has no focus rings.
   - [ ] Disabled/loading modes prevent output events.
   - [ ] Keyboard and pointer activation parity is preserved.
-  - [ ] Light/Dark tables remain structurally parallel.
 
 ## Storybook proof & codegen consumers
 
-**Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
+**Spec Generated** stories prove that `design-spec.md` is machine-consumable.
 
-1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
-2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
-3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
-
-Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
+1. Read this spec as the single source of truth.
+2. Emit styles **only** via semantic `var(--...)` from the correct theme file.
+3. Keep lib ports and Storybook examples aligned with this spec.
 
 ### Icon Implementation Details (Spec Generated Stories)
 
-The spec-generated Button stories (`storybook-generated/ids/src/components/Button.stories.tsx`) implement icons with the following configuration:
-
-- **Icon asset**: All icons use `assets/icons/settings-gear-detailed.svg`
-- **Icon variant**: All icons use `variant="mask"` (mask-based coloring)
-- **Color token mapping**:
-  - `primary` variant (default/hover/press states): `var(--color-icon-gray-white)`
-  - `secondary` variant (default/hover/press states): `var(--color-icon-brand-base)`
-  - `tertiary` variant (default/hover/press states): `var(--color-icon-brand-base)`
-  - All variants (disabled state): `var(--color-icon-gray-disabled)`
-
-This implementation aligns with the **States (Light Theme)** and **States (Dark Theme)** tables above, which specify icon colors per variant and state.
+- **Demo icon asset**: `assets/icons/settings-gear-detailed.svg` (text Button) / `shape-plus` acceptable for Icon Button demos
+- **Icon variant**: `variant="mask"`
+- **Color token mapping**: per States tables (including Ghost Neutral icons)
 
 ## Source Mapping
 - Component map entry: `data/component-figma-map.json` -> `Button`.
-- Primary node: `41894:116183` (IDS library button board).
-- States matrix node: `9662:25120` (style x state x size matrix evidence).
-- Figma MCP calls used:
-  - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
-  - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
-  - `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:26377)` — focus ring geometry
-  - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=41894:116183)`
-  - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:25120)`
-  - `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=9662:26377)` — `Corner Radius/radius-2`, `Corner Radius/radius-4`
-### Storybook proof and codegen consumers
-
-**Spec Generated** stories in this repo prove that `design-spec.md` is machine-consumable: generators and humans must be able to produce components that match **Layout & Measurements**, **Tokens**, **States**, and **Codegen Contract** without guessing. Downstream codegen must:
-
-1. Read this spec (and layered root/theme for program deltas) as the single source of truth.
-2. Emit styles **only** via semantic `var(--...)` from the correct theme file: **`components/ids-theme.css`** for IDS, **`components/dap-theme.css`** for DAP (do not mix program themes in one bundle).
-3. Keep the reference implementation (`storybook/src/components/...`) aligned with the spec when discrepancies are found (stories validate the contract; drift is a spec or implementation bug).
-
-Root Storybook **Spec Generated** includes **IDS** and **DAP** only.
-
-| Consumer | Location |
-|---|---|
-| Storybook (Base UI reference) | `storybook/src/components/Button.tsx`, `IdsButton.tsx`, `IdsButton.stories.tsx` |
-| Lib React (no Base UI) | `lib/react/ids/button/` (`IdsButton.tsx`, `IdsButton.module.css`; selectors `ids-button`, …); stories: `storybook/src/components/lib-generated/Button.stories.tsx` |
+- Primary board: `41894:116123`.
+- Text Button component set: `9662:25120`.
+- Icon Button component set: `52172:249499`.
+- Icon Button Primary Large Default / Focus evidence: `9662:25539` / `9662:25541`.
+- Icon Button Ghost Neutral Large Default evidence: `52173:249627` (Figma `Type=Ghost`; glyph `icon-14`; docs label Ghost Neutral).
+- Focus evidence (text Button): `9662:25507` (Primary Large Focus).
+- Runtime contract: `component-contracts/ids/button.contract.ts`.
+- Reference implementations:
+  - React: `lib/react/ids/button/`
+  - Angular: `lib/angular/ids/button/`
+  - Lit: `lib/lit/ids/src/button/`
+- Storybook:
+  - React lib: `storybook/src/components/lib-generated/Button.stories.tsx`
+  - Angular: `storybook-angular/src/components/ids-button/`
+  - Lit: `storybook-lit/src/components/Button.stories.ts`
+  - Spec Generated IDS/DAP: `storybook-generated/ids|dap/src/components/Button.stories.tsx`
+- Live verification (2026-10-12): Figma MCP `get_metadata` / `get_variable_defs` / `use_figma` on Icon Button set `52172:249499` (file `0bHk3XhrjFhowgFkz9yLr4`).
 
 ## Implementation Notes
 
 **Typography**
-- **Label font-weight**: `400` — do NOT use `500`; `Body 2` spec is `14/20` at weight `400`.
+- **Label font-weight**: `400` — do NOT use `500`; `Body 2` is `14/20` at weight `400`.
 
 **Icon color**
-- **Primary button icon**: `var(--color-icon-gray-white)` — do NOT use `var(--color-icon-brand-base)`.
-- **Secondary, tertiary, and icon-only button icon**: `var(--color-icon-brand-base)` — do NOT use `var(--color-icon-gray-white)`.
+- Primary: `var(--color-icon-gray-white)` (all interactive states); disabled → `var(--color-icon-gray-disabled)`.
+- Text Button secondary/tertiary leading icon: `var(--color-icon-brand-base)`.
+- Icon Button Secondary: default `brand-base` → hover/focus `brand-strong` → press `brand-stronger`.
+- Icon Button Tertiary: default/hover/focus `brand-strong` → press `brand-stronger`.
+- Ghost Neutral: default `var(--color-icon-gray-neutral-base)`; hover/press/focus `var(--color-icon-gray-neutral-strong)`.
+- Disabled (all): `var(--color-icon-gray-disabled)`.
 
 **Icon rendering**
-- **Icon slot must use mask rendering**: render `iconSlug` via `Icon` component with `variant="mask"` so CSS `color` tokens tint the icon. An `<img>` tag ignores `color` and will break icon color for all variants.
+- Mask rendering required so CSS `color` tints the icon.
 
-**Control border (added 2026-07-17)**
-- The `1px` control border is an **inside stroke** — render it with `box-shadow: inset 0 0 0 var(--border-width-border-1) <color>` (or `outline`), never CSS `border`. Under the global `box-sizing: border-box`, a real `border` adds `+2px` to every size.
-- On focus, `tertiary` keeps its control border **by state** (transparent in the default state) — only the outer ring is blue. Do not force a brand-base inner border on `tertiary` focus (secondary's base already has one; tertiary's does not).
+**Control border**
+- Inside stroke via `box-shadow: inset 0 0 0 var(--border-width-border-1) <color>`.
+- Tertiary never shows a brand control border (default/hover/press/focus).
+- Icon Button Secondary **press** keeps `var(--color-border-brand-base)` (does not use text Button `brand-strong` press border).
 
-**Focus ring (added 2026-07-21; re-verified 2026-09-01 on `9662:26377`)**
-- Corrected to match Figma: IDS `--button-focus-ring-offset` `3px` → `2px`, and the ring corner radius now resolves to `--button-focus-ring-radius` (`4px`) instead of following the `2px` control radius.
-- Don't use CSS `outline` (it inherits the control's `border-radius`, but the ring radius must differ). Render the ring as an absolutely-positioned `::after` (`outline: none` on the control) with `border` + `border-radius: var(--button-focus-ring-radius)`.
-- Offset: `inset: calc(-1 * (var(--button-focus-ring-offset) + var(--border-width-border-1)))`. The `+ border-width` is needed because `::after`'s `inset` positions the ring's **outer** edge (the `border` draws inward), whereas the offset is defined as the gap to the ring's **inner** edge. Plain `-offset` leaves the gap short by 1px. (With `outline` this compensation wasn't needed — `outline-offset` measures to the inner edge directly — but `outline` can't carry its own radius, hence `::after`.)
+**Focus (2026-10-12)**
+- Fill matches **hover** for every variant (including Icon Button Focus variants).
+- Dual drop shadows (Figma tokens): `0 0 0 var(--scale-2) var(--color-border-gray-white)` then `0 0 0 var(--scale-4) var(--color-border-brand-base)`, stacked after the inset stroke.
+- Do not invent `--button-focus-ring-*` aliases; do not use `::after` or CSS `outline` for focus chrome.
+- Demo focus via `data-state="focus-visible"` must hit the same `box-shadow` rules.
 
-**Theme alias drift (2026-09-01 regression note)**
-- The spec documented `--button-control-radius`, `--button-focus-ring-radius`, and `--button-focus-ring-offset` in the Tokens table and Codegen Contract, but those aliases were absent from `components/ids-theme.css` while other layout aliases (card, date-picker, …) were present. Component CSS referenced the correct alias names, so styles silently failed (invalid `border-radius` / focus ring). **Fix:** define all three aliases in `ids-theme.css`; do not rely on the Tokens table alone.
-- Generated **StateHarness** stories overrode focus with CSS `outline` / `outline-offset` despite this spec — that produced a ring with the **control** radius (2px), not `--button-focus-ring-radius` (4px). **Fix:** drive demo focus via `data-state="focus-visible"` and the component `::after` ring.
-- Keep `lib/angular/ids/button` and `lib/react/ids/button` as canonical ports; legacy Storybook copies must not diverge on focus technique.
+**Secondary / tertiary fill (2026-10-12)**
+- Hover/press backgrounds use `var(--color-background-controls-light)` (not `controls-lighter`).
+- Text Button secondary **press** border: `var(--color-border-brand-strong)`.
+
+**Icon Button / Ghost Neutral (set `52172:249499`)**
+- Types: Primary, Secondary, Tertiary, Ghost (docs label **Ghost Neutral**) — no Destructive, no extra actions beyond Default/Hover/Press/Focus/Disabled.
+- Runtime variant: `ghostNeutral` (alias `ghost`).
+- Square control + `padding-none`; sizing tokens `size-24/32/40`; glyphs `icon-12/14/16` (Ghost Neutral Large = `icon-14`).
+- Ghost Neutral is icon-only-only.
+- Keep `lib/react|angular|lit/ids/button` as canonical ports.

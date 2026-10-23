@@ -86,13 +86,14 @@ export const SpecAccurateDesign = {
 
 /** @type {import("@storybook/angular").StoryObj<IdsDropdownButtonComponent>} */
 export const WithLeadingIcon = {
+  name: "With leading icon",
   render: (args) => ({
     props: args,
     template: DROPDOWN_BUTTON_WITH_ICON_TEMPLATE,
   }),
   args: {
     buttonStyle: "primary",
-    size: "medium",
+    size: "large",
     disabled: false,
     label: "Settings",
     ariaLabel: "Settings menu",
@@ -115,30 +116,145 @@ export const IconOnly = {
 
 /** @type {import("@storybook/angular").StoryObj<IdsDropdownButtonComponent>} */
 export const VariantMatrix = {
+  name: "Style × size matrix",
   render: () => ({
     template: `
-      <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
-        <ids-dropdown-button buttonStyle="primary" size="medium">
-          <ids-dropdown-button-trigger label="Primary" />
+      <div style="display:flex;flex-direction:column;gap:24px;">
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <ids-dropdown-button buttonStyle="primary" size="large">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+              <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+          <ids-dropdown-button buttonStyle="secondary" size="large">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+          <ids-dropdown-button buttonStyle="tertiary" size="large">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <ids-dropdown-button buttonStyle="primary" size="medium">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+          <ids-dropdown-button buttonStyle="secondary" size="medium">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+          <ids-dropdown-button buttonStyle="tertiary" size="medium">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+        </div>
+        <div style="display:flex;gap:16px;align-items:center;flex-wrap:wrap;">
+          <ids-dropdown-button buttonStyle="primary" size="small">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+          <ids-dropdown-button buttonStyle="secondary" size="small">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+          <ids-dropdown-button buttonStyle="tertiary" size="small">
+            <ids-dropdown-button-trigger label="Button" />
+            <ids-dropdown-button-menu>
+              <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+              <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            </ids-dropdown-button-menu>
+          </ids-dropdown-button>
+        </div>
+      </div>
+    `,
+  }),
+};
+
+/** Figma examples frame 41894:290670 — open-menu compositions. */
+export const OpenMenuExamples = {
+  name: "Open menu examples",
+  render: () => ({
+    template: `
+      <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:48px;align-items:start;padding-bottom:280px;">
+        <ids-dropdown-button buttonStyle="primary" size="large" [defaultOpen]="true">
+          <ids-dropdown-button-trigger label="Button" />
           <ids-dropdown-button-menu>
             <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
             <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
           </ids-dropdown-button-menu>
         </ids-dropdown-button>
 
-        <ids-dropdown-button buttonStyle="secondary" size="medium">
-          <ids-dropdown-button-trigger label="Secondary" />
+        <ids-dropdown-button buttonStyle="primary" size="large" [defaultOpen]="true">
+          <ids-dropdown-button-trigger label="Button" [showLeadingIcon]="true" />
           <ids-dropdown-button-menu>
-            <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+            <ids-dropdown-button-menu-item value="option-1" label="Option with a longer label" />
             <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
+            <ids-dropdown-button-menu-item value="option-4" label="Option 4" />
+            <ids-dropdown-button-menu-item value="option-5" label="Option 5" />
+            <ids-dropdown-button-menu-item value="option-6" label="Option 6" />
           </ids-dropdown-button-menu>
         </ids-dropdown-button>
 
-        <ids-dropdown-button buttonStyle="tertiary" size="medium">
-          <ids-dropdown-button-trigger label="Tertiary" />
+        <ids-dropdown-button buttonStyle="secondary" size="small" [defaultOpen]="true">
+          <ids-dropdown-button-trigger label="Button" />
+          <ids-dropdown-button-menu>
+            <ids-dropdown-button-menu-item value="option-1" label="Option with a longer label" />
+            <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
+          </ids-dropdown-button-menu>
+        </ids-dropdown-button>
+
+        <ids-dropdown-button buttonStyle="secondary" size="small" [defaultOpen]="true">
+          <ids-dropdown-button-trigger label="Button" [showLeadingIcon]="true" />
           <ids-dropdown-button-menu>
             <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
             <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
+          </ids-dropdown-button-menu>
+        </ids-dropdown-button>
+
+        <ids-dropdown-button buttonStyle="secondary" size="medium" [defaultOpen]="true">
+          <ids-dropdown-button-trigger [iconOnly]="true" [showLeadingIcon]="true" ariaLabel="Secondary icon-only dropdown" />
+          <ids-dropdown-button-menu>
+            <ids-dropdown-button-menu-item value="option-1" label="Option with a longer label" />
+            <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
+          </ids-dropdown-button-menu>
+        </ids-dropdown-button>
+
+        <ids-dropdown-button buttonStyle="secondary" size="medium" [defaultOpen]="true">
+          <ids-dropdown-button-trigger [iconOnly]="true" [showLeadingIcon]="true" ariaLabel="Secondary icon-only dropdown with options" />
+          <ids-dropdown-button-menu>
+            <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
+            <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
+            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
           </ids-dropdown-button-menu>
         </ids-dropdown-button>
       </div>

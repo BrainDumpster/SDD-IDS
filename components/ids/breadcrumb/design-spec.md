@@ -7,9 +7,9 @@
 - Node ID: 11067-54494
 ## Anatomy
 - Breadcrumb list container
-- Individual breadcrumb items (links)
+- Individual breadcrumb items (links) rendered with the `IdsLink` component (standalone type)
 - Separator characters (/) between items
-- Ellipsis (...) for truncated paths
+- Ellipsis (...) for truncated paths, styled with `IdsLink` standalone classes
 - The overflow menu uses the IDS DropdownMenu component with all truncated links
 - Current page text (displayed below breadcrumb trail)
 - Focus ring for keyboard navigation
@@ -18,7 +18,7 @@
 - Item padding: 0px (no padding on breadcrumb links)
 - Separator spacing: 8px
 - Border radius: 4px (for focus states)
-- Focus ring: 2px offset from item
+- Focus ring: follows `IdsLink` 1px brand color focus ring (radius-4, ~4px x / 2px y offset)
 - Minimum item width: 24px
 - Separator size: 16px × 16px
 - Container margin: 0px (no margin on breadcrumb container)
@@ -65,16 +65,17 @@
 - All colors use semantic CSS custom properties for theme consistency
 - Typography scales are defined via font tokens with proper hierarchy
 - Focus states use brand colors for visual consistency
-- Link states provide clear visual feedback
+- Link states use the `IdsLink` component, inheriting its standalone hover/press/focus treatment
+- Breadcrumb items and the ellipsis share the same `IdsLink` standalone styling
 - Current page state is clearly distinguished
 - Dark theme adaptation through semantic tokens
 ## States (Light Theme)
-| State | Background | Border | Text (One Line) | Text (Two Lines Current Page) | Separator |
+| State | Background | Border | Text (Breadcrumb Trail) | Text (Current Page) | Separator |
 |---|---|---|---|---|---|
 | Default | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Hover | `var(--color-background-brand-lighter-slate)` (#1e262c) | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Focus | `var(--color-background-brand-lighter-slate)` (#1e262c) | `var(--color-border-brand-base)` (#4c9fdd) | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
-| Current (Two Lines) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Hover | transparent | transparent | `var(--color-text-link-brand-strong)` (#94c5ea) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Focus | transparent | `var(--color-border-brand-base)` (#4c9fdd) 1px focus ring | `var(--color-text-link-brand-base)` (#0062ab) | N/A | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Current | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) |
 | Disabled | transparent | transparent | `var(--color-text-gray-disabled)` (#757575) | N/A | `var(--color-text-gray-disabled)` (#757575) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
@@ -83,14 +84,16 @@
 - Current page uses neutral strong for clear indication
 ## Interactions
 - Click breadcrumb items to navigate to that page
-- Hover provides visual feedback with background and text changes
+- Hover provides visual feedback with `IdsLink` text and underline changes
 - Focus ring uses brand color for keyboard navigation
-- In two-line variant, current page is displayed below breadcrumb trail with larger typography
+- Current page is displayed below breadcrumb trail with larger typography
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
 - Truncated breadcrumbs reveal the IDS DropdownMenu when the "..." ellipsis is clicked or keyboard-activated
+- When the overflow menu opens, focus moves to the first menu item
+- When focus moves out of the menu (Tab past the last item, Shift+Tab back to the trigger, or focus leaving the menu entirely), the menu closes
 ### Accessibility
-- Focus ring: 2px brand color border
+- Focus ring: follows `IdsLink` 1px brand color focus ring
 - Keyboard navigation: Tab to breadcrumb items, Enter to navigate
 - Screen reader support: Proper ARIA attributes (navigation, breadcrumb list)
 - High contrast: Meets WCAG AA standards with provided colors
@@ -100,21 +103,42 @@
 
 ### Behavior & guidelines
 - Use breadcrumbs to show navigation hierarchy
-- Overflow pattern: breadcrumb shows full path up to 4 items (could be less based on screen size)
-- From 4 items, breadcrumb truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between
-- The ellipsis uses the same link color and hover/focus/press styling as the other breadcrumb links
+- Overflow pattern: breadcrumb shows full path up to 3 items (could be less based on screen size)
+- From 4 items, breadcrumb automatically truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between. The threshold is configurable via `maxVisibleItems` (default 3); no opt-in prop is required
+- The ellipsis uses the same `IdsLink` standalone color and hover/focus/press styling as the other breadcrumb links
 - Clicking or keyboard-activating the "..." ellipsis opens the IDS DropdownMenu (single-select dropdown) with all truncated links
 - Use proper separator characters (/ > »)
 - Implement responsive behavior for mobile
 - Test with screen readers for proper navigation announcement
 - Use consistent styling across the application
+
+### Text Truncation (Responsive)
+When horizontal space is limited by an adjacent sibling, individual breadcrumb labels are gradually truncated to avoid collision.
+
+- **Spacing measurement** — The component measures the gap between the right edge of the breadcrumb list and the left edge of the next sibling in its container. When no sibling exists, the right edge of the breadcrumb container is used.
+- **Thresholds**
+  - **Truncate** when the measured spacing drops below `24px`.
+  - **Revert** (un-truncate) when the measured spacing reaches `48px` or more. This 24px buffer above the truncation threshold prevents rapid oscillation when a character is added back.
+- **Gradual decrease** — A character cap is lowered by one character at a time. Only labels longer than the current cap are rendered as `{{label.slice(0, cap)}...` (three dots, no space). Because the cap is global, the longest label is shortened first.
+- **Gradual increase** — As the container grows, the cap is raised by one character at a time until all labels are fully restored.
+- **Observation** — `ResizeObserver` watches the breadcrumb `<nav>`, the `<ol>` list, and the parent container so truncation updates as the layout changes.
+
+### Text Truncation Priority
+When the available width limit is hit (spacing to the next element drops below `24px`), labels are truncated in the following order of priority:
+
+1. First, identify and truncate any breadcrumb labels that exceed 45 characters.
+2. Next, identify and truncate any remaining breadcrumb labels that exceed 20 characters.
+3. If the list still overflows after the 45 and 20 character stages, continue truncating all labels gradually until the content fits.
 ## Composition & API (runtime)
 Document runtime props, events, and variant axes. When **Variants** appears as a subsection below, treat it as the variant matrix source until a dedicated API table is authored.
 ### Variants
-- **One Line**: Standard horizontal breadcrumb trail (all links have same styling)
-- **One Line Truncated**: Long paths truncated with ellipsis and dropdown menu
-- **Two Lines**: Breadcrumb trail on top with current page displayed below (larger typography)
-- **Two Lines Truncated**: Two-line variant with truncation for long paths
+- **Standard**: Breadcrumb trail on top with current page displayed below (larger typography)
+- **Truncated**: Standard variant with truncation for long paths (shows first and last items with ellipsis in between)
+
+### Props
+- `items`: `BreadcrumbItem[]` (`{ label, href? }`) — required
+- `currentPage`: `string` — optional, displayed below the trail
+- `maxVisibleItems`: `number` — default `3`; item count above this triggers the ellipsis overflow automatically
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 Follow **Anatomy** (same slot order). Codegen must emit stable PascalCase slot identifiers aligned with anatomy labels.
@@ -155,7 +179,5 @@ When icons are used, resolve from `assets/icons/<slug>.svg` through the shared I
 - Design source: Figma URL above
 - Component map entry: data/component-figma-map.json → component "Breadcrumb" (category "Navigation"; node "11067-54494")
 - Figma variants:
-  - One line: 48608-92898 (4 items), 48608-92922 (1 item), 48608-92916 (2 items), 48608-92908 (3 items)
-  - One line truncated: 48608-92890 (5 items), 48608-92881 (with dropdown)
-  - Two lines: 48608-92945 (4 items), 48608-92972 (1 item), 48608-92965 (2 items), 48608-92956 (3 items)
-  - Two lines truncated: 48608-92936 (5 items), 48608-92926 (with dropdown)
+  - Standard: 48608-92945 (4 items), 48608-92972 (1 item), 48608-92965 (2 items), 48608-92956 (3 items)
+  - Truncated: 48608-92936 (5 items), 48608-92926 (with dropdown)

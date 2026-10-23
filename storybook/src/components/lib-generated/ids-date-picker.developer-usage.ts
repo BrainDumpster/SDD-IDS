@@ -18,6 +18,7 @@ Import from \`@ids/react/date-picker\`.
 | \`placeholder\` | \`string\` | — |
 | \`label\` | \`string\` | — |
 | \`required\` | \`boolean\` | — |
+| \`id\` | \`string\` | generated (the label's \`htmlFor\` points at it) |
 | \`dateFormat\` | \`string\` | — |
 | \`formatHint\` | \`string\` | — |
 | \`helperText\` | \`string\` | — |
@@ -30,6 +31,7 @@ Import from \`@ids/react/date-picker\`.
 | \`rangeMode\` | \`boolean\` | — |
 | \`rangeStart\` | \`Date \\| null\` | — |
 | \`rangeEnd\` | \`Date \\| null\` | — |
+| \`rangeField\` | \`"start" \\| "end"\` | — |
 | \`forceOpen\` | \`boolean\` | — |
 
 ## Events

@@ -21,7 +21,12 @@ def generate_ids_detail_panel_story(
 
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ useState }} from "react";
-import {{ IdsDetailPanel as {component_name}, type IdsDetailPanelAttachMode }} from "{import_path}";
+import {{
+  IdsDetailPanel as {component_name},
+  IdsDetailPanelField,
+  IdsDetailPanelSection,
+  type IdsDetailPanelAttachMode,
+}} from "{import_path}";
 
 const meta: Meta<typeof {component_name}> = {{
   title: "{options.title_prefix}/Detail Panel",
@@ -33,13 +38,18 @@ const meta: Meta<typeof {component_name}> = {{
 export default meta;
 type Story = StoryObj<typeof {component_name}>;
 
+/** Figma "Detail Panel Template": section headers with label / value rows, ruled apart. */
 function ExampleContent() {{
   return (
-    <div style={{{{ display: "grid", gap: 12 }}}}>
-      <div style={{{{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-gray-neutral-strong)", fontWeight: 500 }}}}>Section Header</div>
-      <div style={{{{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-gray-neutral)" }}}}>Label: Single line content</div>
-      <div style={{{{ height: 600, border: "1px dashed var(--color-border-gray-neutral-base)", padding: 12, boxSizing: "border-box" }}}}>Overflow sample content area</div>
-    </div>
+    <>
+      <IdsDetailPanelSection title="Section Header">
+        <IdsDetailPanelField label="Label:">Single line content</IdsDetailPanelField>
+        <IdsDetailPanelField label="Label:">Multiple line content that wraps onto the next line when it is longer than the panel width</IdsDetailPanelField>
+      </IdsDetailPanelSection>
+      <IdsDetailPanelSection title="Section Header">
+        <IdsDetailPanelField label="Status:">Warning</IdsDetailPanelField>
+      </IdsDetailPanelSection>
+    </>
   );
 }}
 

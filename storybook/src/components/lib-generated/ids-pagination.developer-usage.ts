@@ -19,7 +19,6 @@ Import from \`@ids/react/pagination\`.
 | \`pageSizeOptions\` | \`number[]\` | — |
 | \`showResultsPerPage\` | \`boolean\` | — |
 | \`background\` | \`IdsPaginationBackground\` | — |
-| \`disabled\` | \`boolean\` | — |
 | \`summaryFormatter\` | \`(currentPage: number, totalPages: number) => string\` | — |
 | \`responsiveMode\` | \`IdsPaginationResponsiveMode\` | — |
 | \`collapseOrder\` | \`IdsPaginationCollapseSlot[]\` | — |

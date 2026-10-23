@@ -1,0 +1,52 @@
+/**
+ * IDS Form Label styles — derived from components/ids/form-label/design-spec.md
+ * Theme: components/ids-theme.css
+ * Ported from lib/react/ids/form-label/IdsFormLabel.module.css
+ *
+ * Row: flex, align-items:center, gap space-8 (label group ↔ info icon).
+ * Size (24/32/40) = padding-block 2/6/10 around a fixed 20px Body-2 line.
+ * Label group: flex, gap space-2 (text ↔ required marker).
+ */
+
+.ids-form-label {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  box-sizing: border-box;
+}
+
+.ids-form-label--sm {
+  padding-block: var(--padding-padding-2);
+}
+
+.ids-form-label--md {
+  padding-block: var(--padding-padding-6);
+}
+
+.ids-form-label--lg {
+  padding-block: var(--padding-padding-10);
+}
+
+.ids-form-label-group {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  margin: 0;
+  padding: var(--padding-padding-none);
+}
+
+.ids-form-label-text,
+.ids-form-label-marker {
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-form-label-info {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+}

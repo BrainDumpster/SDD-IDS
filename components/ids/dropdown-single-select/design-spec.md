@@ -54,7 +54,7 @@
   - `var(--color-border-gray-neutral-base)` top border on section boundaries
   - first section header top border may be omitted.
 - Footer action button inner wrapper: `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`
-- Focus ring: pseudo-element `::after`, `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` — field shell stays square (`radius-none`); only the outer focus ring is rounded.
+- Focus ring: pseudo-element `::after`, `inset: -4px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` — field shell stays square (`radius-none`); only the outer focus ring is rounded.
 
 ### Slot geometry (Figma-verified)
 
@@ -98,7 +98,7 @@
   - `var(--shadow-shadow-4-drop-shadow-4-spread)` (0)
   - `var(--shadow-shadow-4-drop-shadow-4-color)` (rgba(37,37,37,0.08))
 - Geometry:
-  - `var(--border-width-border-default)` (field + menu border width, 1px)
+  - `var(--border-width-border-1)` (field + menu border width, 1px)
   - `var(--dropdown-control-radius)` (field shell; IDS theme → `var(--corner-radius-radius-none)` / 0px)
   - `var(--dropdown-focus-ring-radius)` (focus ring; IDS theme → `var(--corner-radius-radius-4)`)
   - `var(--dropdown-menu-radius)` (detached menu; IDS theme → `0`)
@@ -116,7 +116,7 @@
 | Field container | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | show-dropdown | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
-| Field container | focus-visible | `var(--color-background-surface-component)` | inner `var(--color-border-gray-neutral-base)` + outer ring `var(--color-border-brand-base)` (pseudo `::after`, `inset: -5px`, `border-radius: 4px`) | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
+| Field container | focus-visible | `var(--color-background-surface-component)` | inner `var(--color-border-gray-neutral-base)` + outer ring `var(--color-border-brand-base)` (pseudo `::after`, `inset: -4px`, `border-radius: 4px`) | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | text `var(--color-text-gray-disabled)`, caret `var(--color-border-gray-disabled)` |
 | Field container | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)`, error icon `var(--color-icon-alerting-critical-base)`, error text `var(--color-text-alerting-critical-base)` |
 | Option row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
@@ -125,6 +125,8 @@
 | Option row | selected (no radio) | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 | Option row | selected (with radio) | `var(--color-background-surface-component)` | none | `var(--color-text-brand-strong)` |
 | Option row | focus-visible | `var(--color-background-surface-component)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`) | `var(--color-text-gray-neutral)` |
+| Option row | selected + focus-visible (no radio) | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`), `border-radius: var(--corner-radius-radius-4)` | `var(--color-text-brand-strong)` |
+| Option row | selected + focus-visible (with radio) | `var(--color-background-surface-component)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`), `border-radius: var(--corner-radius-radius-4)` | `var(--color-text-brand-strong)` |
 | Option row | disabled (no radio) | `var(--color-background-gray-lighter)` | `outline: 1px solid var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 | Option row | disabled (with radio) | `var(--color-background-surface-component)` | none | `var(--color-text-gray-disabled)` |
 | Section header | — | `var(--color-background-surface-component)` | `border-top: var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
@@ -135,19 +137,24 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 | Element | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | Field container | default/hover/focus/disabled/error | semantic token resolved | semantic token resolved | semantic token resolved |
-| Option rows | default/hover/selected/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
+| Option rows | default/hover/selected/focus-visible/selected + focus-visible/disabled | semantic token resolved | semantic token resolved | semantic token resolved |
 ## Interactions
 - Trigger:
-  - click/`Enter`/`Space` toggles open/close.
-  - when the popup opens, focus remains on the trigger; the implementation explicitly returns focus to the trigger after Base UI mounts the popup.
-  - `Tab` from the trigger moves focus to the first tabbable control inside the popup (search input, search clear, option rows, footer action).
+  - click toggles open/close; focus stays on the trigger after a pointer open.
+  - `Tab` onto the trigger focuses it but does **not** open the menu.
+  - `Enter`/`Space` open the menu and move focus **into** it, onto the **selected** option (the first enabled option when nothing is selected). With the menu already open (pointer open), `Enter`/`Space`/`ArrowUp`/`ArrowDown` move focus onto the selected option.
   - `Escape` closes and returns focus to trigger.
 - Selection:
   - selecting an option sets exactly one selected value.
   - selecting a new option replaces previous selection.
-- Keyboard:
-  - `ArrowUp`/`ArrowDown` navigates options.
-  - `Enter` commits active option.
+  - selecting (click or `Enter`) closes the menu and returns focus to the trigger.
+- Keyboard (design review 2026-10, Windows-style):
+  - `ArrowUp`/`ArrowDown` move focus through the menu and **wrap**: `ArrowDown` on the last item goes to the first, `ArrowUp` on the first goes to the last. The cycle covers every control in the menu in DOM order: search field (`searchable`), Clear All / Reset to Default (`showClearAll`), enabled option rows, action row. Disabled options are skipped.
+  - focus is separate from selection: moving focus never changes the value. The selected option keeps its selected state, and when it also has focus it shows **selected + focus-visible** (selected fill/text plus the focus ring).
+  - `Enter` (or `Space`) on the focused option selects it and closes the menu.
+  - `Tab`/`Shift+Tab` while the menu is open close it, **keep the previously selected value** (e.g. stays `100%` even with focus on `125%`) and move focus to the next/previous component on the page. `Tab` never walks the option rows (lists can be 20+ items). Exception: in the search field, `Tab` first accepts a pending inline suggestion.
+  - `Escape` closes the menu without changing the value and returns focus to the trigger.
+  - **On hold:** `ArrowUp`/`ArrowDown` on the **closed** trigger (change the value without opening, as Windows does) is pending accessibility review. Until then the existing behavior stays: React opens the menu on `ArrowDown` with focus kept on the trigger; Angular does nothing.
 - Optional radio mode:
   - radio control visibility is input-driven.
   - radio does not change single-select behavior semantics; it is visual control parity.
@@ -159,6 +166,9 @@ Dark theme must remain structurally identical to Light Theme with values resolve
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding-2 / padding-16`, `radius-2`) but with a **bottom** border since it sits at the top of the list.
   - the Clear All row is **hidden while a search query is active**, and reappears when the search is cleared.
   - clicking clears the selection; the row then auto-hides. It does **not** collapse the menu.
+  - after the click, focus moves onto the option that is now selected (the first enabled option when none is), so the keyboard user stays in the menu instead of losing focus with the hidden row.
+  - **With radio options (`showRadio`) the row is labelled "Reset to Default"** (design review 2026-10). Behavior is unchanged: it returns the dropdown to no selection (placeholder), shows whenever a value is selected, hides once reset and while a search query is active, and does **not** collapse the menu.
+  - Reset to Default is **right-aligned** in its row, like the multi-select Clear All: `16px` (`var(--padding-padding-16)`) right inset. A plain Clear All row stays left-aligned.
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -170,7 +180,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 | `disabled` | No | `boolean` | Blocks interactions. |
 | `searchable` | No | `boolean` | Enables search row. |
 | `menuWidth` | No | `"trigger" \| "content"` | Width mode. `"trigger"` (default) = trigger width; `"content"` = grow to widest option, clamped `[trigger, 700px]`. |
-| `showClearAll` | No | `boolean` | Shows a "Clear All" row (below search) when a value is selected; clears the selection on click (row then auto-hides), without collapsing the menu. |
+| `showClearAll` | No | `boolean` | Shows a "Clear All" row (below search) when a value is selected; clears the selection on click (row then auto-hides), without collapsing the menu. With `showRadio` the row is labelled "Reset to Default" (same behavior). |
 | `showRadio` | No | `boolean` | Optional radio visual in option rows. |
 | `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option list. |
 | `value` | No | `string` | Controlled selected value. |
@@ -195,7 +205,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - `size`: `small | large`
 - `content`: `empty | filled`
 - `field-state`: `default | hover | show-dropdown | focus-visible | disabled | error`
-- `option-state`: `default | hover | press | selected | focus-visible | disabled`
+- `option-state`: `default | hover | press | selected | focus-visible | selected-focus-visible | disabled`
 - `radio-visibility`: `on | off`
 - `search`: `enabled | disabled`
 - `sections`: `none | enabled`
@@ -216,7 +226,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Disabled option behavior differs by radio mode:
   - with radio: white background, no outline
   - without radio: `color-background-gray-lighter` background, `outline: 1px solid color-border-gray-disabled`
-- Focus ring on field: pseudo-element `::after` with `inset: -5px` (4px gap), `border: 1px solid color-border-brand-base`, `border-radius: var(--corner-radius-radius-4)`. Field element itself has no border-radius.
+- Focus ring on field: pseudo-element `::after` with `inset: -4px` (2px gap from the 1px field border), `border: 1px solid color-border-brand-base`, `border-radius: var(--corner-radius-radius-4)`. Field element itself has no border-radius.
 - Option focus ring: inset `outline: 1px solid color-border-brand-base` with `outline-offset: -1px`.
 - When option row is focused, radio button must not render its own focus ring.
 - Font weight: `400` (regular) for all text elements (field value, option label, helper text, error message, section header, action label).
@@ -266,7 +276,22 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
-> Last updated: 2026-06-07.
+> Last updated: 2026-10-11.
+
+### 2026-10-11
+- **Reset to Default right-aligned** (design review). React `DropdownMenu.tsx`: `clearAllAlign` now defaults to `"right"` when the row reads Reset to Default (`showSingleSelectRadio`), else `"left"`; `.clearAllAction[data-align="right"]` uses a `var(--padding-padding-16)` right inset, matching the multi-select Clear All. Angular `ids-dropdown-menu`: new `clearAllAlign` input, `resolvedClearAllAlign` → `data-align`. Angular also gets the `.clearAllAction` row styles (bottom border, `16px` inset, label focus ring), which its SCSS was missing.
+- The keyboard model below now also runs for multi-select (see the multi-select spec).
+
+### 2026-10-09
+- **Clear All is labelled "Reset to Default" with radio options** (design review). Reset returns the dropdown to no selection, exactly like Clear All; only the label changes. React `DropdownMenu.tsx`: with `showSingleSelectRadio` the `showClearAll` row renders `resetToDefaultLabel` (default `"Reset to Default"`) and still fires `onClearAllClick`. Angular `ids-dropdown-menu`: `resetToDefaultLabel` input; the row still emits `clearAllClick`.
+- **Focus after Clear All / Reset to Default**: the row hides itself on click, which used to drop focus to `<body>` with the menu still open. React parks focus on the popup (`tabIndex=-1`, no outline), then moves it onto the first option on the next frame. Angular moves it after the consumer's update renders (`requestAnimationFrame` → `focusSelectedOption`). Angular also stops the row's click from propagating: the row is removed before the click reaches `onDocumentClick`, which took it for an outside click and closed the menu, contrary to "does not collapse the menu".
+
+### 2026-10-05
+- **Single-select keyboard model** (design review, see ## Interactions → Keyboard). Supersedes the 2026-08-13 "no auto-focus on open" and "`Tab` still traverses every tabbable control" notes for single-select; multi-select and combo box are unchanged.
+  - React `lib/react/ids/dropdown-shared/DropdownMenu.tsx`, active only for `selectionMode="single"`: `handleTriggerKeyDown` flags a keyboard open, and an effect focuses the selected (else first enabled) `[data-selectable="true"]` row one frame after the popup mounts (the positioner reveals it in a layout effect). `handleSingleSelectKeyDownCapture` runs in the capture phase, because the search input stops propagation of its keys: `ArrowUp`/`ArrowDown` cycle the popup's enabled `input`/`button` controls with wrap-around; `Tab` closes and focuses the trigger **without** `preventDefault`, so the browser's own `Tab`/`Shift+Tab` continues from the trigger. That is how focus escapes the portal at the end of `<body>`. Selecting an option closes the menu and returns focus to the trigger. `onOpenChange` is deduplicated through `openRef`, and it now also fires when a selection closes the menu.
+  - React `lib/react/shared/menu/Menu.tsx`: pressing the trigger while focus is inside the popup no longer closes the menu on blur and then reopens it on the trigger click. The blur-close is skipped for a trigger press, and the click toggles the menu closed.
+  - Angular `lib/angular/ids/dropdown/ids-dropdown-menu.component.ts` (parity): `onTriggerKeydown`, `onPopupKeydown` and `onSearchKeydown` implement the same model. `cdr.detectChanges()` renders the popup before focusing a row and removes it before `Tab`'s default action. `onEscape` returns focus to the trigger when focus was inside the popup, and `Escape` from the search field now reaches it.
+- **Selected + focus-visible** needs no extra CSS. The selected rule sets background/text and the `:focus-visible` rule adds the 1px `var(--color-border-brand-base)` inset ring, so both show together on the same row (with and without radio). Figma still needs this as an explicit option variant.
 
 ### 2026-08-30
 - **Options list 1px inset padding** — `DropdownMenu.module.css` `.optionsScrollViewport` now has `padding-inline: 1px` so the option rows sit 1px inside the menu border, matching the App Launcher options list.
@@ -275,11 +300,13 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
 - **Section-aware keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections (option rows, footer action) and stop at section boundaries. `Tab` still traverses every tabbable control.
 - **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport`) carry `tabIndex={-1}` so they do not receive focus; only interactive controls inside the popup are keyboard reachable.
-- **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
+- **Focus ring geometry** — `triggerReset` uses a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
 - **Action button focus rings** — Added missing `:focus-visible` focus ring for the `footerAction` button to match IDS Button / Dropdown Button specs.
+- **Truncated option label tooltip** — `DropdownMenu.tsx` wraps any option label that overflows its row in `IdsTooltip`, revealing the full label on hover. The tooltip is rendered only when `scrollWidth > clientWidth`, with `delay={0}` for immediate appearance. The `IdsTooltip.Trigger` uses `triggerDisplay="block"` and `.triggerBlock { min-width: 0 }` so long labels do not force the menu wider.
+- **Top-side popup shadow suppression** — when Base UI flips/places the menu above the trigger (`data-side="top"`), `DropdownMenu.module.css` removes `box-shadow` from `.popup[data-side="top"]` so the menu does not cast a shadow onto the field or container below. The default `bottom` side keeps the standard `IDS Shadow 1` elevation.
 
 **Focus ring must not add border-radius to the field element.**
-Only the outer ring is rounded (`radius-4`). Implementation: `IdsDropdownTriggerShell.module.css` — field uses `border-radius: var(--dropdown-control-radius)`; focus uses `::after` (`position: absolute; inset: -5px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`).
+Only the outer ring is rounded (`radius-4`). Implementation: `IdsDropdownTriggerShell.module.css` — field uses `border-radius: var(--dropdown-control-radius)`; focus uses `::after` (`position: absolute; inset: -4px; border: 1px solid var(--color-border-brand-base); border-radius: var(--corner-radius-radius-4); pointer-events: none`).
 
 **Caret disabled color is `var(--color-border-gray-disabled)`, not `var(--color-icon-gray-disabled)`.**
 Both tokens resolve to the same value in light mode but differ in dark mode. Implementation: `IdsDropdownTriggerShell.module.css` — `.field[data-disabled] .caretWrap { color: var(--color-border-gray-disabled) }`.
@@ -325,14 +352,13 @@ Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="single
 **Text-only single-select option aligns to the top (`align-items: flex-start`); radio rows stay centered.**
 Implementation: `DropdownMenu.module.css` — `.item[data-selection-mode="single"]:not(:has(.radioOuter)) { align-items: flex-start }`.
 
-**Caret stays down-pointing while the popup is open** (Figma show-dropdown / component matrix — no 180° flip).
-Implementation: `IdsDropdownTriggerShell` uses `arrow-drop-tri-caret` without open-state rotation.
+**Caret does not rotate when the popup opens** — it stays pointing down.
 
 ### Implementation updates (2026-08-05)
 
 - **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-gray-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownSingleSelect` wrapper and does not constrain the menu width.
 - **Single-select `Clear All` row** — visible above the option list whenever a value is selected (enabled via `showClearAll`). Clicking it fires `onClearAllClick`, clears the selection and the row auto-hides; the popup stays open (does **not** collapse the menu). Implementation: `DropdownMenu.tsx` — `showSingleClearAllRow`; `DropdownMenu.module.css` — `.clearAllAction`.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup). Caret direction is unchanged (still down). Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field`.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0` (square edge meeting the popup). The caret does **not** rotate. Implementation: `IdsDropdownTriggerShell.module.css` — `:global([data-popup-open]) .field`.
 - **Tooltip** — when the field value is truncated, it is wrapped in the IDS Tooltip showing the full item. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
 - **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth`.
 - **Options list scroll** — caps at `maxVisibleItems` rows (default `6`); the list only scrolls when the number of rows exceeds the threshold. Implementation: `DropdownMenu.tsx` — `scrollRegionStyle`.

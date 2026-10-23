@@ -289,6 +289,9 @@ export function IdsDropdownSingleSelect({
   const selectedLabel =
     (selectedId && (idToLabel.get(selectedId) ?? selectedId)) || "";
   const hasSelection = Boolean(selectedLabel);
+  // Spec: a disabled dropdown showing an empty selection must NOT display the
+  // required asterisk — the user can't act on it, so marking it required misleads.
+  const showRequiredMark = required && !(disabled && !hasSelection);
   const hasError = Boolean(errorMessage);
   const message = errorMessage ?? helper;
 
@@ -352,7 +355,7 @@ export function IdsDropdownSingleSelect({
     >
       <div className={styles.fieldRow} data-ids="ids-dropdown-single-select-field-row">
         {label ? (
-          <FieldLabel text={label} size={size} required={required} htmlFor={rootId} />
+          <FieldLabel text={label} size={size} required={showRequiredMark} htmlFor={rootId} />
         ) : null}
         <div
           className={styles.field}

@@ -90,7 +90,7 @@ export function IdsBadge({
 
   const valueText = String(value);
   const numericValue = Number(value);
-  const isLargeNumber = !Number.isNaN(numericValue) && numericValue >= 999;
+  const isLargeNumber = !Number.isNaN(numericValue) && numericValue > 999;
   // Established IDS Badge truncate for ≥999 (tooltip shows full `valueText`).
   const displayText = isLargeNumber ? "1K" : valueText;
   const type = resolveType(typeProp);
@@ -119,10 +119,10 @@ export function IdsBadge({
 
   if (!isLargeNumber) return badge;
 
-  // Hover/focus of the badge shows full value (Interactions). Trigger owns focus.
+  // Hover of the badge shows full value (Interactions).
   return (
     <IdsTooltip hugContent side="top">
-      <TooltipTrigger tabIndex={0}>{badge}</TooltipTrigger>
+      <TooltipTrigger>{badge}</TooltipTrigger>
       <TooltipPanel>
         <TooltipBody>{valueText}</TooltipBody>
       </TooltipPanel>

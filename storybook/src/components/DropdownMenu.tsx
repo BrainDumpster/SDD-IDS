@@ -1,11 +1,66 @@
 import { Menu } from "@base-ui-components/react/menu";
 import { ScrollArea } from "@base-ui-components/react/scroll-area";
-import { useMemo, useRef, useState, type RefObject } from "react";
+import { useCallback, useMemo, useRef, useState, type RefObject } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Tag } from "./Tag";
+import { IdsTooltip } from "./IdsTooltip";
 import styles from "./DropdownMenu.module.css";
 import search16Icon from "../../../assets/icons/search-16.svg";
+
+/**
+ * Option label that truncates with an ellipsis and, only when the text is
+ * actually cut off (`scrollWidth > clientWidth`), reveals the full label in an
+ * IDS Tooltip on hover/focus. The block trigger (`min-width: 0`) keeps a long
+ * label from forcing the menu wider.
+ */
+function OptionLabel({ label }: { label: string }) {
+  const spanRef = useRef<HTMLSpanElement>(null);
+  const [truncated, setTruncated] = useState(false);
+
+  const measure = () => {
+    const el = spanRef.current;
+    setTruncated(!!el && el.scrollWidth > el.clientWidth + 1);
+  };
+
+  // `IdsTooltip` here is uncontrolled, so the wrapper must already exist before
+  // the pointer arrives. Measure on the frame after mount (Base UI has positioned
+  // the popup and the row width is final by then); re-measure on hover as a
+  // fallback so a late layout still gets picked up.
+  const measureRef = useCallback((el: HTMLSpanElement | null) => {
+    spanRef.current = el;
+    if (!el) return;
+    requestAnimationFrame(() =>
+      setTruncated(el.scrollWidth > el.clientWidth + 1),
+    );
+  }, []);
+
+  const labelSpan = (
+    <span
+      ref={measureRef}
+      className={styles.itemLabel}
+      onMouseEnter={measure}
+      onFocus={measure}
+    >
+      {label}
+    </span>
+  );
+
+  if (!truncated) return labelSpan;
+
+  return (
+    <IdsTooltip
+      side="right"
+      arrowAlign="start"
+      hugContent
+      delay={0}
+      triggerDisplay="block"
+      content={label}
+    >
+      {labelSpan}
+    </IdsTooltip>
+  );
+}
 
 interface MenuItem {
   id?: string;
@@ -186,6 +241,12 @@ export function DropdownMenu({
   // suggestion accepted with Tab / → / End. Only computed on text insertion —
   // deleting/clearing clears the suggestion.
   const searchInputRef = useRef<HTMLInputElement>(null);
+  // Search field focus ring: a text `<input>` matches `:focus-visible` even on a
+  // mouse click, so pure CSS would draw the ring on click too. Track the focus
+  // modality ourselves — only a keyboard focus (Tab, not a pointer press) sets
+  // `data-focus-visible` on the field, which the CSS keys the ring off.
+  const searchPointerDownRef = useRef(false);
+  const [searchFocusVisible, setSearchFocusVisible] = useState(false);
   const popupRef = useRef<HTMLDivElement>(null);
   const optionsViewportRef = useRef<HTMLDivElement>(null);
   // Reset the options list scroll to the top (used after Clear All).
@@ -248,9 +309,14 @@ export function DropdownMenu({
   // only keep it when at least 2 options match the query.
   const showSelectAllRow = showSelectAllClearAll && (!hasSearchQuery || optionRowCount >= 2);
 
-  // Single-select Clear All row: visible whenever a value is selected.
+  // Single-select Clear All row: visible whenever a value is selected, but hidden
+  // while a search query is active (same as the multi-select Select All / Clear All
+  // row, which also hides during search). Commit 83f9d224.
   const showSingleClearAllRow =
-    selectionMode === "single" && showClearAll && selectedValues.length > 0;
+    selectionMode === "single" &&
+    showClearAll &&
+    selectedValues.length > 0 &&
+    !hasSearchQuery;
 
   // Values of the options currently visible (respecting the search filter).
   const visibleSelectableValues = displayedItems
@@ -399,6 +465,58 @@ export function DropdownMenu({
     }
   };
 
+  // Show Selected panel, extracted so it can be placed FIRST in the DOM when
+  // showSelectedFirst — CSS column-reverse would move it visually but leave the
+  // Tab/arrow order wrong (focus would reach Select All / Clear All first).
+  const showSelectedPanelNode =
+    showSelectedPanel &&
+    selectionMode === "multi" &&
+    selectedValues.length > 0 &&
+    !showNoResults ? (
+      <div
+        className={styles.showSelectedPanel}
+        data-expanded={isShowSelectedExpanded ? "true" : undefined}
+        data-focus-section="showSelected"
+      >
+        <div className={styles.showSelectedHeader}>
+          <button
+            type="button"
+            className={styles.showSelectedToggle}
+            aria-expanded={isShowSelectedExpanded}
+            onClick={() => setShowSelectedExpanded(!isShowSelectedExpanded)}
+          >
+            <span>{isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel}</span>
+            <Icon
+              shapeName="arrow-drop-tri-caret"
+              className={styles.showSelectedCaret}
+              color="var(--color-icon-brand-base)"
+              style={{ width: 10, height: 10 }}
+            />
+          </button>
+        </div>
+        {isShowSelectedExpanded ? (
+          <ScrollArea.Root className={styles.showSelectedTagsRoot}>
+            <ScrollArea.Viewport className={styles.showSelectedTags}>
+              {selectedTagItems.map((tag) => (
+                <Tag
+                  key={tag.value}
+                  label={tag.label}
+                  type="editable"
+                  size="lg"
+                  closable
+                  maxWidth="100%"
+                  onDismiss={() => onRemoveSelectedTag?.(tag.value)}
+                />
+              ))}
+            </ScrollArea.Viewport>
+            <ScrollArea.Scrollbar className={styles.optionsScrollbar} orientation="vertical">
+              <ScrollArea.Thumb className={styles.optionsScrollThumb} />
+            </ScrollArea.Scrollbar>
+          </ScrollArea.Root>
+        ) : null}
+      </div>
+    ) : null;
+
   return (
     <Menu.Root
       modal={portalContainer != null ? false : undefined}
@@ -421,13 +539,29 @@ export function DropdownMenu({
           {trigger}
         </span>
       </Menu.Trigger>
-      <Menu.Portal>
-        <Menu.Positioner sideOffset={sideOffset} align="start" style={positionerStyle}>
-          <Menu.Popup className={styles.popup} style={popupStyle}>
+      <Menu.Portal container={portalContainer ?? undefined}>
+        <Menu.Positioner
+          side={side}
+          sideOffset={sideOffset}
+          align="start"
+          /* Field-attached combobox. `side: "flip"` lets the menu open **above**
+             the trigger when there isn't room below (near the viewport bottom) —
+             `.popup[data-side="top"]` then suppresses the shadow. `align` and
+             cross-axis stay off so the left edge stays glued to the trigger and
+             the popup does not drift sideways when Show Selected expands. */
+          collisionAvoidance={{ side: "flip", align: "none", fallbackAxisSide: "none" }}
+        >
+          <Menu.Popup
+            className={contentWidthMode ? `${styles.popup} ${styles.popupContentWidth}` : styles.popup}
+            style={popupStyle}
+          >
             {showSearch ? (
               <>
                 <div className={styles.searchRow}>
-                  <div className={styles.searchField}>
+                  <div
+                    className={styles.searchField}
+                    data-focus-visible={searchFocusVisible ? "true" : undefined}
+                  >
                     <span
                       className={styles.searchIcon}
                       aria-hidden="true"
@@ -437,18 +571,95 @@ export function DropdownMenu({
                       }}
                     />
                     <div className={styles.searchInputWrap}>
-                      <input
-                        className={styles.searchInput}
-                        type="text"
-                        value={searchValue}
-                        placeholder={searchPlaceholder}
-                        onChange={(event) => onSearchValueChange?.(event.target.value)}
-                        onKeyDown={(event) => {
-                          if (!["Escape", "ArrowUp", "ArrowDown"].includes(event.key)) {
+                      <div className={styles.searchInputBox}>
+                        <input
+                          ref={searchInputRef}
+                          className={styles.searchInput}
+                          type="text"
+                          value={currentSearch}
+                          placeholder={searchPlaceholder}
+                          onPointerDown={() => {
+                            searchPointerDownRef.current = true;
+                          }}
+                          onFocus={() => {
+                            // Keyboard focus (Tab) shows the ring; a pointer press
+                            // that just moved focus here does not.
+                            setSearchFocusVisible(!searchPointerDownRef.current);
+                            searchPointerDownRef.current = false;
+                          }}
+                          onBlur={() => {
+                            setSearchFocusVisible(false);
+                            searchPointerDownRef.current = false;
+                          }}
+                          onChange={(event) => {
+                            const value = event.target.value;
+                            const nativeEvent = event.nativeEvent as Partial<InputEvent>;
+                            // While an IME (e.g. Vietnamese Telex) is composing, the
+                            // text isn't committed yet — never autocomplete into a
+                            // half-composed value or the compositionend commit will
+                            // duplicate it. Just track the value; the ghost is
+                            // computed in onCompositionEnd once composition settles.
+                            if (nativeEvent.isComposing) {
+                              setSearch(value);
+                              setGhostSuffix("");
+                              return;
+                            }
+                            const inputType = nativeEvent.inputType;
+                            // Autocomplete on typing, never on deleting. Prefer the
+                            // InputEvent's inputType; fall back to a length compare
+                            // when it is unavailable (older browsers).
+                            const isDeletion =
+                              typeof inputType === "string"
+                                ? inputType.startsWith("delete")
+                                : value.length < currentSearch.length;
+                            handleSearchInput(value, !isDeletion);
+                          }}
+                          onCompositionEnd={(event) => {
+                            // Composition committed — now it's safe to suggest.
+                            const value = event.currentTarget.value;
+                            setSearch(value);
+                            setGhostSuffix(computeGhostSuffix(value));
+                          }}
+                          onKeyDown={(event) => {
                             event.stopPropagation();
-                          }
-                        }}
-                      />
+                            // Ignore keys while the IME is composing (keyCode 229 /
+                            // isComposing): Tab/→ then belong to the IME candidate UI,
+                            // and mutating the value mid-composition corrupts it.
+                            if (event.nativeEvent.isComposing || event.keyCode === 229) {
+                              return;
+                            }
+                            // Accept the greyed-out ghost suggestion. Recompute the
+                            // suffix from the live DOM value (not the ghostSuffix /
+                            // currentSearch closures) so a fast type-then-Tab can
+                            // never commit a stale value.
+                            if (
+                              event.key === "Tab" ||
+                              event.key === "ArrowRight" ||
+                              event.key === "End"
+                            ) {
+                              const input = event.currentTarget;
+                              const typed = input.value;
+                              const atEnd =
+                                input.selectionStart === typed.length &&
+                                input.selectionStart === input.selectionEnd;
+                              if (event.key === "Tab" || atEnd) {
+                                const suffix = computeGhostSuffix(typed);
+                                if (suffix) {
+                                  event.preventDefault();
+                                  setSearch(typed + suffix);
+                                  setGhostSuffix("");
+                                }
+                              }
+                            }
+                          }}
+                        />
+                        {ghostSuffix ? (
+                          <span className={styles.searchGhost} aria-hidden="true">
+                            <span className={styles.searchGhostTyped}>{currentSearch}</span>
+                            <span className={styles.searchGhostSuffix}>{ghostSuffix}</span>
+                          </span>
+                        ) : null}
+                      </div>
                       {showSearchClear ? (
                         <button
                           type="button"
@@ -460,7 +671,7 @@ export function DropdownMenu({
                           <Icon
                             shapeName="ctrl-close-16"
                             className={styles.searchClearIcon}
-                            color="var(--color-icon-accessible)"
+                            color="var(--color-icon-gray-neutral-accessible)"
                             style={{ width: 12, height: 12 }}
                           />
                         </button>
@@ -470,7 +681,8 @@ export function DropdownMenu({
                 </div>
               </>
             ) : null}
-            <div className={showSelectedFirst ? styles.menuControlsReversed : styles.menuControls}>
+            <div className={styles.menuControls}>
+            {showSelectedFirst ? showSelectedPanelNode : null}
             {showSelectAllRow ? (
               <div className={styles.selectAllClearAllRow}>
                 <button
@@ -519,57 +731,7 @@ export function DropdownMenu({
                 <span className={styles.footerActionButton}>{clearAllLabel}</span>
               </button>
             ) : null}
-            {showSelectedPanel &&
-            selectionMode === "multi" &&
-            selectedValues.length > 0 &&
-            !showNoResults ? (
-              <div
-                className={styles.showSelectedPanel}
-                data-expanded={isShowSelectedExpanded ? "true" : undefined}
-                data-focus-section="showSelected"
-              >
-                <div className={styles.showSelectedHeader}>
-                  <button
-                    type="button"
-                    className={styles.showSelectedToggle}
-                    aria-expanded={isShowSelectedExpanded}
-                    onClick={() => setShowSelectedExpanded(!isShowSelectedExpanded)}
-                  >
-                    <span>{isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel}</span>
-                    <Icon
-                      shapeName="arrow-drop-tri-caret"
-                      className={styles.showSelectedCaret}
-                      color="var(--color-icon-brand-base)"
-                      style={{
-                        width: 10,
-                        height: 10,
-                        transform: isShowSelectedExpanded ? "rotate(180deg)" : undefined,
-                      }}
-                    />
-                  </button>
-                </div>
-                {isShowSelectedExpanded ? (
-                  <ScrollArea.Root className={styles.showSelectedTagsRoot}>
-                    <ScrollArea.Viewport className={styles.showSelectedTags}>
-                      {selectedTagItems.map((tag) => (
-                        <Tag
-                          key={tag.value}
-                          label={tag.label}
-                          type="editable"
-                          size="lg"
-                          closable
-                          maxWidth="100%"
-                          onDismiss={() => onRemoveSelectedTag?.(tag.value)}
-                        />
-                      ))}
-                    </ScrollArea.Viewport>
-                    <ScrollArea.Scrollbar className={styles.optionsScrollbar} orientation="vertical">
-                      <ScrollArea.Thumb className={styles.optionsScrollThumb} />
-                    </ScrollArea.Scrollbar>
-                  </ScrollArea.Root>
-                ) : null}
-              </div>
-            ) : null}
+            {showSelectedFirst ? null : showSelectedPanelNode}
             </div>
             <ScrollArea.Root className={styles.optionsScrollRoot} data-focus-section="options">
               <ScrollArea.Viewport ref={optionsViewportRef} className={styles.optionsScrollViewport} style={scrollRegionStyle} tabIndex={-1}>
@@ -635,7 +797,7 @@ export function DropdownMenu({
                           </span>
                         </span>
                       ) : null}
-                      <span className={styles.itemLabel}>{item.label}</span>
+                      <OptionLabel label={item.label} />
                     </button>
                   );
                 }
@@ -648,7 +810,7 @@ export function DropdownMenu({
                     data-selectable="false"
                     data-selected={isSelected ? "true" : undefined}
                   >
-                    <span className={styles.itemLabel}>{item.label}</span>
+                    <OptionLabel label={item.label} />
                   </Menu.Item>
                 );
               })}

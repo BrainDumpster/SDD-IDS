@@ -18,8 +18,14 @@
  * No @base-ui-components dependency.
  */
 
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { IdsIcon } from "../icon";
+import {
+  IdsTooltip,
+  TooltipBody,
+  TooltipPanel,
+  TooltipTrigger,
+} from "../tooltip";
 import styles from "./IdsMainMenuLeft.module.css";
 
 export type MainMenuLeftPrimaryState =
@@ -122,7 +128,7 @@ export interface IdsMainMenuLeftProps {
   /** Optional branding block above `MainMenuList` (not in base Figma frame; product slot). */
   logo?: MainMenuLeftLogo;
   /**
-   * Rail width mode: expanded `278px` vs collapsed `64px`.
+   * Rail width mode: expanded `min 256px` / `max 356px` vs collapsed `64px`.
    * With `onExpandedChange`: **controlled** (parent must update this after toggle).
    * Without: **uncontrolled** initial value only (default `true`).
    */
@@ -253,6 +259,75 @@ function toPascal(value: MainMenuLeftPrimaryState): string {
     .join("");
 }
 
+interface ClampedLabelProps {
+  text: string;
+  tooltip: string;
+  wrapperClassName: string;
+  textClassName: string;
+}
+
+/**
+ * Two-line clamped label. Marks the wrapper `data-wrapped="true"` when the text
+ * wraps to two lines (so the primary icon/chevron top-align via CSS `:has()`),
+ * and wraps the text in `IdsTooltip` when it is truncated after clamping.
+ */
+function ClampedLabel({
+  text,
+  tooltip,
+  wrapperClassName,
+  textClassName,
+}: ClampedLabelProps) {
+  const [element, setElement] = useState<HTMLSpanElement | null>(null);
+  const [isTruncated, setIsTruncated] = useState(false);
+  const [isWrapped, setIsWrapped] = useState(false);
+
+  useLayoutEffect(() => {
+    if (!element) return;
+
+    const check = () => {
+      setIsTruncated(
+        element.scrollHeight > element.clientHeight + 1 ||
+          element.scrollWidth > element.clientWidth + 1,
+      );
+      setIsWrapped(element.clientHeight > 32);
+    };
+
+    check();
+
+    let observer: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== "undefined") {
+      observer = new ResizeObserver(check);
+      observer.observe(element);
+    }
+
+    return () => observer?.disconnect();
+  }, [text, element]);
+
+  const label = (
+    <span ref={setElement} className={textClassName}>
+      {text}
+    </span>
+  );
+
+  return (
+    <span
+      className={wrapperClassName}
+      data-wrapped={isWrapped ? "true" : undefined}
+    >
+      {isTruncated ? (
+        <IdsTooltip side="right" arrowAlign="start" hugContent>
+          <TooltipTrigger display="block">{label}</TooltipTrigger>
+          <TooltipPanel>
+            <TooltipBody>{tooltip}</TooltipBody>
+          </TooltipPanel>
+        </IdsTooltip>
+      ) : (
+        label
+      )}
+    </span>
+  );
+}
+
 export function IdsMainMenuLeft({
   logo,
   expanded = true,
@@ -282,6 +357,15 @@ export function IdsMainMenuLeft({
     onExpandedChange?.(next);
   };
 
+  // Collapsed-state behavior: while the rail is collapsed, hovering it expands
+  // the rail as an overlay over the page content (with drop shadow) and it
+  // collapses again on mouse leave. The rail is only *fixed* expanded via the
+  // footer toggle, so the footer icon keeps showing the collapsed state during
+  // a hover-expand ("expand icon remains until the nav is fixed expanded").
+  const [hoverExpanded, setHoverExpanded] = useState(false);
+  const overlayExpanded = hoverExpanded && !isExpanded;
+  const showExpanded = isExpanded || overlayExpanded;
+
   const [selectedKey, setSelectedKey] = useState<string | null>(() =>
     resolveInitialSelectedKey(items, defaultSelectedItemId),
   );
@@ -291,16 +375,66 @@ export function IdsMainMenuLeft({
   );
   const [selectedSecondaryKey, setSelectedSecondaryKey] = useState<string | null>(null);
 
+  const contentRef = useRef<HTMLDivElement>(null);
+  const getFocusableButtons = () => {
+    const container = contentRef.current;
+    if (!container) return [];
+    return Array.from(
+      container.querySelectorAll<HTMLButtonElement>(
+        'button:not([tabindex="-1"])',
+      ),
+    );
+  };
+
+  const moveFocus = (delta: number) => {
+    const buttons = getFocusableButtons();
+    const active = document.activeElement as HTMLButtonElement | null;
+    if (!active) return;
+    const index = buttons.indexOf(active);
+    if (index === -1) return;
+    const nextIndex = index + delta;
+    if (nextIndex >= 0 && nextIndex < buttons.length) {
+      buttons[nextIndex].focus();
+    }
+  };
+
+  const focusFirst = () => {
+    const buttons = getFocusableButtons();
+    buttons[0]?.focus();
+  };
+
+  const focusLast = () => {
+    const buttons = getFocusableButtons();
+    buttons[buttons.length - 1]?.focus();
+  };
+
+  const focusParent = (parentItemId: string) => {
+    contentRef.current
+      ?.querySelector<HTMLButtonElement>(`[data-item-id="${parentItemId}"]`)
+      ?.focus();
+  };
+
   return (
-    <nav
+    <div
       className={cx(
-        styles.root,
-        isExpanded ? styles.expanded : styles.collapsed,
-        className,
+        styles.reserve,
+        isExpanded ? styles.reserveExpanded : styles.reserveCollapsed,
       )}
-      aria-label={ariaLabel}
+      onMouseEnter={() => {
+        if (!isExpanded) setHoverExpanded(true);
+      }}
+      onMouseLeave={() => setHoverExpanded(false)}
     >
-      {logo ? (
+      <nav
+        className={cx(
+          styles.root,
+          showExpanded ? styles.expanded : styles.collapsed,
+          overlayExpanded && styles.overlay,
+          className,
+        )}
+        aria-label={ariaLabel}
+      >
+        {logo ? (
         <div className={styles.logoSlot}>
           {logo.link ? (
             <button
@@ -329,7 +463,7 @@ export function IdsMainMenuLeft({
         </div>
       ) : null}
 
-      <div className={styles.content}>
+      <div className={styles.content} ref={contentRef}>
         {items.map((item, itemIndex) => {
           const itemId = resolvePrimaryId(item, itemIndex);
           const hasForcedState = forceStates && Boolean(item.state);
@@ -343,16 +477,21 @@ export function IdsMainMenuLeft({
           const childList = item.children ?? [];
           const hasChildren = childList.length > 0;
           const showChildrenList =
-            isExpanded &&
+            showExpanded &&
             hasChildren &&
             (hasForcedState ? item.childrenMenu === "expanded" : expandedChildrenKey === itemId);
-          const showChevron = isExpanded && hasChildren;
+          const showChevron = showExpanded && hasChildren;
           const primaryIconName = item.iconName ?? "home";
           const hasSelectedSecondary = selectedSecondaryParentKey === itemId;
+          // A parent only shows the selected highlight when its selected child is
+          // hidden (sub-menu collapsed) — it takes over the indicator from the
+          // now-hidden child. While the sub-menu is open the child carries the
+          // highlight, so the parent stays unselected.
+          const parentSelectedWhileHidden = hasSelectedSecondary && !showChildrenList;
           const showSelectedInset = hasForcedState
             ? state === "selected" || state === "selected-focus"
             : hasChildren
-              ? hasSelectedSecondary
+              ? parentSelectedWhileHidden
               : selectedKey === itemId;
           // Parent takes aria-current when its selected secondary child is hidden (sub-menu collapsed).
           const primaryIsCurrentPage =
@@ -361,41 +500,119 @@ export function IdsMainMenuLeft({
           const primaryLabel = primaryDisplayName(item);
           const primaryTitle = item.tooltip ?? primaryLabel;
 
+          // Parent rows (with children, expanded rail): accordion only — no navigate/select.
+          const togglePrimary = () => {
+            if (hasForcedState) return;
+
+            if (hasChildren && showExpanded) {
+              setExpandedChildrenKey((prev: string | null) =>
+                prev === itemId ? null : itemId,
+              );
+              return;
+            }
+
+            selectPrimary();
+          };
+
+          const selectPrimary = () => {
+            setSelectedKey(itemId);
+            onNavigate?.(
+              buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
+                href: item.href,
+                routeRef: item.routeRef,
+              }),
+            );
+            onSelected?.(
+              buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
+                href: item.href,
+                routeRef: item.routeRef,
+              }),
+            );
+            setSelectedSecondaryParentKey(null);
+            setSelectedSecondaryKey(null);
+          };
+
+          // Enter/Space activation: a parent primary with a closed sub-menu opens it;
+          // a leaf primary selects and emits.
+          const openPrimary = () => {
+            if (hasForcedState) return;
+
+            if (hasChildren && showExpanded) {
+              if (!showChildrenList) {
+                setExpandedChildrenKey(itemId);
+              }
+              return;
+            }
+
+            selectPrimary();
+          };
+
+          const handlePrimaryKeyDown = (
+            event: React.KeyboardEvent<HTMLButtonElement>,
+          ) => {
+            if (hasForcedState) return;
+
+            switch (event.key) {
+              case "ArrowUp":
+                event.preventDefault();
+                moveFocus(-1);
+                break;
+              case "ArrowDown":
+                event.preventDefault();
+                moveFocus(1);
+                break;
+              case "Home":
+                event.preventDefault();
+                focusFirst();
+                break;
+              case "End":
+                event.preventDefault();
+                focusLast();
+                break;
+              case "ArrowRight":
+                if (hasChildren && showExpanded) {
+                  event.preventDefault();
+                  if (!showChildrenList) {
+                    setExpandedChildrenKey(itemId);
+                    setTimeout(() => moveFocus(1), 0);
+                  } else {
+                    moveFocus(1);
+                  }
+                }
+                break;
+              case "ArrowLeft":
+                if (showChildrenList) {
+                  event.preventDefault();
+                  setExpandedChildrenKey(null);
+                }
+                break;
+              case "Escape":
+                if (showChildrenList) {
+                  event.preventDefault();
+                  setExpandedChildrenKey(null);
+                }
+                break;
+              case "Enter":
+              case " ":
+                event.preventDefault();
+                openPrimary();
+                break;
+            }
+          };
+
           return (
             <div key={itemId} className={styles.itemBlock}>
               <button
                 type="button"
-                title={primaryTitle}
-                onClick={() => {
-                  if (hasForcedState) return;
-
-                  // Parent rows (with children, expanded rail): accordion only — no navigate/select.
-                  if (hasChildren && isExpanded) {
-                    setExpandedChildrenKey((prev) => (prev === itemId ? null : itemId));
-                    return;
-                  }
-
-                  setSelectedKey(itemId);
-                  onNavigate?.(
-                    buildNavigateTarget(itemId, primaryLabel, undefined, item.link, {
-                      href: item.href,
-                      routeRef: item.routeRef,
-                    }),
-                  );
-                  onSelected?.(
-                    buildSelectionDetail("primary", itemId, undefined, primaryLabel, item.link, {
-                      href: item.href,
-                      routeRef: item.routeRef,
-                    }),
-                  );
-                  setSelectedSecondaryParentKey(null);
-                  setSelectedSecondaryKey(null);
-                }}
+                data-item-id={itemId}
+                title={!showExpanded ? primaryTitle : undefined}
+                onClick={togglePrimary}
+                onKeyDown={handlePrimaryKeyDown}
                 className={cx(
                   styles.primaryRow,
                   !hasForcedState && styles.interactive,
                   styles[`state${toPascal(state)}` as keyof typeof styles],
-                  hasSelectedSecondary && styles.secondaryParentSelected,
+                  parentSelectedWhileHidden && styles.secondaryParentSelected,
                   showSelectedInset && styles.selected,
                 )}
                 aria-current={primaryIsCurrentPage ? "page" : undefined}
@@ -403,13 +620,18 @@ export function IdsMainMenuLeft({
                 tabIndex={hasForcedState ? -1 : undefined}
               >
                 <IdsIcon shape={primaryIconName} size={16} className={styles.primaryIcon} />
-                {isExpanded ? (
-                  <span className={styles.primaryLabel}>{primaryLabel}</span>
+                {showExpanded ? (
+                  <ClampedLabel
+                    text={primaryLabel}
+                    tooltip={item.tooltip ?? primaryLabel}
+                    wrapperClassName={styles.primaryLabel}
+                    textClassName={styles.primaryLabelText}
+                  />
                 ) : null}
                 {showChevron ? (
                   <IdsIcon
                     shape={showChildrenList ? "chev-down-thick" : "chev-right-thick"}
-                    size={14}
+                    size={16}
                     className={styles.chevronIcon}
                   />
                 ) : null}
@@ -427,43 +649,89 @@ export function IdsMainMenuLeft({
                     const isSecondarySelected =
                       selectedSecondaryParentKey === itemId && selectedSecondaryKey === childId;
 
+                    const activateSecondary = () => {
+                      setSelectedKey(null);
+                      setSelectedSecondaryParentKey(itemId);
+                      setSelectedSecondaryKey(childId);
+                      onNavigate?.(
+                        buildNavigateTarget(childId, childLabel, itemId, child.link, {
+                          href: child.href,
+                          routeRef: child.routeRef,
+                        }),
+                      );
+                      onSelected?.(
+                        buildSelectionDetail(
+                          "secondary",
+                          childId,
+                          itemId,
+                          childLabel,
+                          child.link,
+                          {
+                            href: child.href,
+                            routeRef: child.routeRef,
+                          },
+                        ),
+                      );
+                    };
+
+                    const handleSecondaryKeyDown = (
+                      event: React.KeyboardEvent<HTMLButtonElement>,
+                    ) => {
+                      switch (event.key) {
+                        case "ArrowUp":
+                          event.preventDefault();
+                          moveFocus(-1);
+                          break;
+                        case "ArrowDown":
+                          event.preventDefault();
+                          moveFocus(1);
+                          break;
+                        case "Home":
+                          event.preventDefault();
+                          focusFirst();
+                          break;
+                        case "End":
+                          event.preventDefault();
+                          focusLast();
+                          break;
+                        case "ArrowLeft":
+                          event.preventDefault();
+                          focusParent(itemId);
+                          break;
+                        case "Escape":
+                          event.preventDefault();
+                          setExpandedChildrenKey(null);
+                          setTimeout(() => focusParent(itemId), 0);
+                          break;
+                        case "Enter":
+                        case " ":
+                          event.preventDefault();
+                          activateSecondary();
+                          break;
+                      }
+                    };
+
                     return (
                       <button
                         key={childId}
                         type="button"
-                        title={child.tooltip ?? childLabel}
+                        data-item-id={childId}
+                        data-parent-id={itemId}
                         className={cx(
                           styles.secondaryRow,
                           styles.secondaryInteractive,
                           isSecondarySelected && styles.secondaryRowSelected,
                         )}
                         aria-current={isSecondarySelected ? "page" : undefined}
-                        onClick={() => {
-                          setSelectedKey(null);
-                          setSelectedSecondaryParentKey(itemId);
-                          setSelectedSecondaryKey(childId);
-                          onNavigate?.(
-                            buildNavigateTarget(childId, childLabel, itemId, child.link, {
-                              href: child.href,
-                              routeRef: child.routeRef,
-                            }),
-                          );
-                          onSelected?.(
-                            buildSelectionDetail(
-                              "secondary",
-                              childId,
-                              itemId,
-                              childLabel,
-                              child.link,
-                              {
-                                href: child.href,
-                                routeRef: child.routeRef,
-                              },
-                            ),
-                          );
-                        }}
+                        onClick={activateSecondary}
+                        onKeyDown={handleSecondaryKeyDown}
                       >
-                        {childLabel}
+                        <ClampedLabel
+                          text={childLabel}
+                          tooltip={child.tooltip ?? childLabel}
+                          wrapperClassName={styles.secondaryLabel}
+                          textClassName={styles.secondaryLabelText}
+                        />
                       </button>
                     );
                   })}
@@ -491,7 +759,8 @@ export function IdsMainMenuLeft({
           />
         </button>
       </div>
-    </nav>
+      </nav>
+    </div>
   );
 }
 

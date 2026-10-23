@@ -10,6 +10,7 @@
     "noEmit": true,
     "isolatedModules": true,
     "lib": ["ES2022", "dom"],
+    "ignoreDeprecations": "5.0",
     "baseUrl": ".",
     "paths": {
       "@storybook/angular": ["node_modules/@storybook/angular"],
@@ -37,6 +38,7 @@
     "../component-contracts/ids/dual-list-box.contract.ts",
     "../component-contracts/ids/toggle-switch.contract.ts",
     "../component-contracts/ids/wizard.contract.ts",
+    "../component-contracts/ids/spinner.contract.ts",
     "../lib/angular/ids/**/*.ts"
   ]
 }

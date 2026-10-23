@@ -37,7 +37,22 @@ const TYPES: IdsToastType[] = [
   "success",
 ];
 
-const meta: Meta<IdsToastItemProps> = {
+type ToastStoryArgs = IdsToastItemProps & {
+  /** Story-only control: toggles the View Details action (`link` prop). */
+  showViewDetails?: boolean;
+};
+
+const DEFAULT_LINK = { label: "View Details", onClick: () => undefined };
+
+function toastArgs(args: ToastStoryArgs): IdsToastItemProps {
+  const { showViewDetails, ...rest } = args;
+  return {
+    ...rest,
+    link: showViewDetails ? (rest.link ?? DEFAULT_LINK) : undefined,
+  };
+}
+
+const meta: Meta<ToastStoryArgs> = {
   tags: ["autodocs"],
   title: "Components/IDS/Toast",
   component: IdsToastItem,
@@ -60,6 +75,7 @@ const meta: Meta<IdsToastItemProps> = {
     message: MESSAGE,
     duration: 0,
     closable: true,
+    showViewDetails: false,
   },
   argTypes: {
     type: {
@@ -69,13 +85,17 @@ const meta: Meta<IdsToastItemProps> = {
     message: { control: "text" },
     duration: { control: "number" },
     closable: { control: "boolean" },
+    showViewDetails: {
+      control: "boolean",
+      name: "Show View Details",
+    },
     onClose: { action: "onClose" },
     onTimeout: { action: "onTimeout" },
   },
 };
 
 export default meta;
-type Story = StoryObj<IdsToastItemProps>;
+type Story = StoryObj<ToastStoryArgs>;
 
 /** Spec Accurate Design — Figma info toast without View Details (`42903:139523`). */
 export const SpecAccurateDesign: Story = {
@@ -87,8 +107,8 @@ export const SpecAccurateDesign: Story = {
     closable: true,
   },
   render: (args) => (
-    <div style={{ maxWidth: 516 }}>
-      <IdsToastItem {...args} />
+    <div style={{ width: 1200, maxWidth: "100%" }}>
+      <IdsToastItem {...toastArgs(args)} />
     </div>
   ),
 };
@@ -97,7 +117,7 @@ export const SpecAccurateDesign: Story = {
 export const AllTypes: Story = {
   name: "All Types",
   render: () => (
-    <div style={{ display: "grid", gap: 12, maxWidth: 516 }}>
+    <div style={{ display: "grid", gap: 12, width: 1200, maxWidth: "100%", justifyItems: "start" }}>
       {TYPES.map((type) => (
         <IdsToastItem
           key={type}
@@ -115,7 +135,7 @@ export const AllTypes: Story = {
 export const WithViewDetails: Story = {
   name: "With View Details",
   render: () => (
-    <div style={{ display: "grid", gap: 12, maxWidth: 617 }}>
+    <div style={{ display: "grid", gap: 12, width: 1200, maxWidth: "100%", justifyItems: "start" }}>
       {TYPES.map((type) => (
         <IdsToastItem
           key={type}
@@ -137,6 +157,7 @@ export const ViewDetailsHref: Story = {
     message: MESSAGE,
     duration: 0,
     closable: true,
+    showViewDetails: true,
     link: {
       label: "View Details",
       href: "https://example.com",
@@ -144,8 +165,8 @@ export const ViewDetailsHref: Story = {
     },
   },
   render: (args) => (
-    <div style={{ maxWidth: 617 }}>
-      <IdsToastItem {...args} />
+    <div style={{ width: 1200, maxWidth: "100%" }}>
+      <IdsToastItem {...toastArgs(args)} />
     </div>
   ),
 };
@@ -159,8 +180,8 @@ export const NotClosable: Story = {
     closable: false,
   },
   render: (args) => (
-    <div style={{ maxWidth: 516 }}>
-      <IdsToastItem {...args} />
+    <div style={{ width: 1200, maxWidth: "100%" }}>
+      <IdsToastItem {...toastArgs(args)} />
     </div>
   ),
 };
@@ -174,8 +195,60 @@ export const AutoDismiss: Story = {
     closable: true,
   },
   render: (args) => (
-    <div style={{ maxWidth: 516 }}>
-      <IdsToastItem {...args} />
+    <div style={{ width: 1200, maxWidth: "100%" }}>
+      <IdsToastItem {...toastArgs(args)} />
+    </div>
+  ),
+};
+
+/** Long message hugs content up to 900px and clamps at 5 lines — shrink the frame to verify responsiveness. */
+export const LongMessage: Story = {
+  name: "Long Message",
+  args: {
+    type: "info",
+    message:
+      "The scheduled backup job could not complete because the connection to the remote storage repository timed out after multiple retry attempts. Verify that the repository credentials are still valid, confirm the network route to the storage endpoint is reachable, and check whether a firewall rule is blocking outbound traffic on the configured port. Once connectivity is restored, retry the job from the backup scheduler or wait for the next scheduled run to execute automatically.",
+    duration: 0,
+    closable: true,
+  },
+  render: (args) => (
+    <div
+      style={{
+        width: 1200,
+        maxWidth: "100%",
+        resize: "horizontal",
+        overflow: "auto",
+        padding: 8,
+        border: "1px dashed #666",
+      }}
+    >
+      <IdsToastItem {...toastArgs(args)} />
+    </div>
+  ),
+};
+
+/** Short message — demonstrates the toast hugging narrow content instead of stretching. */
+export const HugContent: Story = {
+  name: "Hug Content",
+  args: {
+    type: "success",
+    message: "Saved.",
+    duration: 0,
+    closable: true,
+    showViewDetails: true,
+  },
+  render: (args) => (
+    <div
+      style={{
+        width: 1200,
+        maxWidth: "100%",
+        resize: "horizontal",
+        overflow: "auto",
+        padding: 8,
+        border: "1px dashed #666",
+      }}
+    >
+      <IdsToastItem {...toastArgs(args)} />
     </div>
   ),
 };

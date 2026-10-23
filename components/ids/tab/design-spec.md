@@ -40,10 +40,11 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 - Tab / overflow / add controls use `box-sizing: border-box` so the `38px` height includes the baseline border.
 - Label width is content-driven; short labels (1-3 words) are preferred.
 - Secondary tabs are left-aligned and may extend beyond viewport; overflow behavior manages hidden tabs.
-- Focus ring heights:
-  - Primary tabs: `var(--sizing-size-36, 36px)` focus ring height (centered within `var(--sizing-size-38, 38px)` tab with `var(--spacing-space-1, 1px)` top/bottom margin)
-  - Secondary tabs: `var(--sizing-size-34, 34px)` focus ring height (centered within `var(--sizing-size-38, 38px)` tab with `var(--spacing-space-2, 2px)` top/bottom margin)
-  - Focus ring uses `outline` (not box-shadow) with `var(--border-width-border-2, 2px)` thickness using `var(--color-border-brand-base)`
+- Focus ring geometry (.Tab-Element `State=Focus`):
+  - The focused tab keeps its full `38px` height so its bottom `border-bottom` lines up with the row baseline; the double ring is offset **outside** the element (`0 0 0 …` spread, not inset).
+  - The tab list wrap uses `var(--spacing-space-4, 4px)` vertical padding with matching `-4px` margins so the outward ring is not clipped while layout height stays `38px`.
+  - Focus ring is a `box-shadow` double ring — `0 0 0 var(--scale-2) var(--color-background-surface-component)` inner separator + `0 0 0 var(--scale-4) var(--color-border-brand-base)` outer ring (IDS Button / accordion convention), `border-radius: var(--corner-radius-radius-2)`.
+  - Focused background: `var(--color-background-brand-lighter-slate)`; text keeps the unselected/selected color.
 ## Tokens
 - **Typography**
   - `Body 2` (`14/20`) for tab labels.
@@ -70,12 +71,12 @@ Document component parts in deterministic order. Add one bullet per slot (root, 
 | Primary | Unselected Default | host-dependent | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
 | Primary | Unselected Hover | `var(--color-background-brand-lighter-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` |
 | Primary | Unselected Press | `var(--color-background-brand-light-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-brand-strong)` |
-| Primary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
+| Primary | Focus-visible (selected/unselected) | `var(--color-background-brand-lighter-slate)` | double ring `0 0 0 var(--scale-2) var(--color-background-surface-component)` + `0 0 0 var(--scale-4) var(--color-border-brand-base)`, `radius-2`; selected keeps top `2px var(--color-border-brand-strong)` indicator | inherits selected/unselected text color |
 | Secondary | Selected | host-dependent (`transparent` or `var(--color-background-surface-secondary)`) | bottom indicator `2px var(--color-border-brand-strong)`; **no accessible bottom baseline** (`border-bottom: none`) | `var(--color-text-brand-strong)` |
 | Secondary | Unselected Default | host-dependent | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
 | Secondary | Unselected Hover | `var(--color-background-brand-lighter-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` |
 | Secondary | Unselected Press | `var(--color-background-brand-light-slate)` | baseline/divider `var(--color-border-gray-neutral-base)` | `var(--color-text-brand-strong)` |
-| Secondary | Focus-visible (selected/unselected) | inherits current visual background | `2px var(--color-border-brand-base)` focus ring + state indicator/borders | inherits selected/unselected text color |
+| Secondary | Focus-visible (selected/unselected) | `var(--color-background-brand-lighter-slate)` | double ring `0 0 0 var(--scale-2) var(--color-background-surface-component)` + `0 0 0 var(--scale-4) var(--color-border-brand-base)`, `radius-2`; selected keeps bottom `2px var(--color-border-brand-strong)` indicator | inherits selected/unselected text color |
 ## States (Dark Theme)
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
 - `components/ids-theme.css`
@@ -160,7 +161,7 @@ Runtime rules:
 - `TabItem` selected: `border-bottom: none` (elevated **and** transparent). Do not rely on opaque fill to hide a baseline drawn elsewhere.
 - `TabLabel`: Body 2 tokenized typography.
 - `SelectedIndicator`: `2px`, placement depends on variant (`primary=top`, `secondary=bottom` in validated IDS examples).
-- `FocusRing`: `2px` brand border, tokenized.
+- `FocusRing`: `box-shadow` double ring — `var(--scale-2)` `var(--color-background-surface-component)` inner band + `var(--scale-4)` `var(--color-border-brand-base)` outer ring, `radius-2`, tinted `var(--color-background-brand-lighter-slate)` background. Ring is drawn **outside** the full-`38px` element (list-wrap padding keeps it unclipped); the focused tab's bottom border stays aligned with the row baseline.
 - `TabClose` (IDS tabs only): rendered as an `IdsButton` tertiary icon-only control (`variant="tertiary"`, `size="sm"`, `iconOnly`, `iconSlug="ctrl-close-16"`). The control is `24px` × `24px` (`var(--sizing-size-24)`) with `var(--padding-padding-4)` padding on all sides; the icon is tinted `var(--color-icon-gray-neutral-base)`. Synapse tabs continue to use the previous `shape-x` 12px icon in a padded span.
 - `OverflowTrigger`: same sizing and tab affordance as peer tab items; selected overflow trigger also uses `border-bottom: none`.
 - `AddTabTrigger`: visual parity with tab row controls; keeps accessible baseline.

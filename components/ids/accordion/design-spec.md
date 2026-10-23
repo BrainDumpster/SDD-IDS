@@ -18,7 +18,7 @@ Main component:
 Child components (deterministic order):
 1. `AccordionItem`
 2. `AccordionHeader` — **same surface as the trigger:** the full header row is the interactive unit (title + chevron region, expand/collapse, focus ring, `aria-expanded`). Implementations may use an inner native `button` or a library sub-component (e.g. Base UI `Accordion.Trigger`) **inside** this header for semantics; that inner node is **not** a separate public IDS slot or second generated component—codegen exposes one header/trigger API. Header content is **top-aligned**.
-3. `AccordionChevron` (left or right slot) — wrapped in a frame with **hug content** sizing and **padding-2** top/bottom
+3. `AccordionChevron` (left or right slot) — wrapped in a frame with **hug content** sizing and a **padding-2** top offset (`var(--padding-padding-2)`)
 4. `AccordionBody` (framework alias: `AccordionPanel`)
 5. `AccordionContent` — content is **top-aligned**
 
@@ -26,9 +26,11 @@ Optional child sub-slots:
 - `AccordionMetaSlot` (optional helper text/metadata)
 ## Layout & Measurements
 - Root width is container-driven (`width: 100%`).
+- Root `max-width` is `1594px` by default and may be overridden via the `maxWidth` prop (number values are interpreted as pixels; string values are used as any CSS length).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
 - Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
 - Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px**.
+- Truncated header titles expose the full text via a **native browser tooltip** (`title` attribute on the title element). The tooltip is set **only while the rendered text is actually truncated** (measured overflow), so untruncated titles show no redundant tooltip; tooltip text is the rendered text content.
 - **Expanded body / header join:** The open **panel body** (first wrapper under `AccordionBody`; Storybook `.panel > .content`) must **not** use a `border-top` under the header—separation is **background contrast only** (header `brand-lighter` vs body `component` surface), per IDS expanded treatment.
 - Open **item** left highlighter: **4px** brand strip `var(--color-border-brand-base)` aligned on the **open trigger** and **open panel** regions (implementation: left-edge `linear-gradient` on those surfaces). Do **not** rely on `inset` `box-shadow` on the item container alone—opaque trigger/panel fills paint above it and hide the bar.
 - Selected/open state does **not** add a second item outline beyond shared row borders.
@@ -36,7 +38,7 @@ Optional child sub-slots:
 - Chevron can be placed on:
   - `left` (leading; default)
   - `right` (trailing)
-- Chevron icon is wrapped in a frame with **hug content** sizing (`display: inline-flex`) and **padding-2** top/bottom (`var(--padding-padding-2)`)
+- Chevron icon is wrapped in a frame with **hug content** sizing (`display: inline-flex`) and a **padding-2** top offset (`var(--padding-padding-2)`); implement as `margin-top` when the glyph is painted via a centered CSS mask — `padding-top` only grows the box and leaves the glyph centered
 - Expanded item: left highlighter reads as **one** continuous **4px** strip through header and body (same token); render on surfaces that carry the row fill (trigger + panel slots), aligned so the bar does not stack into a seam.
 - Expanded panel keeps contiguous border continuity with header (no visual break).
 - Focus indicator must be visible on trigger row and not clipped by item container.
@@ -53,13 +55,12 @@ Optional child sub-slots:
   - `var(--border-width-border-2)`
   - `var(--color-border-gray-neutral-base)`
   - `var(--color-border-brand-base)`
-  - `var(--color-border-brand-strong)` (inner content card outline)
   - `var(--color-border-gray-neutral-strong)`
 - Text/Icon:
   - `var(--color-text-gray-neutral-strong)`
   - `var(--color-text-gray-neutral)`
   - `var(--color-text-link-brand-base)`
-  - `var(--color-icon-gray-neutral-base)`
+  - `var(--color-icon-gray-neutral-accessible)`
   - `var(--color-icon-gray-neutral-strong)`
 - Icon asset:
   - canonical chevron **shapeName**: `chev-down-thick` → `assets/icons/chev-down-thick.svg` (see **Icon primitive & asset delivery (codegen)** for Icon-vs-fallback rules and Storybook reference).
@@ -78,24 +79,26 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
 | Artboard / frame backdrop | `#F4F4F4` | `var(--color-background-surface-primary)` (or nearest doc backdrop token used in app shell) |
 | Accordion row / collapsed surface | `#FFFFFF` | `var(--color-background-surface-component)` |
 | Expanded **Panel** row (header tint) | `#EBF4FB` | `var(--color-background-brand-lighter-slate)` |
-| **Swap content** inner card fill | `#EBF4FB` (same tint as expanded panel in file) | `var(--color-background-brand-lighter-slate)` |
+| **Swap content** inner card fill | `#EBF4FB` in file — **not applied** (spec: card has no fill) | none / transparent |
 | Left **4px** selection rail (`Rectangle 1`) | `#0076CE` | `var(--color-border-brand-base)` |
 | Primary label / body text | `#252525` | `var(--color-text-gray-neutral-strong)` |
 | Inline link (“Learn how…”) | `#0062AB` | `var(--color-text-link-brand-base)` |
-| Chevron (IDS library) | ~`#4D4D4D` / `#252525` in samples | `var(--color-icon-gray-neutral-base)` default & expanded; `var(--color-icon-gray-neutral-strong)` on hover |
+| Chevron (IDS library) | ~`#4D4D4D` / `#252525` in samples | `var(--color-icon-gray-neutral-accessible)` default & expanded; `var(--color-icon-gray-neutral-strong)` on hover |
 
 **Note:** Dark theme values come from the same semantic names in `components/ids-theme.css` dark block (e.g. brand base / link shift to lighter blues for contrast)—re-validate against dark variants in Figma when available.
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| trigger | default (collapsed) | `var(--color-background-surface-component)` | item divider `var(--color-border-gray-neutral-base)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-base)` |
+| trigger | default (collapsed) | `var(--color-background-surface-component)` | item divider `var(--color-border-gray-neutral-base)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-accessible)` |
 | trigger | hover (collapsed) | `var(--color-background-brand-lighter-slate)` | unchanged divider | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
 | trigger | hover (expanded) | `var(--color-background-brand-light-slate)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
-| trigger | expanded (open) | `var(--color-background-brand-lighter-slate)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-base)` (rotated) |
-| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-1)` `var(--color-border-brand-base)`; `border-radius: var(--corner-radius-radius-4)`; `outline-offset: 0` (height equals item border) | same as default |
+| trigger | expanded (open) | `var(--color-background-brand-lighter-slate)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-accessible)` (rotated) |
+| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)`; `border-radius: var(--corner-radius-radius-4)`; offset **4px** beyond trigger left/right and **1px** top/bottom (per-side offsets — draw with a pseudo-element ring, not `outline`) | same as default |
 | trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
 | panel/content | expanded | `var(--color-background-surface-component)` | item perimeter `var(--color-border-gray-neutral-base)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-gray-neutral)`, link `var(--color-text-link-brand-base)` |
 | content-card | expanded (optional) | none / transparent | none | heading/body per content; link `var(--color-text-link-brand-base)` |
+
+*Cascade note:* expanded-state chevron selectors that chain `[data-open]` (e.g. `.item[data-open="true"] .trigger .chevron`) can tie the hover rule at equal specificity — place the hover chevron rule **after** the expanded rules (or raise its specificity) so expanded+hover still resolves to `var(--color-icon-gray-neutral-strong)`.
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -116,6 +119,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Arrow key roving focus is supported between triggers.
 - Home/End move focus to first/last trigger.
 - Panel content participates in layout only when expanded.
+- Hovering a truncated header title shows the full title text in a native browser tooltip (no tooltip when the title fits).
 ## Composition & API (runtime)
 Canonical machine-readable mirror (Storybook + codegen QA; MDX is not executed by Storybook): `storybook/src/spec-contracts/ids-accordion.contract.tsx`.
 
@@ -124,6 +128,7 @@ Main inputs:
 - `multiple?: boolean` (default `false`)
 - `defaultValue?: string[]`
 - `chevronPosition?: "left" | "right"` (default `"left"`)
+- `maxWidth?: number | string` (default `1594px`; numbers are treated as px, strings as any CSS length)
 
 Per-item inputs:
 - `value: string` (required stable ID)
@@ -167,7 +172,7 @@ Behavior contract:
 Accessibility contract:
 - The header/trigger surface carries `aria-expanded` and `aria-controls` on the actual focusable control (if the header wraps an inner `button`, those attributes live on that element).
 - Panel carries `role="region"` and `aria-labelledby`.
-- Keyboard support: `Enter`, `Space`, `ArrowUp`, `ArrowDown`, `Home`, `End`.
+- Keyboard support: `Enter`, `Space`, `Home`, `End`. (Arrow keys no longer move focus between accordion triggers.)
 
 Fallback/error rules:
 - Unknown `chevronPosition` -> fallback to `"left"`.
@@ -189,7 +194,7 @@ Use this section whenever codegen targets a stack that already ships an **Icon**
 **When the target library exposes an Icon / glyph component**
 - **Prefer it** for `AccordionChevron` instead of hand-rolling `<img src>` or hard-coded file paths in the accordion module.
 - Pass a **stable asset slug** (here: `chev-down-thick`) via whatever prop the library uses (`shapeName`, `name`, `icon`, `glyph`, …). That slug must match the **asset contract** entry for this component (see below).
-- For **monochrome** chevrons, use the library’s **tintable** mode when offered (e.g. mask + semantic `color`, or SVG `currentColor`). Map states to tokens from this spec’s state tables (`var(--color-icon-gray-neutral-base)`, `var(--color-icon-gray-neutral-strong)` on hover, etc.).
+- For **monochrome** chevrons, use the library’s **tintable** mode when offered (e.g. mask + semantic `color`, or SVG `currentColor`). Map states to tokens from this spec’s state tables (`var(--color-icon-gray-neutral-accessible)`, `var(--color-icon-gray-neutral-strong)` on hover, etc.).
 - For **multi-color** SVGs only, use the library’s **non-tinted / raster** mode if required; accordion chevron is **not** in that category.
 
 **When no Icon primitive exists**

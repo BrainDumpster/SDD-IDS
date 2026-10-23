@@ -46,6 +46,7 @@
     "../component-contracts/ids/date-picker.contract.ts",
     "../component-contracts/ids/time-picker.contract.ts",
     "../component-contracts/ids/spinner.contract.ts",
+    "../component-contracts/ids/form-label.contract.ts",
     "../component-contracts/ids/slider.contract.ts",
     "../component-contracts/ids/progress-bar.contract.ts",
     "../component-contracts/ids/link.contract.ts",

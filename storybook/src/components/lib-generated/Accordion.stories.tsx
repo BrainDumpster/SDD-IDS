@@ -29,6 +29,7 @@ import {
   type IdsAccordionItemInput,
   type IdsAccordionProps,
 } from "@ids/react/accordion";
+import { IdsLink } from "@ids/react/link";
 
 const demoItems: IdsAccordionItemInput[] = [
   {
@@ -37,7 +38,7 @@ const demoItems: IdsAccordionItemInput[] = [
     content: (
       <>
         <p>Configure network policies and service endpoints for this workspace.</p>
-        <a href="#">Learn how network policies work</a>
+        <IdsLink label="Learn how network policies work" type="inline" href="#" />
       </>
     ),
   },
@@ -50,40 +51,6 @@ const demoItems: IdsAccordionItemInput[] = [
     value: "integrations",
     title: "Integrations",
     content: "Connect external systems and event pipelines.",
-    disabled: true,
-  },
-];
-
-const formItems: IdsAccordionItemInput[] = [
-  {
-    value: "contact",
-    title: "Primary contact",
-    content: (
-      <>
-        <p>Provide owner details for service notifications.</p>
-        <label>
-          Name
-          <input defaultValue="Muthu" style={{ display: "block", width: "100%", marginTop: 4 }} />
-        </label>
-      </>
-    ),
-  },
-  {
-    value: "alerts",
-    title: "Alert preferences",
-    content: (
-      <>
-        <p>Select channels for critical and warning notifications.</p>
-        <label>
-          Channel
-          <select defaultValue="email" style={{ display: "block", width: "100%", marginTop: 4 }}>
-            <option value="email">Email</option>
-            <option value="slack">Slack</option>
-            <option value="pagerduty">PagerDuty</option>
-          </select>
-        </label>
-      </>
-    ),
   },
 ];
 
@@ -111,6 +78,7 @@ const meta: Meta<IdsAccordionProps> = {
     chevronPosition: "left",
     variant: "default",
     defaultValue: ["network"],
+    maxWidth: "1594px",
   },
   argTypes: {
     multiple: {
@@ -159,6 +127,11 @@ const meta: Meta<IdsAccordionProps> = {
       control: false,
       table: { category: "Props" },
     },
+    maxWidth: {
+      control: "text",
+      description: "Max-width of the accordion root.",
+      table: { category: "Props", defaultValue: { summary: "1594px" } },
+    },
   },
 };
 
@@ -187,7 +160,7 @@ export const SpecAccurateDesign: Story = {
         <IdsAccordionBody>
           <IdsAccordionContent>
             <p>Configure network policies and service endpoints for this workspace.</p>
-            <a href="#">Learn how network policies work</a>
+            <IdsLink label="Learn how network policies work" type="inline" href="#" />
           </IdsAccordionContent>
         </IdsAccordionBody>
       </IdsAccordionItem>
@@ -201,47 +174,7 @@ export const SpecAccurateDesign: Story = {
         </IdsAccordionBody>
       </IdsAccordionItem>
 
-      <IdsAccordionItem value="integrations" disabled>
-        <IdsAccordionHeader title="Integrations" />
-        <IdsAccordionBody>
-          <IdsAccordionContent>Connect external systems and event pipelines.</IdsAccordionContent>
-        </IdsAccordionBody>
-      </IdsAccordionItem>
-    </IdsAccordion>
-  ),
-};
-
-export const NestedHierarchy: Story = {
-  name: "Nested Hierarchy",
-  parameters: {
-    docs: {
-      description: {
-        story: "Explicit composition tree without the `items[]` convenience API.",
-      },
-    },
-  },
-  render: () => (
-    <IdsAccordion defaultValue={["network"]} chevronPosition="left">
-      <IdsAccordionItem value="network" first>
-        <IdsAccordionHeader title="Network configuration" />
-        <IdsAccordionBody>
-          <IdsAccordionContent>
-            <p>Configure network policies and service endpoints for this workspace.</p>
-            <a href="#">Learn how network policies work</a>
-          </IdsAccordionContent>
-        </IdsAccordionBody>
-      </IdsAccordionItem>
-
-      <IdsAccordionItem value="security">
-        <IdsAccordionHeader title="Security controls" />
-        <IdsAccordionBody>
-          <IdsAccordionContent>
-            Manage access rules, authentication options, and audit controls.
-          </IdsAccordionContent>
-        </IdsAccordionBody>
-      </IdsAccordionItem>
-
-      <IdsAccordionItem value="integrations" disabled>
+      <IdsAccordionItem value="integrations">
         <IdsAccordionHeader title="Integrations" />
         <IdsAccordionBody>
           <IdsAccordionContent>Connect external systems and event pipelines.</IdsAccordionContent>
@@ -271,41 +204,20 @@ export const ChevronRight: Story = {
   },
 };
 
-export const WithFormContent: Story = {
-  name: "With Form Content",
+/** Long panel title clamps to two lines; hovering shows the native browser tooltip with the full text. */
+export const TruncatedTitleTooltip: Story = {
+  name: "Truncated Title Tooltip",
   args: {
-    variant: "form",
-    items: formItems,
-    defaultValue: ["contact"],
+    items: [
+      {
+        value: "long-title",
+        title:
+          "Network configuration with an unusually long and descriptive panel title that wraps to two lines and then truncates with an ellipsis so the full text is only reachable via the browser tooltip",
+        content: "Hover the truncated title to see the full text in a native browser tooltip.",
+      },
+      ...demoItems,
+    ],
+    defaultValue: [],
   },
 };
 
-export const NestedGenericContent: Story = {
-  name: "Nested Generic Content",
-  parameters: {
-    docs: {
-      description: {
-        story: "Form-like projected children inside IdsAccordionContent.",
-      },
-    },
-  },
-  render: () => (
-    <IdsAccordion defaultValue={["contact"]}>
-      <IdsAccordionItem value="contact" first>
-        <IdsAccordionHeader title="Primary contact" />
-        <IdsAccordionBody>
-          <IdsAccordionContent>
-            <p>Provide owner details for service notifications.</p>
-            <label>
-              Name
-              <input defaultValue="Muthu" style={{ display: "block", width: "100%", marginTop: 4 }} />
-            </label>
-            <p style={{ marginTop: 12 }}>
-              <a href="#">Learn more about contacts</a>
-            </p>
-          </IdsAccordionContent>
-        </IdsAccordionBody>
-      </IdsAccordionItem>
-    </IdsAccordion>
-  ),
-};

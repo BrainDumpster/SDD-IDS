@@ -149,7 +149,7 @@ export function IdsTooltip({
           className={
             triggerDisplay === "block" ? styles.triggerBlock : styles.trigger
           }
-          render={<span />}
+          render={<span tabIndex={tabIndex} />}
         >
           {trigger}
         </BaseTooltip.Trigger>

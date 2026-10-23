@@ -20,6 +20,7 @@ import React, { type CSSProperties, type ReactElement } from "react";
 import { IdsHelper, IdsHelperText } from "../helper";
 import { IdsIcon } from "../icon";
 import styles from "./IdsProgressBar.module.css";
+import { IDS_ICON_URL_BY_SHAPE } from "../shared/idsAssetRegistry.generated";
 
 export type IdsProgressBarType = "inline" | "with-label" | "indeterminate";
 export type IdsProgressBarThickness = "thin" | "medium" | "thick";
@@ -76,19 +77,26 @@ const HELPER_ICON_BY_STATE: Record<
 const SHAPE_PATTERN = /^[a-z0-9-]+$/;
 
 const iconUrlByShape: Record<string, string> = (() => {
-  const modules = import.meta.glob<string>("../../../../assets/icons/*.svg", {
-    eager: true,
-    query: "?url",
-    import: "default",
-  });
   const out: Record<string, string> = {};
-  for (const path of Object.keys(modules)) {
-    const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
-    if (file && modules[path] != null) {
-      out[file] = modules[path] as string;
+  try {
+    const modules = import.meta.glob<string>("../../../../assets/icons/*.svg", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    });
+    for (const path of Object.keys(modules)) {
+      const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
+      if (file && modules[path] != null) {
+        out[file] = modules[path] as string;
+      }
     }
+  } catch {
+    // Non-Vite bundler (esbuild): `import.meta.glob` is not a function. Fall through.
   }
-  return out;
+  // Vite populates `out` and this returns it unchanged (behaviour is byte-identical).
+  // esbuild leaves it EMPTY, which would render every icon as a missing box -- use the
+  // generated registry (scripts/generate_ids_asset_registry.mjs) in that case.
+  return Object.keys(out).length > 0 ? out : IDS_ICON_URL_BY_SHAPE;
 })();
 
 function hasIconAsset(shape: string): boolean {
@@ -149,6 +157,9 @@ export function IdsProgressBar({
   const percentLabel = `${Math.round(clampedValue)}%`;
   const progressClip = isIndeterminate ? "0%" : `${clampedValue}%`;
   const valueFull = !isIndeterminate && clampedValue >= 100;
+
+  // Indeterminate + success/warning/error: helper text only, no track.
+  const hideTrack = isIndeterminate && state !== "in-progress";
 
   const helperIconSlug =
     state !== "in-progress" ? HELPER_ICON_BY_STATE[state] : undefined;
@@ -211,6 +222,7 @@ export function IdsProgressBar({
               <span
                 className={styles["ids-progress-bar-label"]}
                 data-ids="ids-progress-bar-label"
+                title={label}
               >
                 {label}
               </span>
@@ -241,16 +253,22 @@ export function IdsProgressBar({
             </span>
           ) : null}
         </div>
-      ) : (
+      ) : hideTrack ? null : (
         track
       )}
 
       {showHelperText && helperText ? (
-        <IdsHelper data-ids="ids-progress-bar-helper">
+        <IdsHelper
+          className={styles["ids-progress-bar-helper"]}
+          data-ids="ids-progress-bar-helper"
+          title={helperText}
+        >
           {showHelperIcon ? (
             <IdsIcon shape={helperIconSlug!} variant="img" size={16} />
           ) : null}
-          <IdsHelperText>{helperText}</IdsHelperText>
+          <IdsHelperText className={styles["ids-progress-bar-helper-text"]}>
+            {helperText}
+          </IdsHelperText>
         </IdsHelper>
       ) : null}
     </div>

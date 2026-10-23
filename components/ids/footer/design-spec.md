@@ -10,7 +10,7 @@
 - **Description:** Application status footer bar with optional host name, SWID (with copy), current date/time, and time-zone selector.
 - **Status:** active
 - **Created:** 2026-05-22
-- **Updated:** 2026-08-19
+- **Updated:** 2026-09-23
 - **Figma (validated):** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=38908-5818&m=dev
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
 - **Primary node:** `38908:5818` (component instance `Footer`)
@@ -58,6 +58,7 @@ Angular composition selectors may map these slots 1:1 as:
 - **Time zone group:** single tertiary button (size: small, variant: tertiary) with world-globe icon; no padding/gap as handled by Button component.
 - Typography: **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; label prefixes use medium weight, values use regular weight.
 - Sample frame width **1664px** in Figma is reference-only; runtime width follows application shell.
+- **Minimum width:** the component minimum is `min-width: 944px` on the root (unconditional) — the bar never compresses below 944px; narrower hosts show a horizontal scrollbar instead of compressing or reflowing bar content. (The viewport ≤1024px breakpoint now governs only the time-group → tooltip collapse, see below.)
 
 ## Tokens
 ### Typography
@@ -113,10 +114,11 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 *(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
 
 ## Interactions
-- **SWID copy:** activating `FooterCopyControl` copies the SWID string to the system clipboard (when API available) and emits `onCopySwid` with the current SWID value; provide non-blocking confirmation in host app if required.
+- **SWID copy:** activating `FooterCopyControl` copies the SWID string to the system clipboard (when API available), emits `onCopySwid` with the current SWID value, and displays an IDS success toast reading **"Copied"** in the **top-right** corner (uses the IDS Toast default auto-dismiss duration).
 - **Time zone:** activating `FooterTimeZoneAction` opens the host time-zone picker or settings (`onTimeZoneClick`); control is a button styled as a link (not navigation away by default).
 - **Visibility toggles:** `showHostname`, `showCurrentDateAndTime`, and `showTimeZone` mirror Figma boolean props; when false, remove the corresponding group without shifting bar height.
 - Date/time string is **display-only** in the bar (no inline edit); host supplies formatted `currentDateTime` text.
+- **Compact breakpoint (viewport ≤1024px):** `FooterTimeGroup` is removed from the bar and `currentDateTime` is surfaced in an IDS tooltip anchored to `FooterTimeZoneAction` (hover/focus, transient, text only — no clock icon). No tooltip is attached when `showCurrentDateAndTime` is false or `currentDateTime` is empty; above 1024px the inline time group renders normally with no tooltip.
 - Pointer: copy and time-zone controls use `cursor: pointer`; bar background is not clickable.
 - No drag, expand, or collapse behavior on the bar itself.
 
@@ -241,6 +243,8 @@ ids-footer
 - Hiding a group removes it from layout and tab order without reserving space.
 - Host name truncates at 48 characters with ellipsis; if the value reaches the 48-character limit or is visually truncated (including by component resize), hovering the value shows the full text in a tooltip.
 - Other long strings truncate with ellipsis; tooltips for other content are host-defined (optional).
+- The root enforces `min-width: 944px` at all viewport widths; horizontal overflow is handled by a host/page scrollbar, not by compressing bar content.
+- At viewport widths ≤1024px `FooterTimeGroup` is hidden and `currentDateTime` moves into a hover/focus tooltip on `FooterTimeZoneAction` (text only, no icon).
 
 ### Accessibility contract
 - See **Interactions → Accessibility**; codegen must emit native buttons for copy and time-zone actions.
@@ -272,6 +276,7 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 - [ ] Copy and time-zone controls are keyboard-activatable with visible focus rings.
 - [ ] Icon slugs `copy`, `time-clock`, `world-globe` resolve via Icon primitive.
 - [ ] Spec Accurate Design story uses story defaults above under `Spec Generated/IDS/Footer`.
+- [ ] Bar never compresses below `min-width: 944px` (narrower hosts scroll horizontally); ≤1024px viewport: inline date/time hidden and shown via tooltip on the time-zone action.
 - [ ] Light state matrix complete; dark uses boilerplate (same semantic tokens).
 - [ ] Source mapping lists MCP verification evidence.
 
@@ -282,6 +287,7 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 | Theme CSS | `components/ids-theme.css` |
 | Root spec | `components/ids/root-spec.md` |
 | Component contract | `component-contracts/ids/footer.contract.ts` |
+| React library port | `lib/react/ids/footer/` |
 | Angular library port | `lib/angular/ids/footer/` |
 | Angular composition Storybook | `storybook-angular/src/components/ids-footer-lib/` |
 | Figma MCP (2026-08-19) | `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)`; `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=38908:5818)` |

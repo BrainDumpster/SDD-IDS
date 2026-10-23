@@ -42,6 +42,7 @@ const specAccurateArgs: ComponentProps<typeof IdsAnchorMenu> = {
   title: "On this page",
   header: true,
   sticky: true,
+  nativeTooltip: false,
   onItemClick,
 };
 
@@ -64,6 +65,14 @@ const meta: Meta<typeof IdsAnchorMenu> = {
     },
   },
   args: specAccurateArgs,
+  argTypes: {
+    nativeTooltip: {
+      control: { type: "boolean" },
+      description:
+        "Reveal truncated labels with the browser's native `title` tooltip instead of the branded `IdsTooltip`.",
+      table: { defaultValue: { summary: "false" } },
+    },
+  },
 };
 
 export default meta;
@@ -101,6 +110,10 @@ export const EmptyItems: Story = {
 
 export const StickyWithPageContent: Story = {
   name: "Sticky With Page Content",
+  // Full-bleed so the content and menu both start at the 24px padding — which
+  // equals the sticky top — so the menu is pinned from the very first pixel and
+  // doesn't visibly settle upward on the first scroll.
+  parameters: { layout: "fullscreen" },
   render: (args) => (
     <div
       style={{
@@ -116,6 +129,9 @@ export const StickyWithPageContent: Story = {
         style={{
           flex: 1,
           color: "var(--color-text-gray-neutral-strong)",
+          // Trailing space so the final sections have room to scroll up to the
+          // same top offset as the rest instead of stopping short at page end.
+          paddingBottom: "100vh",
         }}
       >
         {specAccurateItems.map((item) => (
@@ -135,4 +151,119 @@ export const StickyWithPageContent: Story = {
     </div>
   ),
   args: specAccurateArgs,
+};
+
+const longLabelItems = [
+  { label: "Overview", href: "#overview" },
+  { label: "Types and classifications of anchor menu patterns", href: "#types" },
+  { label: "A deliberately extremely long anchor menu section title that overflows the two-line clamp and shows an ellipsis on the third line", href: "#anatomy", active: true },
+  { label: "Usage Rules", href: "#usage-rules" },
+  { label: "States and Colors", href: "#states-and-colors" },
+  { label: "Redlines", href: "#redlines" },
+];
+
+export const LongLabel: Story = {
+  name: "Long Label",
+  args: {
+    items: longLabelItems,
+  },
+};
+
+/**
+ * Long header: the heading grows to the rail's max width and wraps to a second
+ * line; anything past two lines truncates with an ellipsis and reveals the full
+ * text in a tooltip on hover.
+ */
+export const LongHeader: Story = {
+  name: "Long Header",
+  args: {
+    ...specAccurateArgs,
+    title:
+      "On this deliberately long page section heading that overflows two lines and truncates",
+  },
+};
+
+/**
+ * Menu on a right-hand rail: the IdsTooltip auto-flips to `side="left"` so it
+ * opens toward the page instead of overflowing off the right edge.
+ */
+export const RightRailLongLabel: Story = {
+  name: "Right Rail (Long Label)",
+  args: {
+    items: longLabelItems,
+  },
+  render: (args) => (
+    <div
+      style={{
+        display: "flex",
+        gap: 32,
+        padding: 24,
+        alignItems: "flex-start",
+        justifyContent: "flex-end",
+        background: "var(--color-background-surface-primary)",
+      }}
+    >
+      <div style={{ flex: 1, color: "var(--color-text-gray-neutral-strong)" }}>
+        Page content on the left; anchor menu pinned to the right edge.
+      </div>
+      <IdsAnchorMenu {...args} />
+    </div>
+  ),
+};
+
+/** Figma `AnchorMenu-Main` allows 3–16 sections — the upper bound. */
+const manySectionItems: IdsAnchorMenuItem[] = Array.from(
+  { length: 16 },
+  (_, i) => ({
+    label: `Section ${i + 1}`,
+    href: `#section-${i + 1}`,
+    active: i === 0,
+  }),
+);
+
+/**
+ * Many sections (16 — the Figma upper bound). When the menu is taller than the
+ * viewport it scrolls internally (its own scrollbar) so every item stays
+ * reachable, while still pinning below the top and scroll-spying page content.
+ */
+export const ManySections: Story = {
+  name: "Many Sections",
+  parameters: { layout: "fullscreen" },
+  render: (args) => (
+    <div
+      style={{
+        display: "flex",
+        gap: 32,
+        padding: 24,
+        alignItems: "flex-start",
+        background: "var(--color-background-surface-primary)",
+      }}
+    >
+      <div
+        style={{
+          flex: 1,
+          color: "var(--color-text-gray-neutral-strong)",
+          paddingBottom: "100vh",
+        }}
+      >
+        {manySectionItems.map((item) => (
+          <section
+            key={item.href}
+            id={item.href.replace("#", "")}
+            style={{ marginBottom: 120, minHeight: 120 }}
+          >
+            <h2 style={{ margin: 0 }}>{item.label}</h2>
+            <p style={{ color: "var(--color-text-gray-neutral)" }}>
+              Section content for scroll-spy and smooth scroll.
+            </p>
+          </section>
+        ))}
+      </div>
+      <IdsAnchorMenu {...args} items={manySectionItems} />
+    </div>
+  ),
+  args: {
+    ...specAccurateArgs,
+    items: manySectionItems,
+  },
 };

@@ -81,6 +81,9 @@ export interface IdsDropdownMultiSelectProps {
   clearAllDisabled?: boolean;
   showSelectedBadge?: boolean;
   showSelectedTooltip?: boolean;
+  /** Render the in-menu "Show Selected" panel (collapsible, removable tags),
+   *  above the Select All / Clear All row. Auto-hides when nothing is selected. */
+  showSelectedPanel?: boolean;
   actionLabel?: string;
   onAction?: () => void;
   onOpenChange?: (open: boolean) => void;
@@ -181,7 +184,15 @@ function partitionChildren(children: ReactNode): {
   return { helper, error, optionsFromChildren };
 }
 
-function TruncatingValue({ text, tooltip }: { text: string; tooltip?: string }) {
+function TruncatingValue({
+  text,
+  tooltip,
+  tooltipTitle,
+}: {
+  text: string;
+  tooltip?: string;
+  tooltipTitle?: string;
+}) {
   const [truncated, setTruncated] = useState(false);
   const observerRef = useRef<ResizeObserver | null>(null);
 
@@ -206,6 +217,7 @@ function TruncatingValue({ text, tooltip }: { text: string; tooltip?: string }) 
     <IdsTooltip side="top" arrowAlign="start" hugContent>
       <TooltipTrigger display="block">{valueSpan}</TooltipTrigger>
       <TooltipPanel>
+        {tooltipTitle ? <TooltipHeader>{tooltipTitle}</TooltipHeader> : null}
         <TooltipBody>{tooltip}</TooltipBody>
       </TooltipPanel>
     </IdsTooltip>
@@ -259,6 +271,7 @@ export function IdsDropdownMultiSelect({
   clearAllDisabled,
   showSelectedBadge = true,
   showSelectedTooltip = true,
+  showSelectedPanel = true,
   actionLabel,
   onAction,
   onOpenChange,
@@ -320,6 +333,9 @@ export function IdsDropdownMultiSelect({
   const selectedDisplay = selectedLabels.join(", ");
   const hasSelection = selectedLabels.length > 0;
   const hasError = Boolean(errorMessage);
+  // Spec: a disabled dropdown showing an empty selection must NOT display the
+  // required asterisk — the user can't act on it, so marking it required misleads.
+  const showRequiredMark = required && !(disabled && !hasSelection);
   const message = errorMessage ?? helper;
 
   const emitChange = (nextIds: string[]) => {
@@ -419,7 +435,11 @@ export function IdsDropdownMultiSelect({
         <>
           {badgeNode}
           {showSelectedBadge && hasSelection ? (
-            <TruncatingValue text={selectedDisplay || placeholder} />
+            <TruncatingValue
+              text={selectedDisplay || placeholder}
+              tooltip={selectedDisplay}
+              tooltipTitle={`${selectedLabels.length} Items`}
+            />
           ) : (
             <TruncatingValue
               text={hasSelection ? selectedDisplay : placeholder}
@@ -444,7 +464,7 @@ export function IdsDropdownMultiSelect({
     >
       <div className={styles.fieldRow} data-ids="ids-dropdown-multiselect-field-row">
         {label ? (
-          <FieldLabel text={label} size={size} required={required} htmlFor={rootId} />
+          <FieldLabel text={label} size={size} required={showRequiredMark} htmlFor={rootId} />
         ) : null}
         <div
           className={styles.field}
@@ -494,6 +514,12 @@ export function IdsDropdownMultiSelect({
               );
             }}
             clearAllDisabled={effectiveClearAllDisabled}
+            showSelectedPanel={showSelectedPanel}
+            showSelectedFirst
+            defaultShowSelectedExpanded={false}
+            onRemoveSelectedTag={(value) =>
+              applySelectionByLabels(selectedLabels.filter((lbl) => lbl !== value))
+            }
             footerActionLabel={actionLabel}
             onFooterActionClick={onAction}
             defaultOpen={defaultOpen && !disabled}

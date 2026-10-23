@@ -36,8 +36,34 @@ import {
   TooltipTrigger,
 } from "../tooltip";
 import styles from "./IdsFooter.module.css";
+import { IdsToastViewport } from "../toast/IdsToastViewport";
+import type { IdsToastQueueItem } from "../toast/IdsToastViewport";
 
 const HOSTNAME_MAX_CHARS = 48;
+
+/**
+ * At or below this viewport width the inline date/time group is hidden and
+ * surfaced in a tooltip on the time zone button instead.
+ */
+const COMPACT_BREAKPOINT_PX = 1024;
+
+/** True while the viewport is at/below the compact footer breakpoint. */
+function useCompactFooter(): boolean {
+  const [compact, setCompact] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(`(max-width: ${COMPACT_BREAKPOINT_PX}px)`).matches;
+  });
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${COMPACT_BREAKPOINT_PX}px)`);
+    const onChange = () => setCompact(mq.matches);
+    setCompact(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return compact;
+}
 
 export interface IdsFooterProps
   extends Omit<ComponentProps<"footer">, "children"> {
@@ -104,8 +130,13 @@ export function IdsFooter({
   const showCurrentDateAndTime = resolveShowFlag(showCurrentDateAndTimeProp);
   const showTimeZone = resolveShowFlag(showTimeZoneProp);
 
+  const isCompact = useCompactFooter();
+
   const hostnameText = hostname ?? "";
   const truncatedHostname = truncateHostname(hostnameText);
+  const dateTimeText = currentDateTime ?? "";
+  const showDateTimeTooltip =
+    isCompact && showCurrentDateAndTime && dateTimeText !== "";
   const hasSwid = swid != null && swid !== "";
   const canCopy = hasSwid && !copyDisabled;
   const zoneLabel =
@@ -115,6 +146,7 @@ export function IdsFooter({
 
   const [valueEl, setValueEl] = useState<HTMLSpanElement | null>(null);
   const [isOverflowed, setIsOverflowed] = useState(false);
+  const [toasts, setToasts] = useState<IdsToastQueueItem[]>([]);
 
   useEffect(() => {
     if (!valueEl) return;
@@ -143,6 +175,16 @@ export function IdsFooter({
     if (!canCopy || !swid) return;
     try {
       await copyTextToClipboard(swid);
+      setToasts((prev) => [
+        ...prev,
+        {
+          id: `copy-toast-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+          type: "success",
+          message: "Copied",
+          closable: true,
+          role: "status",
+        },
+      ]);
     } catch {
       /* Clipboard failure still notifies host via onCopySwid (spec fallback). */
     }
@@ -156,12 +198,13 @@ export function IdsFooter({
   );
 
   return (
-    <footer
-      {...rest}
-      className={cx(styles["ids-footer"], className)}
-      aria-label="Application status"
-      data-ids="ids-footer"
-    >
+    <>
+      <footer
+        {...rest}
+        className={cx(styles["ids-footer"], className)}
+        aria-label="Application status"
+        data-ids="ids-footer"
+      >
       <div className={styles["ids-footer-left"]} data-ids="ids-footer-left">
         {showHostname ? (
           <div
@@ -222,7 +265,7 @@ export function IdsFooter({
         ) : null}
       </div>
 
-      {showCurrentDateAndTime ? (
+      {showCurrentDateAndTime && !isCompact ? (
         <div
           className={styles["ids-footer-time-group"]}
           data-ids="ids-footer-time-group"
@@ -233,9 +276,7 @@ export function IdsFooter({
             size={16}
             color="var(--color-icon-gray-neutral-base)"
           />
-          <span className={styles["ids-footer-datetime"]}>
-            {currentDateTime ?? ""}
-          </span>
+          <span className={styles["ids-footer-datetime"]}>{dateTimeText}</span>
         </div>
       ) : null}
 
@@ -244,26 +285,51 @@ export function IdsFooter({
           className={styles["ids-footer-timezone-group"]}
           data-ids="ids-footer-timezone-group"
         >
-          <IdsButton
-            type="button"
-            variant="tertiary"
-            size="small"
-            disabled={timeZoneDisabled}
-            onClick={() => onTimeZoneClick?.()}
-          >
-            <IdsButtonLeadingIcon>
-              <IdsIcon
-                shape="world-globe"
-                variant="mask"
-                size={16}
-                color="var(--color-icon-brand-base)"
-              />
-            </IdsButtonLeadingIcon>
-            <IdsButtonLabel>{zoneLabel}</IdsButtonLabel>
-          </IdsButton>
+          {(() => {
+            const timeZoneButton = (
+              <IdsButton
+                type="button"
+                variant="tertiary"
+                size="small"
+                disabled={timeZoneDisabled}
+                onClick={() => onTimeZoneClick?.()}
+              >
+                <IdsButtonLeadingIcon>
+                  <IdsIcon
+                    shape="world-globe"
+                    variant="mask"
+                    size={16}
+                    color="var(--color-icon-brand-base)"
+                  />
+                </IdsButtonLeadingIcon>
+                <IdsButtonLabel>{zoneLabel}</IdsButtonLabel>
+              </IdsButton>
+            );
+
+            return showDateTimeTooltip ? (
+              <IdsTooltip hugContent side="top">
+                <TooltipTrigger>{timeZoneButton}</TooltipTrigger>
+                <TooltipPanel>
+                  <TooltipBody>
+                    <span className={styles["ids-footer-datetime-tooltip"]}>
+                      {dateTimeText}
+                    </span>
+                  </TooltipBody>
+                </TooltipPanel>
+              </IdsTooltip>
+            ) : (
+              timeZoneButton
+            );
+          })()}
         </div>
       ) : null}
-    </footer>
+      </footer>
+      <IdsToastViewport
+        position="top-right"
+        items={toasts}
+        onItemsChange={setToasts}
+      />
+    </>
   );
 }
 

@@ -6,13 +6,6 @@
   height: 100%;
   min-height: 0;
   background: var(--color-background-surface-component);
-  background-image:
-    linear-gradient(
-      180deg,
-      var(--color-background-gradient-left-nav-start, #ffffff) 0%,
-      var(--color-background-gradient-left-nav-end, #ffffff) 100%
-    ),
-    linear-gradient(90deg, var(--color-background-surface-component) 0%, var(--color-background-surface-component) 100%);
   border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-top: none;
   box-sizing: border-box;
@@ -95,11 +88,85 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__content {
   flex: 1;
+  /* The rail's 8px top padding lives here (not on the root) so the scroll
+     container — and its scrollbar — reaches the top edge of the rail. */
+  padding-top: var(--padding-padding-8);
   min-height: 0;
   overflow-y: auto;
+  /* Keep the selected inset (which bleeds 1px into the rail border zone) from
+     being clipped by this scroll container. The negative inline margin keeps
+     the row content-box — and its hover/selected fills — in place. */
+  /* Left only: the right edge stays inside the rail so the scrollbar sits
+     within the rail's right border. */
+  padding-inline-start: calc(4 * var(--border-width-border-1));
+  margin-inline-start: calc(-4 * var(--border-width-border-1));
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-8);
+}
+
+/* IDS small scrollbar (Figma Storybook-Test `6191:59167`; small content
+   display like Anchor Menu, confirmed by Mona and Reut): native scrollbar
+   recoloured for IDS — 8px track `var(--color-background-gray-neutral-light)`
+   with 2px radius, 6px `var(--color-border-gray-neutral-base)` thumb with 8px
+   radius, 8px carets at both ends. Styling the WebKit pseudo-elements forces a
+   classic, always-visible scrollbar; `scrollbar-width` / `scrollbar-color` stay
+   unset because setting them makes Chromium ignore these rules. Firefox falls
+   back to its own scrollbar. */
+.ids-main-menu-left__content::-webkit-scrollbar {
+  width: var(--sizing-size-8);
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-track {
+  background: var(--color-background-gray-neutral-light);
+  border-radius: var(--corner-radius-radius-2);
+}
+
+/* 6px thumb centred in the 8px track (1px transparent border, padding-box clip). */
+.ids-main-menu-left__content::-webkit-scrollbar-thumb {
+  background: var(--color-border-gray-neutral-base);
+  background-clip: padding-box;
+  border: 1px solid transparent;
+  border-radius: var(--corner-radius-radius-8);
+}
+
+/* Carets: one button per end (2px block padding + 8px caret). The triangle is
+   drawn with two half-gradients so its colour comes from the token. */
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical {
+  display: block;
+  width: var(--sizing-size-8);
+  height: 10px;
+  background-color: var(--color-background-gray-neutral-light);
+  background-repeat: no-repeat;
+  background-size: 3px 3px, 3px 3px;
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:start:decrement {
+  border-radius: var(--corner-radius-radius-2) var(--corner-radius-radius-2) 0 0;
+  background-image:
+    linear-gradient(to top left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to top right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 4px, 4px 4px;
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:end:increment {
+  border-radius: 0 0 var(--corner-radius-radius-2) var(--corner-radius-radius-2);
+  background-image:
+    linear-gradient(to bottom left, var(--color-border-gray-neutral-base) 50%, transparent 50%),
+    linear-gradient(to bottom right, var(--color-border-gray-neutral-base) 50%, transparent 50%);
+  background-position: 1px 3px, 4px 3px;
+}
+
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:start:increment,
+.ids-main-menu-left__content::-webkit-scrollbar-button:vertical:end:decrement {
+  display: none;
+}
+
+/* With a logo above, the list starts right under it (logo keeps the top padding). */
+.ids-main-menu-left__logo-slot ~ .ids-main-menu-left__content {
+  padding-top: 0;
 }
 
 .ids-main-menu-left__item-block {
@@ -179,8 +246,8 @@ ids-main-menu-left-item-icon {
 }
 
 .ids-main-menu-left__chevron-icon {
-  width: 14px;
-  height: 14px;
+  width: 16px;
+  height: 16px;
   color: var(--color-icon-brand-strong, #0062ab);
   /* background + mask-image owned by ids-icon host */
 }
@@ -202,7 +269,9 @@ ids-main-menu-left-item-icon {
   overflow: visible;
   background: transparent;
   text-align: left;
-  padding: var(--padding-padding-6, 6px) var(--padding-padding-58, 58px);
+  /* Figma `11099:56238`: 58px leading, 24px trailing. */
+  padding: var(--padding-padding-6, 6px) var(--padding-padding-24, 24px) var(--padding-padding-6, 6px)
+    var(--padding-padding-58, 58px);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral);
@@ -212,12 +281,12 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__secondary-row--selected {
   background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
-  font-weight: 500;
+  font-weight: 400;
 }
 
 .ids-main-menu-left__secondary-row--state-Hover {
   background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-main-menu-left__secondary-row--state-Press {
@@ -227,7 +296,7 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__secondary-row--interactive:hover {
   background: var(--color-background-brand-lighter-slate);
-  color: var(--color-text-brand-strong);
+  color: var(--color-text-gray-neutral);
 }
 
 .ids-main-menu-left__secondary-row--interactive:active {
@@ -237,6 +306,7 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__secondary-row--interactive.ids-main-menu-left__secondary-row--selected:hover {
   background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-brand-strong);
 }
 
 .ids-main-menu-left__secondary-row--interactive.ids-main-menu-left__secondary-row--selected:active {
@@ -250,8 +320,8 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__secondary-row--interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 var(--padding-padding-4, 4px);
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -264,29 +334,47 @@ ids-main-menu-left-item-icon {
   max-height: 49px;
   flex-shrink: 0;
   border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  padding: var(--padding-padding-16) var(--padding-padding-24);
+  /* Padding moved onto the button so its hover/press fill covers the whole footer. */
+  padding: 0;
   display: flex;
-  align-items: center;
+  align-items: stretch;
 }
 
 .ids-main-menu-left__bottom-toggle-button {
   box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  min-width: 16px;
-  min-height: 16px;
-  padding: 0;
+  /* Tertiary control that fills the entire footer: hover/press tint the whole
+     background edge-to-edge. Inline padding keeps the icon on the 24px inset. */
+  width: 100%;
+  height: 100%;
+  padding: 0 var(--padding-padding-24);
   margin: 0;
   border: none;
+  border-radius: 0;
   background: transparent;
+  box-shadow: none;
   display: inline-flex;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   line-height: 0;
   font: inherit;
   cursor: pointer;
   appearance: none;
   -webkit-appearance: none;
+  transition: background-color 150ms ease;
+
+  /* Tertiary hover/press fill across the whole footer — no border. */
+  &:hover {
+    background: var(--color-background-controls-lighter);
+  }
+
+  &:active {
+    background: var(--color-background-controls-light);
+  }
+
+  &:focus,
+  &:focus-visible {
+    outline: none;
+  }
 }
 
 .ids-main-menu-left__bottom-toggle-icon {
@@ -302,10 +390,10 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__focus-ring {
   position: absolute;
-  /* Figma secondary `12016:227537` / assembled rail: 1px gap from Main Menu L/R border.
-     No drop-shadow in the gap (Selected-Focus only adds inset 4px selected bar). */
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  /* Figma `12016:227840` / `12016:227537`: ring sits INSIDE the row, 4px in from
+     the rail's L/R border, flush top/bottom. */
+  inset: 0 var(--padding-padding-4, 4px);
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
@@ -318,11 +406,18 @@ ids-main-menu-left-item-icon {
 .ids-main-menu-left__primary-row--interactive:focus-visible::after {
   content: "";
   position: absolute;
-  inset: 0 var(--border-width-border-1);
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  inset: 0 var(--padding-padding-4, 4px);
+  border: var(--border-width-border-2) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
   pointer-events: none;
   box-sizing: border-box;
+}
+
+/* Selected-Focus (Figma `12016:227912`): the ring starts after the 4px selected
+   inset with a 3px gap (left 7px), so the bar stays visible. */
+.ids-main-menu-left__primary-row:has(.ids-main-menu-left__selected-inset) .ids-main-menu-left__focus-ring,
+.ids-main-menu-left__primary-row--interactive:has(.ids-main-menu-left__selected-inset):focus-visible::after {
+  left: 7px;
 }
 
 .ids-main-menu-left__selected-inset {
@@ -364,11 +459,11 @@ ids-main-menu-left-item-icon {
 
 .ids-main-menu-left__primary-row--state-Selected .ids-main-menu-left__primary-icon,
 .ids-main-menu-left__primary-row--state-SelectedFocus .ids-main-menu-left__primary-icon {
-  color: var(--color-icon-brand-base, #0076ce);
+  color: var(--color-icon-brand-strong, #055fa9);
 }
 
 .ids-main-menu-left__primary-row--secondary-parent-selected .ids-main-menu-left__primary-icon {
-  color: var(--color-icon-brand-base, #0076ce);
+  color: var(--color-icon-brand-strong, #055fa9);
 }
 
 .ids-main-menu-left--collapsed .ids-main-menu-left__primary-row {

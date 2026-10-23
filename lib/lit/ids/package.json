@@ -1,0 +1,47 @@
+{
+  "name": "@ids/lit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "IDS Lit web components generated from design-spec.md",
+  "exports": {
+    ".": "./dist/index.js",
+    "./accordion": "./dist/accordion/index.js",
+    "./accordion/register": "./dist/accordion/register.js",
+    "./icon": "./dist/icon/index.js",
+    "./icon/register": "./dist/icon/register.js",
+    "./theme": "./dist/theme/index.js",
+    "./assets": "./dist/assets/index.js",
+    "./progress-bar": "./dist/progress-bar/index.js",
+    "./progress-bar/register": "./dist/progress-bar/register.js",
+    "./button": "./dist/button/index.js",
+    "./button/register": "./dist/button/register.js",
+    "./checkbox": "./dist/checkbox/index.js",
+    "./checkbox/register": "./dist/checkbox/register.js",
+    "./radio-button": "./dist/radio-button/index.js",
+    "./radio-button/register": "./dist/radio-button/register.js",
+    "./ids-theme.css": "./styles/ids-theme.css"
+  },
+  "files": [
+    "dist",
+    "styles",
+    "src"
+  ],
+  "scripts": {
+    "build": "rollup --config ./rollup.config.js",
+    "build:watch": "rollup --watch --config ./rollup.config.js",
+    "dev": "npm run build:watch",
+    "clean": "rm -rf dist",
+    "prepare": "npm run build"
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-typescript": "^12.1.2",
+    "rollup": "^4.40.0",
+    "tslib": "^2.8.1",
+    "typescript": "^5.8.3"
+  }
+}

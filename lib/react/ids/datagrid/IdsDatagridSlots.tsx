@@ -52,6 +52,8 @@ export type IdsDatagridViewMode = "table" | "treeview";
 export type IdsDatagridSelectionMode = "single" | "multiple";
 export type IdsDatagridSortDirection = "asc" | "desc";
 
+export type IdsDatagridColumnAlign = "left" | "right";
+
 /** Spec `DatagridColumn` config — collected from `IdsDatagridColumn` children or `columns` prop. */
 export interface IdsDatagridColumnDef {
   key: string;
@@ -67,6 +69,8 @@ export interface IdsDatagridColumnDef {
   dateTimeFilterState?: IdsDatagridDateTimeFilterState;
   filterPanel?: ReactNode;
   columnHideable?: boolean;
+  /** Header title + body cell alignment. Use `"right"` for numeric columns (Figma Cells `Type=Numeric`). Default `"left"`. */
+  align?: IdsDatagridColumnAlign;
 }
 
 /** Spec `DatagridRow` model — collected from `IdsDatagridRow` children or `rows` prop. */
@@ -115,6 +119,8 @@ export interface IdsDatagridColumnProps {
   filterable?: boolean;
   filterActive?: boolean;
   columnHideable?: boolean;
+  /** Header title + body cell alignment. Use `"right"` for numeric columns. Default `"left"`. */
+  align?: IdsDatagridColumnAlign;
   numericFilterState?: IdsDatagridNumericFilterState;
   dateFilterState?: IdsDatagridDateFilterState;
   dateTimeFilterState?: IdsDatagridDateTimeFilterState;
@@ -228,6 +234,7 @@ function collectColumn(el: ReactElement<IdsDatagridColumnProps>): IdsDatagridCol
     width,
     defaultWidth,
     columnHideable,
+    align,
     numericFilterState,
     dateFilterState,
     dateTimeFilterState,
@@ -268,6 +275,7 @@ function collectColumn(el: ReactElement<IdsDatagridColumnProps>): IdsDatagridCol
     width,
     defaultWidth,
     columnHideable,
+    align,
     numericFilterState,
     dateFilterState,
     dateTimeFilterState,

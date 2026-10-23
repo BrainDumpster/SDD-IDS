@@ -19,9 +19,11 @@
       "@base-ui-components/react/*": ["./node_modules/@base-ui-components/react/*"],
       "@component-contracts/*": ["../component-contracts/*"],
       "@ids/react": ["../lib/react/ids"],
-      "@ids/react/*": ["../lib/react/ids/*"]
+      "@ids/react/*": ["../lib/react/ids/*"],
+      "react": ["./node_modules/react"],
+      "react/*": ["./node_modules/react/*"]
     }
   },
-  "include": ["src", "../lib", "../component-contracts", "src/global.d.ts"],
+  "include": ["src", "../lib/react", "../lib/shared", "../component-contracts", "src/global.d.ts"],
   "exclude": ["node_modules"]
 }

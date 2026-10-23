@@ -43,3 +43,17 @@ apps/design-spec-collab/data/collab_sessions/
 apps/design-spec-collab/data/storybook_pr_builds/
 apps/design-spec-portal/data/jobs/
 apps/design-spec-portal/*.json
+
+# design-sync (claude.ai/design import) — build artifacts + machine state.
+# The DURABLE set IS committed: .design-sync/{config*.json,NOTES*.md,conventions*.md,previews/,overrides/}
+.ds-sync/
+ds-bundle/
+ds-bundle-synapse/
+.design-sync/sb-reference/
+.design-sync/sb-reference-synapse/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.design-sync/types/
+.design-sync/*.log
+.design-sync/*-theme-bundle.css

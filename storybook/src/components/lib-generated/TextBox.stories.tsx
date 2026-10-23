@@ -75,6 +75,7 @@ const meta: Meta<IdsTextBoxProps> = {
     iconName: "mail",
     disabled: false,
     invalid: false,
+    selectTextOnFocus: true,
   },
   argTypes: {
     componentType: { control: "select", options: ["text-input", "text-area"] },
@@ -88,6 +89,7 @@ const meta: Meta<IdsTextBoxProps> = {
     showLabel: { control: "boolean" },
     required: { control: "boolean" },
     showIcon: { control: "boolean" },
+    selectTextOnFocus: { control: "boolean" },
     onValueChange: { action: "onValueChange" },
   },
 };
@@ -230,9 +232,43 @@ export const FocusVisibleAndPointerFocus: Story = {
           color: "var(--color-text-gray-neutral)",
         }}
       >
-        Click inside input: active border only. Use Tab for focus-visible ring.
+        Click or Tab: the Selected style, brand border with no outer ring. Same for the text area.
       </p>
       <Box value="Focus behavior demo" helper="Helper text" />
+      <Box componentType="text-area" value="Focus behavior demo" helper="Helper text" />
+    </div>
+  ),
+};
+
+export const SelectTextOnFocus: Story = {
+  name: "Select Text On Focus",
+  args: { selectTextOnFocus: true },
+  parameters: {
+    controls: { include: ["selectTextOnFocus"] },
+    docs: {
+      description: {
+        story:
+          "Switch `selectTextOnFocus` in Controls, then click or Tab into the fields. `true` " +
+          "(default): the whole value is selected, typing replaces it. `false`: the caret goes to the " +
+          "end. No field remembers an earlier selection.",
+      },
+    },
+  },
+  render: (args) => (
+    <div style={{ display: "grid", gap: 16, maxWidth: 420 }}>
+      <Box
+        label="Location:"
+        defaultValue="Boston"
+        showIcon={false}
+        selectTextOnFocus={args.selectTextOnFocus}
+      />
+      <Box
+        label="Note:"
+        componentType="text-area"
+        defaultValue="Rack 4, shelf 2. Replace the fan module before the next firmware update."
+        showIcon={false}
+        selectTextOnFocus={args.selectTextOnFocus}
+      />
     </div>
   ),
 };

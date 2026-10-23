@@ -46,7 +46,7 @@
   - popup opens attached below trigger. It carries a **full 4-sided `1px` border**; a `-1px` vertical offset makes its top border overlap the field's bottom border so the two merge into a single line (attached-dropdown look). Detached usages keep the full border with no overlap.
   - drop shadow uses IDS shadow tokens.
   - search row wrapper padding: `var(--padding-padding-8)`.
-  - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
+  - search inner field (`Search-Main`, Figma `29393:141946`): `var(--border-width-border-1)` solid `var(--color-border-gray-neutral-base)`, `var(--padding-padding-2)` vertical / `var(--padding-padding-16)` horizontal, **no border-radius** (sharp corners).
   - search input wrap gap (input ↔ clear control): `var(--spacing-space-10)`.
   - popup min-height: `212px` (search only), `252px` (search + `SelectAllRow` + `ShowSelectedToggle` row).
   - option row padding: `var(--padding-padding-10) var(--padding-padding-16)` for **all types** (right inset is `16px`; single-select and multi-select share the same horizontal padding). Single-select text-only rows use `align-items: flex-start`; radio and multi rows use `align-items: center`.
@@ -68,7 +68,7 @@
   - selected-count badge follows IDS badge geometry (`18px` height, pill radius). The badge does not shrink (`flex-shrink: 0`) so a 2-digit count never overlaps the value text.
 - Search dismiss control:
   - visible when query length `> 0`; right-aligned inside search field row.
-  - dismiss icon (`ctrl-close-16`, matching the Datagrid filter search clear): **12×12px** frame, `var(--color-icon-accessible)`.
+  - dismiss icon (`ctrl-close-16`, matching the Datagrid filter search clear): **12×12px** frame, `var(--color-icon-gray-neutral-accessible)`.
 - Field corner radius: `var(--dropdown-control-radius)` (IDS theme → `var(--corner-radius-radius-none)` / **0px**).
 - Focus ring corner radius: `var(--dropdown-focus-ring-radius)` (IDS theme → `var(--corner-radius-radius-4)` / 4px).
 - Detached menu corner radius: `var(--dropdown-menu-radius)` (IDS theme → `0`).
@@ -153,19 +153,23 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Trigger interaction:
   - click/`Enter`/`Space` toggles popup open/close.
   - `Escape` closes popup and restores focus to trigger.
-  - the caret indicator stays down-pointing while the popup is open (Figma show-dropdown — no 180° flip).
-- Keyboard list navigation:
-  - `ArrowUp`/`ArrowDown` moves active option.
-  - `Enter` commits active option in single-select mode.
-  - `Space` toggles active option in multi-select mode.
+  - the caret indicator does **not** rotate when the popup opens — it stays pointing down.
+- Keyboard list navigation (design review 2026-10, same model as the single-select and multi-select dropdowns):
+  - `Enter`/`Space` on the trigger open the menu and move focus into it (design review 2026-10): onto the **selected** option when there is one (multi-select: the first selected option), otherwise onto the **search field** so the user can start typing. Without a search row, the first enabled option.
+  - `ArrowUp`/`ArrowDown` move focus through every enabled menu control in DOM order and wrap at both ends. In multi-select, `ArrowLeft`/`ArrowRight` still move within the Select All / Reset to Default row and between Show Selected tags.
+  - `Enter` commits the focused option in single-select mode (menu closes).
+  - `Enter`/`Space` toggle the focused option in multi-select mode (menu stays open).
+  - `Tab`/`Shift+Tab` close the menu and move to the next/previous component; in the search field `Tab` first accepts a pending inline suggestion.
 - Search behavior:
   - typing in the search row filters the option list immediately by **case-insensitive substring (contains) match** on the option label (e.g. typing `c` shows options containing `c`, then `ca` narrows to those containing `ca`) — same match behavior as the datagrid combobox/multiselect filters. Section headers and dividers are hidden while a query is active.
   - when search query is non-empty, a right-aligned dismiss control (`ctrl-close-16`, **12×12px** frame) clears the query.
   - when no option matches, the list shows a single `No results found` row (see Layout for typography/padding); nothing else is rendered.
-  - **Inline autocomplete (ghost text):** when the typed keyword is a **prefix of exactly one** selectable option, the remaining tail of that option's label renders as **greyed-out ghost text** immediately after the caret (the typed characters keep their normal `var(--color-text-gray-neutral)` colour; the suggested tail uses `var(--color-static-gray-400)` = `#9E9E9E`, fixed in both light and dark). The ghost tail is a **non-committed suggestion**, not a text selection — nothing is highlighted. Accept it with `Tab`, `→` (caret at end), or `End`, which commits the full option label (preserving the option's own casing). Any further typing or deletion recomputes/clears the suggestion. Only computed on insertion — deleting never re-completes.
+  - **Inline autocomplete (ghost text):** when the typed keyword is a **prefix of exactly one** selectable option, the remaining tail of that option's label renders as **greyed-out ghost text** immediately after the caret (the typed characters keep their normal `var(--color-text-gray-neutral)` colour; the suggested tail uses `var(--color-static-gray-400)` = `#9E9E9E`, fixed in both light and dark). The ghost tail is a **non-committed suggestion**, not a text selection — nothing is highlighted. Accept it with `Tab`, `→` (caret at end), or `End`, which commits the full option label (preserving the option's own casing). Any further typing or deletion recomputes/clears the suggestion. Only computed on insertion — deleting never re-completes. Clearing the query (dismiss control, or a consumer reset) also clears the suggestion; ghost text never overlays the placeholder.
 - Option selection:
   - single-select commits the option and **closes** the popup.
   - multi-select toggles the option and **keeps the popup open** for further selection.
+- **Naming (design review 2026-10):** in the combo box every Clear All control is labelled **"Reset to Default"**: the single-select row and the multi-select `Select All | Reset to Default` row. Only the label changes; the clearing behavior described below stays the same. The single-select Reset to Default row is right-aligned (`16px` right inset), like the multi-select one.
+- Multi-select Reset to Default does **not** collapse the menu; once it disables itself, focus moves to `Select All`.
 - Single-select Clear All (`showClearAll`, Figma `348:140631`):
   - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the footer action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding: var(--padding-padding-2) var(--padding-padding-16)`, `radius-2`) but with a **bottom** border (not the footer's top border) since it sits at the top of the list.
   - the Clear All row is **hidden while a search query is active** (same as the multi-select `SelectAllRow`), and reappears when the search is cleared.
@@ -273,6 +277,16 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - [ ] Accessibility semantics and keyboard behavior pass parity checks.
 ## Implementation Notes
 
+### 2026-10-11
+- **Ghost text over the placeholder** — the search dismiss control reset the query but not the ghost suffix, so the stale tail painted over the empty field's placeholder. React `DropdownMenu.tsx` clears `ghostSuffix` on dismiss and only renders a suffix that still completes the current query (`visibleGhostSuffix`), which also covers a consumer-driven reset.
+- **Ghost text during IME composition** — Telex keeps the whole word composing, and the suggestion used to be hidden until `compositionend`, so it never appeared while typing. `DropdownMenu.tsx` now computes the suggestion on composing input too (display only); `Tab` / `→` / `End` still accept it only after the composition commits.
+- **Reset to Default right-aligned** — React `IdsDropdownComboBox.tsx` passes `clearAllAlign="right"`; Angular `resolvedClearAllAlign` is `"right"` for `combobox-single` / `combobox-multi`.
+- **Keyboard open focus** — React `IdsDropdownComboBox.tsx` passes `keyboardOpenFocus="selectedOrSearch"` to `DropdownMenu`: `focusMenuEntry` focuses the first `[data-selectable="true"][data-selected="true"]` row, else the search input (`searchInputRef`). Angular `focusMenuEntry` does the same for `combobox-single` / `combobox-multi` (`.searchInput`). The plain multi-select keeps landing on Show / Hide Selected.
+- **Keyboard model** — the single-select model (focus into the menu on `Enter`/`Space`, wrapping arrows, `Tab` closes) now also runs for multi-select. Supersedes the 2026-08-13 focus-management notes below. See the multi-select spec for the Clear All focus fix.
+
+### 2026-10-09
+- **Clear All labelled "Reset to Default"** (design review). React `IdsDropdownComboBox.tsx` passes `clearAllLabel="Reset to Default"` to `DropdownMenu`, which covers the single row and the multi Select All row. Angular `ids-dropdown-menu` renders `resolvedClearAllLabel`, which is `resetToDefaultLabel` for `combobox-single` / `combobox-multi` (and for single-select with radio). Behavior and the `onClearAllClick` / `clearAllClick` events are unchanged.
+
 ### 2026-08-30
 - **Field text tooltip with section header (multi-select)** — `IdsDropdownComboBox.stories.tsx` `TruncatingValue` now accepts a `tooltipTitle` and renders an `IdsTooltip` on the truncated field text with the same `${selectedCount} Items` header as the badge. The tooltip only appears when the text is actually cut off.
 - **Show Selected panel above Select All / Clear All** — `IdsDropdownComboBox.stories.tsx` multi-select stories pass `showSelectedFirst` to `DropdownMenu` so the `Show Selected / Hide Selected` toggle is rendered before the `Select All | Clear All` row.
@@ -282,9 +296,11 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - **Focus management / no auto-focus on open** — `DropdownMenu.tsx` explicitly returns focus to the trigger after Base UI mounts the popup. The user must `Tab` into the popup; `ArrowUp`/`ArrowDown` then move focus between enabled `data-selectable` option rows via `moveOptionFocus`.
 - **Cross-section keyboard navigation** — `ArrowUp`/`ArrowDown` move focus between popup sections and inside the Show Selected panel (toggle → tags); `ArrowLeft`/`ArrowRight` move horizontally within the Select All / Clear All row and between Show Selected tags. `Tab` still traverses every tabbable control.
 - **Keyboard-reachable controls only** — `ScrollArea.Viewport` elements (`optionsScrollViewport` and `showSelectedTags`) carry `tabIndex={-1}` so they do not receive focus; `searchClearButton` is kept in the tab order.
-- **Focus ring geometry** — `triggerReset` and `searchField` use a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-default) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. The `searchField` ring is rendered only when `data-focus-visible` is set (keyboard `Tab` focus) and is hidden while typing. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
+- **Focus ring geometry** — `triggerReset` and `searchField` use a `::after` pseudo-element focus ring: `inset: -4px`, `border: var(--border-width-border-1) solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `pointer-events: none`. The `searchField` ring is rendered only when `data-focus-visible` is set (keyboard `Tab` focus) and is hidden while typing. Option rows use `outline: var(--border-width-border-1) solid var(--color-border-brand-base)` with `outline-offset: -1px` and `border-radius: var(--corner-radius-radius-4)`.
 - **Action button focus rings** — Added missing `:focus-visible` focus rings for popup action buttons (`selectAllButton`, `clearAllButton`, `showSelectedToggle`, `footerAction`, `clearAllAction`) to match IDS Checkbox / Button / Dropdown Button specs.
 - **Select All / Clear All row** — `.selectAllClearAllRow` `padding-right` is `0`.
+- **Truncated option label tooltip** — `DropdownMenu.tsx` wraps any option label that overflows its row in `IdsTooltip`, revealing the full label on hover. The tooltip is rendered only when `scrollWidth > clientWidth`, with `delay={0}` for immediate appearance. The `IdsTooltip.Trigger` uses `triggerDisplay="block"` and `.triggerBlock { min-width: 0 }` so long labels do not force the menu wider.
+- **Top-side popup shadow suppression** — when Base UI flips/places the menu above the trigger (`data-side="top"`), `DropdownMenu.module.css` removes `box-shadow` from `.popup[data-side="top"]` so the menu does not cast a shadow onto the field or container below. The default `bottom` side keeps the standard `IDS Shadow 1` elevation.
 
 Design-level implementation contract for the shared component (`DropdownMenu.tsx` / `DropdownMenu.module.css`, `IdsDropdownTriggerShell.*`) and `ids-theme.css`. Shared with single-/multi-select — verify all three after edits.
 
@@ -294,7 +310,7 @@ Design-level implementation contract for the shared component (`DropdownMenu.tsx
 - **Leading control (checkbox/radio)** — `16×16px`, left edge flush with the `Select All` checkbox.
 - **Search input wrap gap** — `var(--spacing-space-10)`.
 - **Empty-search row (`No results found`)** — Body 2 - Medium (`500`), `var(--color-text-gray-neutral)`, `wdth 100`, padding `pl-16 pr-16 py-10`; rendered as the sole list row.
-- **Caret** — stays down-pointing while the popup is open (Figma show-dropdown / matrix — no 180° flip).
+- **Caret** — does **not** rotate when the popup opens; it stays pointing down.
 - **Popup min-height** — `212px` (search only) / `252px` (search + Select All + Show Selected). The `252px` applies only while the `Select All` row is shown; when it collapses (no results, or `<2` matches) the popup falls back to `212px`.
 - **Option list scroll** — caps at `maxVisibleItems` rows (default `6`); ≤6 no scroll, >6 scrolls.
 - **Search filter** — case-insensitive substring (contains) match on the option label; sections/dividers hidden while filtering.
@@ -308,8 +324,8 @@ Design-level implementation contract for the shared component (`DropdownMenu.tsx
 ### Implementation updates (2026-08-05)
 
 - **Label** — optional; sits to the left of the field on the same row with `gap: var(--spacing-space-16)`. Uses `body-2` typography (`var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`), `var(--color-text-gray-neutral-strong)`, and an optional trailing required `*`. The label is rendered outside `DropdownMenu` by the consuming `IdsDropdownComboBox` wrapper and does not constrain the menu width.
-- **Ghost text autocomplete** — when the typed keyword is a prefix of exactly one option, the remaining suffix is rendered as greyed-out ghost text. It is accepted with `Tab`, `ArrowRight`, or `End` while the cursor is at the end of the input; IME composition is deferred until `compositionend`; deletions always clear the suggestion.
-- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0`. Caret direction is unchanged (still down).
+- **Ghost text autocomplete** — when the typed keyword is a prefix of exactly one option, the remaining suffix is rendered as greyed-out ghost text. It is accepted with `Tab`, `ArrowRight`, or `End` while the cursor is at the end of the input; while an IME (e.g. Vietnamese Telex) is composing, the suggestion is still shown but cannot be accepted until the composition commits; deletions always clear the suggestion.
+- **Field attached dropdown radius** — when the popup opens, Base UI sets `data-popup-open` on the trigger, causing the field's bottom-left/right radii to become `0`. The caret does **not** rotate.
 - **Tooltip** — truncated field value is wrapped in the IDS Tooltip: single-select shows the full selected item, multi-select shows the full selected list via the badge tooltip. The tooltip only appears when the text is actually cut off. Implementation: `IdsDropdownTriggerShell` consumer wraps the truncated field content with `components/ids/tooltip/design-spec.md`.
 - **Content-driven menu width (`menuWidth="content"`)** — the popup grows to the width of its widest option/tag, clamped between the trigger width (`--dropdown-trigger-width`, aliased to Base UI `--anchor-width`) and `700px` (`--dropdown-menu-max-width`). Content beyond `700px` truncates with an ellipsis. The selected tag wrap uses `contain: inline-size` so wrapped tags do not inflate the menu width. Implementation: `DropdownMenu.tsx` — `contentWidthMode`; `DropdownMenu.module.css` — `.popupContentWidth` and `.showSelectedTags` `contain: inline-size`.
 

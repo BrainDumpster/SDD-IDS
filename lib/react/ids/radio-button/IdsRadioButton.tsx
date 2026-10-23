@@ -12,7 +12,7 @@
  *       IdsRadioLabel — required
  *       IdsHelper? | IdsError? — optional
  *
- * Selectors: ids-radio-group, ids-radio-button, ids-radio-control, ids-radio-label
+ * Selectors: IdsRadioGroup, ids-radio-button, ids-radio-control, ids-radio-label
  * No @base-ui-components dependency.
  */
 
@@ -23,17 +23,22 @@ import React, {
   isValidElement,
   useCallback,
   useContext,
+  useEffect,
   useId,
   useMemo,
+  useRef,
   useState,
   type ChangeEvent,
+  type FocusEvent,
   type HTMLAttributes,
   type InputHTMLAttributes,
+  type KeyboardEvent,
   type ReactElement,
   type ReactNode,
 } from "react";
-import { IdsError } from "../error";
+import { IdsError, IdsErrorText } from "../error";
 import { IdsHelper } from "../helper";
+import { IdsFormLabel } from "../form-label";
 import styles from "./IdsRadioButton.module.css";
 
 export type IdsRadioDataState = "default" | "hover" | "focus-visible" | "disabled";
@@ -47,7 +52,10 @@ interface IdsRadioGroupContextValue {
   name: string;
   value: string | undefined;
   disabled: boolean;
+  error: boolean;
+  orientation: IdsRadioOrientation;
   setValue: (next: string) => void;
+  focusedValue?: string;
 }
 
 const IdsRadioGroupContext = createContext<IdsRadioGroupContextValue | null>(null);
@@ -64,7 +72,8 @@ function cx(...parts: Array<string | false | null | undefined>): string {
 /* IdsRadioGroup                                                              */
 /* -------------------------------------------------------------------------- */
 
-export interface IdsRadioGroupProps extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
+export interface IdsRadioGroupProps
+  extends Omit<HTMLAttributes<HTMLDivElement>, "onChange"> {
   children?: ReactNode;
   /** Shared group name for native single-select. */
   name: string;
@@ -73,6 +82,19 @@ export interface IdsRadioGroupProps extends Omit<HTMLAttributes<HTMLDivElement>,
   onChange?: (value: string) => void;
   disabled?: boolean;
   orientation?: IdsRadioOrientation;
+  /** Visible group label text. */
+  label?: string;
+  showLabel?: boolean;
+  /** Optional 16x16 icon node rendered after the label text. */
+  labelIcon?: ReactNode;
+  labelPosition?: "left" | "top";
+  /** Shows a `*` required mark inside the group label. */
+  required?: boolean;
+  /** Accessible name fallback when no visible group label is rendered. */
+  ariaLabel?: string;
+  /** Group-wide error state; also renders the `errorText` message. */
+  error?: boolean;
+  errorText?: ReactNode;
 }
 
 export function IdsRadioGroup({
@@ -83,12 +105,31 @@ export function IdsRadioGroup({
   onChange,
   disabled = false,
   orientation = "vertical",
+  label,
+  showLabel = true,
+  labelIcon,
+  labelPosition = "left",
+  required = false,
+  ariaLabel,
+  error = false,
+  errorText,
   className,
+  id: idProp,
+  onKeyDown: onKeyDownProp,
+  onFocus: onFocusProp,
   ...rest
 }: IdsRadioGroupProps) {
+  const reactId = useId();
+  const groupRef = useRef<HTMLDivElement>(null);
+  const groupId = idProp ?? `ids-radio-group-${reactId}`;
+  const labelId = `${groupId}-label`;
+  const errorId = `${groupId}-error`;
+
   const isControlled = valueProp !== undefined;
   const [uncontrolled, setUncontrolled] = useState(defaultValue);
   const value = isControlled ? valueProp : uncontrolled;
+
+  const [focusedValue, setFocusedValue] = useState<string | undefined>(valueProp ?? defaultValue);
 
   const setValue = useCallback(
     (next: string) => {
@@ -98,28 +139,197 @@ export function IdsRadioGroup({
     [isControlled, onChange],
   );
 
-  const ctx = useMemo<IdsRadioGroupContextValue>(
-    () => ({ name, value, disabled, setValue }),
-    [name, value, disabled, setValue],
+  useEffect(() => {
+    if (valueProp !== undefined) setFocusedValue(valueProp);
+  }, [valueProp]);
+
+  useEffect(() => {
+    const groupEl = groupRef.current;
+    if (!groupEl) return;
+    const radios = Array.from(
+      groupEl.querySelectorAll<HTMLInputElement>(`input[type="radio"][name="${CSS.escape(name)}"]`),
+    );
+    if (!radios.length) return;
+    /* The roving tab stop must always land on an option that exists: every radio
+       gets tabIndex={-1} unless its value is the focused one. Re-seed not only
+       when it is unset but also when it matches no rendered option — a consumer
+       passing a sentinel for "nothing selected" (IdsDatagrid passes "") would
+       otherwise drop the whole group out of the tab order. */
+    if (focusedValue !== undefined && radios.some((radio) => radio.value === focusedValue)) {
+      return;
+    }
+    const selected = radios.find((radio) => radio.checked);
+    setFocusedValue((selected ?? radios[0]).value);
+  }, [focusedValue, name, value]);
+
+  const handleFocus = useCallback(
+    (event: FocusEvent<HTMLDivElement>) => {
+      const target = event.target;
+      if (target instanceof HTMLInputElement && target.type === "radio") {
+        setFocusedValue(target.value);
+      }
+      onFocusProp?.(event);
+    },
+    [onFocusProp],
   );
+
+  const focusOption = useCallback(
+    (target: HTMLInputElement) => {
+      target.focus();
+      setFocusedValue(target.value);
+    },
+    [],
+  );
+
+  const handleKeyDown = useCallback(
+    (event: KeyboardEvent<HTMLDivElement>) => {
+      const current = event.target;
+      if (!(current instanceof HTMLInputElement) || current.type !== "radio") {
+        onKeyDownProp?.(event);
+        return;
+      }
+
+      const groupEl = groupRef.current;
+      if (!groupEl) {
+        onKeyDownProp?.(event);
+        return;
+      }
+
+      const radios = Array.from(
+        groupEl.querySelectorAll<HTMLInputElement>(`input[type="radio"][name="${CSS.escape(name)}"]`),
+      );
+      if (!radios.length) {
+        onKeyDownProp?.(event);
+        return;
+      }
+
+      const currentIndex = radios.indexOf(current);
+      const isCurrentEnabled = current.getAttribute("aria-disabled") !== "true";
+      const isEnabled = (radio: HTMLInputElement) =>
+        radio.getAttribute("aria-disabled") !== "true" && !radio.disabled;
+
+      /* ARIA APG radiogroup: arrows move the focus AND check the option they land
+         on, wrapping at the ends and skipping disabled options. `preventDefault`
+         suppresses the browser's own radio-group arrow handling, so the selection
+         has to be made here. */
+      const moveTo = (start: number, step: number) => {
+        for (let i = 1; i <= radios.length; i += 1) {
+          const index = (((start + step * i) % radios.length) + radios.length) % radios.length;
+          const candidate = radios[index];
+          if (isEnabled(candidate)) {
+            focusOption(candidate);
+            setValue(candidate.value);
+            return;
+          }
+        }
+      };
+
+      const moveToEdge = (from: "start" | "end") => {
+        const ordered = from === "start" ? radios : [...radios].reverse();
+        const target = ordered.find(isEnabled);
+        if (!target) return;
+        focusOption(target);
+        setValue(target.value);
+      };
+
+      switch (event.key) {
+        case "ArrowDown":
+        case "ArrowRight": {
+          event.preventDefault();
+          moveTo(currentIndex, 1);
+          break;
+        }
+        case "ArrowUp":
+        case "ArrowLeft": {
+          event.preventDefault();
+          moveTo(currentIndex, -1);
+          break;
+        }
+        case "Home": {
+          event.preventDefault();
+          moveToEdge("start");
+          break;
+        }
+        case "End": {
+          event.preventDefault();
+          moveToEdge("end");
+          break;
+        }
+        case " ":
+        case "Spacebar":
+        case "Enter": {
+          event.preventDefault();
+          if (isCurrentEnabled) {
+            setValue(current.value);
+          }
+          break;
+        }
+        default:
+          break;
+      }
+
+      onKeyDownProp?.(event);
+    },
+    [focusOption, name, onKeyDownProp, setValue],
+  );
+
+  const ctx = useMemo<IdsRadioGroupContextValue>(
+    () => ({ name, value, disabled, error, orientation, setValue, focusedValue }),
+    [name, value, disabled, error, orientation, setValue, focusedValue],
+  );
+
+  const shouldRenderLabel = showLabel && Boolean(label);
+  const hasErrorMessage = Boolean(error && errorText);
 
   return (
     <IdsRadioGroupContext.Provider value={ctx}>
       <div
         {...rest}
+        ref={groupRef}
+        id={groupId}
         role="radiogroup"
-        className={cx(
-          styles["ids-radio-group"],
-          orientation === "horizontal"
-            ? styles["ids-radio-group--horizontal"]
-            : styles["ids-radio-group--vertical"],
-          className,
-        )}
-        data-ids="ids-radio-group"
+        className={cx(styles["IdsRadioGroup"], className)}
+        data-ids="IdsRadioGroup"
         data-orientation={orientation}
+        data-label-position={labelPosition}
+        data-has-error-message={hasErrorMessage ? "true" : undefined}
         data-disabled={disabled ? "true" : undefined}
+        aria-labelledby={shouldRenderLabel ? labelId : undefined}
+        aria-label={!shouldRenderLabel ? ariaLabel : undefined}
+        aria-invalid={error || undefined}
+        aria-errormessage={hasErrorMessage ? errorId : undefined}
+        aria-required={required || undefined}
+        aria-disabled={disabled ? true : undefined}
+        onFocus={handleFocus}
+        onKeyDown={handleKeyDown}
       >
-        {children}
+        {shouldRenderLabel ? (
+          <IdsFormLabel
+            id={labelId}
+            size="lg"
+            required={required}
+            showInfoIcon={Boolean(labelIcon)}
+            className={styles["IdsRadioGroupLabel"]}
+          >
+            {label}
+          </IdsFormLabel>
+        ) : null}
+        <div
+          className={styles["IdsRadioGroupBody"]}
+          data-ids="IdsRadioGroupBody"
+        >
+          <div
+            className={styles["IdsRadioGroupItems"]}
+            data-ids="IdsRadioGroupItems"
+          >
+            {children}
+          </div>
+          {hasErrorMessage ? (
+            <IdsError id={errorId}>
+              <IdsErrorText>{errorText}</IdsErrorText>
+            </IdsError>
+          ) : null}
+        </div>
       </div>
     </IdsRadioGroupContext.Provider>
   );
@@ -215,6 +425,8 @@ export interface IdsRadioButtonProps
   checked?: boolean;
   defaultChecked?: boolean;
   disabled?: boolean;
+  /** Forces error styling on the control (merged with group `error` and `IdsError` child). */
+  error?: boolean;
   onChange?: (checked: boolean) => void;
   /** Demo/testing visual override only. */
   dataState?: IdsRadioDataState;
@@ -229,6 +441,7 @@ export const IdsRadioButton = forwardRef<HTMLInputElement, IdsRadioButtonProps>(
       checked: checkedProp,
       defaultChecked,
       disabled = false,
+      error: errorProp = false,
       onChange,
       dataState,
       id: idProp,
@@ -252,11 +465,13 @@ export const IdsRadioButton = forwardRef<HTMLInputElement, IdsRadioButtonProps>(
     const isDisabled = Boolean(disabled || group?.disabled || dataState === "disabled");
 
     const isItemControlled = checkedProp !== undefined;
+    const isStandaloneUncontrolled = !group && !isItemControlled;
+    const [uncontrolledChecked, setUncontrolledChecked] = useState(Boolean(defaultChecked));
     const checked = group
       ? group.value === value
       : isItemControlled
         ? Boolean(checkedProp)
-        : undefined;
+        : uncontrolledChecked;
 
     const { label, helper, error: errorMessage } = partitionChildren(children);
     if (!label) {
@@ -266,10 +481,16 @@ export const IdsRadioButton = forwardRef<HTMLInputElement, IdsRadioButtonProps>(
       throw new Error("IdsRadioButton: project either `IdsHelper` or `IdsError`, not both.");
     }
 
-    const hasError = Boolean(errorMessage);
+    const hasError = Boolean(errorProp || group?.error || errorMessage);
     const message = errorMessage ?? helper;
-    const isCheckedVisual =
-      checked === true || (checked === undefined && Boolean(defaultChecked));
+
+    const tabIndex = group
+      ? group.focusedValue === value
+        ? 0
+        : -1
+      : isDisabled
+        ? -1
+        : 0;
 
     const itemCtx = useMemo(() => ({ inputId }), [inputId]);
 
@@ -280,6 +501,9 @@ export const IdsRadioButton = forwardRef<HTMLInputElement, IdsRadioButtonProps>(
       }
       if (group) {
         group.setValue(value);
+      }
+      if (isStandaloneUncontrolled) {
+        setUncontrolledChecked(event.target.checked);
       }
       onChange?.(event.target.checked);
     };
@@ -297,7 +521,7 @@ export const IdsRadioButton = forwardRef<HTMLInputElement, IdsRadioButtonProps>(
         <div
           className={cx(styles["ids-radio-button"], className)}
           data-ids="ids-radio-button"
-          data-checked={isCheckedVisual ? "true" : "false"}
+          data-checked={checked ? "true" : "false"}
           data-disabled={isDisabled ? "true" : "false"}
           data-error={hasError ? "true" : "false"}
           data-state={dataState && dataState !== "default" ? dataState : undefined}
@@ -314,18 +538,12 @@ export const IdsRadioButton = forwardRef<HTMLInputElement, IdsRadioButtonProps>(
               ref={forwardedRef}
               id={inputId}
               type="radio"
+              tabIndex={tabIndex}
               className={styles["ids-radio-input"]}
               name={name}
               value={value}
-              checked={
-                group || isItemControlled
-                  ? Boolean(checked)
-                  : undefined
-              }
-              defaultChecked={
-                !group && !isItemControlled ? defaultChecked : undefined
-              }
-              disabled={isDisabled}
+              checked={Boolean(checked)}
+              aria-disabled={isDisabled ? true : undefined}
               aria-invalid={hasError || undefined}
               aria-describedby={projectedMessage ? messageId : undefined}
               onChange={handleChange}

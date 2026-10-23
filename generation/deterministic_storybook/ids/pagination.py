@@ -57,7 +57,7 @@ import {{
   PAGINATION_DROPDOWN_STATES,
 }} from "{contract_import}";
 
-/* Gate coverage: default hover press focus-visible disabled selected */
+/* Gate coverage: default hover press focus-visible selected */
 
 const frameStyle = {{ padding: 20, maxWidth: 960 }} as const;
 const stackStyle = {{ ...frameStyle, display: "grid", gap: 20 }} as const;
@@ -110,7 +110,6 @@ const meta: Meta<typeof {component_name}> = {{
     background: {{ control: "radio", options: PAGINATION_BACKGROUND_OPTIONS }},
     dropdownState: {{ control: "select", options: PAGINATION_DROPDOWN_STATES }},
     pageOffsetDropdownState: {{ control: "select", options: PAGINATION_DROPDOWN_STATES }},
-    disabled: {{ control: "boolean" }},
     onPageChange: {{ action: "onPageChange" }},
     onPageSizeChange: {{ action: "onPageSizeChange" }},
     onFirstPageNavigate: {{ action: "onFirstPageNavigate" }},
@@ -123,7 +122,6 @@ const meta: Meta<typeof {component_name}> = {{
     pageSizeOptions: [...{defaults_symbol}.pageSizeOptions],
     dropdownState: "collapsed",
     pageOffsetDropdownState: "collapsed",
-    disabled: false,
   }},
 }};
 
@@ -206,14 +204,6 @@ export const PageOffsetDropdown: Story = {{
         pageOffsetOptions={{[1, 2, 3, 4, 5, 8, 16]}}
         pageOffsetDropdownState="expanded-below"
       />
-    </div>
-  ),
-}};
-
-export const Disabled: Story = {{
-  render: () => (
-    <div style={{{{ ...frameStyle }}}}>
-      <{component_name} {{...{defaults_symbol}}} pageSizeOptions={{[...{defaults_symbol}.pageSizeOptions]}} currentPage={{2}} totalPages={{16}} disabled />
     </div>
   ),
 }};

@@ -1,6 +1,11 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { IdsDetailPanel, type IdsDetailPanelAttachMode } from "./IdsDetailPanel";
+import {
+  IdsDetailPanel,
+  IdsDetailPanelField,
+  IdsDetailPanelSection,
+  type IdsDetailPanelAttachMode,
+} from "./IdsDetailPanel";
 import "../../../components/ids-theme.css";
 
 const meta: Meta<typeof IdsDetailPanel> = {
@@ -25,26 +30,34 @@ const meta: Meta<typeof IdsDetailPanel> = {
 export default meta;
 type Story = StoryObj<typeof IdsDetailPanel>;
 
+/** Figma "Detail Panel Template": section headers with label / value rows, ruled apart. */
 function ExampleContent() {
   return (
-    <div style={{ display: "grid", gap: 12 }}>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-gray-neutral-strong)", fontWeight: 500 }}>
-        Section Header
-      </div>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-gray-neutral)" }}>
-        Label: Single line content
-      </div>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-gray-neutral)" }}>
-        Status: Warning
-      </div>
-      <div style={{ height: 600, border: "1px dashed var(--color-border-gray-neutral-base)", padding: 12, boxSizing: "border-box" }}>
-        Overflow sample content area
-      </div>
-    </div>
+    <>
+      <IdsDetailPanelSection title="Section Header">
+        <IdsDetailPanelField label="Label:">Single line content</IdsDetailPanelField>
+        <IdsDetailPanelField label="Label:">
+          Multiple line content that wraps onto the next line when it is longer than the panel width
+        </IdsDetailPanelField>
+        <IdsDetailPanelField label="Label:">Single line content</IdsDetailPanelField>
+      </IdsDetailPanelSection>
+      <IdsDetailPanelSection title="Section Header">
+        <IdsDetailPanelField label="Label:">Single line content</IdsDetailPanelField>
+        <IdsDetailPanelField label="Status:">Warning</IdsDetailPanelField>
+      </IdsDetailPanelSection>
+    </>
   );
 }
 
-function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPanelAttachMode; initialExpanded: boolean }) {
+function PanelFrame({
+  attachMode,
+  initialExpanded,
+  detachable = false,
+}: {
+  attachMode: IdsDetailPanelAttachMode;
+  initialExpanded: boolean;
+  detachable?: boolean;
+}) {
   const [expanded, setExpanded] = useState(initialExpanded);
   const frameHeight = attachMode === "datagrid" ? 792 : 768;
 
@@ -56,7 +69,14 @@ function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPane
       <div style={{ display: "flex", height: frameHeight, border: "1px solid var(--color-border-gray-neutral-base)", background: "var(--color-background-surface-component)" }}>
         <main style={{ flex: 1, minWidth: 0, padding: 16, boxSizing: "border-box", overflow: "auto" }}>
           <h3 style={{ marginTop: 0 }}>Host content</h3>
-          <p>Panel is attached to this host region and toggles between 398px and 40px widths.</p>
+          <p>
+            {attachMode === "datagrid"
+              ? "Datagrid panels size to their content between 240px and 480px and collapse to a 40px rail."
+              : "Page panels are 384px wide (the guideline maximum) and collapse to a 40px rail."}
+            {detachable
+              ? " Use the pop-out control to float the panel; drag its header to move it and its corner to resize it (up to 480 × 1280)."
+              : null}
+          </p>
           <div style={{ height: 900, border: "1px dashed var(--color-border-gray-neutral-base)", padding: 12 }}>
             Scrollable host content
           </div>
@@ -67,6 +87,7 @@ function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPane
             isExpanded={expanded}
             onExpandedChange={setExpanded}
             title="Details"
+            detachable={detachable}
             body={<ExampleContent />}
           />
         </div>
@@ -77,6 +98,11 @@ function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPane
 
 export const DatagridAttachedManual: Story = {
   render: () => <PanelFrame attachMode="datagrid" initialExpanded={true} />,
+};
+
+export const DatagridPopOut: Story = {
+  name: "Datagrid Pop-out",
+  render: () => <PanelFrame attachMode="datagrid" initialExpanded={true} detachable />,
 };
 
 export const PageAttachedManual: Story = {

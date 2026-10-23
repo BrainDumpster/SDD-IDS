@@ -370,9 +370,12 @@ export interface MenuPopupProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-function MenuPopup({ children, className, style, id, onKeyDown, ...rest }: MenuPopupProps) {
+function MenuPopup({ children, className, style, id, onKeyDown, onBlur, ...rest }: MenuPopupProps) {
   const root = useMenuRoot()!;
   const popupRef = useRef<HTMLDivElement | null>(null);
+  // Pressing the trigger pulls focus out of the popup before the trigger's click
+  // toggles the menu. Closing on that blur would let the click reopen it.
+  const triggerPressedRef = useRef(false);
 
   useEffect(() => {
     if (!root.open) return;
@@ -380,8 +383,9 @@ function MenuPopup({ children, className, style, id, onKeyDown, ...rest }: MenuP
     const onPointerDown = (event: MouseEvent) => {
       const target = event.target as Node | null;
       if (!target) return;
+      triggerPressedRef.current = Boolean(root.triggerRef.current?.contains(target));
       if (popupRef.current?.contains(target)) return;
-      if (root.triggerRef.current?.contains(target)) return;
+      if (triggerPressedRef.current) return;
       // Nested submenu portals
       const portals = document.querySelectorAll("[data-ids-menu-portal]");
       for (const portal of portals) {
@@ -430,6 +434,25 @@ function MenuPopup({ children, className, style, id, onKeyDown, ...rest }: MenuP
         if (event.key === "Escape") {
           root.setOpen(false);
         }
+      }}
+      onBlur={(event) => {
+        onBlur?.(event);
+        const triggerPressed = triggerPressedRef.current;
+        triggerPressedRef.current = false;
+        // The trigger's own click closes the menu.
+        if (triggerPressed) return;
+        const next = event.relatedTarget as Node | null;
+        // Focus moved to another element inside the popup — stay open.
+        if (next && popupRef.current?.contains(next)) return;
+        // Focus moved into a nested/sibling menu portal (e.g. submenu) — stay open.
+        if (next) {
+          const portals = document.querySelectorAll("[data-ids-menu-portal]");
+          for (const portal of portals) {
+            if (portal.contains(next)) return;
+          }
+        }
+        // Focus left the menu entirely (including back to the trigger) — close.
+        root.setOpen(false);
       }}
     >
       {children}

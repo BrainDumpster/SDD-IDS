@@ -145,9 +145,9 @@ export const TokenInspector: Story = {{
           align-items: start;
           gap: 12px;
           padding: 6px 8px;
-          border: 1px solid var(--color-border-neutral-light, #c5c5c5);
+          border: 1px solid var(--color-border-gray-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }}
         .sbTokenCode {{
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -159,7 +159,7 @@ export const TokenInspector: Story = {{
         .sbTokenSwatch {{
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }}

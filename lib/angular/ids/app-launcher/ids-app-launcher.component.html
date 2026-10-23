@@ -18,6 +18,20 @@
     />
   </button>
 
+  <!-- Off-screen label measurement for the long-name reflow. Always rendered so
+       the packed layout is known before the panel opens. -->
+  <div class="ids-app-launcher__measure" aria-hidden="true">
+    @for (product of products; track reflowKey(product, $index); let i = $index) {
+      <span
+        #measureLabel
+        class="ids-app-launcher__measure-label"
+        [attr.data-reflow-key]="reflowKey(product, i)"
+        [attr.data-reflow-budget]="isNoIcon(product) ? 3 : 1"
+        >{{ product.name }}</span
+      >
+    }
+  </div>
+
   @if (open) {
     <div
       #popupPanel
@@ -26,6 +40,7 @@
       [attr.aria-label]="ariaLabel"
       [attr.data-programme]="resolvedProgramme"
       [ngStyle]="popupStyle"
+      (keydown)="onPopupKeyDown($event)"
     >
       <div
         class="ids-app-launcher__surface"
@@ -34,7 +49,7 @@
         [attr.data-programme]="resolvedProgramme"
       >
         @if (products.length > 0) {
-          <div class="ids-app-launcher__product-region">
+          <div class="ids-app-launcher__product-region" data-focus-section="products">
             @for (row of rows; track $index; let rowIndex = $index) {
               <div class="ids-app-launcher__product-row-group">
                 @if (rowIndex > 0) {

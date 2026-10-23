@@ -1,0 +1,28 @@
+{
+  "name": "ids-storybook-lit",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bash ./scripts/dev-with-lit-watch.sh",
+    "dev:storybook": "fuser -k 6008/tcp 2>/dev/null || true; storybook dev -p 6008 --ci",
+    "build": "npm run build --prefix ../lib/lit/ids && storybook build",
+    "build:lit": "npm run build --prefix ../lib/lit/ids",
+    "build:lit:watch": "npm run build:watch --prefix ../lib/lit/ids",
+    "storybook": "npm run dev"
+  },
+  "dependencies": {
+    "@ids/lit": "file:../lib/lit/ids",
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@storybook/addon-essentials": "^8.6.18",
+    "@storybook/blocks": "^8.6.18",
+    "@storybook/web-components": "8.6.18",
+    "@storybook/web-components-vite": "8.6.18",
+    "@types/node": "^26.4.1",
+    "storybook": "8.6.18",
+    "typescript": "^5.8.3",
+    "vite": "^6.3.5"
+  }
+}

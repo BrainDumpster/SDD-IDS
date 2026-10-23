@@ -95,6 +95,8 @@ function resolveLabelVisibility(
   mode: IdsSpinnerMode,
   value: unknown,
 ): IdsSpinnerLabelVisibility {
+  if (size === "lg") return "sr-only";
+
   let visibility: IdsSpinnerLabelVisibility | undefined;
   if (
     typeof value === "string" &&
@@ -105,8 +107,7 @@ function resolveLabelVisibility(
 
   if (visibility == null) {
     if (size === "sm") return "visible-inline";
-    if (size === "md") return "visible-below";
-    return "sr-only";
+    return "visible-below";
   }
 
   // size=sm: visible-inline | sr-only; overlay → sr-only only
@@ -118,7 +119,7 @@ function resolveLabelVisibility(
 
   // size=md|lg: visible-below | sr-only (visible-inline incompatible)
   if (visibility === "visible-inline") {
-    return size === "lg" ? "sr-only" : "visible-below";
+    return "visible-below";
   }
 
   return visibility;

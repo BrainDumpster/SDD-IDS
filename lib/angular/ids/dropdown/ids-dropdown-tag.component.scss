@@ -2,7 +2,7 @@
   display: inline-flex;
   align-items: center;
   gap: var(--spacing-space-8);
-  border: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--corner-radius-radius-24);
   background: var(--color-background-surface-component);
   color: var(--color-text-gray-neutral);
@@ -32,6 +32,6 @@
 }
 
 .dismiss:focus-visible {
-  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
   outline-offset: 1px;
 }
