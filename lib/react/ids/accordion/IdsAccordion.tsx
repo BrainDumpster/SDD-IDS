@@ -28,6 +28,7 @@ import React, {
   useMemo,
   useRef,
   useState,
+  type CSSProperties,
   type HTMLAttributes,
   type KeyboardEvent,
   type ReactNode,
@@ -78,7 +79,11 @@ export interface IdsAccordionProps {
   chevronPosition?: "left" | "right";
   variant?: "default" | "form";
   className?: string;
+  /** Root width — fluid (100% of container) by default; number values are px, strings any CSS length. */
+  width?: number | string;
   maxWidth?: number | string;
+  /** Expanded panel max-height — unconstrained by default; overflowing content scrolls. Numbers are px, strings any CSS length. */
+  panelMaxHeight?: number | string;
 }
 
 type ChevronPosition = "left" | "right";
@@ -89,6 +94,7 @@ interface IdsAccordionContextValue {
   multiple: boolean;
   chevronPosition: ChevronPosition;
   variant: Variant;
+  panelMaxHeight?: string;
   reactId: string;
   toggle: (itemValue: string, disabled?: boolean) => void;
   registerTrigger: (value: string, el: HTMLButtonElement | null) => void;
@@ -150,9 +156,22 @@ function AccordionTitle({ children }: { children: ReactNode }) {
     if (!element) return;
 
     const check = () => {
+      // `-webkit-box`/`line-clamp` clips text without growing scroll metrics,
+      // so temporarily render as a plain block — it grows to the full content
+      // height — and compare against the clamped height. Synchronous, so it
+      // never paints.
+      const clampedHeight = element.clientHeight;
+      const clampedWidth = element.clientWidth;
+      element.style.setProperty("display", "block");
+      element.style.setProperty("-webkit-line-clamp", "unset");
+      element.style.setProperty("line-clamp", "unset");
+      const fullHeight = element.offsetHeight;
+      const fullScrollWidth = element.scrollWidth;
+      element.style.removeProperty("display");
+      element.style.removeProperty("-webkit-line-clamp");
+      element.style.removeProperty("line-clamp");
       setIsTruncated(
-        element.scrollHeight > element.clientHeight + 1 ||
-          element.scrollWidth > element.clientWidth + 1,
+        fullHeight > clampedHeight + 1 || fullScrollWidth > clampedWidth + 1,
       );
     };
 
@@ -215,13 +234,27 @@ export function IdsAccordion({
   chevronPosition: chevronPositionProp,
   variant: variantProp,
   className,
+  width,
   maxWidth,
+  panelMaxHeight,
 }: IdsAccordionProps) {
+  const widthValue =
+    width !== undefined
+      ? typeof width === "number"
+        ? `${width}px`
+        : width
+      : undefined;
   const maxWidthValue =
     maxWidth !== undefined
       ? typeof maxWidth === "number"
         ? `${maxWidth}px`
         : maxWidth
+      : undefined;
+  const panelMaxHeightValue =
+    panelMaxHeight !== undefined
+      ? typeof panelMaxHeight === "number"
+        ? `${panelMaxHeight}px`
+        : panelMaxHeight
       : undefined;
   if (items) {
     assertUniqueValues(items);
@@ -319,6 +352,7 @@ export function IdsAccordion({
       multiple,
       chevronPosition,
       variant,
+      panelMaxHeight: panelMaxHeightValue,
       reactId,
       toggle,
       registerTrigger,
@@ -333,6 +367,7 @@ export function IdsAccordion({
       multiple,
       chevronPosition,
       variant,
+      panelMaxHeightValue,
       reactId,
       toggle,
       registerTrigger,
@@ -367,7 +402,11 @@ export function IdsAccordion({
         className={cx(s.accordion, variant === "form" && s.accordionForm, className)}
         data-ids="ids-accordion"
         data-variant={variant}
-        style={maxWidthValue !== undefined ? { maxWidth: maxWidthValue } : undefined}
+        style={
+          widthValue !== undefined || maxWidthValue !== undefined
+            ? { width: widthValue, maxWidth: maxWidthValue }
+            : undefined
+        }
       >
         {composedChildren}
       </div>
@@ -526,8 +565,13 @@ export interface IdsAccordionBodyProps extends HTMLAttributes<HTMLDivElement> {
   children?: ReactNode;
 }
 
-export function IdsAccordionBody({ children, className, ...rest }: IdsAccordionBodyProps) {
+export function IdsAccordionBody({ children, className, style, ...rest }: IdsAccordionBodyProps) {
+  const root = useIdsAccordion("IdsAccordionBody");
   const item = useIdsAccordionItem("IdsAccordionBody");
+
+  const panelStyle: CSSProperties | undefined = root.panelMaxHeight
+    ? { maxHeight: root.panelMaxHeight, overflowY: "auto", ...style }
+    : style;
 
   return (
     <div
@@ -537,6 +581,7 @@ export function IdsAccordionBody({ children, className, ...rest }: IdsAccordionB
       aria-labelledby={item.triggerId}
       hidden={!item.isOpen}
       className={cx(s.body, !item.isOpen && s.bodyHidden, className)}
+      style={panelStyle}
       data-ids="ids-accordion-body"
       data-open={item.isOpen ? "true" : "false"}
     >
