@@ -54,7 +54,7 @@
   - `var(--color-border-gray-neutral-base)` top border on section boundaries
   - first section header top border may be omitted.
 - Footer action button inner wrapper: `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`
-- Focus ring: pseudo-element `::after`, `inset: -4px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` — field shell stays square (`radius-none`); only the outer focus ring is rounded.
+- Field focus: the field **border turns brand** (`var(--color-border-brand-base)`) with **no outer ring**, matching the IDS Text Box (see 2026-10-23 note). The field shell stays square (`radius-none`). (Option rows inside the menu keep their own inset focus ring.)
 
 ### Slot geometry (Figma-verified)
 
@@ -116,7 +116,7 @@
 | Field container | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | show-dropdown | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
-| Field container | focus-visible | `var(--color-background-surface-component)` | inner `var(--color-border-gray-neutral-base)` + outer ring `var(--color-border-brand-base)` (pseudo `::after`, `inset: -4px`, `border-radius: 4px`) | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
+| Field container | focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` (border turns brand, no outer ring — matches Text Box) | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | text `var(--color-text-gray-disabled)`, caret `var(--color-border-gray-disabled)` |
 | Field container | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)`, error icon `var(--color-icon-alerting-critical-base)`, error text `var(--color-text-alerting-critical-base)` |
 | Option row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
@@ -162,13 +162,12 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Optional action row:
   - user-defined label
   - emits action event on click.
-- Optional Clear All (`showClearAll`, Figma `348:140631`):
-  - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding-2 / padding-16`, `radius-2`) but with a **bottom** border since it sits at the top of the list.
-  - the Clear All row is **hidden while a search query is active**, and reappears when the search is cleared.
-  - clicking clears the selection; the row then auto-hides. It does **not** collapse the menu.
-  - after the click, focus moves onto the option that is now selected (the first enabled option when none is), so the keyboard user stays in the menu instead of losing focus with the hidden row.
-  - **With radio options (`showRadio`) the row is labelled "Reset to Default"** (design review 2026-10). Behavior is unchanged: it returns the dropdown to no selection (placeholder), shows whenever a value is selected, hides once reset and while a search query is active, and does **not** collapse the menu.
-  - Reset to Default is **right-aligned** in its row, like the multi-select Clear All: `16px` (`var(--padding-padding-16)`) right inset. A plain Clear All row stays left-aligned.
+- Reset to Default (`showResetToDefault`, default on; `showClearAll` is a deprecated alias — Figma `348:140631`):
+  - the field has two default states: the `-Select-` placeholder (`defaultValue = ""`) or a pre-selected option (`defaultValue = "<id>"`).
+  - "Reset to Default" occupies the **footer action-button slot** at the **bottom** of the menu (after the options list) — **not** a row above the options. It is full-width, **left-aligned** (`16px` left inset, aligning with the options), `var(--color-text-brand-strong)` / `Body 2`, with a **top** border, matching the standard action button.
+  - it appears **only when the current selection differs from `defaultValue`**; while the selection *is* the default there is no reset control.
+  - clicking **restores `defaultValue`** (the placeholder when it is `""`); the control then auto-hides. It does **not** collapse the menu.
+  - because it lives in the footer slot, it replaces a custom `actionLabel`/`onAction` button while active; it falls back to that action when the selection is already the default.
 ## Composition & API (runtime)
 | Prop / Slot | Required | Type | Notes |
 |---|---|---|---|
@@ -180,7 +179,10 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 | `disabled` | No | `boolean` | Blocks interactions. |
 | `searchable` | No | `boolean` | Enables search row. |
 | `menuWidth` | No | `"trigger" \| "content"` | Width mode. `"trigger"` (default) = trigger width; `"content"` = grow to widest option, clamped `[trigger, 700px]`. |
-| `showClearAll` | No | `boolean` | Shows a "Clear All" row (below search) when a value is selected; clears the selection on click (row then auto-hides), without collapsing the menu. With `showRadio` the row is labelled "Reset to Default" (same behavior). |
+| `showResetToDefault` | No | `boolean` | Default `true`. Shows a "Reset to Default" row (below search) when the current selection differs from `defaultValue`; clicking restores `defaultValue` (row then auto-hides), without collapsing the menu. |
+| `resetToDefaultLabel` | No | `string` | Label for the Reset to Default row. Default `"Reset to Default"`. |
+| `defaultValue` | No | `string` | The default selection. `""` = `-Select-` placeholder; an option id pre-selects that option. |
+| `showClearAll` | No | `boolean` | **Deprecated** alias for `showResetToDefault`; the row now resets to `defaultValue` rather than always clearing to empty. |
 | `showRadio` | No | `boolean` | Optional radio visual in option rows. |
 | `options` | Yes | `{ id: string; label: string; disabled?: boolean }[]` | Canonical option list. |
 | `value` | No | `string` | Controlled selected value. |
@@ -226,7 +228,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Disabled option behavior differs by radio mode:
   - with radio: white background, no outline
   - without radio: `color-background-gray-lighter` background, `outline: 1px solid color-border-gray-disabled`
-- Focus ring on field: pseudo-element `::after` with `inset: -4px` (2px gap from the 1px field border), `border: 1px solid color-border-brand-base`, `border-radius: var(--corner-radius-radius-4)`. Field element itself has no border-radius.
+- Field focus: the field border turns brand (`var(--color-border-brand-base)`), no outer ring — matches the IDS Text Box. Field element itself has no border-radius.
 - Option focus ring: inset `outline: 1px solid color-border-brand-base` with `outline-offset: -1px`.
 - When option row is focused, radio button must not render its own focus ring.
 - Font weight: `400` (regular) for all text elements (field value, option label, helper text, error message, section header, action label).
@@ -276,7 +278,12 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
-> Last updated: 2026-10-11.
+> Last updated: 2026-10-23.
+
+### 2026-10-23
+- **Field + search focus turn the border brand (Text Box look), no outer ring** (design review). The trigger focus no longer draws an outer `::after` ring (`inset: -4px`, brand border, `radius-4`); the field border turns brand (`var(--color-border-brand-base)`) with no ring. The trigger is a `<button>`, which keeps `:focus` after a mouse click, so the field border is **keyboard-focus only** (`:focus-visible` / `data-focus-visible`) — a mouse click opens the menu without leaving a lingering brand border. The in-menu **search field** is a specialised Text Box and mirrors its states: default base border, hover `--color-border-gray-neutral-strong` (`:hover:not(:focus-within)`), and brand border on **any** focus (click or Tab) via `:focus-within` (disabled/error do not apply — it only shows inside an enabled, open menu). The error state keeps its critical border. Implementation: React `lib/react/ids/dropdown-shared/DropdownMenu.module.css` (`.triggerReset:focus-visible` sets `--trigger-border`, inherited into the shell's `.field`; `.searchField:focus-within`) + `IdsDropdownTriggerShell.module.css` (demo `data-focus`); Angular `ids-dropdown-menu.component.scss` + `ids-dropdown-trigger-shell.component.scss`. Applies to all dropdown fields (single, multi, combo box).
+- **Footer action pinned to the bottom border** — the popup is a flex column with the options region `flex: 1 1 auto; min-height: 0`, so the footer action (Reset to Default) stays on the bottom border when a `min-height` makes the popup taller than its content (e.g. a searchable field's "No results found" state). Implementation: `DropdownMenu.module.css` `.popup` + `.optionsScrollRoot`; Angular `ids-dropdown-menu.component.scss`.
+- **Reset to Default in the footer action slot, returns to `defaultValue`, two default states** (design review). The single-select field has two default states: the `-Select-` placeholder (`defaultValue = ""`) or a pre-selected option (`defaultValue = "<id>"`). "Reset to Default" now renders as the **footer action button** (bottom of the menu, full-width, left-aligned) — not the top Clear All row (which was above the options and right-aligned) — and appears **only when the current selection differs from `defaultValue`**, restoring `defaultValue` on click. Implementation: React `IdsDropdownSingleSelect.tsx` — new `showResetToDefault` (default `true`, `showClearAll` kept as a deprecated alias) and `resetToDefaultLabel`; the wrapper drives `footerActionLabel={showResetRow ? resetToDefaultLabel : actionLabel}` / `onFooterActionClick`, where `showResetRow = selectedId !== defaultValue`. Angular: consumer projects `<ids-dropdown-menu-footer actionLabel="Reset to Default" (action)="…">` conditionally.
 
 ### 2026-10-11
 - **Reset to Default right-aligned** (design review). React `DropdownMenu.tsx`: `clearAllAlign` now defaults to `"right"` when the row reads Reset to Default (`showSingleSelectRadio`), else `"left"`; `.clearAllAction[data-align="right"]` uses a `var(--padding-padding-16)` right inset, matching the multi-select Clear All. Angular `ids-dropdown-menu`: new `clearAllAlign` input, `resolvedClearAllAlign` → `data-align`. Angular also gets the `.clearAllAction` row styles (bottom border, `16px` inset, label focus ring), which its SCSS was missing.

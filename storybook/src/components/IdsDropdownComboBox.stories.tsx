@@ -64,6 +64,45 @@ function TruncatingValue({
   );
 }
 
+/** Plain single-line value (ellipsis). Used when the tooltip is owned by the
+ *  field trigger (badge + text share one tooltip). */
+function FieldValueText({ text }: { text: string }) {
+  return (
+    <span
+      style={{
+        display: "block",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        whiteSpace: "nowrap",
+        cursor: "pointer",
+      }}
+    >
+      {text}
+    </span>
+  );
+}
+
+/** Bulleted list of the selected labels — easier to scan long labels than a
+ *  comma-joined string (design request). */
+function SelectedItemsList({ labels }: { labels: string[] }) {
+  return (
+    <ul
+      style={{
+        margin: 0,
+        paddingInlineStart: "var(--spacing-space-16)",
+        listStyle: "disc",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--spacing-space-2)",
+      }}
+    >
+      {labels.map((label, index) => (
+        <li key={`${label}-${index}`}>{label}</li>
+      ))}
+    </ul>
+  );
+}
+
 function ComboTrigger({
   value,
   placeholder = "-Select-",
@@ -74,6 +113,7 @@ function ComboTrigger({
   focusVisible = false,
   showBadge = false,
   selectedCount = 0,
+  selectedLabels,
   fullWidth = false,
 }: {
   value?: string;
@@ -86,10 +126,14 @@ function ComboTrigger({
   /** Multi-select combo: optional count badge in front of the truncated list (Figma 4g). */
   showBadge?: boolean;
   selectedCount?: number;
+  /** Selected labels for the bulleted tooltip list (multi-select badge case). */
+  selectedLabels?: string[];
   /** Fill the container width (for the responsive-width demo). */
   fullWidth?: boolean;
 }) {
   const badgeVisible = showBadge && selectedCount > 0;
+  const tooltipLabels =
+    selectedLabels ?? (value ? value.split(", ").filter(Boolean) : []);
   return (
     <IdsDropdownTriggerShell
       size={size}
@@ -101,19 +145,31 @@ function ComboTrigger({
       style={fullWidth ? { width: "100%" } : undefined}
       left={
         badgeVisible ? (
-          <>
-            {/* Badge and truncated text each get a tooltip. The text tooltip
-                uses a section header so the full selected list is available on
-                hover even when the badge is not targeted. */}
-            <span style={{ display: "inline-flex", flexShrink: 0 }}>
-              <IdsTooltip side="top" arrowAlign="start" title={`${selectedCount} Items`} content={value ?? ""}>
-                <span style={{ display: "inline-flex" }}>
-                  <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
-                </span>
-              </IdsTooltip>
+          // Badge + value text share one tooltip trigger. Hovering either opens
+          // the tooltip anchored above the badge (side=top + arrowAlign=start),
+          // listing the selected items as bullets.
+          <IdsTooltip
+            side="top"
+            arrowAlign="start"
+            triggerDisplay="block"
+            title={`${selectedCount} Items`}
+            content={<SelectedItemsList labels={tooltipLabels} />}
+          >
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--spacing-space-4)",
+                minWidth: 0,
+                width: "100%",
+              }}
+            >
+              <span style={{ display: "inline-flex", flexShrink: 0 }}>
+                <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
+              </span>
+              <FieldValueText text={value || placeholder} />
             </span>
-            <TruncatingValue text={value || placeholder} tooltip={value} tooltipTitle={`${selectedCount} Items`} />
-          </>
+          </IdsTooltip>
         ) : (
           <TruncatingValue text={value || placeholder} tooltip={value} />
         )
@@ -222,8 +278,10 @@ export const SingleSelectContractManual: Story = {
           trigger={<ComboTrigger value={selected} placeholder={placeholder} />}
           items={items}
           showSearch
-          showClearAll
-          onClearAllClick={() => {
+          /* Default is the -Select- placeholder: Reset to Default sits in the
+             footer action slot and shows only when a value is selected. */
+          footerActionLabel={selected ? "Reset to Default" : undefined}
+          onFooterActionClick={() => {
             setSelected("");
             setSelectionEvent({ csv: "", item: null });
           }}
@@ -322,6 +380,7 @@ export const MultiSelectContractManual: Story = {
               placeholder="-Select-"
               showBadge
               selectedCount={selected.length}
+              selectedLabels={selected}
               fullWidth
             />
           }
@@ -487,6 +546,7 @@ export const MultiSelectShowSelectedPanel: Story = {
               placeholder="-Select-"
               showBadge
               selectedCount={selected.length}
+              selectedLabels={selected}
               fullWidth
             />
           }

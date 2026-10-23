@@ -53,8 +53,6 @@ export const CompositionApi = {
           <ids-dropdown-menu
             [searchable]="searchable"
             [showSearch]="searchable"
-            [showClearAll]="showClearAll"
-            [clearAllLabel]="clearAllLabel"
             [menuWidth]="menuWidth"
             [defaultOpen]="defaultOpen"
             [fullWidth]="fullWidth"
@@ -65,7 +63,6 @@ export const CompositionApi = {
             [searchPlaceholder]="searchPlaceholder"
             [ariaLabel]="ariaLabel || null"
             [ariaInvalid]="ariaInvalid"
-            (clearAllClick)="selected = ''"
           >
             <ids-dropdown-trigger-shell [size]="size" [disabled]="disabled" [filled]="!!selected">
               <span style="overflow:hidden;text-overflow:ellipsis;white-space:nowrap">
@@ -76,6 +73,11 @@ export const CompositionApi = {
             <ids-dropdown-menu-item value="Compute" label="Compute" />
             <ids-dropdown-menu-item value="Network" label="Network" />
             <ids-dropdown-menu-item value="Security" label="Security" />
+            <!-- Default is the placeholder: Reset to Default is the footer action
+                 button, shown only when a value is selected. -->
+            @if (selected) {
+              <ids-dropdown-menu-footer actionLabel="Reset to Default" (action)="selected = ''" />
+            }
           </ids-dropdown-menu>
           <ids-dropdown-helper>Choose one product</ids-dropdown-helper>
         </ids-dropdown>

@@ -17,24 +17,17 @@
   min-width: 0;
 }
 
-/* Base UI Menu.Trigger is the real focusable element; show the IDS focus ring
-   around the trigger shell (inset -5px) when keyboard focus is active.
-   `.triggerReset` has `all: unset`, so the pseudo-element draws the ring. */
+/* Focus: the field border turns brand (like the IDS Text Box), with no outer
+   ring — but keyboard focus only. A mouse click opens the menu without leaving a
+   lingering brand border (a `<button>` keeps `:focus` after a click, so `:focus`
+   is deliberately not matched here). Base UI Menu.Trigger (`.triggerReset`) is the
+   real focusable element; `--trigger-border` inherits into the trigger shell's
+   `.field`. The error state sets `--trigger-border` directly on `.field`, so it
+   still wins. */
 .triggerReset:focus-visible,
 .triggerReset[data-focus-visible] {
-  position: relative;
   outline: none;
-}
-
-.triggerReset:focus-visible::after,
-.triggerReset[data-focus-visible]::after {
-  content: "";
-  position: absolute;
-  /* -4px → 2px visible offset from the 1px field border (IDS standard). */
-  inset: -4px;
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
+  --trigger-border: var(--color-border-brand-base);
 }
 
 .triggerMeasure {
@@ -44,6 +37,11 @@
 
 .popup {
   background: var(--color-background-surface-component);
+  /* Column layout so the options region can flex-grow and keep the footer action
+     pinned to the bottom border even when a `min-height` (combo box) makes the
+     popup taller than its content — e.g. the "No results found" search state. */
+  display: flex;
+  flex-direction: column;
   /* Full 1px border. With sideOffset -1 the popup's top border overlaps the
      field's bottom border into a single line (attached-dropdown look, 677bdca3).
      Without the top border, the opaque popup covers the field border → no line. */
@@ -114,18 +112,18 @@
   border-radius: 0;
 }
 
-/* Outer focus ring: matches the IDS dropdown trigger focus ring
-   (`inset: -4px` = 2px offset, brand border, 4px radius). Keyboard focus only —
-   `DropdownMenu.tsx` sets `data-focus-visible` on the field for a Tab focus but
-   not a mouse click (a text `<input>` matches `:focus-visible` even on click, so
-   `:focus-within` / `:focus-visible` would wrongly show the ring on click). */
-.searchField[data-focus-visible="true"]::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
+/* The search field is a specialised Text Box, so it mirrors the Text Box states.
+   Hover: border `--color-border-gray-neutral-strong` (not while focused). */
+.searchField:hover:not(:focus-within) {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+/* Focus matches the IDS Text Box: the field border turns brand, no outer ring,
+   on both click and Tab (the search `<input>` sits inside, so `:focus-within`
+   covers pointer focus too). */
+.searchField:focus-within,
+.searchField[data-focus-visible="true"] {
+  border-color: var(--color-border-brand-base);
 }
 
 .searchIcon {
@@ -346,6 +344,10 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  /* Grow to fill the popup (incl. a combo-box `min-height`) so the footer action
+     stays on the bottom border; `min-height: 0` lets the viewport scroll. */
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .optionsScrollViewport {

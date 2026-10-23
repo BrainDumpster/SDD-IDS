@@ -4,6 +4,16 @@
   box-sizing: border-box;
 }
 
+/* Focus: the field border turns brand (like the IDS Text Box), no outer ring —
+   keyboard focus only. A mouse click opens the menu without leaving a lingering
+   brand border (a `<button>` keeps `:focus` after a click). `--trigger-border`
+   inherits down into the projected trigger shell's `.field`; the error state
+   sets it directly on `.field`, so it still wins. */
+.triggerReset:focus-visible {
+  outline: none;
+  --trigger-border: var(--color-border-brand-base);
+}
+
 .triggerFull {
   width: 100%;
 }
@@ -16,6 +26,11 @@
 
 .popup {
   background: var(--color-background-surface-component);
+  /* Column layout so the options region can flex-grow and keep the footer action
+     pinned to the bottom border even when a `min-height` (combo box) makes the
+     popup taller than its content — e.g. the "No results found" search state. */
+  display: flex;
+  flex-direction: column;
   border: var(--border-width-border-1, 1px) solid var(--color-border-gray-neutral-base);
   border-top: none;
   box-sizing: border-box;
@@ -59,6 +74,18 @@
   background: var(--color-background-surface-component);
   padding: var(--padding-padding-2) var(--padding-padding-16);
   border-radius: 0;
+}
+
+/* The search field is a specialised Text Box, so it mirrors the Text Box states.
+   Hover: border `--color-border-gray-neutral-strong` (not while focused). */
+.searchField:hover:not(:focus-within) {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+/* Focus matches the IDS Text Box: the field border turns brand, no outer ring,
+   on both click and Tab (the search input sits inside). */
+.searchField:focus-within {
+  border-color: var(--color-border-brand-base);
 }
 
 .searchIcon {
@@ -209,6 +236,10 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  /* Grow to fill the popup (incl. a combo-box `min-height`) so the footer action
+     stays on the bottom border; `min-height: 0` lets it scroll. */
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .selectAllClearAllRow {
