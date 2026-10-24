@@ -10,6 +10,7 @@ import {
 } from "react";
 import { createPortal } from "react-dom";
 import { IdsFormLabel } from "../../../lib/react/ids/form-label";
+import { Button } from "./Button";
 import { Icon } from "./Icon";
 import styles from "./IdsDatePicker.module.css";
 
@@ -611,8 +612,14 @@ export function IdsDatePicker({
     const popupHeight = popup?.offsetHeight ?? 340;
     const margin = 8;
     let top = rect.bottom - 1;
+    // Right-align: the popup's right edge sits on the field's right edge
+    // (`left = fieldRight - popupWidth`). `left` is viewport-relative so it is
+    // unaffected by the scrollbar, unlike a `right` offset. Keep it on screen
+    // without breaking the right-alignment: never overflow the right edge, and
+    // floor at 0 (not `margin`) so a field near the left edge stays aligned.
     let left = rect.right - popupWidth;
-    left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
+    left = Math.min(left, window.innerWidth - popupWidth - margin);
+    left = Math.max(0, left);
     if (top + popupHeight > window.innerHeight - margin) {
       const above = rect.top - popupHeight + 1;
       if (above >= margin) top = above;
@@ -916,9 +923,13 @@ export function IdsDatePicker({
         </div>
 
         <div className={styles.navButtons}>
-          <button
+          <Button
             type="button"
-            className={styles.navBtn}
+            variant="ghostNeutral"
+            size="sm"
+            iconOnly
+            icon={<Icon shapeName="chev-left-thick" style={{ width: 12, height: 12 }} />}
+            aria-label="Previous month"
             onClick={() => {
               if (viewMonth === 0) {
                 setViewMonth(11);
@@ -927,13 +938,14 @@ export function IdsDatePicker({
                 setViewMonth((m) => m - 1);
               }
             }}
-            aria-label="Previous month"
-          >
-            <Icon shapeName="chev-left-thick" className={styles.navIcon} style={{ width: 12, height: 12 }} />
-          </button>
-          <button
+          />
+          <Button
             type="button"
-            className={styles.navBtn}
+            variant="ghostNeutral"
+            size="sm"
+            iconOnly
+            icon={<Icon shapeName="chev-right-thick" style={{ width: 12, height: 12 }} />}
+            aria-label="Next month"
             onClick={() => {
               if (viewMonth === 11) {
                 setViewMonth(0);
@@ -942,10 +954,7 @@ export function IdsDatePicker({
                 setViewMonth((m) => m + 1);
               }
             }}
-            aria-label="Next month"
-          >
-            <Icon shapeName="chev-right-thick" className={styles.navIcon} style={{ width: 12, height: 12 }} />
-          </button>
+          />
         </div>
       </div>
 
@@ -1113,10 +1122,13 @@ export function IdsDatePicker({
               // The format hint (or the error) is the field's description, per the guideline.
               aria-describedby={describedBy}
             />
-            <button
+            <Button
               ref={calendarBtnRef}
               type="button"
-              className={`${styles.calendarIconBtn} ${showError ? styles.error : ""}`}
+              variant="tertiary"
+              size={size === "large" ? "lg" : "md"}
+              iconOnly
+              icon={<Icon shapeName="calendar-simple-16" style={{ width: 16, height: 16 }} />}
               onClick={() => {
                 if (!disabled) setOpen((v) => !v);
               }}
@@ -1124,9 +1136,8 @@ export function IdsDatePicker({
               aria-label="Choose date"
               aria-haspopup="dialog"
               aria-expanded={open}
-            >
-              <Icon shapeName="calendar-simple-16" style={{ width: 16, height: 16 }} />
-            </button>
+              className={styles.calendarButton}
+            />
           </div>
 
           {!popupPortal && calendarPopup}

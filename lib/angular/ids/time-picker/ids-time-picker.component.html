@@ -45,7 +45,7 @@
           aria-modal="true"
           aria-label="Choose time"
         >
-          <div class="timeColumn" role="group" aria-label="Hour">
+          <div class="timeColumn" role="group" aria-label="Hour" (wheel)="onColumnWheel($event, 'hour')">
             <button
               type="button"
               class="arrowBtn arrowUp"
@@ -74,7 +74,7 @@
               />
             </button>
           </div>
-          <div class="timeColumn" role="group" aria-label="Minute">
+          <div class="timeColumn" role="group" aria-label="Minute" (wheel)="onColumnWheel($event, 'minute')">
             <button
               type="button"
               class="arrowBtn arrowUp"
@@ -104,7 +104,7 @@
             </button>
           </div>
           @if (showSeconds) {
-            <div class="timeColumn" role="group" aria-label="Second">
+            <div class="timeColumn" role="group" aria-label="Second" (wheel)="onColumnWheel($event, 'second')">
               <button
                 type="button"
                 class="arrowBtn arrowUp"
@@ -135,7 +135,7 @@
             </div>
           }
           @if (clockType === "12h") {
-            <div class="timeColumn" role="group" aria-label="AM or PM">
+            <div class="timeColumn" role="group" aria-label="AM or PM" (wheel)="onColumnWheel($event, 'period')">
               <button
                 type="button"
                 class="arrowBtn arrowUp"

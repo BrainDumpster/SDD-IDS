@@ -94,8 +94,40 @@ function TimeColumn({
   disabled?: boolean;
   className?: string;
 }) {
+  const colRef = useRef<HTMLDivElement>(null);
+  const incRef = useRef(onIncrement);
+  const decRef = useRef(onDecrement);
+  const disabledRef = useRef(disabled);
+  incRef.current = onIncrement;
+  decRef.current = onDecrement;
+  disabledRef.current = disabled;
+
+  // Scroll a column (wheel / trackpad) to change its value, per the spec
+  // ("Scroll column list → change hour/minute/seconds/period").
+  useEffect(() => {
+    const el = colRef.current;
+    if (!el) return;
+    let acc = 0;
+    const STEP = 24;
+    const onWheel = (e: WheelEvent) => {
+      if (disabledRef.current) return;
+      e.preventDefault();
+      acc += e.deltaY;
+      while (acc >= STEP) {
+        incRef.current();
+        acc -= STEP;
+      }
+      while (acc <= -STEP) {
+        decRef.current();
+        acc += STEP;
+      }
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, []);
+
   return (
-    <div className={className ? `${styles.timeColumn} ${className}` : styles.timeColumn} role="group" aria-label={label}>
+    <div ref={colRef} className={className ? `${styles.timeColumn} ${className}` : styles.timeColumn} role="group" aria-label={label}>
       {/* Per spec: the up arrow is the "Previous" control — navigates backward (decrement). */}
       <button type="button" className={`${styles.arrowBtn} ${styles.arrowUp}`} onClick={onDecrement} disabled={disabled} aria-label={`Previous ${label}`}>
         <Icon shapeName="arrow-tri-down-solid" color="var(--color-icon-gray-neutral-base)" style={{ width: 10, height: 10 }} />
