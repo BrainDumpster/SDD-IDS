@@ -321,11 +321,11 @@ export class IdsDropdownMenuComponent
     return this.selectionMode === "single" && this.resolvedShowRadio;
   }
 
-  /** Combo box names every Clear All "Reset to Default" (same behavior). */
+  /** Only the single-select radio top row reads "Reset to Default". Multi-select
+   *  and combo box keep the standard "Clear All" label; single-select Reset to
+   *  Default now lives in the footer action slot, not this row. */
   get clearAllReadsResetToDefault(): boolean {
-    const mode = this.dropdown?.mode;
-    const isComboBox = mode === "combobox-single" || mode === "combobox-multi";
-    return isComboBox || this.singleRowResetsToDefault;
+    return this.singleRowResetsToDefault;
   }
 
   get resolvedClearAllLabel(): string {

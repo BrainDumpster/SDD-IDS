@@ -15,21 +15,21 @@
   box-sizing: border-box;
 }
 
+/* Focus: brand border like the IDS Text Box, no outer ring — keyboard focus
+   only (a mouse click opens the menu without a lingering brand border, since a
+   `<button>` keeps `:focus` after a click). */
 .triggerReset:focus-visible {
   outline: none;
-}
-
-.triggerReset:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
+  --trigger-border: var(--color-border-brand-base);
 }
 
 .popup {
   background: var(--color-background-surface-component);
+  /* Column layout so the options region can flex-grow and keep the footer action
+     pinned to the bottom border even when a `min-height` (combo box) makes the
+     popup taller than its content — e.g. the "No results found" search state. */
+  display: flex;
+  flex-direction: column;
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   border-top: none;
   box-sizing: border-box;
@@ -76,14 +76,17 @@
   border-radius: 0;
 }
 
-.searchField[data-focus-visible="true"]::after,
-.searchField:has(.searchInput:focus-visible)::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
+/* The search field is a specialised Text Box, so it mirrors the Text Box states.
+   Hover: border `--color-border-gray-neutral-strong` (not while focused). */
+.searchField:hover:not(:focus-within) {
+  border-color: var(--color-border-gray-neutral-strong);
+}
+
+/* Focus matches the IDS Text Box: the field border turns brand, no outer ring,
+   on both click and Tab (the search input sits inside). */
+.searchField:focus-within,
+.searchField[data-focus-visible="true"] {
+  border-color: var(--color-border-brand-base);
 }
 
 .searchIcon {
@@ -221,6 +224,10 @@
   width: 100%;
   min-width: 0;
   box-sizing: border-box;
+  /* Grow to fill the popup (incl. a combo-box `min-height`) so the footer action
+     stays on the bottom border; `min-height: 0` lets it scroll. */
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .noResults {

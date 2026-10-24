@@ -18,10 +18,8 @@
 import React, {
   Children,
   isValidElement,
-  useCallback,
   useId,
   useMemo,
-  useRef,
   useState,
   type CSSProperties,
   type ReactElement,
@@ -184,43 +182,22 @@ function partitionChildren(children: ReactNode): {
   return { helper, error, optionsFromChildren };
 }
 
-function TruncatingValue({
-  text,
-  tooltip,
-  tooltipTitle,
-}: {
-  text: string;
-  tooltip?: string;
-  tooltipTitle?: string;
-}) {
-  const [truncated, setTruncated] = useState(false);
-  const observerRef = useRef<ResizeObserver | null>(null);
+/** Single-line value that truncates with an ellipsis. The tooltip is owned by
+ *  the field trigger (so hovering the badge or the text opens one tooltip,
+ *  anchored above the badge). */
+function ValueText({ text }: { text: string }) {
+  return <span className={styles.valueText}>{text}</span>;
+}
 
-  const measureRef = useCallback((el: HTMLSpanElement | null) => {
-    observerRef.current?.disconnect();
-    if (!el) return;
-    const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
-    check();
-    observerRef.current = new ResizeObserver(check);
-    observerRef.current.observe(el);
-  }, []);
-
-  const valueSpan = (
-    <span ref={measureRef} className={styles.valueText}>
-      {text}
-    </span>
-  );
-
-  if (!(truncated && tooltip)) return valueSpan;
-
+/** Bulleted list of the selected labels — easier to scan long labels than a
+ *  comma-joined string (design request). */
+function SelectedItemsList({ labels }: { labels: string[] }) {
   return (
-    <IdsTooltip side="top" arrowAlign="start" hugContent>
-      <TooltipTrigger display="block">{valueSpan}</TooltipTrigger>
-      <TooltipPanel>
-        {tooltipTitle ? <TooltipHeader>{tooltipTitle}</TooltipHeader> : null}
-        <TooltipBody>{tooltip}</TooltipBody>
-      </TooltipPanel>
-    </IdsTooltip>
+    <ul className={styles.selectedList}>
+      {labels.map((label, index) => (
+        <li key={`${label}-${index}`}>{label}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -395,34 +372,40 @@ export function IdsDropdownMultiSelect({
   const effectiveClearAllDisabled =
     clearAllDisabled ?? selectedLabels.length === 0;
 
-  const badgeNode =
+  const badgeGlyph =
     showSelectedBadge && hasSelection ? (
-      <span className={styles.badgeWrap}>
-        {showSelectedTooltip ? (
-          <IdsTooltip side="top" arrowAlign="start" hugContent>
-            <TooltipTrigger>
-              <span className={styles.badgeTrigger}>
-                <IdsBadge
-                  value={selectedLabels.length}
-                  type={disabled ? "disabled" : "default"}
-                />
-              </span>
-            </TooltipTrigger>
-            <TooltipPanel>
-              <TooltipHeader>{`${selectedLabels.length} Items`}</TooltipHeader>
-              <TooltipBody>{selectedDisplay}</TooltipBody>
-            </TooltipPanel>
-          </IdsTooltip>
-        ) : (
-          <span className={styles.badgeTrigger}>
-            <IdsBadge
-              value={selectedLabels.length}
-              type={disabled ? "disabled" : "default"}
-            />
-          </span>
-        )}
+      <span className={styles.badgeTrigger}>
+        <IdsBadge
+          value={selectedLabels.length}
+          type={disabled ? "disabled" : "default"}
+        />
       </span>
     ) : null;
+
+  // Badge + value text sit together as the field content. Hovering either one
+  // opens a single tooltip, anchored above the badge (side=top + arrowAlign=start),
+  // listing the selected items as bullets.
+  const fieldContent = (
+    <span className={styles.triggerContent}>
+      {badgeGlyph}
+      <ValueText text={hasSelection ? selectedDisplay : placeholder} />
+    </span>
+  );
+
+  const left =
+    showSelectedTooltip && hasSelection ? (
+      <IdsTooltip side="top" arrowAlign="start" hugContent>
+        <TooltipTrigger display="block">{fieldContent}</TooltipTrigger>
+        <TooltipPanel>
+          <TooltipHeader>{`${selectedLabels.length} Items`}</TooltipHeader>
+          <TooltipBody>
+            <SelectedItemsList labels={selectedLabels} />
+          </TooltipBody>
+        </TooltipPanel>
+      </IdsTooltip>
+    ) : (
+      fieldContent
+    );
 
   const trigger = (
     <IdsDropdownTriggerShell
@@ -431,23 +414,7 @@ export function IdsDropdownMultiSelect({
       error={hasError}
       filled={hasSelection}
       style={fullWidth ? { width: "100%" } : undefined}
-      left={
-        <>
-          {badgeNode}
-          {showSelectedBadge && hasSelection ? (
-            <TruncatingValue
-              text={selectedDisplay || placeholder}
-              tooltip={selectedDisplay}
-              tooltipTitle={`${selectedLabels.length} Items`}
-            />
-          ) : (
-            <TruncatingValue
-              text={hasSelection ? selectedDisplay : placeholder}
-              tooltip={hasSelection ? selectedDisplay : undefined}
-            />
-          )}
-        </>
-      }
+      left={left}
     />
   );
 

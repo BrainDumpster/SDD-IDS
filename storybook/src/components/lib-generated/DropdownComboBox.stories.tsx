@@ -105,7 +105,8 @@ const meta: Meta<typeof IdsDropdownComboBox> = {
     required: true,
     placeholder: "Select",
     searchable: true,
-    showClearAll: true,
+    showResetToDefault: true,
+    resetToDefaultLabel: "Reset to Default",
     options: PRODUCT_OPTIONS,
     defaultValue: "app-2",
     menuWidth: "trigger",
@@ -118,7 +119,8 @@ const meta: Meta<typeof IdsDropdownComboBox> = {
     size: { control: "select", options: ["large", "small"] },
     menuWidth: { control: "select", options: ["trigger", "content"] },
     searchable: { control: "boolean" },
-    showClearAll: { control: "boolean" },
+    showResetToDefault: { control: "boolean" },
+    resetToDefaultLabel: { control: "text" },
     showSelectedPanel: { control: "boolean" },
     disabled: { control: "boolean" },
     required: { control: "boolean" },
@@ -159,7 +161,7 @@ export const CompositionalOptions: Story = {
           required
           placeholder="Select"
           searchable
-          showClearAll
+          showResetToDefault
           value={value}
           onChange={(next) => setValue(typeof next === "string" ? next : next[0] ?? "")}
           defaultOpen

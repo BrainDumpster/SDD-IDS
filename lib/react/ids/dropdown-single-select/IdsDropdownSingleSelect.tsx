@@ -64,13 +64,23 @@ export interface IdsDropdownSingleSelectProps {
   disabled?: boolean;
   searchable?: boolean;
   menuWidth?: IdsDropdownSingleSelectMenuWidth | string;
-  showClearAll?: boolean;
   showRadio?: boolean;
   maxVisibleItems?: number;
   noResultsLabel?: string;
   options?: IdsDropdownSingleSelectOptionModel[];
   value?: string;
+  /** Default selection the field returns to. `""` (default) shows the
+   *  `-Select-` placeholder; an option id makes that option selected by default. */
   defaultValue?: string;
+  /** Show a "Reset to Default" action row in the menu whenever the current
+   *  selection differs from `defaultValue`. Clicking it restores `defaultValue`
+   *  (the placeholder when `defaultValue` is `""`). Default `true`. */
+  showResetToDefault?: boolean;
+  /** Label for the Reset to Default row. Default `"Reset to Default"`. */
+  resetToDefaultLabel?: string;
+  /** @deprecated Alias for `showResetToDefault` — the Clear row now resets to
+   *  `defaultValue` rather than always clearing to empty. */
+  showClearAll?: boolean;
   onChange?: (value: string) => void;
   actionLabel?: string;
   onAction?: () => void;
@@ -236,7 +246,9 @@ export function IdsDropdownSingleSelect({
   disabled = false,
   searchable = false,
   menuWidth: menuWidthProp = "trigger",
-  showClearAll = false,
+  showResetToDefault,
+  resetToDefaultLabel = "Reset to Default",
+  showClearAll,
   showRadio = false,
   maxVisibleItems = 6,
   noResultsLabel = "No results found",
@@ -299,6 +311,14 @@ export function IdsDropdownSingleSelect({
     if (!isControlled) setInternalValue(nextId);
     onChange?.(nextId);
   };
+
+  // "Reset to Default": the field has two default states — the `-Select-`
+  // placeholder (`defaultValue === ""`) or a pre-selected option
+  // (`defaultValue === "<id>"`). The reset row appears only when the current
+  // selection differs from the default, and restores it on click.
+  const resetToDefaultEnabled = showResetToDefault ?? showClearAll ?? true;
+  const differsFromDefault = selectedId !== defaultValue;
+  const showResetRow = resetToDefaultEnabled && differsFromDefault;
 
   const items = useMemo(
     () =>
@@ -375,11 +395,11 @@ export function IdsDropdownSingleSelect({
             fullWidth={fullWidth}
             maxVisibleItems={maxVisibleItems}
             noResultsLabel={noResultsLabel}
-            showClearAll={showClearAll}
             showSingleSelectRadio={showRadio}
-            onClearAllClick={() => emitChange("")}
-            footerActionLabel={actionLabel}
-            onFooterActionClick={onAction}
+            footerActionLabel={showResetRow ? resetToDefaultLabel : actionLabel}
+            onFooterActionClick={
+              showResetRow ? () => emitChange(defaultValue) : onAction
+            }
             defaultOpen={defaultOpen && !disabled}
             onOpenChange={onOpenChange}
             ariaDescribedBy={message ? messageId : undefined}

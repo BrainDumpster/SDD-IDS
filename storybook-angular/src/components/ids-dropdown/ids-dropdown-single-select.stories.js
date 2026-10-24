@@ -62,14 +62,11 @@ export const CompositionApi = {
               [searchPlaceholder]="searchPlaceholder"
               [showRadio]="showRadio"
               [searchable]="searchable" [showSearch]="searchable"
-              [showClearAll]="showClearAll"
-              [clearAllLabel]="clearAllLabel"
               [menuWidth]="menuWidth"
               [fullWidth]="fullWidth"
               [disabled]="disabled"
               [ariaLabel]="ariaLabel || null"
               [ariaInvalid]="ariaInvalid"
-              (clearAllClick)="selected = ''"
             >
               <ids-dropdown-trigger-shell [size]="size" [disabled]="disabled">
                 <span>{{ selected }}</span>
@@ -78,6 +75,11 @@ export const CompositionApi = {
               <ids-dropdown-menu-item value="Option 2" label="Option 2" />
               <ids-dropdown-menu-item value="Option 3" label="Option 3" [disabled]="true" />
               <ids-dropdown-menu-item value="Option 4" label="Option 4" />
+              <!-- Default option is "Option 2": Reset to Default is the footer
+                   action button, shown only when a different option is selected. -->
+              @if (selected !== 'Option 2') {
+                <ids-dropdown-menu-footer actionLabel="Reset to Default" (action)="selected = 'Option 2'" />
+              }
             </ids-dropdown-menu>
           </ids-dropdown>
         </div>

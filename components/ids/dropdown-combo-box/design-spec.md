@@ -129,7 +129,7 @@
 | Field container | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` + `var(--color-icon-gray-neutral-accessible)` |
 | Field container | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | neutral text |
 | Field container | selected/open | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | selected text stays neutral/brand per content state |
-| Field container | focus-visible | `var(--color-background-surface-component)` | base border + outer focus ring `var(--color-border-brand-base)` | caret/text may shift to brand token |
+| Field container | focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` (border turns brand, no outer ring — matches Text Box) | caret/text may shift to brand token |
 | Field container | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` |
 | Field container | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | error icon/text tokenized critical |
 | Option row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
@@ -156,7 +156,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - the caret indicator does **not** rotate when the popup opens — it stays pointing down.
 - Keyboard list navigation (design review 2026-10, same model as the single-select and multi-select dropdowns):
   - `Enter`/`Space` on the trigger open the menu and move focus into it (design review 2026-10): onto the **selected** option when there is one (multi-select: the first selected option), otherwise onto the **search field** so the user can start typing. Without a search row, the first enabled option.
-  - `ArrowUp`/`ArrowDown` move focus through every enabled menu control in DOM order and wrap at both ends. In multi-select, `ArrowLeft`/`ArrowRight` still move within the Select All / Reset to Default row and between Show Selected tags.
+  - `ArrowUp`/`ArrowDown` move focus through every enabled menu control in DOM order and wrap at both ends. In multi-select, `ArrowLeft`/`ArrowRight` still move within the Select All / Clear All row and between Show Selected tags.
   - `Enter` commits the focused option in single-select mode (menu closes).
   - `Enter`/`Space` toggle the focused option in multi-select mode (menu stays open).
   - `Tab`/`Shift+Tab` close the menu and move to the next/previous component; in the search field `Tab` first accepts a pending inline suggestion.
@@ -168,12 +168,12 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - Option selection:
   - single-select commits the option and **closes** the popup.
   - multi-select toggles the option and **keeps the popup open** for further selection.
-- **Naming (design review 2026-10):** in the combo box every Clear All control is labelled **"Reset to Default"**: the single-select row and the multi-select `Select All | Reset to Default` row. Only the label changes; the clearing behavior described below stays the same. The single-select Reset to Default row is right-aligned (`16px` right inset), like the multi-select one.
-- Multi-select Reset to Default does **not** collapse the menu; once it disables itself, focus moves to `Select All`.
-- Single-select Clear All (`showClearAll`, Figma `348:140631`):
-  - a "Clear All" row appears **below the search row** whenever a value is selected. Visual matches the footer action button (`var(--color-text-brand-strong)`, `Body 2`, inner button `padding: var(--padding-padding-2) var(--padding-padding-16)`, `radius-2`) but with a **bottom** border (not the footer's top border) since it sits at the top of the list.
-  - the Clear All row is **hidden while a search query is active** (same as the multi-select `SelectAllRow`), and reappears when the search is cleared.
-  - clicking it clears the selection; the row then **auto-hides** (no value remains). It does **not** collapse the menu.
+- **Naming (design review 2026-10, revised):** only the **single-select** control reads **"Reset to Default"** (and it lives in the footer action slot — see below). The **multi-select** `Select All | Clear All` row keeps the standard **"Clear All"** label.
+- Multi-select Clear All does **not** collapse the menu; once it disables itself, focus moves to `Select All`.
+- Single-select Reset to Default (`showResetToDefault`, default on; `showClearAll` is a deprecated alias — Figma `348:140631`):
+  - two default states: the `-Select-` placeholder (no `defaultValue`) or a pre-selected option (`defaultValue`).
+  - "Reset to Default" occupies the **footer action-button slot** at the **bottom** of the menu (full-width, **left-aligned**, `var(--color-text-brand-strong)` / `Body 2`, **top** border) — not a row above the options.
+  - it appears **only when the current selection differs from `defaultValue`**, and clicking it **restores `defaultValue`** (the placeholder when there is none). It does **not** collapse the menu.
 - Menu sizing:
   - the option list shows up to **6 rows** before it scrolls; ≤6 options render with no scroll, >6 introduce a vertical scroll region.
 - Multi-select behavior:
@@ -184,7 +184,7 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
   - `Show Selected` / `Hide Selected` toggles the selection summary panel (Figma `12730:120316`, menu `29393:146761`). It **defaults to collapsed** (`Show Selected`) and expands to `Hide Selected` on click.
   - when expanded, selected values render as dismissible **Tag** chips per `components/ids/tag/design-spec.md` (`type=editable`, `closable`, large dismissible geometry).
   - the panel auto-hides when no option is selected (e.g. after `Clear All`); there is **no separate panel dismiss (X) control** — clearing is done via `Clear All`.
-  - the field shows the selection on one line; when the text is **truncated** it is wrapped in the IDS Tooltip revealing the full value (single-select: the selected item; multi-select: the badge tooltip reveals the full list). The tooltip appears only when the text is actually cut off.
+  - the field shows the selection on one line. Single-select: when the value text is **truncated** it is wrapped in the IDS Tooltip revealing the full item (only when actually cut off). Multi-select: the badge and the value text share **one** tooltip trigger — hovering either opens the same tooltip, anchored **above the badge** (`side="top"`, `arrowAlign="start"`), listing the selected items as a **bulleted list** whenever there is a selection.
   - collapsed multi-select field shows badge count + truncated selected labels.
 - Validation:
   - error state shows critical icon + "Error message" slot below field.
@@ -276,6 +276,14 @@ Dark theme uses the same structural state matrix as Light Theme and resolves all
 - [ ] Light and dark outputs remain semantic-token driven.
 - [ ] Accessibility semantics and keyboard behavior pass parity checks.
 ## Implementation Notes
+
+### 2026-10-23
+- **Field + search focus turn the border brand (Text Box look), no outer ring** — neither the trigger nor the in-menu search field draws an outer `::after` ring. The trigger field border is **keyboard-focus only** (`:focus-visible`) so a mouse click opens the menu without a lingering brand border (the trigger `<button>` keeps `:focus` after a click); the **search field** mirrors the Text Box states (it is a specialised Text Box): default `--color-border-gray-neutral-base`, hover `--color-border-gray-neutral-strong` (`:hover:not(:focus-within)`), focus brand via `:focus-within` (disabled/error do not apply — the search only shows inside an enabled, open menu). The trigger's error state keeps its critical border. Shared across all dropdown fields. Implementation: `lib/react/ids/dropdown-shared/DropdownMenu.module.css` (`.triggerReset` + `.searchField`) + `IdsDropdownTriggerShell.module.css`; Angular `ids-dropdown-menu.component.scss` + `ids-dropdown-trigger-shell.component.scss`.
+- **Footer action pinned to the bottom border** — the popup is now a flex column with the options region (`.optionsScrollRoot` / Angular `.optionsScrollRegion`) set to `flex: 1 1 auto; min-height: 0`, so the footer action button (e.g. Reset to Default) stays on the popup's bottom border even when a `min-height` makes the popup taller than its content — notably the **"No results found"** search state (combo-box min-height `212px`). Implementation: `DropdownMenu.module.css` `.popup` + `.optionsScrollRoot`; Angular `ids-dropdown-menu.component.scss` `.popup` + `.optionsScrollRegion`.
+- **Multi-select keeps "Clear All"** — only single-select uses "Reset to Default" (in the footer). The multi-select `Select All | Clear All` row reverts to the standard "Clear All" label (React: combo box passes `clearAllLabel="Clear All"`; Angular: `clearAllReadsResetToDefault` no longer returns true for combo box).
+- **Single-select Reset to Default moved to the footer action slot** — matches the single-select dropdown: for `combobox-single`, "Reset to Default" now renders as the footer action button (bottom, left-aligned), appears only when the selection differs from `defaultValue`, and restores `defaultValue` on click (was a right-aligned row above the options that cleared to empty). React `IdsDropdownComboBox.tsx`: new `showResetToDefault` (default `true`, `showClearAll` deprecated alias) + `resetToDefaultLabel`; drives `footerActionLabel`/`onFooterActionClick` with `showResetRow = selectedId !== defaultId`. Angular: consumer projects `<ids-dropdown-menu-footer>` conditionally.
+- **Unified selected tooltip, anchored above the badge (multi-select)** — the selected-count badge and the field value text now share a single `IdsTooltip` trigger. Hovering/focusing either opens the same tooltip, always positioned above the badge (`side="top"`, `arrowAlign="start"`), shown whenever there is a selection (no longer gated on text truncation). Single-select keeps the truncation-only value tooltip. Supersedes the 2026-08-30 "Field text tooltip" note and the "Tooltip" note below for the multi-select badge case. Implementation: React `lib/react/ids/dropdown-combo-box/IdsDropdownComboBox.tsx` (`.triggerContent` wraps badge + `ValueText`); Angular `lib/angular/ids/dropdown/ids-dropdown-trigger-shell.component.html`.
+- **Selected items as a bulleted list** — the multi-select tooltip `BodyContent` renders one `<li>` per selected label instead of a comma-joined string, so long labels stay readable. Implementation: `SelectedItemsList` (React) / `<ul class="selectedList">` (Angular).
 
 ### 2026-10-11
 - **Ghost text over the placeholder** — the search dismiss control reset the query but not the ghost suffix, so the stale tail painted over the empty field's placeholder. React `DropdownMenu.tsx` clears `ghostSuffix` on dismiss and only renders a suffix that still completes the current query (`visibleGhostSuffix`), which also covers a consumer-driven reset.
