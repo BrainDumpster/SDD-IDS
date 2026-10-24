@@ -28,6 +28,7 @@ import {
   IdsButton,
   IdsButtonLabel,
 } from "@ids/react/button";
+import { IdsTextBox } from "@ids/react/text-box";
 
 const meta: Meta<IdsModalProps> = {
   tags: ["autodocs"],
@@ -165,7 +166,6 @@ export const NonAlerting: Story = {
       triggerLabel="Open Dialog"
       scenario="dialog"
       type="non-alerting"
-      size="medium"
       title="Non-Alerting"
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryActionLabel="Close"
@@ -182,7 +182,6 @@ export const Informational: Story = {
       triggerLabel="Open Informational Dialog"
       scenario="dialog"
       type="informational"
-      size="medium"
       title="Informational"
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryActionLabel="Close"
@@ -199,7 +198,6 @@ export const Warning: Story = {
       triggerLabel="Open Warning Dialog"
       scenario="dialog"
       type="warning"
-      size="medium"
       title="Warning"
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryActionLabel="Continue"
@@ -221,7 +219,6 @@ export const Major: Story = {
       triggerLabel="Open Major Dialog"
       scenario="dialog"
       type="major"
-      size="medium"
       title="Major"
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryActionLabel="Continue"
@@ -243,7 +240,6 @@ export const Critical: Story = {
       triggerLabel="Open Critical Dialog"
       scenario="dialog"
       type="critical"
-      size="medium"
       title="Critical"
       description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
       primaryActionLabel="Continue"
@@ -272,7 +268,6 @@ export const Destructive: Story = {
           onOpenChange={setOpen}
           scenario="dialog"
           type="destructive"
-          size="medium"
           title="Critical"
           description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
           primaryActionLabel="Action"
@@ -281,24 +276,20 @@ export const Destructive: Story = {
           enableTertiaryAction
           closable
         >
+          {/* Figma `.Modal-Element-Content` "Confirmation Text Field": text, 16px gap,
+              300px TextBox. */}
           <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
-            <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
+            <div style={{ color: "var(--color-text-gray-neutral)" }}>
               Type in CONFIRM below to verify the action.
             </div>
-            <input
-              aria-label="Type CONFIRM"
-              value={confirmText}
-              onChange={(e) => setConfirmText(e.target.value)}
-              placeholder="CONFIRM"
-              style={{
-                width: 300,
-                boxSizing: "border-box",
-                borderRadius: 0,
-                border: "1px solid var(--color-border-gray-neutral-base)",
-                padding: "8px 12px",
-                font: "inherit",
-              }}
-            />
+            <div style={{ width: 300 }}>
+              <IdsTextBox
+                ariaLabel="Type CONFIRM"
+                placeholder="CONFIRM"
+                value={confirmText}
+                onValueChange={setConfirmText}
+              />
+            </div>
           </div>
         </IdsModal>
       </>
@@ -372,5 +363,87 @@ export const MultiPageModalUsage: Story = {
         },
       ]}
     />
+  ),
+};
+
+/** Figma `.Modal-Element-Content` "Text" template, repeated so the content outgrows the modal. */
+const LONG_TEXT =
+  "Donec semper et, tristique sed purus. Mauris pretium volutpat consequat. Curabitur a risus vel risus tincidunt ultrices. Nulla facilisi. Praesent eu est diam. Etiam nec dolor arcu. Proin scelerisque orci sed arcu elementum porta. Pellentesque blandit nibh non quam luctus sagittis. Aenean blandit vel orci in iaculis. Vivamus accumsan risus a tortor ultrices tincidunt. Mauris id sapien accumsan eros placerat condimentum. Duis eu magna urna.";
+
+function LongContent({ paragraphs = 14 }: { paragraphs?: number }) {
+  return (
+    <div style={{ display: "flex", flexDirection: "column", gap: 16, color: "var(--color-text-gray-neutral)" }}>
+      {Array.from({ length: paragraphs }, (_, i) => (
+        <p key={i} style={{ margin: 0 }}>
+          {LONG_TEXT}
+        </p>
+      ))}
+    </div>
+  );
+}
+
+/** Figma Modal-Main "Scroll Bar=Yes": content scrolls inside the modal, with the bottom fade. */
+export const SinglePageModalWithScrollBar: Story = {
+  name: "Single-Page Modal With Scroll Bar",
+  render: () => (
+    <PropDrivenDemo
+      triggerLabel="Open Scrollable Single-Page Modal"
+      scenario="single-page"
+      type="non-alerting"
+      size="small"
+      title="Header"
+      description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint. Velit officia consequat duis enim velit mollit."
+      primaryActionLabel="Apply"
+      tertiaryActionLabel="Cancel"
+      scrollBar
+      closable
+    >
+      <LongContent />
+    </PropDrivenDemo>
+  ),
+};
+
+export const MultiPageModalWithScrollBar: Story = {
+  name: "Multi-Page Modal With Scroll Bar",
+  render: () => (
+    <PropDrivenDemo
+      triggerLabel="Open Scrollable Multi-Page Modal"
+      scenario="multi-page"
+      type="non-alerting"
+      size="small"
+      title="Header"
+      description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
+      primaryActionLabel="Apply"
+      tertiaryActionLabel="Cancel"
+      scrollBar
+      tabs
+      closable
+      pages={[
+        { id: "details", label: "Details", content: <LongContent /> },
+        { id: "settings", label: "Settings", content: <LongContent paragraphs={4} /> },
+        { id: "review", label: "Review", content: "Page 3 content: final review before apply." },
+      ]}
+    />
+  ),
+};
+
+/** Figma `.Modal-Element-ButtonGroup` "Three Button Group": tertiary, secondary, primary. */
+export const ThreeButtonGroup: Story = {
+  name: "Three Button Group",
+  render: () => (
+    <PropDrivenDemo
+      triggerLabel="Open Modal With Three Actions"
+      scenario="single-page"
+      type="non-alerting"
+      size="small"
+      title="Header"
+      description="Amet minim mollit non deserunt ullamco est sit aliqua dolor do amet sint."
+      tertiaryActionLabel="Cancel"
+      secondaryActionLabel="Secondary Action"
+      primaryActionLabel="Primary Action"
+      closable
+    >
+      Swap content area — page-specific content renders here.
+    </PropDrivenDemo>
   ),
 };

@@ -5,6 +5,11 @@
   z-index: 1000;
 }
 
+/* IDS overlay token (Figma Modal-Element-Overlay, #252525 at 65%). */
+:global([data-design-system="ids"]) .backdrop {
+  background: var(--color-background-surface-overlay);
+}
+
 .popup {
   position: fixed;
   inset: 0;
