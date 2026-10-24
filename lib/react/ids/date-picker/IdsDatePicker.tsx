@@ -9,6 +9,7 @@ import React, {
   type CSSProperties,
 } from "react";
 import { createPortal } from "react-dom";
+import { IdsButton, IdsButtonLeadingIcon } from "../button";
 import { IdsFormLabel } from "../form-label";
 import { IdsIcon } from "../icon";
 import styles from "./IdsDatePicker.module.css";
@@ -611,8 +612,14 @@ export function IdsDatePicker({
     const popupHeight = popup?.offsetHeight ?? 340;
     const margin = 8;
     let top = rect.bottom - 1;
+    // Right-align: the popup's right edge sits on the field's right edge
+    // (`left = fieldRight - popupWidth`). `left` is viewport-relative so it is
+    // unaffected by the scrollbar, unlike a `right` offset. Keep it on screen
+    // without breaking the right-alignment: never overflow the right edge, and
+    // floor at 0 (not `margin`) so a field near the left edge stays aligned.
     let left = rect.right - popupWidth;
-    left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
+    left = Math.min(left, window.innerWidth - popupWidth - margin);
+    left = Math.max(0, left);
     if (top + popupHeight > window.innerHeight - margin) {
       const above = rect.top - popupHeight + 1;
       if (above >= margin) top = above;
@@ -916,9 +923,12 @@ export function IdsDatePicker({
         </div>
 
         <div className={styles.navButtons}>
-          <button
+          <IdsButton
             type="button"
-            className={styles.navBtn}
+            variant="ghostNeutral"
+            size="small"
+            iconOnly
+            ariaLabel="Previous month"
             onClick={() => {
               if (viewMonth === 0) {
                 setViewMonth(11);
@@ -927,13 +937,17 @@ export function IdsDatePicker({
                 setViewMonth((m) => m - 1);
               }
             }}
-            aria-label="Previous month"
           >
-            <IdsIcon shape="chev-left-thick" className={styles.navIcon} size={12} />
-          </button>
-          <button
+            <IdsButtonLeadingIcon>
+              <IdsIcon shape="chev-left-thick" size={12} />
+            </IdsButtonLeadingIcon>
+          </IdsButton>
+          <IdsButton
             type="button"
-            className={styles.navBtn}
+            variant="ghostNeutral"
+            size="small"
+            iconOnly
+            ariaLabel="Next month"
             onClick={() => {
               if (viewMonth === 11) {
                 setViewMonth(0);
@@ -942,10 +956,11 @@ export function IdsDatePicker({
                 setViewMonth((m) => m + 1);
               }
             }}
-            aria-label="Next month"
           >
-            <IdsIcon shape="chev-right-thick" className={styles.navIcon} size={12} />
-          </button>
+            <IdsButtonLeadingIcon>
+              <IdsIcon shape="chev-right-thick" size={12} />
+            </IdsButtonLeadingIcon>
+          </IdsButton>
         </div>
       </div>
 
@@ -1113,20 +1128,25 @@ export function IdsDatePicker({
               // The format hint (or the error) is the field's description, per the guideline.
               aria-describedby={describedBy}
             />
-            <button
+            <IdsButton
               ref={calendarBtnRef}
               type="button"
-              className={`${styles.calendarIconBtn} ${showError ? styles.error : ""}`}
+              variant="tertiary"
+              size={size === "large" ? "large" : "medium"}
+              iconOnly
+              ariaLabel="Choose date"
+              aria-haspopup="dialog"
+              aria-expanded={open}
+              className={styles.calendarButton}
+              disabled={disabled}
               onClick={() => {
                 if (!disabled) setOpen((v) => !v);
               }}
-              disabled={disabled}
-              aria-label="Choose date"
-              aria-haspopup="dialog"
-              aria-expanded={open}
             >
-              <IdsIcon shape="calendar-simple-16" size={16} />
-            </button>
+              <IdsButtonLeadingIcon>
+                <IdsIcon shape="calendar-simple-16" size={16} />
+              </IdsButtonLeadingIcon>
+            </IdsButton>
           </div>
 
           {!popupPortal && calendarPopup}

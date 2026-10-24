@@ -186,6 +186,40 @@ export class IdsTimePickerComponent implements OnChanges {
     this.period = this.period === "AM" ? "PM" : "AM";
   }
 
+  private wheelAcc = 0;
+  private wheelCol: string | null = null;
+
+  /**
+   * Scroll a column (wheel / trackpad) to change its value, per the spec
+   * ("Scroll column list → change hour/minute/seconds/period"). A small
+   * threshold keeps one notch per step; preventDefault stops the popup/page
+   * from scrolling at the same time.
+   */
+  onColumnWheel(e: WheelEvent, col: "hour" | "minute" | "second" | "period"): void {
+    if (this.disabled) return;
+    e.preventDefault();
+    if (this.wheelCol !== col) {
+      this.wheelCol = col;
+      this.wheelAcc = 0;
+    }
+    this.wheelAcc += e.deltaY;
+    const STEP = 24;
+    const apply = (dir: number): void => {
+      if (col === "hour") this.bumpHour(dir);
+      else if (col === "minute") this.bumpMinute(dir);
+      else if (col === "second") this.bumpSecond(dir);
+      else this.togglePeriod();
+    };
+    while (this.wheelAcc >= STEP) {
+      apply(1);
+      this.wheelAcc -= STEP;
+    }
+    while (this.wheelAcc <= -STEP) {
+      apply(-1);
+      this.wheelAcc += STEP;
+    }
+  }
+
   pad2(n: number): string {
     return pad2(n);
   }

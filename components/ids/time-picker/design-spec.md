@@ -52,7 +52,7 @@
 - Field container: `padding-left: var(--padding-padding-16)`; no right padding (icon button provides trailing padding)
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
 - Field container corner radius: `var(--time-picker-control-radius)` (IDS theme: square / `var(--corner-radius-radius-none)`)
-- Clock icon button: trailing hit area, `align-self: stretch`, `margin: -1px -1px -1px 0` (overlaps field border). Hover fill + chrome: `border-radius: var(--time-picker-control-radius)` (IDS: square / `var(--corner-radius-radius-none)`; Figma Hover on icon `42159:132250`). Do **not** use `--button-control-radius` (Synapse 4px). Padding: `var(--padding-padding-12)` / `var(--padding-padding-16)` large; `var(--padding-padding-8)` / `var(--padding-padding-16)` small.
+- Clock icon button: the IDS **large tertiary icon button** (`IdsButton variant="tertiary" iconOnly`, `size` lg for 40 / md for 32 in React; raw `<button>` restyled to the same tokens in Angular so `aria-expanded` stays on the button), `margin: -1px -1px -1px 0` (overlaps field border). Square `var(--sizing-size-40)` / `var(--sizing-size-32)`, `border-radius: var(--corner-radius-radius-2)` (2px), 16px glyph, icon `var(--color-icon-brand-strong)`. One tweak over the plain tertiary icon button: on hover it adds an inset `var(--color-border-brand-base)` 1px border + `var(--color-background-controls-lighter)` fill (Figma "Hover on icon", node `163:2`). Focus-visible uses the tertiary focus ring (not the hover border).
 - Time popup shell: `border-radius: 0` (square corners)
 - Field focus ring corner radius: `var(--time-picker-focus-ring-radius)` (`var(--corner-radius-radius-4)` in IDS theme)
 - Input width: container-driven (`width: 100%`); text `flex: 1 0 0`, `min-width: 1px`; a value wider than the field is truncated with an ellipsis (`text-overflow: ellipsis`)
@@ -129,10 +129,10 @@
 | Default (empty) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` (placeholder) | `var(--color-icon-brand-base)` | Format hint always visible |
 | Default (filled) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` Regular | `var(--color-icon-brand-base)` | Example value `09:30 PM` |
 | Hover (text field) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-stronger)` | (unchanged) | (unchanged) | Container border only |
-| Hover on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | `var(--color-icon-brand-base)` | Icon: bg `var(--color-background-controls-lighter)`, border `var(--color-border-brand-base)` |
-| Pointer-focused / Selected (empty) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | — | `var(--color-icon-brand-base)` | Cursor in field; placeholder hidden on focus; **no** outer ring on click |
-| Keyboard-focused on text field | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | (unchanged) | Outer ring on container: `inset: -5px`, `1px solid var(--color-border-brand-base)`, `border-radius: 4px` (Figma) |
-| Focused on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | (unchanged) | Ring on icon only: `inset: -3px`, `border-radius: 4px` |
+| Hover on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | `var(--color-icon-brand-strong)` | Icon button (tertiary icon button + tweak): bg `var(--color-background-controls-lighter)`, inset border `var(--color-border-brand-base)` 1px, `border-radius: var(--corner-radius-radius-2)` |
+| Pointer-focused / Selected (empty) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | — | `var(--color-icon-brand-strong)` | Cursor in field; placeholder hidden on focus; **no** outer ring on click (matches `IdsTextBox`) |
+| Keyboard-focused on text field | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | (unchanged) | (unchanged) | Same as pointer focus — brand border, **no outer ring** (matches `IdsTextBox` field focus) |
+| Focused on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | (unchanged) | (unchanged) | Icon button shows its own tertiary focus ring (double `box-shadow`: inner `var(--color-border-gray-white)` 2px + outer `var(--color-border-brand-base)` 4px) over bg `var(--color-background-controls-light)`; no inset border |
 | Disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | filled value `var(--color-text-gray-neutral)`; placeholder `var(--color-text-gray-disabled)` | `var(--color-icon-gray-disabled)` | No hover on field or icon |
 | Selected with dropdown | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | per content | `var(--color-icon-brand-base)` | Popup open; `margin-top: -1px` attaches popup to input; format hint stays below field |
 | Selected (filled, editing) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)`; selected text on `var(--color-background-controls-lighter)` (`::selection`) | `var(--color-icon-brand-base)` | Selection is cleared when the clock button opens the popup, so the open state shows no highlight |
@@ -358,7 +358,24 @@ See **Interactions → Keyboard navigation** and **Interactions → Accessibilit
 | `components/ids/date-and-time-picker/design-spec.md` | Family map entry (Date and Time Picker) |
 
 ## Implementation Notes
-Last updated: 2026-10-11
+Last updated: 2026-10-24
+
+### 2026-10-24 — Hour / minute / second / AM-PM columns are wheel-scrollable
+
+- Each time column now responds to **wheel / trackpad scroll** to change its value (hour, minute, second, AM/PM), matching the spec's "Scroll column list → change value" interaction. Previously only the up/down arrows changed the value. A small accumulator threshold gives one step per notch, and the listener is non-passive so it `preventDefault`s the popup/page from scrolling at the same time (React: a per-column `wheel` listener on the column element; Angular: a `(wheel)` binding → `onColumnWheel`).
+- Applied to the React lib, Angular lib, and the Storybook copy.
+
+### 2026-10-24 — Format hint / error message overflow like IdsTextBox (no field widening)
+
+- The format hint and error message behave like `IdsTextBox` — the whole text shows (no truncation) up to a **`700px`** cap, running **past the field's right edge** when it is longer than the field. `.formatHint` / `.errorMessage` are `position: absolute` below the field (`width: max-content; max-width: 700px`), and `.fieldGroup` is `position: relative` with one line of `padding-bottom` reserved, so a long message never widens the field. This replicates the `IdsError` / `IdsHelper` overflow behavior with a 700px cap instead of importing them (Angular has no `ids-helper`, and the cap differs from their 900px).
+- Applied to the React lib, Angular lib, and the Storybook copy.
+
+### 2026-10-24 — Clock trigger → large tertiary icon button; field focus matches IdsTextBox (Figma node `163:2`)
+
+- The clock trigger is the IDS **tertiary icon button** — `IdsButton variant="tertiary" iconOnly size={large?"large":"medium"}` (React, already in place) / a raw `<button>` restyled to the same new Icon Button tokens (Angular). Square 40/32, **`border-radius: var(--corner-radius-radius-2)`** (was `--time-picker-control-radius` / square), 16px glyph, icon `var(--color-icon-brand-strong)`, press → `var(--color-icon-brand-stronger)`, focus ring via `box-shadow`.
+- **Custom tweak over the plain tertiary** (per Figma "Hover on icon", node `163:2`): on hover the trigger adds an inset `var(--color-border-brand-base)` 1px border + `var(--color-background-controls-lighter)` fill. Keyboard focus keeps the tertiary focus ring (`:not(:focus-visible)` guards the hover border). React: `.clockButton.clockButton:hover` override (doubled class to win over `IdsButton`'s own `tertiary:hover`). Angular: raw `.clockIconBtn` restyled (kept raw so `aria-expanded` stays on the button).
+- **Field focus now matches `IdsTextBox`**: focusing the text field shows a `var(--color-border-brand-base)` border with **no outer ring**, whether clicked or tabbed into. Removed the old `::after` keyboard-focus ring and the `mouseActivated` logic. Focusing the trigger leaves the field border neutral and shows the icon button's own focus ring.
+- Applied to `lib/react/ids/time-picker`, `lib/angular/ids/time-picker`, and the Storybook copies (`storybook/src/components/IdsTimePicker.*`). Not visually verified for Angular (Angular Storybook not run); React verified in Storybook.
 
 - **Font-weight:** all text elements use `400`.
 - **Label component:** the label is the shared `IdsFormLabel`, not local markup. The Time Picker maps its own `size` to Form Label's: `large` → `lg`, `small` → `md` (**not** `sm` — `md` is the size whose `padding-block` matches a 32px field).
