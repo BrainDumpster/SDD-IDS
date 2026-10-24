@@ -122,6 +122,7 @@ When horizontal space is limited by an adjacent sibling, individual breadcrumb l
 - **Gradual decrease** — A character cap is lowered by one character at a time. Only labels longer than the current cap are rendered as `{{label.slice(0, cap)}...` (three dots, no space). Because the cap is global, the longest label is shortened first.
 - **Gradual increase** — As the container grows, the cap is raised by one character at a time until all labels are fully restored.
 - **Observation** — `ResizeObserver` watches the breadcrumb `<nav>`, the `<ol>` list, and the parent container so truncation updates as the layout changes.
+- **Native tooltip** — Labels shortened by the character cap set `title` to the untruncated label on the link, so hovering a truncated breadcrumb shows the full text via the browser tooltip. Untruncated labels get no `title`.
 
 ### Text Truncation Priority
 When the available width limit is hit (spacing to the next element drops below `24px`), labels are truncated in the following order of priority:

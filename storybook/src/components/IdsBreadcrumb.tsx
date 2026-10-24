@@ -82,11 +82,17 @@ export function IdsBreadcrumb({
   const listRef = useRef<HTMLOListElement>(null);
   const [labelCap, setLabelCap] = useState<number | null>(null);
 
-  const displayedItems = useMemo(() => {
+  const displayedItems = useMemo<
+    (BreadcrumbItem & { fullLabel?: string })[]
+  >(() => {
     if (labelCap == null) return visibleItems;
     return visibleItems.map((item) => {
       if (item.label.length <= labelCap) return item;
-      return { ...item, label: `${item.label.slice(0, labelCap)}...` };
+      return {
+        ...item,
+        fullLabel: item.label,
+        label: `${item.label.slice(0, labelCap)}...`,
+      };
     });
   }, [visibleItems, labelCap]);
 
@@ -183,6 +189,8 @@ export function IdsBreadcrumb({
                 href={item.href ?? "#"}
 
                 type="standalone"
+
+                title={item.fullLabel}
 
               />
 
