@@ -1,5 +1,5 @@
 import { Dialog as BaseDialog } from "@base-ui-components/react/dialog";
-import { isValidElement, type ReactNode, useEffect, useRef, useState } from "react";
+import { isValidElement, type CSSProperties, type ReactNode, useEffect, useRef, useState } from "react";
 import styles from "./Dialog.module.css";
 import buttonStyles from "./Button.module.css";
 import { Button } from "./Button";
@@ -20,40 +20,40 @@ type DialogType =
   | "Info"
   | "Danger"
   | "Success";
-type DialogSize = "sm" | "lg" | "xl";
+type DialogSize = "x-small" | "small" | "medium" | "large";
+type DialogScenario = "dialog" | "single-page" | "multi-page";
 export type DialogVariant = "default" | "about";
 
 interface DialogProps {
-  /** Programme chrome for footer/trigger `Button` (`synapse` button aliases). Modal radius uses `--modal-control-radius` from theme CSS. */
   programme?: "ids" | "synapse";
-  /** Use `about` for the Synapse About pattern (centered product line, optional slots in children). */
   variant?: DialogVariant;
-  /** Omit when controlling visibility with `open` / `onOpenChange`. */
   trigger?: ReactNode;
 
-  // Visibility
-  openDidalog?: boolean; // initial open in uncontrolled dialog demo
+  openDidalog?: boolean;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
 
-  // Header
   dialogTitle: string;
   dialogType?: DialogType;
+  scenario?: DialogScenario;
   dialogSize?: DialogSize;
   dialogClosable?: boolean;
   description?: string;
+  tabs?: ReactNode;
   children?: ReactNode;
 
-  // Footer buttons (labels are product/user-defined at runtime)
   primaryButtonName: string;
   enableActionButton?: boolean;
   tertiaryButtonName?: string;
   enableTertiaryButtton?: boolean;
+  /** Middle button of the Figma "Three Button Group" (secondary, outlined). */
+  secondaryButtonName?: string;
+  enableSecondaryButton?: boolean;
 
-  // Events
   onClose?: () => void;
   onPrimaryButtonClick?: () => void;
   onTertiaryButtonClick?: () => void;
+  onSecondaryButtonClick?: () => void;
 }
 
 export function Dialog({
@@ -65,21 +65,28 @@ export function Dialog({
   onOpenChange,
   dialogTitle,
   dialogType = "None",
-  dialogSize = "lg",
+  scenario = "dialog",
+  dialogSize,
   dialogClosable = true,
   description,
+  tabs,
   children,
   primaryButtonName,
   enableActionButton = true,
   tertiaryButtonName,
   enableTertiaryButtton = true,
+  secondaryButtonName,
+  enableSecondaryButton = true,
   onClose,
   onPrimaryButtonClick,
   onTertiaryButtonClick,
+  onSecondaryButtonClick,
 }: DialogProps) {
   const bodyRef = useRef<HTMLDivElement | null>(null);
   const [bodyScrollable, setBodyScrollable] = useState(false);
   const [showBodyScrollShadow, setShowBodyScrollShadow] = useState(false);
+  // The fade stops short of the body's scroll bar, which sits on top of it (Figma).
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   const controlled = open !== undefined;
   if (!controlled && trigger == null) {
@@ -88,7 +95,10 @@ export function Dialog({
 
   const showTertiary =
     variant !== "about" && Boolean(tertiaryButtonName);
+  const showSecondary =
+    variant !== "about" && Boolean(secondaryButtonName);
 
+  const isModalPage = scenario === "single-page" || scenario === "multi-page";
   const popupClassName =
     variant === "about"
       ? [
@@ -101,7 +111,8 @@ export function Dialog({
       : [
           styles.popup,
           programme === "synapse" ? styles.popupSynapse : styles.popupIds,
-          styles[dialogSize],
+          isModalPage ? styles.popupPage : "",
+          isModalPage && dialogSize ? styles[dialogSize] : "",
         ]
           .filter(Boolean)
           .join(" ");
@@ -121,6 +132,7 @@ export function Dialog({
       const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
       setBodyScrollable(scrollable);
       setShowBodyScrollShadow(scrollable && !atBottom);
+      setScrollbarWidth(el.offsetWidth - el.clientWidth);
     };
 
     updateContentOverflow();
@@ -136,7 +148,7 @@ export function Dialog({
       el.removeEventListener("scroll", updateContentOverflow);
       resizeObserver.disconnect();
     };
-  }, [children, description, dialogSize, dialogType, open, openDidalog, variant]);
+  }, [children, description, dialogSize, dialogType, open, openDidalog, scenario, variant]);
 
   return (
     <BaseDialog.Root
@@ -157,7 +169,11 @@ export function Dialog({
         <BaseDialog.Backdrop
           className={variant === "about" ? styles.backdropAbout : styles.backdrop}
         />
-        <BaseDialog.Popup className={popupClassName}>
+        <BaseDialog.Popup
+          className={popupClassName}
+          data-scenario={variant === "about" ? undefined : scenario}
+          data-size={isModalPage ? dialogSize : undefined}
+        >
           {variant === "about" ? (
             <>
               <div className={styles.modalMainAbout}>
@@ -232,6 +248,7 @@ export function Dialog({
                   className={[
                     styles.description,
                     styles[`description${normalizeDialogType(dialogType)}`],
+                    isModalPage ? styles.descriptionModalPage : "",
                   ]
                     .filter(Boolean)
                     .join(" ")}
@@ -240,11 +257,16 @@ export function Dialog({
                 </BaseDialog.Description>
               ) : null}
 
+              {tabs ? (
+                <div className={styles.tabStrip}>{tabs}</div>
+              ) : null}
+
               {children ? (
                 <div
                   ref={bodyRef}
                   className={[
                     styles.body,
+                    isModalPage ? styles.bodyModalPage : "",
                     styles[`body${normalizeDialogType(dialogType)}`],
                     bodyScrollable ? styles.bodyScrollable : "",
                   ]
@@ -256,34 +278,52 @@ export function Dialog({
               ) : null}
 
               {showBodyScrollShadow ? (
-                <div className={styles.contentScrollShadow} aria-hidden="true" />
+                <div
+                  className={styles.contentScrollShadow}
+                  style={{ "--ids-modal-scrollbar-width": `${scrollbarWidth}px` } as CSSProperties}
+                  aria-hidden="true"
+                />
               ) : null}
 
-              <div className={styles.footer}>
-                {showTertiary ? (
+              <div className={[styles.footer, isModalPage ? styles.footerModalPage : ""].filter(Boolean).join(" ")}>
+                {/* Right-aligned button group: tertiary, secondary, primary. */}
+                <div className={styles.footerActions}>
+                  {showTertiary ? (
+                    <Button
+                      programme={programme}
+                      size="lg"
+                      variant="tertiary"
+                      disabled={!enableTertiaryButtton}
+                      onClick={() => onTertiaryButtonClick?.()}
+                    >
+                      {tertiaryButtonName}
+                    </Button>
+                  ) : null}
+                  {showSecondary ? (
+                    <Button
+                      programme={programme}
+                      size="lg"
+                      variant="secondary"
+                      disabled={!enableSecondaryButton}
+                      onClick={() => onSecondaryButtonClick?.()}
+                    >
+                      {secondaryButtonName}
+                    </Button>
+                  ) : null}
                   <Button
                     programme={programme}
                     size="lg"
-                    variant="tertiary"
-                    disabled={!enableTertiaryButtton}
-                    onClick={() => onTertiaryButtonClick?.()}
+                    variant={
+                      normalizeDialogType(dialogType) === "Destructive"
+                        ? "destructive"
+                        : "primary"
+                    }
+                    disabled={!enableActionButton}
+                    onClick={() => onPrimaryButtonClick?.()}
                   >
-                    {tertiaryButtonName}
+                    {primaryButtonName}
                   </Button>
-                ) : null}
-                <Button
-                  programme={programme}
-                  size="lg"
-                  variant={
-                    normalizeDialogType(dialogType) === "Destructive"
-                      ? "destructive"
-                      : "primary"
-                  }
-                  disabled={!enableActionButton}
-                  onClick={() => onPrimaryButtonClick?.()}
-                >
-                  {primaryButtonName}
-                </Button>
+                </div>
               </div>
             </>
           )}
@@ -293,7 +333,6 @@ export function Dialog({
   );
 }
 
-/** Canonical asset: `assets/icons/shape-x.svg` */
 function DialogCloseGlyph() {
   return (
     <img

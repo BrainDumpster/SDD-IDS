@@ -37,8 +37,9 @@ import React, {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { IdsButton, IdsButtonLabel } from "../button";
+import { IdsButton, IdsButtonLabel, IdsButtonLeadingIcon } from "../button";
 import { IdsIcon } from "../icon";
+import { IdsTabs } from "../tab";
 import styles from "./IdsModal.module.css";
 
 export type IdsModalScenario =
@@ -205,21 +206,26 @@ export function IdsModalClose({
   const ctx = useContext(IdsModalContext);
 
   return (
-    <button
+    <IdsButton
       type="button"
-      className={cx(styles["ids-modal-close"], className)}
+      variant="ghostNeutral"
+      size="medium"
+      iconOnly
+      ariaLabel="Close"
+      className={className}
       data-ids="ids-modal-close"
-      aria-label="Close"
       onClick={(event) => {
         onClick?.(event);
         if (!event.defaultPrevented) ctx?.close();
       }}
       {...rest}
     >
-      {children ?? (
-        <IdsIcon shape="shape-x" variant="mask" size={16} color="currentColor" />
-      )}
-    </button>
+      <IdsButtonLeadingIcon>
+        {children ?? (
+          <IdsIcon shape="shape-x" variant="mask" size={16} color="currentColor" />
+        )}
+      </IdsButtonLeadingIcon>
+    </IdsButton>
   );
 }
 
@@ -366,9 +372,11 @@ markSlot(IdsModalDescription, "description");
 /* -------------------------------------------------------------------------- */
 
 export interface IdsModalTabsProps extends HTMLAttributes<HTMLDivElement> {
+  /** An `IdsTabs` (`type="primary"`, `surface="transparent"`); it owns the tablist. */
   children?: ReactNode;
 }
 
+/** Multi-page tab strip (Figma Modal-Main `tabs`): 8px / 24px inset around the tabs. */
 export function IdsModalTabs({
   children,
   className,
@@ -379,7 +387,6 @@ export function IdsModalTabs({
     <div
       className={cx(styles["ids-modal-tabs"], className)}
       data-ids="ids-modal-tabs"
-      role="tablist"
       {...rest}
     >
       {children}
@@ -477,6 +484,10 @@ export interface IdsModalProps {
   title?: string;
   description?: string;
   closable?: boolean;
+  /**
+   * Single-page / multi-page width and minimum height (Figma Modal-Main). Dialogs
+   * are always 640px wide and size to their content.
+   */
   size?: IdsModalSize;
   tabs?: boolean;
   scrollBar?: boolean;
@@ -486,11 +497,15 @@ export interface IdsModalProps {
   /** Required for prop-driven chrome when compound slots are not projected. */
   primaryActionLabel?: string;
   tertiaryActionLabel?: string;
+  /** Middle button of the Figma "Three Button Group" (secondary, outlined). */
+  secondaryActionLabel?: string;
   enablePrimaryAction?: boolean;
   enableTertiaryAction?: boolean;
+  enableSecondaryAction?: boolean;
   onClose?: () => void;
   onPrimaryAction?: () => void;
   onTertiaryAction?: () => void;
+  onSecondaryAction?: () => void;
   layer?: IdsModalLayer;
   className?: string;
   labelledBy?: string;
@@ -517,11 +532,14 @@ export function IdsModal({
   children,
   primaryActionLabel,
   tertiaryActionLabel,
+  secondaryActionLabel,
   enablePrimaryAction = true,
   enableTertiaryAction = true,
+  enableSecondaryAction = true,
   onClose,
   onPrimaryAction,
   onTertiaryAction,
+  onSecondaryAction,
   layer = "main",
   className,
   labelledBy,
@@ -575,6 +593,8 @@ export function IdsModal({
   const contentRef = useRef<HTMLDivElement | null>(null);
   const previouslyFocused = useRef<HTMLElement | null>(null);
   const [showScrollShadow, setShowScrollShadow] = useState(false);
+  // The fade stops short of the content's scroll bar, which sits on top of it (Figma).
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
   const [footerChecked, setFooterChecked] = useState(false);
 
   const ctx = useMemo<IdsModalContextValue>(
@@ -645,6 +665,7 @@ export function IdsModal({
       const scrollable = el.scrollHeight - el.clientHeight > 1;
       const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
       setShowScrollShadow(scrollable && !atBottom);
+      setScrollbarWidth(el.offsetWidth - el.clientWidth);
     };
     update();
     el.addEventListener("scroll", update, { passive: true });
@@ -658,9 +679,11 @@ export function IdsModal({
 
   if (!open || typeof document === "undefined") return null;
 
-  const showTertiary =
-    Boolean(tertiaryActionLabel) &&
-    (scenario !== "dialog" || TWO_BUTTON_TYPES.has(type));
+  // Dialogs of the alerting types and modal pages take more than one action.
+  const multiAction = scenario !== "dialog" || TWO_BUTTON_TYPES.has(type);
+  const showTertiary = Boolean(tertiaryActionLabel) && multiAction;
+  const showSecondary = Boolean(secondaryActionLabel) && multiAction;
+  const isModalPage = scenario === "single-page" || scenario === "multi-page";
   const primaryVariant = type === "destructive" ? "destructive" : "primary";
 
   const overlayLayerClass =
@@ -677,7 +700,9 @@ export function IdsModal({
         : undefined;
   const sizeClass = fullScreen
     ? styles["ids-modal-surface--full-screen"]
-    : styles[`ids-modal-surface--${size}`];
+    : scenario === "dialog"
+      ? styles["ids-modal-surface--dialog"]
+      : styles[`ids-modal-surface--${size}`];
 
   const propDrivenInterior = (
     <>
@@ -695,19 +720,17 @@ export function IdsModal({
           <p className={styles["ids-modal-empty"]}>No pages available.</p>
         ) : (
           <IdsModalTabs>
-            {pageList.map((page) => (
-              <button
-                key={page.id}
-                type="button"
-                role="tab"
-                className={styles["ids-modal-tab"]}
-                data-active={page.id === activePageId ? "true" : "false"}
-                aria-selected={page.id === activePageId}
-                onClick={() => setActivePageId(page.id)}
-              >
-                {page.label}
-              </button>
-            ))}
+            <IdsTabs
+              type="primary"
+              surface="transparent"
+              items={pageList.map((page) => ({
+                id: page.id,
+                label: page.label,
+                content: null,
+              }))}
+              activeItemId={activePageId}
+              onActiveItemChange={setActivePageId}
+            />
           </IdsModalTabs>
         )
       ) : null}
@@ -725,6 +748,7 @@ export function IdsModal({
       {showScrollShadow ? (
         <div
           className={styles["ids-modal-content-scroll-shadow"]}
+          style={{ marginRight: scrollbarWidth }}
           aria-hidden="true"
         />
       ) : null}
@@ -751,6 +775,16 @@ export function IdsModal({
               onClick={() => onTertiaryAction?.()}
             >
               <IdsButtonLabel>{tertiaryActionLabel}</IdsButtonLabel>
+            </IdsButton>
+          ) : null}
+          {showSecondary ? (
+            <IdsButton
+              variant="secondary"
+              size="large"
+              disabled={!enableSecondaryAction}
+              onClick={() => onSecondaryAction?.()}
+            >
+              <IdsButtonLabel>{secondaryActionLabel}</IdsButtonLabel>
             </IdsButton>
           ) : null}
           <IdsButton
@@ -786,13 +820,14 @@ export function IdsModal({
         className={cx(
           styles["ids-modal-surface"],
           sizeClass,
+          isModalPage && styles["ids-modal-surface--page"],
           surfaceLayerClass,
           className,
         )}
         data-ids="ids-modal-surface"
         data-scenario={scenario}
         data-type={type}
-        data-size={size}
+        data-size={scenario === "dialog" ? undefined : size}
         data-layer={layer}
         tabIndex={-1}
         onClick={(event) => event.stopPropagation()}
@@ -801,6 +836,7 @@ export function IdsModal({
         {compound && showScrollShadow ? (
           <div
             className={styles["ids-modal-content-scroll-shadow"]}
+            style={{ marginRight: scrollbarWidth }}
             aria-hidden="true"
           />
         ) : null}
