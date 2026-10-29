@@ -3,6 +3,7 @@ import {
   Children,
   createContext,
   isValidElement,
+  type CSSProperties,
   type ReactElement,
   type ReactNode,
   useContext,
@@ -117,6 +118,8 @@ export function IdsModal({
   const contentElementRef = useRef<HTMLElement | null>(null);
   const [bodyScrollable, setBodyScrollable] = useState(false);
   const [showScrollShadow, setShowScrollShadow] = useState(false);
+  // The fade stops short of the body's scroll bar, which sits on top of it (Figma).
+  const [scrollbarWidth, setScrollbarWidth] = useState(0);
 
   const titleChild = findChild(children, IdsModalTitle);
   const bodyChild = findChild(children, IdsModalBody);
@@ -130,6 +133,7 @@ export function IdsModal({
   const normalizedType = normalizeDialogType(type);
   const showSeverityIcon = scenario === "dialog" && type !== "non-alerting";
   const showFooterBorder = scenario !== "dialog";
+  const isModalPage = scenario === "single-page" || scenario === "multi-page";
 
   const registerContentElement = (element: HTMLElement | null) => {
     contentElementRef.current = element;
@@ -146,6 +150,7 @@ export function IdsModal({
     const atBottom = el.scrollTop + el.clientHeight >= el.scrollHeight - 1;
     setBodyScrollable(scrollable);
     setShowScrollShadow(scrollable && !atBottom);
+    setScrollbarWidth(el.offsetWidth - el.clientWidth);
   };
 
   const onContentScroll = () => {
@@ -208,7 +213,15 @@ export function IdsModal({
         ) : null}
         <BaseDialog.Portal>
           <BaseDialog.Backdrop className={styles.backdrop} />
-          <BaseDialog.Popup className={[styles.popup, SIZE_CLASS[size]].filter(Boolean).join(" ")}>
+          <BaseDialog.Popup
+            className={[styles.popup, isModalPage ? styles.popupPage : "", SIZE_CLASS[size]]
+              .filter(Boolean)
+              .join(" ")}
+            // IDS chrome (Dialog.module.css) keys on these; the Synapse modal ignores them.
+            data-scenario={scenario}
+            data-type={type}
+            data-size={scenario === "dialog" ? undefined : size}
+          >
             <div className={styles.header}>
               <div className={styles.headerLeft}>
                 {showSeverityIcon ? (
@@ -232,7 +245,11 @@ export function IdsModal({
             {bodyChild}
 
             {showScrollShadow ? (
-              <div className={styles.contentScrollShadow} aria-hidden="true" />
+              <div
+                className={styles.contentScrollShadow}
+                style={{ "--ids-modal-scrollbar-width": `${scrollbarWidth}px` } as CSSProperties}
+                aria-hidden="true"
+              />
             ) : null}
 
             {footerChild}

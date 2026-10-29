@@ -28,7 +28,6 @@ export const NonAlerting: Story = {
       trigger={<Button>Open Dialog</Button>}
       scenario="dialog"
       type="non-alerting"
-      size="large"
       defaultOpen={false}
       onClose={logEvent("onClose")}
     >
@@ -49,7 +48,6 @@ export const Informational: Story = {
       trigger={<Button variant="secondary">Open Informational Dialog</Button>}
       scenario="dialog"
       type="informational"
-      size="large"
       defaultOpen={false}
       onClose={logEvent("onClose")}
     >
@@ -68,7 +66,6 @@ export const Warning: Story = {
       trigger={<Button variant="secondary">Open Warning Dialog</Button>}
       scenario="dialog"
       type="warning"
-      size="large"
       defaultOpen={false}
       onClose={logEvent("onClose")}
     >
@@ -99,22 +96,25 @@ export const Destructive: Story = {
         trigger={<Button variant="secondary">Open Destructive Dialog</Button>}
         scenario="dialog"
         type="destructive"
-        size="large"
         defaultOpen={false}
         onClose={logEvent("onClose")}
       >
         <IdsModal.Title>Critical</IdsModal.Title>
         <IdsModal.Body description={MODAL_FIGMA_BODY}>
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+          {/* Figma `.Modal-Element-Content` "Confirmation Text Field": text, 16px gap,
+              300px TextBox. */}
+          <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
             <div style={{ color: "var(--color-text-gray-neutral)", lineHeight: "20px" }}>
               Type in CONFIRM below to verify the action.
             </div>
-            <TextInput
-              ariaLabel="Type CONFIRM"
-              value={confirmText}
-              onValueChange={setConfirmText}
-              placeholder="CONFIRM"
-            />
+            <div style={{ width: 300 }}>
+              <TextInput
+                ariaLabel="Type CONFIRM"
+                value={confirmText}
+                onValueChange={setConfirmText}
+                placeholder="CONFIRM"
+              />
+            </div>
           </div>
         </IdsModal.Body>
         <IdsModal.Footer>

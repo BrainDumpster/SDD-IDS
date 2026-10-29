@@ -18,7 +18,23 @@ IdsModal
 
 Import from \`@ids/react/modal\`.
 
+Scenarios:
+
+- **\`dialog\`** — always 640px wide, height follows the content (Figma ModalDialog-Main). \`size\` does not apply.
+- **\`single-page\` / \`multi-page\`** — \`size\` sets width and minimum height: \`x-small\` 640 × 328, \`small\` 960 × 497, \`medium\` 1280 × 667, \`large\` 1600 × 826 (Figma Modal-Main). Footer has a top rule; multi-page pages render as \`IdsTabs\` (primary, transparent surface).
+
+Footer actions (prop-driven): tertiary, secondary and primary, in that order (Figma "Three Button Group").
+
 ## Props
+
+### \`IdsModalProps\` (footer actions)
+
+| Prop | Type | Default |
+|------|------|---------|
+| \`primaryActionLabel\` | \`string\` | — |
+| \`secondaryActionLabel\` | \`string\` | — |
+| \`tertiaryActionLabel\` | \`string\` | — |
+| \`enablePrimaryAction\` / \`enableSecondaryAction\` / \`enableTertiaryAction\` | \`boolean\` | \`true\` |
 
 ### \`IdsModalCloseProps\`
 
@@ -60,6 +76,7 @@ Import from \`@ids/react/modal\`.
 | \`onClose\` | \`IdsModalProps\` | \`() => void\` |
 | \`onPrimaryAction\` | \`IdsModalProps\` | \`() => void\` |
 | \`onTertiaryAction\` | \`IdsModalProps\` | \`() => void\` |
+| \`onSecondaryAction\` | \`IdsModalProps\` | \`() => void\` |
 
 ## API
 
