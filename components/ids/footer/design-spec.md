@@ -58,7 +58,7 @@ Angular composition selectors may map these slots 1:1 as:
 - **Time zone group:** single tertiary button (size: small, variant: tertiary) with world-globe icon; no padding/gap as handled by Button component.
 - Typography: **Body 2** — `var(--font-size-body-2)` / `var(--font-line-height-line-height-20)`; label prefixes use medium weight, values use regular weight.
 - Sample frame width **1664px** in Figma is reference-only; runtime width follows application shell.
-- **Compact breakpoint (viewport ≤1024px):** root enforces `min-width: 1024px` — the bar keeps its 1024px layout width and the host/page shows a horizontal scrollbar instead of compressing or reflowing bar content.
+- **Minimum width:** the component minimum is `min-width: 944px` on the root (unconditional) — the bar never compresses below 944px; narrower hosts show a horizontal scrollbar instead of compressing or reflowing bar content. (The viewport ≤1024px breakpoint now governs only the time-group → tooltip collapse, see below.)
 
 ## Tokens
 ### Typography
@@ -243,7 +243,7 @@ ids-footer
 - Hiding a group removes it from layout and tab order without reserving space.
 - Host name truncates at 48 characters with ellipsis; if the value reaches the 48-character limit or is visually truncated (including by component resize), hovering the value shows the full text in a tooltip.
 - Other long strings truncate with ellipsis; tooltips for other content are host-defined (optional).
-- At viewport widths ≤1024px the root enforces `min-width: 1024px`; horizontal overflow is handled by a host/page scrollbar, not by compressing bar content.
+- The root enforces `min-width: 944px` at all viewport widths; horizontal overflow is handled by a host/page scrollbar, not by compressing bar content.
 - At viewport widths ≤1024px `FooterTimeGroup` is hidden and `currentDateTime` moves into a hover/focus tooltip on `FooterTimeZoneAction` (text only, no icon).
 
 ### Accessibility contract
@@ -276,7 +276,7 @@ Resolve through shared **Icon** primitive (`shapeName` + `variant="mask"` + sema
 - [ ] Copy and time-zone controls are keyboard-activatable with visible focus rings.
 - [ ] Icon slugs `copy`, `time-clock`, `world-globe` resolve via Icon primitive.
 - [ ] Spec Accurate Design story uses story defaults above under `Spec Generated/IDS/Footer`.
-- [ ] ≤1024px viewport: bar keeps `min-width: 1024px` (host scrolls horizontally); inline date/time hidden and shown via tooltip on the time-zone action.
+- [ ] Bar never compresses below `min-width: 944px` (narrower hosts scroll horizontally); ≤1024px viewport: inline date/time hidden and shown via tooltip on the time-zone action.
 - [ ] Light state matrix complete; dark uses boilerplate (same semantic tokens).
 - [ ] Source mapping lists MCP verification evidence.
 

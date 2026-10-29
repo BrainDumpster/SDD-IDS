@@ -19,6 +19,10 @@
 .listWrap {
   width: 100%;
   overflow: hidden;
+  /* Grow the clip window 4px on all sides (offset by negative margin so layout
+     size is unchanged) — the focused tab's outward double ring paints here. */
+  padding: var(--spacing-space-4, 4px);
+  margin: calc(var(--spacing-space-4, 4px) * -1);
 }
 
 .list {
@@ -97,20 +101,19 @@
   color: var(--color-text-brand-strong);
 }
 
+/* Focus (IDS Design Library .Tab-Element State=Focus): tinted tab, radius-2,
+   double ring — 2px surface separator + 4px brand outer ring drawn outside the
+   element (list-wrap padding above unclips it). The tab keeps its 38px height
+   so the focused tab's bottom border lines up with the row baseline; z-index
+   keeps the ring above sibling dividers. */
 .tab:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: calc(var(--border-width-border-2) * -1);
-  border-radius: var(--corner-radius-radius-4);
-}
-
-.tabSecondary:focus-visible {
-  height: var(--sizing-size-34, 34px);
-  margin: var(--spacing-space-2, 2px) 0;
-}
-
-.tabPrimary:focus-visible {
-  height: var(--sizing-size-36, 36px);
-  margin: var(--spacing-space-1, 1px) 0;
+  outline: none;
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-2);
+  background-color: var(--color-background-brand-lighter-slate);
+  box-shadow:
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 /* Primary: Figma leading accessible rail (full height when selected, 24px centered when not). */
@@ -142,11 +145,13 @@
   box-shadow: inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong);
 }
 
+/* Primary selected + focused: keep the top 2px indicator inside the element
+   while the double ring draws outside it. */
 .tabPrimary.selected:focus-visible {
-  border-radius: var(--corner-radius-radius-4);
   box-shadow:
     inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong),
-    inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .selected {
@@ -361,16 +366,14 @@
   position: relative;
 }
 
-.addButton:focus-visible {
-  outline: none;
-  box-shadow: inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-}
-
+.addButton:focus-visible,
 .moreTrigger:focus-visible {
   outline: none;
-  box-shadow: inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-2);
+  box-shadow:
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 /* Primary overflow trigger: same leading rail + top selected segment as tab cells. */
@@ -404,8 +407,8 @@
 .moreTriggerPrimary.moreTriggerSelected:focus-visible {
   box-shadow:
     inset 0 var(--border-width-border-thick) 0 0 var(--color-border-brand-strong),
-    inset 0 0 0 var(--border-width-border-thick) var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .addButton::before {
@@ -454,14 +457,26 @@
   line-height: var(--font-line-height-line-height-20);
 }
 
-/* Synapse Nav Tab — Figma `47807:3185` / `Tab-Single` (`47804:189`). */
+/* Synapse Nav Tab — Figma `47807:3185` / `Tab-Single` (`47804:189`).
+   Synapse keeps its single 2px inset brand outline focus. */
+.programmeSynapse .tab:focus-visible,
+.programmeSynapse .moreTrigger:focus-visible,
+.programmeSynapse .addButton:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: calc(var(--border-width-border-2) * -1);
+  border-radius: var(--corner-radius-radius-4);
+  background-color: var(--color-background-surface-component);
+  box-shadow: none;
+}
+
 .programmeSynapse .list::after {
   display: none;
 }
 
 .programmeSynapse .listWrap {
   border-bottom: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  padding-bottom: var(--padding-padding-1);
+  padding: 0 0 var(--padding-padding-1);
+  margin: 0;
 }
 
 .programmeSynapse .tab {

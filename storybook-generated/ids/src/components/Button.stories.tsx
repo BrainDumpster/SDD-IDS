@@ -74,11 +74,15 @@ const meta: Meta<typeof IdsButton> = {
     },
   },
   argTypes: {
-    variant: { control: "select", options: ["primary", "secondary", "tertiary", "destructive"] },
+    variant: { control: "select", options: ["primary", "secondary", "tertiary", "destructive", "ghostNeutral"] },
     size: { control: "select", options: ["sm", "md", "lg"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
     iconOnly: { control: "boolean" },
+    "aria-label": {
+      control: "text",
+      description: "Required when iconOnly is true (or ghostNeutral).",
+    },
   },
   args: {
     variant: "primary",

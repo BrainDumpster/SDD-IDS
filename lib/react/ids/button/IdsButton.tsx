@@ -60,7 +60,10 @@ export interface IdsButtonProps
   disabled?: boolean;
   loading?: boolean;
   type?: "button" | "submit" | "reset";
-  /** Required when `iconOnly` is true. */
+  /**
+   * Accessible name. **Required** when `iconOnly` is true (or when `variant` is
+   * `ghostNeutral` / `ghost`, which force icon-only). Native `aria-label` is also accepted.
+   */
   ariaLabel?: string;
   /** Demo/testing visual override only — does not replace interaction logic. */
   dataState?: IdsButtonDataState;
@@ -248,7 +251,12 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const resolvedSize: IdsButtonSize = size;
   const isDisabled = Boolean(disabled || loading || dataState === "disabled");
   const [isPressed, setIsPressed] = useState(false);
-  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly);
+  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly, variant);
+  const restAriaLabel =
+    typeof (rest as { "aria-label"?: unknown })["aria-label"] === "string"
+      ? ((rest as { "aria-label"?: string })["aria-label"] ?? "").trim()
+      : "";
+  const resolvedAriaLabel = (ariaLabel ?? "").trim() || restAriaLabel || undefined;
 
   const { projectedIcon, projectedLabel } = partitionProjectedChildren(children);
 
@@ -268,7 +276,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const hasLabel = labelSlot != null;
 
   if (resolvedIconOnly) {
-    if (!ariaLabel) {
+    if (!resolvedAriaLabel) {
       throw new Error("IdsButton: `ariaLabel` is required when `iconOnly` is true.");
     }
     if (!hasIcon) {
@@ -362,7 +370,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       ref={ref}
       type={type}
       disabled={isDisabled}
-      aria-label={ariaLabel}
+      aria-label={resolvedAriaLabel}
       aria-disabled={isDisabled || undefined}
       aria-busy={loading || undefined}
       data-ids="ids-button"

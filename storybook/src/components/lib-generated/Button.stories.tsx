@@ -77,6 +77,10 @@ const meta: Meta<IdsButtonProps> = {
       options: ["small", "medium", "large"],
     },
     iconOnly: { control: "boolean" },
+    ariaLabel: {
+      control: "text",
+      description: "Required when iconOnly is true (or ghostNeutral / ghost).",
+    },
     loading: { control: "boolean" },
     disabled: { control: "boolean" },
     dataState: {
@@ -90,13 +94,40 @@ const meta: Meta<IdsButtonProps> = {
 export default meta;
 type Story = StoryObj<IdsButtonProps>;
 
+function renderButtonArgs(args: IdsButtonProps) {
+  const { ariaLabel, iconOnly: iconOnlyArg, ...rest } = args;
+  const iconOnly =
+    Boolean(iconOnlyArg) ||
+    args.variant === "ghostNeutral" ||
+    args.variant === "ghost";
+  const glyph =
+    args.size === "small"
+      ? 12
+      : args.size === "medium" ||
+          args.variant === "ghostNeutral" ||
+          args.variant === "ghost"
+        ? 14
+        : 16;
+  return (
+    <IdsButton
+      {...rest}
+      iconOnly={iconOnly}
+      ariaLabel={iconOnly ? ariaLabel || "Icon only button" : undefined}
+    >
+      {iconOnly ? (
+        <IdsButtonLeadingIcon>
+          <IdsIcon shape={DEMO_ICON} size={glyph} />
+        </IdsButtonLeadingIcon>
+      ) : (
+        <IdsButtonLabel>Button</IdsButtonLabel>
+      )}
+    </IdsButton>
+  );
+}
+
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
-  render: (args) => (
-    <IdsButton {...args}>
-      <IdsButtonLabel>Button</IdsButtonLabel>
-    </IdsButton>
-  ),
+  render: (args) => renderButtonArgs(args),
 };
 
 export const Variants: Story = {

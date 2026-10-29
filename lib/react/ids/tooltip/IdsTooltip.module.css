@@ -242,6 +242,12 @@
   overflow-y: auto;
   overflow-x: hidden;
   scrollbar-width: thin;
+  /* Theme-aware thumb/track (same contract as the dual-list-box pane) so the
+     scrollbar follows dark mode. `scrollbar-color` — not ::-webkit-scrollbar —
+     keeps `thin` authoritative; the runtime --ids-scrollbar-width probe
+     measures `thin`, so a webkit width override would break the closable
+     4px reserve below. */
+  scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter);
   padding: 0 var(--padding-padding-12);
 }
 
