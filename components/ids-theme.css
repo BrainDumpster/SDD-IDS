@@ -219,6 +219,9 @@ html[data-design-system="ids"], body[data-design-system="ids"] {
   --color-background-brand-stronger: #044b86;
   --color-background-controls-base: #0672cb;
   --color-background-controls-light: #daeaf7;
+  /* Press-step fill: Figma binds a second `controls-light` variable (brand-300 / #97c4e9)
+     on Press; Hover binds brand-200 / #daeaf7. Duplicate codeSyntax — separate alias. */
+  --color-background-controls-press: #97c4e9;
   --color-background-controls-lighter: #ebf4fb;
   --color-background-controls-strong: #055fa9;
   --color-background-controls-stronger: #044b86;
@@ -777,6 +780,7 @@ html[data-design-system="ids"][data-theme="dark"], body[data-design-system="ids"
   --color-background-brand-stronger: #daeaf7;
   --color-background-controls-base: #0672cb;
   --color-background-controls-light: #033864;
+  --color-background-controls-press: #033864;
   --color-background-controls-lighter: #022541;
   --color-background-controls-strong: #055fa9;
   --color-background-controls-stronger: #044b86;
