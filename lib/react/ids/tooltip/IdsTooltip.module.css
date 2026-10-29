@@ -140,69 +140,34 @@
   right: -4px !important;
 }
 
+/* Arrow cross-axis position: centered on the trigger object. The runtime
+   measures the trigger rect and sets --ids-tooltip-arrow-offset; the fallback
+   centers the arrow on the popup before measurement. `arrowAlign` shifts the
+   popup, the arrow always tracks the trigger center. */
+.ids-tooltip-arrow[data-side="bottom"],
+.ids-tooltip-arrow[data-side="top"] {
+  left: var(--ids-tooltip-arrow-offset, calc(50% - 5px)) !important;
+}
+
 .ids-tooltip-arrow[data-side="bottom"][data-align="start"],
-.ids-tooltip-arrow[data-side="top"][data-align="start"] {
-  left: 8px !important;
-}
-
-.ids-tooltip-arrow[data-side="bottom"][data-align="start"] {
-  top: -5px !important;
-}
-
 .ids-tooltip-arrow[data-side="bottom"][data-align="center"],
-.ids-tooltip-arrow[data-side="top"][data-align="center"] {
-  left: calc(50% - 5px) !important;
-}
-
-.ids-tooltip-arrow[data-side="bottom"][data-align="center"] {
-  top: -5px !important;
-}
-
-.ids-tooltip-arrow[data-side="bottom"][data-align="end"],
-.ids-tooltip-arrow[data-side="top"][data-align="end"] {
-  left: calc(100% - 18px) !important;
-}
-
 .ids-tooltip-arrow[data-side="bottom"][data-align="end"] {
   top: -5px !important;
 }
 
+.ids-tooltip-arrow[data-side="left"],
+.ids-tooltip-arrow[data-side="right"] {
+  top: var(--ids-tooltip-arrow-offset, calc(50% - 5px)) !important;
+}
+
 .ids-tooltip-arrow[data-side="left"][data-align="start"],
-.ids-tooltip-arrow[data-side="right"][data-align="start"] {
-  top: 8px !important;
-}
-
-.ids-tooltip-arrow[data-side="left"][data-align="start"] {
-  right: -5px !important;
-}
-
-.ids-tooltip-arrow[data-side="right"][data-align="start"] {
-  left: -5px !important;
-}
-
 .ids-tooltip-arrow[data-side="left"][data-align="center"],
-.ids-tooltip-arrow[data-side="right"][data-align="center"] {
-  top: calc(50% - 5px) !important;
-}
-
-.ids-tooltip-arrow[data-side="left"][data-align="center"] {
-  right: -5px !important;
-}
-
-.ids-tooltip-arrow[data-side="right"][data-align="center"] {
-  left: -5px !important;
-}
-
-.ids-tooltip-arrow[data-side="left"][data-align="end"],
-.ids-tooltip-arrow[data-side="right"][data-align="end"] {
-  top: auto !important;
-  bottom: 8px !important;
-}
-
 .ids-tooltip-arrow[data-side="left"][data-align="end"] {
   right: -5px !important;
 }
 
+.ids-tooltip-arrow[data-side="right"][data-align="start"],
+.ids-tooltip-arrow[data-side="right"][data-align="center"],
 .ids-tooltip-arrow[data-side="right"][data-align="end"] {
   left: -5px !important;
 }
