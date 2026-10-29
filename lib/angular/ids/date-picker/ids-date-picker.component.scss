@@ -1,6 +1,6 @@
-/* IDS Date Picker – spec-accurate styles */
+/* IDS Date Picker â spec-accurate styles */
 
-/* ── Input field ── */
+/* ââ Input field ââ */
 .root {
   display: inline-flex;
   flex-direction: row;
@@ -51,6 +51,13 @@
   gap: var(--spacing-space-4, 4px);
   align-items: flex-start;
   min-width: 1px;
+  /* Anchor the format hint / error message, and reserve one line below the
+     field for them. They are positioned absolutely so a long message can run
+     past the field's right edge (like IdsTextBox) without widening the field. */
+  position: relative;
+  padding-bottom: calc(
+    var(--spacing-space-4, 4px) + var(--font-line-height-line-height-20, 20px)
+  );
 }
 
 .fieldContainer {
@@ -84,34 +91,16 @@
   border-color: var(--color-border-gray-neutral-base, #757575);
 }
 
-/* Pointer/click focus — blue border, no ring */
-.fieldContainer:focus-within:not(.open):not(.disabled):not(.error) {
+/* Text-field focus â brand border, no outer ring, whether clicked or tabbed
+   into (matches IdsTextBox field focus). */
+.fieldContainer:has(.textInput:focus):not(.open):not(.disabled):not(.error) {
   border-color: var(--color-border-brand-base, #0672cb);
 }
 
-/* Keyboard focus-visible only — outer ring via ::after so field border-radius stays square */
-.fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated) {
+/* Calendar-trigger focus â field border stays neutral; the icon button shows
+   its own focus ring (see .calendarIconBtn). */
+.fieldContainer:has(.calendarIconBtn:focus-visible):not(.open):not(.disabled):not(.error) {
   border-color: var(--color-border-gray-neutral-base, #757575);
-}
-
-.fieldContainer:has(.textInput:focus-visible):not(.open):not(.mouseActivated)::after {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
-  border-radius: var(--corner-radius-radius-4, 4px);
-  pointer-events: none;
-  box-sizing: border-box;
-}
-
-/* Always suppress ring when mouse-activated */
-.fieldContainer.mouseActivated {
-  outline: none;
-}
-
-/* Mouse-activated focus must override hover border rules */
-.fieldContainer.mouseActivated:focus-within:not(.open):not(.disabled):not(.error) {
-  border-color: var(--color-border-brand-base, #0672cb);
 }
 
 .fieldContainer.open {
@@ -134,7 +123,7 @@
   border-color: var(--color-border-alerting-critical-base, #af0000);
 }
 
-/* When calendar is open — brand-base border; flatten bottom radius so popup reads as one shell */
+/* When calendar is open â brand-base border; flatten bottom radius so popup reads as one shell */
 .fieldContainer.open {
   border-color: var(--color-border-brand-base, #0672cb);
   border-bottom-left-radius: 0;
@@ -170,39 +159,56 @@
   cursor: not-allowed;
 }
 
+/* Calendar trigger = IDS tertiary icon button (tokens mirror IdsButton
+   variant="tertiary" iconOnly size lg/md), with the Figma "hover on icon"
+   tweak: a brand-base border + lighter fill on hover. */
 .calendarIconBtn {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: var(--spacing-space-8, 0px);
-  background: none;
-  border: var(--border-width-border-default, 1px) solid transparent;
+  gap: 0;
+  background: transparent;
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-1, 1px) transparent;
   cursor: pointer;
-  padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
+  padding: var(--padding-padding-none, 0);
+  width: var(--sizing-size-40, 40px);
+  height: var(--sizing-size-40, 40px);
+  min-height: var(--sizing-size-40, 40px);
   border-radius: var(--corner-radius-radius-2, 2px);
-  color: var(--color-icon-brand-base, #0672cb);
+  color: var(--color-icon-brand-strong, #055fa9);
   flex-shrink: 0;
-  align-self: stretch;
   box-sizing: border-box;
   position: relative;
   outline: none;
   margin: -1px -1px -1px 0;
 }
 
-.calendarIconBtn:hover:not(:disabled) {
-  background: var(--color-background-controls-lighter, #ebf4fb);
-  border-color: var(--color-border-brand-base, #0672cb);
-  color: var(--color-icon-brand-base, #0672cb);
+.fieldContainer.sizeSmall .calendarIconBtn {
+  width: var(--sizing-size-32, 32px);
+  height: var(--sizing-size-32, 32px);
+  min-height: var(--sizing-size-32, 32px);
 }
 
-.calendarIconBtn:focus-visible::after {
-  content: '';
-  position: absolute;
-  inset: -5px;
-  border: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
-  border-radius: var(--corner-radius-radius-4, 4px);
-  pointer-events: none;
-  box-sizing: border-box;
+/* Figma "hover on icon": brand-base border + lighter fill. */
+.calendarIconBtn:hover:not(:disabled):not(:focus-visible) {
+  background: var(--color-background-controls-lighter, #ebf4fb);
+  box-shadow: inset 0 0 0 var(--border-width-border-1, 1px)
+    var(--color-border-brand-base, #0672cb);
+}
+
+.calendarIconBtn:active:not(:disabled) {
+  background: var(--color-background-controls-light, #daeaf7);
+  color: var(--color-icon-brand-stronger, #044b86);
+}
+
+/* Figma "focused on icon": fill + brand focus ring (double), no inset border. */
+.calendarIconBtn:focus-visible:not(:disabled) {
+  background: var(--color-background-controls-light, #daeaf7);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1, 1px) transparent,
+    0 0 0 var(--scale-2, 2px) var(--color-border-gray-white, #fff),
+    0 0 0 var(--scale-4, 4px) var(--color-border-brand-base, #0672cb);
 }
 
 .calendarIconBtn:disabled {
@@ -211,13 +217,25 @@
 }
 
 
+/* Format hint / error message: like IdsTextBox, keep the whole text (no
+   truncation) up to a 700px cap, running past the field's right edge when it is
+   longer than the field. Positioned absolutely below the field so it never
+   widens the field; one line of space is reserved on .inputGroup. */
+.formatHint,
+.errorMessage {
+  position: absolute;
+  left: 0;
+  top: calc(100% - var(--font-line-height-line-height-20, 20px));
+  width: max-content;
+  max-width: 700px;
+}
+
 .formatHint {
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
   font-size: var(--font-size-body-2, 14px);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-20, 20px);
   color: var(--color-text-gray-neutral, #4d4d4d);
-  width: 100%;
 }
 
 
@@ -232,7 +250,7 @@
   color: var(--color-text-alerting-critical-base, #af0000);
 }
 
-/* ── Calendar popup ── */
+/* ââ Calendar popup ââ */
 .calendarPopup {
   position: absolute;
   top: 100%;
@@ -252,7 +270,7 @@
   border-radius: 0;
 }
 
-/* Portaled calendar — escapes overflow/stacking (e.g. DataGrid filter `overflow: clip`). */
+/* Portaled calendar â escapes overflow/stacking (e.g. DataGrid filter `overflow: clip`). */
 .calendarPopupPortaled {
   position: fixed;
   top: 0;
@@ -263,7 +281,7 @@
   border-top-right-radius: var(--date-picker-control-radius);
 }
 
-/* ── Calendar header ── */
+/* ââ Calendar header ââ */
 .calendarHeader {
   display: flex;
   align-items: center;
@@ -284,7 +302,8 @@
   gap: var(--spacing-space-8, 8px);
   padding: var(--padding-padding-2, 2px) var(--padding-padding-8, 8px);
   min-height: var(--scale-24, 24px);
-  border: var(--border-width-border-default, 1px) solid transparent;
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-1, 1px) transparent;
   background: transparent;
   position: relative;
   cursor: pointer;
@@ -298,18 +317,22 @@
   box-sizing: border-box;
 }
 
+/* Small tertiary (dropdown) button: fill on hover/press, no border; focus ring. */
 .dropdownButton:hover:not(:disabled):not(.menuOpen) {
-  background: var(--color-background-controls-lighter, #ebf4fb);
-  border-color: var(--color-border-brand-base, #0672cb);
+  background: var(--color-background-controls-light, #daeaf7);
 }
 
-.dropdownButton:active:not(:disabled):not(.menuOpen) {
+.dropdownButton:active:not(:disabled),
+.dropdownButton.menuOpen {
   background: var(--color-background-controls-light, #daeaf7);
-  border-color: var(--color-border-brand-base, #0672cb);
 }
 
 .dropdownButton:focus-visible {
-  border-color: var(--color-border-brand-base, #0672cb);
+  background: var(--color-background-controls-light, #daeaf7);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1, 1px) transparent,
+    0 0 0 var(--scale-2, 2px) var(--color-border-gray-white, #fff),
+    0 0 0 var(--scale-4, 4px) var(--color-border-brand-base, #0672cb);
 }
 
 .dropdownButton.yearBtn {
@@ -358,7 +381,7 @@
   flex-shrink: 0;
 }
 
-/* ── Weekday row ── */
+/* ââ Weekday row ââ */
 .weekDayRow {
   display: flex;
   gap: var(--spacing-space-4, 4px);
@@ -379,7 +402,7 @@
   box-sizing: border-box;
 }
 
-/* ── Date section (wraps dateContent + todayLink) ── */
+/* ââ Date section (wraps dateContent + todayLink) ââ */
 .dateSection {
   display: flex;
   flex-direction: column;
@@ -387,7 +410,7 @@
   align-items: center;
 }
 
-/* ── Date content (wraps weekDayRow + dateGrid) ── */
+/* ââ Date content (wraps weekDayRow + dateGrid) ââ */
 .dateContent {
   display: flex;
   flex-direction: column;
@@ -395,7 +418,7 @@
   align-items: center;
 }
 
-/* ── Date grid (date rows only) ── */
+/* ââ Date grid (date rows only) ââ */
 .dateGrid {
   display: flex;
   flex-direction: column;
@@ -410,7 +433,7 @@
   position: relative;
 }
 
-/* ── Range bar ── */
+/* ââ Range bar ââ */
 .rangeBar {
   position: absolute;
   top: 50%;
@@ -445,7 +468,7 @@
   color: var(--color-text-gray-white, #fff);
 }
 
-/* ── Date cell ── */
+/* ââ Date cell ââ */
 .dateCell {
   width: 32px;
   height: 32px;
@@ -498,7 +521,7 @@
   display: block;
 }
 
-/* Selected + Focused: outside border fills .dateCell padding → container appears 32×32 */
+/* Selected + Focused: outside border fills .dateCell padding â container appears 32Ã32 */
 .dateCell.selected:focus-visible .dateCellContainer {
   outline: var(--border-width-border-default, 1px) solid var(--color-border-brand-base, #0672cb);
 }
@@ -512,18 +535,18 @@
   padding: 7px 11px;
 }
 
-/* Unavailable — per Figma 42159:132767 (.DatePicker-Element-Date, state=Unavailable) */
+/* Unavailable â per Figma 42159:132767 (.DatePicker-Element-Date, state=Unavailable) */
 .dateCell.unavailable {
   cursor: not-allowed;
 }
 
-/* Default / Adjacent Month — border on inner container */
+/* Default / Adjacent Month â border on inner container */
 .dateCell.unavailable:not(:has(.todayType)) .dateCellContainer {
   background: var(--color-background-gray-lighter, #f4f4f4);
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled, #757575);
 }
 
-/* Today — border on outer cell, inner bg only */
+/* Today â border on outer cell, inner bg only */
 .dateCell.unavailable:has(.todayType) {
   background: var(--color-background-gray-lighter, #f4f4f4);
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-disabled, #757575);
@@ -591,7 +614,7 @@
   background: var(--color-border-gray-disabled, #757575);
 }
 
-/* Focus ring (date cell) — sibling of container, positioned in .dateCell (32×32), inset -2px → 36×36 ring */
+/* Focus ring (date cell) â sibling of container, positioned in .dateCell (32Ã32), inset -2px â 36Ã36 ring */
 .focusRing {
   display: none;
   position: absolute;
@@ -602,13 +625,14 @@
   box-sizing: border-box;
 }
 
-/* ── Today link — behaves as tertiary button ── */
+/* ââ Today link â behaves as tertiary button ââ */
 .todayLink {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   background: transparent;
-  border: var(--border-width-border-default, 1px) solid transparent;
+  border: none;
+  box-shadow: inset 0 0 0 var(--border-width-border-1, 1px) transparent;
   border-radius: var(--corner-radius-radius-2, 2px);
   cursor: pointer;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -622,34 +646,42 @@
   box-sizing: border-box;
 }
 
+/* Small tertiary button: fill on hover/press, no border; focus ring. */
 .todayLink:hover:not(:disabled) {
-  background: var(--color-background-controls-lighter, #ebf4fb);
-  border-color: var(--color-border-brand-base, #0672cb);
+  background: var(--color-background-controls-light, #daeaf7);
 }
 
 .todayLink:active:not(:disabled) {
   background: var(--color-background-controls-light, #daeaf7);
-  border-color: var(--color-border-brand-base, #0672cb);
 }
 
 .todayLink:focus-visible {
-  border-color: var(--color-border-brand-base, #0672cb);
+  background: var(--color-background-controls-light, #daeaf7);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1, 1px) transparent,
+    0 0 0 var(--scale-2, 2px) var(--color-border-gray-white, #fff),
+    0 0 0 var(--scale-4, 4px) var(--color-border-brand-base, #0672cb);
 }
 
-/* ── Month / Year dropdown overlay (per Figma 42159:132520) ── */
+/* ââ Month / Year dropdown overlay (per Figma 42159:132520) ââ */
 .overlayDropdown {
   position: absolute;
   top: 100%;
   left: 0;
   width: 114px;
-  max-height: 200px;
+  /* Show an ODD number of full 32px rows (7) so the centered selection lands on
+     a row boundary — an even count (or extra padding) leaves the top/bottom row
+     clipped. +2px covers the 1px top/bottom borders. */
+  max-height: calc(7 * 32px + 2px);
   overflow-x: hidden;
   overflow-y: auto;
   background: white;
   border: var(--border-width-border-default, 1px) solid var(--color-background-gray-light, #eaeaea);
   box-shadow: 0px 2px 5px 0px rgba(37, 37, 37, 0.08);
   z-index: 10;
-  padding: var(--padding-padding-4, 4px) var(--padding-padding-1, 1px);
+  /* No vertical padding so option rows align flush to the viewport edges (the
+     centering math assumes rows start at the content top). */
+  padding: 0 var(--padding-padding-1, 1px);
   border-radius: var(--corner-radius-radius-4, 4px);
 }
 
@@ -688,7 +720,7 @@
   font-weight: 400;
 }
 
-/* ── Wrapper for positioning ── */
+/* ââ Wrapper for positioning ââ */
 .positionWrapper {
   position: relative;
   display: inline-flex;

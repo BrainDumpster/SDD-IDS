@@ -71,7 +71,7 @@
 - Field container: `padding-left: var(--padding-padding-16)`, no right padding — trailing padding belongs to the icon button
 - Container flex: `align-items: center`, `justify-content: flex-end`, `gap: var(--spacing-space-none)` (0)
 - Field container corner radius: `var(--corner-radius-radius-none)` (0, square)
-- Calendar icon button: separate hit area spanning full field height, `padding: var(--padding-padding-12) var(--padding-padding-16)` (12px vertical, 16px horizontal), `border-radius: var(--corner-radius-radius-2)` (2px), `margin: -1px -1px -1px 0` (right/top/bottom overlap container border by 1px)
+- Calendar icon button: the IDS **large tertiary icon button** (`IdsButton variant="tertiary" iconOnly`, `size` lg for 40 / md for 32), `margin: -1px -1px -1px 0` (right/top/bottom overlap container border by 1px). Square `var(--sizing-size-40)` / `var(--sizing-size-32)`, `border-radius: var(--corner-radius-radius-2)` (2px), 16px glyph, icon `var(--color-icon-brand-strong)`. One tweak over the plain tertiary icon button: on hover it adds an inset `var(--color-border-brand-base)` 1px border + `var(--color-background-controls-lighter)` fill (Figma "Hover on icon", node `163:2`). Focus-visible uses the tertiary focus ring (not the hover border).
 - Calendar popup shell + month/year dropdown overlays: `border-radius: var(--corner-radius-radius-none)` (0, square); when attached below field, all corners are square
 - Field focus ring corner radius: `var(--corner-radius-radius-4)` (4px)
 - Input width: container-driven (`width: 100%`), text flex: `1 0 0`, `min-width: 1px`
@@ -264,10 +264,10 @@ Each cell = 32px, gap = 4px. Bar width = `(selectedDays × 32) + ((selectedDays 
 | Default (empty) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` (placeholder) | `var(--color-icon-brand-base)` | — |
 | Default (filled) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` | `var(--color-icon-brand-base)` | — |
 | Hover (text field) | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-stronger)` | (unchanged) | `var(--color-icon-brand-base)` (unchanged) | Container border darkens; icon button unchanged |
-| Hover on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Icon button: bg `var(--color-background-controls-lighter)`, border `var(--color-border-brand-base)` 1px; container border stays default |
-| Pointer-focused / Selected (Figma `42159:133061`) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Click-focus: blue border, no focus ring, placeholder hidden (`:focus::placeholder { color: transparent }`) |
-| Keyboard-focused on text field | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Outer focus ring via `::after` pseudo-element: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); field border-radius stays `0` (square) |
-| Focused on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | (unchanged) | `var(--color-icon-brand-base)` | Focus ring on **icon button only** via `::after`: `inset: -5px`, `border: 1px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)` (4px); button keeps its own `border-radius: 2px` |
+| Hover on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | (unchanged) | `var(--color-icon-brand-strong)` | Icon button (tertiary icon button + tweak): bg `var(--color-background-controls-lighter)`, inset border `var(--color-border-brand-base)` 1px, `border-radius: var(--corner-radius-radius-2)`; container border stays default |
+| Pointer-focused / Selected (Figma `42159:133061`) | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-strong)` | Click-focus on text field: brand border, no outer ring (matches `IdsTextBox`), placeholder hidden (`:focus::placeholder { color: transparent }`) |
+| Keyboard-focused on text field | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-strong)` | Same as pointer focus — brand border, **no outer ring** (matches `IdsTextBox` field focus); field border-radius stays `0` (square) |
+| Focused on icon | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` (unchanged) | (unchanged) | `var(--color-icon-brand-strong)` | Icon button shows its own tertiary-button focus ring (double `box-shadow`: inner `var(--color-border-gray-white)` 2px + outer `var(--color-border-brand-base)` 4px) over bg `var(--color-background-controls-light)`; no inset border; container border stays neutral |
 | Disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` | `var(--color-icon-gray-disabled)` | Non-interactive; hover on icon must NOT apply; hover on field must NOT change border |
 | Selected with dropdown | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Calendar popup open; popup `margin-top: -1px` attaches to input; format hint remains below the field |
 | Selected | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral-strong)` | `var(--color-icon-brand-base)` | Date chosen, popup closed |
@@ -658,7 +658,31 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 ---
 
 ## Implementation Notes
-Last updated: 2026-10-11
+Last updated: 2026-10-24
+
+### 2026-10-24 — Calendar prev/next-month nav buttons → ghost-neutral small icon button
+
+- The Previous / Next month nav buttons (`.navBtn`) are now the IDS **ghost-neutral small icon button** (`IdsButton variant="ghostNeutral" size="small" iconOnly`, 24×24), keeping the `chev-left-thick` / `chev-right-thick` 12px glyphs. The hand-rolled `.navBtn` styling is dropped in favour of the component's own neutral rest / hover / focus states.
+- Applied to the React lib, Angular lib, and the Storybook copy (Angular now imports `IdsButtonComponent`).
+
+### 2026-10-24 — Calendar right-aligned to field; error/hint overflow like IdsTextBox (no field widening)
+
+- **Calendar position:** the portaled calendar is right-aligned to the field — its right edge sits on the field's right edge via `left = fieldRect.right - popupWidth`. `left` is viewport-relative, so it is unaffected by the scrollbar (a `right`/`fixed` offset is off by the scrollbar width). The clamp keeps it on screen without breaking the alignment: it never overflows the right edge and is floored at `0` (not the margin) so a field near the viewport's left edge stays right-aligned. The non-portal path uses `right: 0`.
+- **Format hint / error message:** behave like `IdsTextBox` — the whole text shows (no truncation) up to a **`700px`** cap, running **past the field's right edge** when it is longer than the field. `.formatHint` / `.errorMessage` are `position: absolute` below the field (`width: max-content; max-width: 700px`), and `.inputGroup` is `position: relative` with one line of `padding-bottom` reserved, so a long message never widens the field (fixes the field growing when an error shows). This replicates the `IdsError` / `IdsHelper` overflow behavior with a 700px cap instead of importing them (Angular has no `ids-helper`, and the cap differs from their 900px).
+- Applied to the React lib, Angular lib, and the Storybook copy.
+
+### 2026-10-24 — Calendar trigger → large tertiary icon button; field focus matches IdsTextBox (Figma node `163:2`)
+
+- The calendar trigger is now the IDS **tertiary icon button** component — `IdsButton variant="tertiary" iconOnly size={large?"large":"medium"}` (React) — instead of a hand-rolled `<button>`. It reuses the new Icon Button tokens (square 40/32, `radius-2`, 16px glyph, icon `var(--color-icon-brand-strong)`, press → `var(--color-icon-brand-stronger)`, focus ring via `box-shadow`).
+- **Custom tweak over the plain tertiary** (per Figma "Hover on icon", node `163:2`): on hover the trigger adds an inset `var(--color-border-brand-base)` 1px border + `var(--color-background-controls-lighter)` fill. The stock tertiary only fills (`controls-light`) with no border. Keyboard focus keeps the tertiary focus ring (`:not(:focus-visible)` guards the hover border). In React this is a `.calendarButton.calendarButton:hover` override (doubled class to win over `IdsButton`'s own `tertiary:hover`); Angular restyles the raw `.calendarIconBtn` to the same tokens (kept raw so `aria-expanded` stays on the button).
+- **Field focus now matches `IdsTextBox`**: focusing the text field shows a `var(--color-border-brand-base)` border with **no outer ring**, whether clicked or tabbed into. Removed the old `::after` keyboard-focus ring and the `mouseActivated` ring-suppression logic. Focusing the trigger instead leaves the field border neutral and shows the icon button's own focus ring.
+- Applied to `lib/react/ids/date-picker`, `lib/angular/ids/date-picker`, and the Storybook copies (`storybook/src/components/IdsDatePicker.*`, used by the DataGrid date filters). Not visually verified for Angular (Angular Storybook not run); React verified in Storybook.
+
+### 2026-10-24 — Calendar header: month/year → small tertiary dropdown button; Today → small tertiary button
+
+- The month and year dropdown buttons (`.dropdownButton`) and the Today button (`.todayLink`) now use the **new small tertiary button** styling: transparent rest (no border), **fill on hover / press** (`var(--color-background-controls-light)`, no brand border), and the tertiary **focus ring** (double `box-shadow`: inner `var(--color-border-gray-white)` 2px + outer `var(--color-border-brand-base)` 4px). Previously they had a brand-base 1px hover/focus border (old tertiary).
+- Month/year keep the custom `RollingList` picker and all their keyboard / `aria-expanded` / `aria-controls` wiring — only the trigger-button styling changed (the DS `IdsDropdownButton` renders its own menu, which would replace the RollingList). `.dropdownButton.menuOpen` shows the pressed fill while its overlay is open. Text stays `var(--color-text-brand-strong)`; the trailing caret (`arrow-drop-tri-caret`) is unchanged.
+- Applied to the React lib, Angular lib, and the Storybook copy. React verified in Storybook (hover); Angular not visually verified.
 
 ### 2026-10-11 — Label uses the shared Form Label (parity with Time Picker)
 
@@ -674,7 +698,7 @@ Last updated: 2026-10-11
 - Calendar popup shadow: Shadow 4 — `--shadow-shadow-4-drop-shadow-{4,8}-{x,y,blur,spread}` with colours `--shadow-drop-shadow-4-color` / `--shadow-drop-shadow-8-color`, the names Figma binds.
 - A value wider than the field ends in an ellipsis; selected input text is highlighted on `var(--color-background-controls-lighter)` with `var(--color-text-gray-neutral)` text (Figma "Selected").
 - Known differences kept on purpose:
-  - Month / year dropdown buttons and the Today button are 26px tall (1px transparent border for their hover / focus stroke) where Figma draws 24px — button styling, handled separately.
+  - Month / year dropdown buttons and the Today button are the IDS **small tertiary (dropdown) button**: `min-height: var(--scale-24)` (24px), fill on hover / press (`var(--color-background-controls-light)`, no border), tertiary focus ring (double `box-shadow`); see the 2026-10-24 note.
   - The month / year overlay follows IDS DropdownMenu (see 2026-07-26), not the legacy Dropdown Framework still drawn in the Figma calendar.
   - CSS borders sit outside the padding while Figma strokes sit inside, so the calendar measures 2px wider and taller than Figma (280 × 346).
 

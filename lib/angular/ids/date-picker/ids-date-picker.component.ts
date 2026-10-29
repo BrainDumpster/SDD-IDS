@@ -18,6 +18,7 @@ import {
 import { CommonModule } from "@angular/common";
 import { DATE_PICKER_SPEC_ACCURATE_DEFAULTS, type DatePickerSize } from "@component-contracts/ids/date-picker.contract";
 import { IdsIconComponent } from "../icon/ids-icon.component";
+import { IdsButtonComponent } from "../button/ids-button.component";
 import { cx } from "../../shared/utils/cx";
 import {
   buildCalendarGrid,
@@ -35,7 +36,7 @@ const CALENDAR_PORTAL_Z_INDEX = 10050;
 @Component({
   selector: "ids-date-picker",
   standalone: true,
-  imports: [CommonModule, IdsIconComponent],
+  imports: [CommonModule, IdsIconComponent, IdsButtonComponent],
   templateUrl: "./ids-date-picker.component.html",
   styleUrl: "./ids-date-picker.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -386,8 +387,14 @@ export class IdsDatePickerComponent implements OnChanges {
     const popupHeight = popup?.offsetHeight ?? 340;
     const margin = 8;
     let top = rect.bottom - 1;
+    // Right-align: the popup's right edge sits on the field's right edge
+    // (`left = fieldRight - popupWidth`). `left` is viewport-relative so it is
+    // unaffected by the scrollbar, unlike a `right` offset. Keep it on screen
+    // without breaking the right-alignment: never overflow the right edge, and
+    // floor at 0 (not `margin`) so a field near the left edge stays aligned.
     let left = rect.right - popupWidth;
-    left = Math.max(margin, Math.min(left, window.innerWidth - popupWidth - margin));
+    left = Math.min(left, window.innerWidth - popupWidth - margin);
+    left = Math.max(0, left);
     if (top + popupHeight > window.innerHeight - margin) {
       const above = rect.top - popupHeight + 1;
       if (above >= margin) top = above;
