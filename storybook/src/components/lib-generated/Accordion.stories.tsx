@@ -78,7 +78,6 @@ const meta: Meta<IdsAccordionProps> = {
     chevronPosition: "left",
     variant: "default",
     defaultValue: ["network"],
-    maxWidth: "1594px",
   },
   argTypes: {
     multiple: {
@@ -127,10 +126,20 @@ const meta: Meta<IdsAccordionProps> = {
       control: false,
       table: { category: "Props" },
     },
+    width: {
+      control: "text",
+      description: "Width of the accordion root — fluid (100%) by default.",
+      table: { category: "Props", defaultValue: { summary: "100%" } },
+    },
     maxWidth: {
       control: "text",
       description: "Max-width of the accordion root.",
-      table: { category: "Props", defaultValue: { summary: "1594px" } },
+      table: { category: "Props" },
+    },
+    panelMaxHeight: {
+      control: "text",
+      description: "Max-height of an expanded panel — overflowing content scrolls.",
+      table: { category: "Props" },
     },
   },
 };

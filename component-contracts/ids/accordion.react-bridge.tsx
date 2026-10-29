@@ -26,7 +26,11 @@ export interface IdsAccordionProps {
   defaultValue?: string[];
   variant?: AccordionVariant;
   chevronPosition?: AccordionChevronPosition;
+  /** Root width — fluid (100% of container) by default; number values are px, strings any CSS length. */
+  width?: number | string;
   maxWidth?: number | string;
+  /** Expanded panel max-height — unconstrained by default; overflowing content scrolls. Numbers are px, strings any CSS length. */
+  panelMaxHeight?: number | string;
 }
 
 export const ACCORDION_ROOT_PROP_KEYS = [
@@ -35,7 +39,9 @@ export const ACCORDION_ROOT_PROP_KEYS = [
   "defaultValue",
   "chevronPosition",
   "variant",
+  "width",
   "maxWidth",
+  "panelMaxHeight",
 ] as const;
 
 export const ACCORDION_ITEM_INPUT_KEYS = [

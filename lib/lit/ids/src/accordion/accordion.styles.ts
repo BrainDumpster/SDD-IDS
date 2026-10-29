@@ -117,11 +117,23 @@ export const accordionTitleStyles = css`
     color: var(--color-icon-gray-neutral-strong);
   }
 
+  /* Focus (IDS Design Library .Accordion-Element-Left State=Focus): tinted header,
+     1px neutral border (inset shadow, no layout shift), double ring — 2px separator +
+     4px brand outer ring — radius-4. z-index keeps the ring above sibling panels. */
   .accordion-header:focus-visible {
-    outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-    outline-offset: 0;
+    outline: none;
+    position: relative;
+    z-index: 1;
     border-radius: var(--corner-radius-radius-4);
-    background: transparent;
+    background-color: var(--color-background-brand-lighter-slate);
+    box-shadow:
+      inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
+      0 0 0 var(--scale-2) var(--color-background-surface-component),
+      0 0 0 var(--scale-4) var(--color-border-brand-base);
+  }
+
+  .accordion-header:focus-visible .icon-layout {
+    color: var(--color-icon-gray-neutral-strong);
   }
 
   .accordion-header:disabled {
@@ -141,13 +153,13 @@ export const accordionTitleStyles = css`
   }
 
   .accordion-header.active-header:hover:not(:disabled) {
-    background-color: var(--color-background-brand-light-slate);
+    background-color: var(--color-background-brand-lighter-slate);
     background-image: linear-gradient(
       90deg,
       var(--color-border-brand-base) 0,
       var(--color-border-brand-base) 4px,
-      var(--color-background-brand-light-slate) 4px,
-      var(--color-background-brand-light-slate) 100%
+      var(--color-background-brand-lighter-slate) 4px,
+      var(--color-background-brand-lighter-slate) 100%
     );
   }
 

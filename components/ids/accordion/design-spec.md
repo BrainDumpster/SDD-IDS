@@ -25,8 +25,8 @@ Child components (deterministic order):
 Optional child sub-slots:
 - `AccordionMetaSlot` (optional helper text/metadata)
 ## Layout & Measurements
-- Root width is container-driven (`width: 100%`).
-- Root `max-width` is `1594px` by default and may be overridden via the `maxWidth` prop (number values are interpreted as pixels; string values are used as any CSS length).
+- Root `width` is fluid (`100%` of its container) by default, bounded only by `min-width: 240px`, and may be overridden via the `width` prop (number values are interpreted as pixels; string values are used as any CSS length).
+- Root `max-width` is unset by default (fills its container); a cap may be applied via the `maxWidth` prop (number values are interpreted as pixels; string values are used as any CSS length).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
 - Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
 - Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px**.
@@ -44,6 +44,7 @@ Optional child sub-slots:
 - Focus indicator must be visible on trigger row and not clipped by item container.
 - Group rows follow Figma contiguous model (1px overlap/no vertical gaps).
 - Expanded content container padding: `8px 24px 16px 40px` (implementations: `var(--padding-padding-40)` when present, otherwise `calc(var(--padding-padding-32) + var(--padding-padding-8))` so left inset is valid in Storybook themes).
+- Expanded content container minimum size: `min-width: 50px` and `min-height: 50px` (apply with `box-sizing: border-box` so the 50px floor includes padding).
 - Optional inner **content card**: **no background color**, **no border**, and **no padding**; it holds the body text. Content card text has a **max-width of 900px**.
 ## Tokens
 - Surface:
@@ -91,9 +92,9 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
 |---|---|---|---|---|
 | trigger | default (collapsed) | `var(--color-background-surface-component)` | item divider `var(--color-border-gray-neutral-base)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-accessible)` |
 | trigger | hover (collapsed) | `var(--color-background-brand-lighter-slate)` | unchanged divider | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
-| trigger | hover (expanded) | `var(--color-background-brand-light-slate)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
+| trigger | hover (expanded) | `var(--color-background-brand-lighter-slate)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
 | trigger | expanded (open) | `var(--color-background-brand-lighter-slate)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-accessible)` (rotated) |
-| trigger | focus-visible | same as current open/closed state | outer focus ring `var(--border-width-border-2)` `var(--color-border-brand-base)`; `border-radius: var(--corner-radius-radius-4)`; offset **4px** beyond trigger left/right and **1px** top/bottom (per-side offsets — draw with a pseudo-element ring, not `outline`) | same as default |
+| trigger | focus-visible | `var(--color-background-brand-lighter-slate)` (tinted in both collapsed and expanded) | header draws its own `var(--border-width-border-1)` `var(--color-border-gray-neutral-base)` border (inset shadow, no layout shift) + `border-radius: var(--corner-radius-radius-4)`; double focus ring — `0 0 0 var(--scale-2) var(--color-background-surface-component)` inner band + `0 0 0 var(--scale-4) var(--color-border-brand-base)` outer ring; the inner band follows the component surface so it is white in light and `#111619` in dark; `z-index` so the ring paints above sibling panels; when the item is expanded the header **hides the left 4px brand strip** (`background-image: none` on the focused trigger — the focus ring is the indicator), while the panel body keeps its strip | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
 | trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
 | panel/content | expanded | `var(--color-background-surface-component)` | item perimeter `var(--color-border-gray-neutral-base)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-gray-neutral)`, link `var(--color-text-link-brand-base)` |
 | content-card | expanded (optional) | none / transparent | none | heading/body per content; link `var(--color-text-link-brand-base)` |
@@ -128,7 +129,9 @@ Main inputs:
 - `multiple?: boolean` (default `false`)
 - `defaultValue?: string[]`
 - `chevronPosition?: "left" | "right"` (default `"left"`)
-- `maxWidth?: number | string` (default `1594px`; numbers are treated as px, strings as any CSS length)
+- `width?: number | string` (default fluid `100%`; numbers are treated as px, strings as any CSS length)
+- `maxWidth?: number | string` (default unset — no cap; numbers are treated as px, strings as any CSS length)
+- `panelMaxHeight?: number | string` (default unset — panel grows with content; when set, overflowing body content scrolls vertically. Numbers are treated as px, strings as any CSS length)
 
 Per-item inputs:
 - `value: string` (required stable ID)
