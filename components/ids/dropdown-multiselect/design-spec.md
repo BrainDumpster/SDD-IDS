@@ -45,7 +45,7 @@
 - Menu width (`menuWidth` prop; min `186px`, max `700px`, left-aligned to trigger via `--anchor-width`):
   - `"trigger"` (default): menu = trigger/field width, tracks a resizing container; long labels truncate.
   - `"content"`: menu grows to the widest option/tag (clamped `[trigger, 700px]`), then the content truncates.
-- Truncation: option label and the field value truncate with an ellipsis; a truncated field value is wrapped in the IDS Tooltip (the badge tooltip reveals the full selected list).
+- Truncation: option label and the field value truncate with an ellipsis. The badge and field value share one tooltip (anchored above the badge) that lists the full selection as bullets whenever there is a selection.
 - Scrollbar: **overlay** (Base UI `ScrollArea`) so option rows keep full width; always visible while the list overflows (shows ~6 rows then scrolls). Thumb `6px`, `radius-4`, `var(--color-border-gray-neutral-light)`.
 - Search row (when `searchable`):
   - wrapper padding: `var(--padding-padding-8)`.
@@ -161,10 +161,11 @@ Dark theme must preserve the same state matrix and resolve values through semant
   - filters visible options in real time; source options remain unchanged.
 - Badge + tooltip:
   - selected count badge updates with selected length.
-  - tooltip content shows selected summary/details when enabled.
+  - the badge and the field value text share **one** tooltip trigger: hovering (or focusing) either the badge or the text opens the same tooltip. The tooltip is anchored **above the badge** (`side="top"`, `arrowAlign="start"`) regardless of which element is hovered.
+  - the tooltip shows whenever there is a selection and `showSelectedTooltip` is enabled (not gated on text truncation).
 - Field hover tooltip:
-  - when the `FieldContainer` is hovered, an `IdsTooltip` is shown (e.g. when the field value is truncated or a selected summary is requested).
-  - the tooltip uses the IDS Tooltip `Header` slot as a section header, followed by `BodyContent` for the full value or selected summary.
+  - the tooltip uses the IDS Tooltip `Header` slot as the section header (`{count} Items`), followed by `BodyContent`.
+  - `BodyContent` lists the selected items as a **bulleted list** (one `<li>` per item), so long labels stay readable instead of running together in a comma-separated string.
   - section header style follows the dropdown `SectionHeaderRow` contract: top border `var(--color-border-gray-neutral-base)`, text `var(--color-text-gray-neutral)`, vertical padding `var(--padding-padding-6)`.
 - Optional action row:
   - user-defined label
@@ -287,6 +288,11 @@ Dark theme must preserve the same state matrix and resolve values through semant
 ---
 
 ## Implementation Notes
+
+### 2026-10-23
+- **Field + search focus turn the border brand (Text Box look), no outer ring** — neither the trigger nor the in-menu search field draws an outer `::after` ring. The trigger field border is **keyboard-focus only** (`:focus-visible`), so a mouse click opens the menu without a lingering brand border (the trigger `<button>` keeps `:focus` after a click); the **search field** mirrors the Text Box states (specialised Text Box): default base border, hover `--color-border-gray-neutral-strong`, focus brand via `:focus-within` (disabled/error N/A). The trigger's error state keeps its critical border. Shared across all dropdown fields. Implementation: `lib/react/ids/dropdown-shared/DropdownMenu.module.css` (`.triggerReset` + `.searchField`) + `IdsDropdownTriggerShell.module.css`; Angular `ids-dropdown-menu.component.scss` + `ids-dropdown-trigger-shell.component.scss`.
+- **Unified selected tooltip, anchored above the badge** — the selected-count badge and the field value text now share a single `IdsTooltip` trigger. Hovering/focusing either the badge or the text opens the same tooltip, always positioned above the badge (`side="top"`, `arrowAlign="start"`). The tooltip shows whenever there is a selection and `showSelectedTooltip` is enabled, no longer gated on text truncation. Supersedes the 2026-08-30 "Field text tooltip" note and the 2026-08-05 "Tooltip" note. Implementation: React `lib/react/ids/dropdown-multiselect/IdsDropdownMultiSelect.tsx` (`.triggerContent` wraps badge + `ValueText`); Angular `lib/angular/ids/dropdown/ids-dropdown-trigger-shell.component.html`.
+- **Selected items as a bulleted list** — the tooltip `BodyContent` renders one `<li>` per selected label instead of a comma-joined string, so long labels stay readable. Implementation: `SelectedItemsList` (React) / `<ul class="selectedList">` (Angular); `.selectedList` styles in the respective module CSS / component SCSS.
 
 ### 2026-10-11
 - **Keyboard model shared with single-select** (design review, see ## Interactions → Keyboard navigation). Supersedes the 2026-08-13 "no auto-focus on open", cross-section `ArrowUp`/`ArrowDown` and "`Tab` still traverses every tabbable control" notes. React `lib/react/ids/dropdown-shared/DropdownMenu.tsx` runs `handleTriggerKeyDown` and the capture-phase `handleSelectKeyDownCapture` for `selectionMode="single"` and `"multi"`; `handlePopupKeyDown` keeps `ArrowLeft`/`ArrowRight`. Angular `ids-dropdown-menu`: `onTriggerKeydown` / `onPopupKeydown` run for every mode except `"none"`.

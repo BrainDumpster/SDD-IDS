@@ -41,14 +41,9 @@
   --trigger-border: var(--color-border-gray-neutral-strong);
 }
 
-.field[data-focus="true"]:not([data-disabled="true"])::after {
-  content: "";
-  position: absolute;
-  /* -4px → 2px visible offset from the 1px field border (IDS standard). */
-  inset: -4px;
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
+/* Focus matches the IDS Text Box: brand border, no outer ring. */
+.field[data-focus="true"]:not([data-disabled="true"]):not([data-error="true"]) {
+  --trigger-border: var(--color-border-brand-base);
 }
 
 /* Menu open: square bottom edge so popup bottom radius meets field (Figma attached dropdown). */

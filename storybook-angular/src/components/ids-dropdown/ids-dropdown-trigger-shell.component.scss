@@ -47,13 +47,9 @@
   --trigger-border: var(--color-border-gray-neutral-strong);
 }
 
-.field[data-focus="true"]:not([data-disabled="true"])::after {
-  content: "";
-  position: absolute;
-  inset: -5px;
-  border: var(--border-width-border-default) solid var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
+/* Focus matches the IDS Text Box: brand border, no outer ring. */
+.field[data-focus="true"]:not([data-disabled="true"]):not([data-error="true"]) {
+  --trigger-border: var(--color-border-brand-base);
 }
 
 :host-context([data-popup-open][data-popup-side="below"]) .field,
@@ -82,6 +78,28 @@
 
 .badgeTrigger {
   display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Badge + value text, laid out as one field-content row so a single tooltip
+   trigger can wrap both. The value text absorbs the shrink so its ellipsis
+   still triggers. */
+.triggerContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-4);
+  min-width: 0;
+  width: 100%;
+}
+
+/* Bulleted list of selected items inside the tooltip body. */
+.selectedList {
+  margin: 0;
+  padding-inline-start: var(--spacing-space-16);
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2);
 }
 
 /* Let the value/text child shrink so text-overflow ellipsis can trigger. */

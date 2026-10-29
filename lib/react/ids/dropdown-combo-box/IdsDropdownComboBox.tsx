@@ -74,8 +74,14 @@ export interface IdsDropdownComboBoxProps {
   disabled?: boolean;
   searchable?: boolean;
   menuWidth?: IdsDropdownComboBoxMenuWidth | string;
-  /** Single-select only — Reset to Default row (combo box name for Clear All)
-   *  when a value is selected. */
+  /** Single-select only — show a "Reset to Default" action button (in the menu
+   *  footer) when the current selection differs from `defaultValue`. Clicking it
+   *  restores `defaultValue` (the placeholder when there is no default). Default `true`. */
+  showResetToDefault?: boolean;
+  /** Label for the Reset to Default action. Default `"Reset to Default"`. */
+  resetToDefaultLabel?: string;
+  /** @deprecated Alias for `showResetToDefault`; the control now resets to
+   *  `defaultValue` from the footer action slot rather than clearing to empty. */
   showClearAll?: boolean;
   maxVisibleItems?: number;
   noResultsLabel?: string;
@@ -207,18 +213,21 @@ function normalizeSelected(
   return value ? [value] : [];
 }
 
-/**
- * Single-line value that truncates with an ellipsis; when (and only when) the
- * text is actually cut off, wrap in IDS Tooltip (design-spec Interactions).
- */
+/** Plain single-line value (ellipsis). Used in the multi-select field where the
+ *  tooltip is owned by the field trigger (badge + text share one tooltip). */
+function ValueText({ text }: { text: string }) {
+  return <span className={styles.valueText}>{text}</span>;
+}
+
+/** Single-select value that truncates with an ellipsis; when (and only when)
+ *  the text is actually cut off, it is wrapped in the IDS Tooltip revealing the
+ *  full value (design-spec Interactions). */
 function TruncatingValue({
   text,
   tooltip,
-  tooltipTitle,
 }: {
   text: string;
   tooltip?: string;
-  tooltipTitle?: string;
 }) {
   const [truncated, setTruncated] = useState(false);
   const observerRef = useRef<ResizeObserver | null>(null);
@@ -244,10 +253,21 @@ function TruncatingValue({
     <IdsTooltip side="top" arrowAlign="start" hugContent>
       <TooltipTrigger display="block">{valueSpan}</TooltipTrigger>
       <TooltipPanel>
-        {tooltipTitle ? <TooltipHeader>{tooltipTitle}</TooltipHeader> : null}
         <TooltipBody>{tooltip}</TooltipBody>
       </TooltipPanel>
     </IdsTooltip>
+  );
+}
+
+/** Bulleted list of the selected labels — easier to scan long labels than a
+ *  comma-joined string (design request). */
+function SelectedItemsList({ labels }: { labels: string[] }) {
+  return (
+    <ul className={styles.selectedList}>
+      {labels.map((label, index) => (
+        <li key={`${label}-${index}`}>{label}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -285,7 +305,9 @@ export function IdsDropdownComboBox({
   disabled = false,
   searchable = false,
   menuWidth: menuWidthProp = "trigger",
-  showClearAll = false,
+  showResetToDefault,
+  resetToDefaultLabel = "Reset to Default",
+  showClearAll,
   maxVisibleItems = 6,
   noResultsLabel = "No results found",
   options: optionsProp,
@@ -366,6 +388,20 @@ export function IdsDropdownComboBox({
   const selectedDisplay = selectedLabels.join(", ");
   const hasSelection = selectedLabels.length > 0;
   const hasError = Boolean(errorMessage);
+
+  // Single-select "Reset to Default": the default state is either the
+  // `-Select-` placeholder (no `defaultValue`) or a pre-selected option. The
+  // Reset to Default action (menu footer slot) only shows when the current
+  // selection differs from the default, and restores it on click.
+  const defaultIds = useMemo(
+    () => normalizeSelected(mode, defaultValue),
+    [mode, defaultValue],
+  );
+  const resetToDefaultEnabled = showResetToDefault ?? showClearAll ?? true;
+  const showResetRow =
+    !isMulti &&
+    resetToDefaultEnabled &&
+    (selectedIds[0] ?? "") !== (defaultIds[0] ?? "");
   // Spec: a disabled dropdown showing an empty selection must NOT display the
   // required asterisk — the user can't act on it, so marking it required misleads.
   const showRequiredMark = required && !(disabled && !hasSelection);
@@ -411,29 +447,28 @@ export function IdsDropdownComboBox({
       style={fullWidth ? { width: "100%" } : undefined}
       left={
         isMulti && hasSelection ? (
-          <>
-            <span className={styles.badgeWrap}>
-              <IdsTooltip side="top" arrowAlign="start" hugContent>
-                <TooltipTrigger>
-                  <span className={styles.badgeTrigger}>
-                    <IdsBadge
-                      value={selectedLabels.length}
-                      type={disabled ? "disabled" : "default"}
-                    />
-                  </span>
-                </TooltipTrigger>
-                <TooltipPanel>
-                  <TooltipHeader>{`${selectedLabels.length} Items`}</TooltipHeader>
-                  <TooltipBody>{selectedDisplay}</TooltipBody>
-                </TooltipPanel>
-              </IdsTooltip>
-            </span>
-            <TruncatingValue
-              text={selectedDisplay || placeholder}
-              tooltip={selectedDisplay}
-              tooltipTitle={`${selectedLabels.length} Items`}
-            />
-          </>
+          // Badge + value text share one tooltip trigger. Hovering either opens
+          // the tooltip anchored above the badge (side=top + arrowAlign=start),
+          // listing the selected items as bullets.
+          <IdsTooltip side="top" arrowAlign="start" hugContent>
+            <TooltipTrigger display="block">
+              <span className={styles.triggerContent}>
+                <span className={styles.badgeTrigger}>
+                  <IdsBadge
+                    value={selectedLabels.length}
+                    type={disabled ? "disabled" : "default"}
+                  />
+                </span>
+                <ValueText text={selectedDisplay || placeholder} />
+              </span>
+            </TooltipTrigger>
+            <TooltipPanel>
+              <TooltipHeader>{`${selectedLabels.length} Items`}</TooltipHeader>
+              <TooltipBody>
+                <SelectedItemsList labels={selectedLabels} />
+              </TooltipBody>
+            </TooltipPanel>
+          </IdsTooltip>
         ) : (
           <TruncatingValue
             text={hasSelection ? selectedDisplay : placeholder}
@@ -454,10 +489,9 @@ export function IdsDropdownComboBox({
       <DropdownMenu
         selectionMode={isMulti ? "multi" : "single"}
         selectedValues={selectedLabels}
-        // Combo box names Clear All "Reset to Default" (single row and multi
-        // Select All row); clearing behaves the same. The single row sits on the
-        // right, like the multi row's Reset to Default.
-        clearAllLabel="Reset to Default"
+        // Multi-select keeps the standard "Clear All" row (not "Reset to
+        // Default", which single-select uses in the footer action slot).
+        clearAllLabel="Clear All"
         clearAllAlign="right"
         // Keyboard open: the selected option, else the search field to type in.
         keyboardOpenFocus="selectedOrSearch"
@@ -471,7 +505,7 @@ export function IdsDropdownComboBox({
         fullWidth={fullWidth}
         maxVisibleItems={maxVisibleItems}
         noResultsLabel={noResultsLabel}
-        showClearAll={!isMulti && showClearAll}
+        showClearAll={false}
         showSelectAllClearAll={isMulti}
         selectAllChecked={
           isMulti &&
@@ -523,6 +557,8 @@ export function IdsDropdownComboBox({
           }
           applySelectionByLabels(selectedLabels.filter((entry) => entry !== labelValue));
         }}
+        footerActionLabel={showResetRow ? resetToDefaultLabel : undefined}
+        onFooterActionClick={() => emitChange(defaultIds.slice(0, 1))}
         defaultOpen={defaultOpen && !disabled}
         onOpenChange={onOpenChange}
         ariaDescribedBy={message ? messageId : undefined}

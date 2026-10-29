@@ -156,8 +156,11 @@ export const MainScenarios: Story = {
               selectionMode="single"
               selectedValues={smallValue ? [smallValue] : []}
               showSingleSelectRadio={showSingleSelectRadio}
-              showClearAll
-              onClearAllClick={() => setSmallValue("")}
+              /* Default option is "Option 2": Reset to Default sits in the footer
+                 action-button slot and appears only when a different option is
+                 selected; clicking it restores the default. */
+              footerActionLabel={smallValue !== "Option 2" ? "Reset to Default" : undefined}
+              onFooterActionClick={() => setSmallValue("Option 2")}
               defaultOpen
             />
           </div>

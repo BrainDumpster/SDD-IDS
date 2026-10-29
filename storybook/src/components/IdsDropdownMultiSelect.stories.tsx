@@ -1,6 +1,6 @@
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import { IdsBadge } from "./IdsBadge";
 import { DropdownMenu } from "./DropdownMenu";
 import { IdsTooltip } from "./IdsTooltip";
@@ -10,30 +10,12 @@ import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical
 type Size = "small" | "large";
 type Option = { id: string; label: string; disabled?: boolean };
 
-function FieldValue({
-  children,
-  tooltip,
-  tooltipTitle,
-}: {
-  children: string;
-  tooltip?: string;
-  tooltipTitle?: string;
-}) {
-  const [truncated, setTruncated] = useState(false);
-  const observerRef = useRef<ResizeObserver | null>(null);
-
-  const measureRef = useCallback((el: HTMLSpanElement | null) => {
-    observerRef.current?.disconnect();
-    if (!el) return;
-    const check = () => setTruncated(el.scrollWidth > el.clientWidth + 1);
-    check();
-    observerRef.current = new ResizeObserver(check);
-    observerRef.current.observe(el);
-  }, []);
-
-  const text = (
+/** Single-line value that truncates with an ellipsis. The tooltip is owned by
+ *  the field trigger (so hovering the badge or the text opens one tooltip,
+ *  anchored above the badge). */
+function FieldValueText({ children }: { children: string }) {
+  return (
     <span
-      ref={measureRef}
       style={{
         display: "block",
         overflow: "hidden",
@@ -46,20 +28,26 @@ function FieldValue({
       {children}
     </span>
   );
+}
 
-  return truncated && tooltip ? (
-    <IdsTooltip
-      title={tooltipTitle}
-      content={tooltip}
-      side="top"
-      arrowAlign="start"
-      triggerDisplay="block"
-      delay={0}
+/** Bulleted list of the selected labels — easier to scan long labels than a
+ *  comma-joined string (design request). */
+function SelectedItemsList({ labels }: { labels: string[] }) {
+  return (
+    <ul
+      style={{
+        margin: 0,
+        paddingInlineStart: "var(--spacing-space-16)",
+        listStyle: "disc",
+        display: "flex",
+        flexDirection: "column",
+        gap: "var(--spacing-space-2)",
+      }}
     >
-      {text}
-    </IdsTooltip>
-  ) : (
-    text
+      {labels.map((label, index) => (
+        <li key={`${label}-${index}`}>{label}</li>
+      ))}
+    </ul>
   );
 }
 
@@ -101,28 +89,37 @@ function MultiSelectTrigger({
       focusVisible={focusVisible}
       filled={selectedCount > 0}
       left={
-        <>
-          {showBadge ? (
-            <span style={{ display: "inline-flex", flexShrink: 0 }}>
-              <IdsTooltip
-                side="top"
-                align="start"
-                title={`${selectedCount} Items`}
-                content={`Display a comma separated list of items. Selected: ${selectedLabels.join(", ")}`}
-              >
-                <span style={{ display: "inline-flex" }}>
+        selectedCount > 0 ? (
+          // Badge + value text share one tooltip trigger. Hovering either opens
+          // the tooltip anchored above the badge (side=top + arrowAlign=start),
+          // listing the selected items as bullets.
+          <IdsTooltip
+            side="top"
+            arrowAlign="start"
+            triggerDisplay="block"
+            title={`${selectedCount} Items`}
+            content={<SelectedItemsList labels={selectedLabels} />}
+          >
+            <span
+              style={{
+                display: "flex",
+                alignItems: "center",
+                gap: "var(--spacing-space-4)",
+                minWidth: 0,
+                width: "100%",
+              }}
+            >
+              {showBadge ? (
+                <span style={{ display: "inline-flex", flexShrink: 0 }}>
                   <IdsBadge value={selectedCount} type={disabled ? "disabled" : "controls"} />
                 </span>
-              </IdsTooltip>
+              ) : null}
+              <FieldValueText>{listText}</FieldValueText>
             </span>
-          ) : null}
-          <FieldValue
-            tooltipTitle={`${selectedCount} Items`}
-            tooltip={selectedCount > 0 ? selectedLabels.join(", ") : undefined}
-          >
-            {listText}
-          </FieldValue>
-        </>
+          </IdsTooltip>
+        ) : (
+          <FieldValueText>{listText}</FieldValueText>
+        )
       }
     />
   );
