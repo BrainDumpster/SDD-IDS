@@ -22,7 +22,7 @@
   margin: 0;
   padding: 0 var(--padding-padding-12);
   list-style: none;
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .barItem {
@@ -57,21 +57,21 @@
 }
 
 .item:hover:not(.itemSelected) {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .item:hover:not(.itemSelected) .label {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .item:active:not(.itemSelected) {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-light-slate);
 }
 
 .itemSelected {
   background: transparent;
   /* Inset underline keeps icon/label vertically centered in the 40px hit target */
-  box-shadow: inset 0 -2px 0 var(--color-border-brand-dark);
+  box-shadow: inset 0 -2px 0 var(--color-border-brand-strong);
 }
 
 .itemSelected .label {
@@ -87,11 +87,11 @@
 }
 
 .itemMenuOpen:not(.itemSelected) {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .itemMenuOpen:not(.itemSelected) .label {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .menuSubmenuPopup {
@@ -125,7 +125,7 @@
   width: 18px;
   height: 18px;
   line-height: 0;
-  color: var(--color-icon-neutral-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .iconGlyph {
@@ -144,7 +144,7 @@
   width: 12px;
   height: var(--font-line-height-line-height-24, 24px);
   line-height: 0;
-  color: var(--color-icon-neutral-strong);
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .chevronSlotSmall {
@@ -167,7 +167,7 @@
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
   font-weight: 500;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
 }
 

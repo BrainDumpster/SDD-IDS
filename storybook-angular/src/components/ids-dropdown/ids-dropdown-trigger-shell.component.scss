@@ -1,0 +1,128 @@
+/* Ported from storybook/src/components/IdsDropdownTriggerShell.module.css */
+
+:host {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.field {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 700px;
+  min-width: 186px;
+  min-height: 40px;
+  box-sizing: border-box;
+  border: var(--border-width-border-default) solid var(--trigger-border, var(--color-border-gray-neutral-base));
+  background: var(--trigger-bg, var(--color-background-surface-component));
+  color: var(--trigger-fg, var(--color-text-gray-neutral));
+  padding: var(--trigger-py, var(--padding-padding-10)) var(--padding-padding-16);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+  gap: var(--spacing-space-10);
+  border-radius: var(--dropdown-control-radius);
+}
+
+.field[data-size="small"] {
+  --trigger-py: var(--padding-padding-6);
+  min-height: 32px;
+}
+
+.field[data-disabled="true"] {
+  cursor: not-allowed;
+  background: var(--color-background-gray-lighter);
+  --trigger-border: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+
+.field[data-error="true"]:not([data-disabled="true"]) {
+  --trigger-border: var(--color-border-alerting-critical-base);
+}
+
+.field[data-hover="true"]:not([data-disabled="true"]):not([data-error="true"]) {
+  --trigger-border: var(--color-border-gray-neutral-strong);
+}
+
+/* Focus matches the IDS Text Box: brand border, no outer ring. */
+.field[data-focus="true"]:not([data-disabled="true"]):not([data-error="true"]) {
+  --trigger-border: var(--color-border-brand-base);
+}
+
+:host-context([data-popup-open][data-popup-side="below"]) .field,
+:host-context([data-popup-open]:not([data-popup-side])) .field {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+:host-context([data-popup-open][data-popup-side="above"]) .field {
+  border-top-left-radius: 0;
+  border-top-right-radius: 0;
+}
+
+.main {
+  display: flex;
+  align-items: center;
+  flex: 1 1 auto;
+  min-width: 0;
+  gap: var(--spacing-space-4);
+}
+
+.badgeWrap {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+.badgeTrigger {
+  display: inline-flex;
+  flex-shrink: 0;
+}
+
+/* Badge + value text, laid out as one field-content row so a single tooltip
+   trigger can wrap both. The value text absorbs the shrink so its ellipsis
+   still triggers. */
+.triggerContent {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-4);
+  min-width: 0;
+  width: 100%;
+}
+
+/* Bulleted list of selected items inside the tooltip body. */
+.selectedList {
+  margin: 0;
+  padding-inline-start: var(--spacing-space-16);
+  list-style: disc;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-2);
+}
+
+/* Let the value/text child shrink so text-overflow ellipsis can trigger. */
+.main > * {
+  min-width: 0;
+}
+
+/* Field showing selected option(s): 16px between content and caret. */
+.field[data-filled="true"] .main {
+  padding-right: var(--padding-padding-16);
+}
+
+.caret-wrap {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: flex-start;
+  padding: 5px var(--padding-padding-1);
+  color: var(--color-icon-gray-neutral-base);
+  line-height: 0;
+}
+
+/* Caret stays down-pointing while open (Figma show-dropdown / matrix). */
+
+.field[data-disabled="true"] .caret-wrap {
+  color: var(--color-border-gray-disabled);
+}

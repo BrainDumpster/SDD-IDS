@@ -1,0 +1,30 @@
+<button
+  [attr.type]="type"
+  [attr.aria-label]="resolvedIconOnly ? ariaLabel || null : null"
+  [attr.data-size]="resolvedSize"
+  [ngClass]="['ids-button', variantClass, resolvedSize, resolvedIconOnly ? 'icon-only' : '', loading ? 'loading' : '']"
+  [class.pressed]="keyboardPressed"
+  [disabled]="disabled || loading"
+  (click)="onClick($event)"
+  (keydown)="onKeyDown($event)"
+  (keyup)="onKeyUp($event)"
+  (blur)="onBlur()"
+>
+  @if (loading) {
+    <span class="spinner" aria-hidden="true"></span>
+  }
+  @if (hasLeadingIcon) {
+    <span
+      class="icon-slot"
+      [class.visually-hidden]="loading && resolvedIconOnly"
+      aria-hidden="true"
+    >
+      <ng-content select="ids-icon" />
+    </span>
+  }
+  @if (!resolvedIconOnly) {
+    <span class="label" [class.label-hidden]="loading">
+      <ng-content />
+    </span>
+  }
+</button>

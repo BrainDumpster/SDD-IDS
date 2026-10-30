@@ -21,7 +21,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof SynapseSpinner> = {
-  title: "Spec Generated/Synapse/Spinner",
+  title: "Components/Synapse/Spinner",
   component: SynapseSpinner,
   parameters: {
     layout: "centered",

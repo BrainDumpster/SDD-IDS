@@ -1,6 +1,14 @@
 import type { ReactNode } from "react";
 import type { DualListBoxItem } from "./IdsDualListBox";
-import { IdsTooltip } from "./IdsTooltip";
+import {
+  IdsTooltip,
+  IdsTooltipArrow,
+  IdsTooltipBody,
+  IdsTooltipHeader,
+  IdsTooltipPanel,
+  IdsTooltipTitle,
+  IdsTooltipTrigger,
+} from "./IdsTooltip";
 
 /** IDS Tooltip contract: `components/ids/tooltip/design-spec.md` */
 export const IDS_TOOLTIP_SPEC_PATH = "components/ids/tooltip/design-spec.md";
@@ -32,47 +40,26 @@ export function wrapDualListBoxItemWithIdsTooltip(
   const side = options.side ?? "top";
   const arrowAlign = options.arrowAlign ?? "center";
 
-  // Title + description → header + body (With header variant).
-  if (title && description) {
-    return (
-      <IdsTooltip
-        title={title}
-        content={description}
-        side={side}
-        arrowAlign={arrowAlign}
-        closable={false}
-        triggerDisplay="block"
-      >
-        {row}
-      </IdsTooltip>
-    );
-  }
+  const body = description || title;
+  const headerTitle = title && description ? title : undefined;
 
-  // Description only → standard tooltip (body only).
-  if (description) {
-    return (
-      <IdsTooltip
-        content={description}
-        side={side}
-        arrowAlign={arrowAlign}
-        closable={false}
-        triggerDisplay="block"
-      >
-        {row}
-      </IdsTooltip>
-    );
-  }
-
-  // Title only → standard tooltip (body only; omit empty header per spec).
   return (
     <IdsTooltip
-      content={title}
       side={side}
       arrowAlign={arrowAlign}
       closable={false}
       triggerDisplay="block"
     >
-      {row}
+      <IdsTooltipTrigger>{row}</IdsTooltipTrigger>
+      <IdsTooltipPanel>
+        {headerTitle ? (
+          <IdsTooltipHeader>
+            <IdsTooltipTitle>{headerTitle}</IdsTooltipTitle>
+          </IdsTooltipHeader>
+        ) : null}
+        <IdsTooltipBody>{body}</IdsTooltipBody>
+        <IdsTooltipArrow />
+      </IdsTooltipPanel>
     </IdsTooltip>
   );
 }

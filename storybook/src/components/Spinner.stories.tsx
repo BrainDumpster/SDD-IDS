@@ -4,7 +4,7 @@ import { IdsSpinner } from "./IdsSpinner";
 import styles from "./Spinner.module.css";
 
 const meta: Meta<typeof IdsSpinner> = {
-  title: "Spec Generated/IDS/Spinner",
+  title: "Components/IDS/Spinner",
   component: IdsSpinner,
   argTypes: {
     size: { control: "select", options: ["sm", "md", "lg"] },

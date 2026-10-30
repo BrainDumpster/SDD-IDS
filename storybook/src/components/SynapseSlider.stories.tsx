@@ -8,7 +8,7 @@ import {
 } from "../spec-contracts/synapse-slider.contract";
 
 const meta: Meta<typeof SynapseSlider> = {
-  title: "Spec Generated/Synapse/Slider",
+  title: "Components/Synapse/Slider",
   component: SynapseSlider,
   parameters: {
     layout: "padded",

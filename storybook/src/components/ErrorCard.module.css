@@ -1,7 +1,7 @@
 .card {
-  border: var(--border-width-border-1) solid var(--color-border-lighter);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-lighter);
   border-radius: var(--corner-radius-radius-4);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   overflow: hidden;
   position: relative;
 }
@@ -39,7 +39,7 @@
   font-size: var(--font-size-body-1);
   font-weight: 500;
   font-family: inherit;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   line-height: var(--font-line-height-line-height-24);
 }
 
@@ -47,7 +47,7 @@
   margin: 0;
   font-size: var(--font-size-body-2);
   font-family: inherit;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
 }
 
@@ -67,7 +67,7 @@
 }
 
 .action:hover {
-  color: var(--color-background-controls-brand-strong);
+  color: var(--color-background-controls-strong);
 }
 
 .action:focus-visible {

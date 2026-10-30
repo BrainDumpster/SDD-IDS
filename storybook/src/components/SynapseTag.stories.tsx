@@ -2,6 +2,7 @@ import React from "react";
 import "../../../components/synapse-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
 import { SynapseTag } from "./SynapseTag";
+import { Tags } from "./Tags";
 import {
   SYNAPSE_TAG_DESIGN_SPEC_PATH,
   SYNAPSE_TAG_IDS_BASELINE_SPEC_PATH,
@@ -15,12 +16,12 @@ import {
 const specAccurateArgs = {
   type: "read-only" as const,
   label: SYNAPSE_TAG_SAMPLE_LABEL,
-  tone: "non-alerting" as const,
-  size: "sm" as const,
+  tone: "none" as const,
+  size: "small" as const,
 };
 
 const meta: Meta<typeof SynapseTag> = {
-  title: "Spec Generated/Synapse/Tag",
+  title: "Components/Synapse/Tag",
   component: SynapseTag,
   parameters: {
     layout: "centered",
@@ -65,19 +66,19 @@ export const TypeMatrix: Story = {
         <p style={{ margin: "0 0 8px", fontSize: 12, color: "var(--color-text-neutral)" }}>
           Read-only — {SYNAPSE_TAG_TYPE_NODES.readOnly}
         </p>
-        <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="sm" />
+        <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="small" />
       </div>
       <div>
         <p style={{ margin: "0 0 8px", fontSize: 12, color: "var(--color-text-neutral)" }}>
           Clickable — {SYNAPSE_TAG_TYPE_NODES.clickable}
         </p>
-        <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" />
+        <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" />
       </div>
       <div>
         <p style={{ margin: "0 0 8px", fontSize: 12, color: "var(--color-text-neutral)" }}>
           Editable — {SYNAPSE_TAG_TYPE_NODES.editableDismissible}
         </p>
-        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" closable />
+        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" />
       </div>
       <div>
         <p style={{ margin: "0 0 8px", fontSize: 12, color: "var(--color-text-neutral)" }}>
@@ -86,10 +87,10 @@ export const TypeMatrix: Story = {
         <SynapseTag
           type="badge"
           label={SYNAPSE_TAG_SAMPLE_LABEL}
-          size="lg"
+          size="large"
           showLabel
-          labelPrefix="Label:"
-          badgeCount={1}
+          labelPrefix="Label"
+          badgeValue={1}
         />
       </div>
     </div>
@@ -104,16 +105,16 @@ export const AlertingTones: Story = {
       <p style={{ margin: 0, fontSize: 12, color: "var(--color-text-neutral)" }}>
         Board {SYNAPSE_TAG_SCENARIO_BOARDS.alerting}
       </p>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {(["info", "success", "minor", "major", "critical"] as const).map((tone) => (
-          <SynapseTag key={`${tone}-strong`} type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} tone={tone} emphasis="strong" size="sm" />
+      <Tags ariaLabel="Alerting strong tones">
+        {(["informational", "success", "minor", "major", "critical"] as const).map((tone) => (
+          <SynapseTag key={`${tone}-strong`} type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} tone={tone} emphasis="strong" size="small" />
         ))}
-      </div>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        {(["info", "success", "minor", "major", "critical"] as const).map((tone) => (
-          <SynapseTag key={`${tone}-light`} type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} tone={tone} emphasis="light" size="sm" />
+      </Tags>
+      <Tags ariaLabel="Alerting light tones">
+        {(["informational", "success", "minor", "major", "critical"] as const).map((tone) => (
+          <SynapseTag key={`${tone}-light`} type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} tone={tone} emphasis="light" size="small" />
         ))}
-      </div>
+      </Tags>
     </div>
   ),
 };
@@ -122,13 +123,13 @@ export const AlertingTones: Story = {
 export const ClickableStates: Story = {
   name: "Clickable States",
   render: () => (
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: 24 }}>
-      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" />
-      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" visualState="hover" />
-      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" visualState="focus" />
-      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" selected />
-      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" selected visualState="hover" />
-    </div>
+    <Tags ariaLabel="Clickable tag states">
+      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" />
+      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" demoHover />
+      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" focusVisible />
+      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" selected />
+      <SynapseTag type="clickable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" selected demoHover />
+    </Tags>
   ),
 };
 
@@ -137,32 +138,33 @@ export const EditableAndBadgeStates: Story = {
   name: "Editable And Badge States",
   render: () => (
     <div style={{ display: "grid", gap: 16, padding: 24 }}>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" closable />
-        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" visualState="error" closable />
-        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" visualState="disabled" closable />
-      </div>
-      <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
-        <SynapseTag type="badge" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" showLabel labelPrefix="Label:" badgeCount={1} />
+      <Tags ariaLabel="Editable tag states">
+        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" />
+        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" error />
+        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" disabled />
+        <SynapseTag type="editable" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" focusOnText showLabel labelPrefix="Label" />
+      </Tags>
+      <Tags ariaLabel="Badge tag states">
+        <SynapseTag type="badge" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" showLabel labelPrefix="Label" badgeValue={1} />
         <SynapseTag
           type="badge"
           label={SYNAPSE_TAG_SAMPLE_LABEL}
-          size="lg"
+          size="large"
           showLabel
-          labelPrefix="Label:"
-          badgeCount={1}
-          visualState="focus"
+          labelPrefix="Label"
+          badgeValue={1}
+          focusVisible
         />
         <SynapseTag
           type="badge"
           label={SYNAPSE_TAG_SAMPLE_LABEL}
-          size="lg"
+          size="large"
           showLabel
-          labelPrefix="Label:"
-          badgeCount={1}
-          visualState="error"
+          labelPrefix="Label"
+          badgeValue={1}
+          error
         />
-      </div>
+      </Tags>
     </div>
   ),
 };
@@ -171,10 +173,10 @@ export const EditableAndBadgeStates: Story = {
 export const NonAlertingLargeStates: Story = {
   name: "Non-Alerting Large States",
   render: () => (
-    <div style={{ display: "flex", gap: 8, flexWrap: "wrap", padding: 24 }}>
-      <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" />
-      <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" visualState="error" />
-      <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="lg" visualState="focus" />
-    </div>
+    <Tags ariaLabel="Non-alerting large tag states">
+      <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" />
+      <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" error />
+      <SynapseTag type="read-only" label={SYNAPSE_TAG_SAMPLE_LABEL} size="large" focusVisible />
+    </Tags>
   ),
 };

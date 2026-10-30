@@ -1,7 +1,11 @@
 import "../../../components/synapse-theme.css";
 import { useState } from "react";
 import type { Meta, StoryObj } from "@storybook/react";
-import { SynapseSegmentedButton } from "./SynapseSegmentedButton";
+import {
+  SynapseSegmentedButtons,
+  SynapseSegmentedIcon,
+  SynapseSegmentedText,
+} from "./SynapseSegmentedButton";
 import {
   SYNAPSE_SEGMENTED_BUTTON_DESIGN_SPEC_PATH,
   SYNAPSE_SEGMENTED_BUTTON_ICON_SPEC_ACCURATE_NODE_ID,
@@ -10,9 +14,9 @@ import {
   SYNAPSE_SEGMENTED_BUTTON_STATE_MATRIX_NODE_ID,
 } from "../spec-contracts/synapse-segmented-button.contract";
 
-const meta: Meta<typeof SynapseSegmentedButton> = {
-  title: "Spec Generated/Synapse/Segmented Button",
-  component: SynapseSegmentedButton,
+const meta: Meta<typeof SynapseSegmentedButtons> = {
+  title: "Components/Synapse/Segmented Button",
+  component: SynapseSegmentedButtons,
   parameters: {
     layout: "centered",
     docs: {
@@ -28,21 +32,28 @@ const meta: Meta<typeof SynapseSegmentedButton> = {
 };
 
 export default meta;
-type Story = StoryObj<typeof SynapseSegmentedButton>;
+type Story = StoryObj<typeof SynapseSegmentedButtons>;
 
 export const SpecAccurateTextTwoOptions: Story = {
   name: "Spec Accurate / Text 2 Options",
   render: () => {
-    const [value, setValue] = useState("option1");
+    const [selected, setSelected] = useState("option1");
     return (
       <div style={{ width: 260 }}>
-        <SynapseSegmentedButton
+        <SynapseSegmentedButtons
           type="text"
           ariaLabel="View mode"
-          items={[...SYNAPSE_SEGMENTED_BUTTON_SAMPLE_OPTIONS]}
-          value={value}
-          onChange={setValue}
-        />
+          selected={selected}
+          onSelectedChange={setSelected}
+        >
+          {SYNAPSE_SEGMENTED_BUTTON_SAMPLE_OPTIONS.map((option) => (
+            <SynapseSegmentedText
+              key={option.value}
+              value={option.value}
+              label={option.label}
+            />
+          ))}
+        </SynapseSegmentedButtons>
       </div>
     );
   },
@@ -50,20 +61,19 @@ export const SpecAccurateTextTwoOptions: Story = {
 
 export const TextThreeOptions: Story = {
   render: () => {
-    const [value, setValue] = useState("weekly");
+    const [selected, setSelected] = useState("weekly");
     return (
       <div style={{ width: 370 }}>
-        <SynapseSegmentedButton
+        <SynapseSegmentedButtons
           type="text"
           ariaLabel="Billing cycle"
-          items={[
-            { value: "daily", label: "Daily" },
-            { value: "weekly", label: "Weekly" },
-            { value: "monthly", label: "Monthly" },
-          ]}
-          value={value}
-          onChange={setValue}
-        />
+          selected={selected}
+          onSelectedChange={setSelected}
+        >
+          <SynapseSegmentedText value="daily" label="Daily" />
+          <SynapseSegmentedText value="weekly" label="Weekly" />
+          <SynapseSegmentedText value="monthly" label="Monthly" />
+        </SynapseSegmentedButtons>
       </div>
     );
   },
@@ -71,18 +81,60 @@ export const TextThreeOptions: Story = {
 
 export const IconTwoOptions: Story = {
   render: () => {
-    const [value, setValue] = useState("list");
+    const [selected, setSelected] = useState("list");
     return (
-      <SynapseSegmentedButton
+      <SynapseSegmentedButtons
         type="icon"
         ariaLabel="Layout"
-        items={[
-          { value: "list", icon: "view-hamburger", ariaLabel: "List view" },
-          { value: "grid", icon: "view-sort-grid-solid", ariaLabel: "Grid view" },
-        ]}
-        value={value}
-        onChange={setValue}
-      />
+        selected={selected}
+        onSelectedChange={setSelected}
+      >
+        <SynapseSegmentedIcon
+          value="list"
+          shape="view-hamburger"
+          ariaLabel="List view"
+          title="List view"
+        />
+        <SynapseSegmentedIcon
+          value="grid"
+          shape="view-sort-grid-solid"
+          ariaLabel="Grid view"
+          title="Grid view"
+        />
+      </SynapseSegmentedButtons>
+    );
+  },
+};
+
+export const IconListTreeGrid: Story = {
+  render: () => {
+    const [selected, setSelected] = useState("tree");
+    return (
+      <SynapseSegmentedButtons
+        type="icon"
+        ariaLabel="Content view"
+        selected={selected}
+        onSelectedChange={setSelected}
+      >
+        <SynapseSegmentedIcon
+          value="list"
+          shape="view-hamburger"
+          ariaLabel="List view"
+          title="List view"
+        />
+        <SynapseSegmentedIcon
+          value="tree"
+          shape="nav-tree"
+          ariaLabel="Tree view"
+          title="Tree view"
+        />
+        <SynapseSegmentedIcon
+          value="grid"
+          shape="view-sort-grid-solid"
+          ariaLabel="Grid view"
+          title="Grid view"
+        />
+      </SynapseSegmentedButtons>
     );
   },
 };
@@ -127,16 +179,23 @@ export const FigmaMatrixReference: Story = {
     },
   },
   render: () => {
-    const [value, setValue] = useState("option1");
+    const [selected, setSelected] = useState("option1");
     return (
       <div style={{ width: 260 }}>
-        <SynapseSegmentedButton
+        <SynapseSegmentedButtons
           type="text"
           ariaLabel="Matrix reference"
-          items={[...SYNAPSE_SEGMENTED_BUTTON_SAMPLE_OPTIONS]}
-          value={value}
-          onChange={setValue}
-        />
+          selected={selected}
+          onSelectedChange={setSelected}
+        >
+          {SYNAPSE_SEGMENTED_BUTTON_SAMPLE_OPTIONS.map((option) => (
+            <SynapseSegmentedText
+              key={option.value}
+              value={option.value}
+              label={option.label}
+            />
+          ))}
+        </SynapseSegmentedButtons>
       </div>
     );
   },

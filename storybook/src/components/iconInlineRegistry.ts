@@ -12,6 +12,7 @@ import search16Raw from "../../../assets/icons/search-16.svg?raw";
 import settingsGearRaw from "../../../assets/icons/settings-gear.svg?raw";
 import shieldEncryptAltRaw from "../../../assets/icons/shield-encrypt-alt.svg?raw";
 import statusWarnTriSolidRaw from "../../../assets/icons/status-warn-tri-solid.svg?raw";
+import { idsRawSvg } from "../../../lib/react/ids/shared/idsAssetRegistry.generated";
 
 export function stripXmlDeclaration(svg: string): string {
   return svg.replace(/<\?xml[^>]*>\s*/i, "").trim();
@@ -43,9 +44,9 @@ function warnMinorAlertIcon(raw: string): string {
   s = s.replace(/\swidth="[^"]*"/i, "");
   s = s.replace(/\sheight="[^"]*"/i, "");
   s = s.replace(/\sstyle="enable-background:[^"]*"/gi, "");
-  s = s.replace(/class="st0"/g, 'style="fill:var(--color-icon-black)"');
-  s = s.replace(/class="st1"/g, 'style="fill:var(--color-icon-black)"');
-  s = s.replace(/class="st2"/g, 'style="fill:var(--color-icon-white)"');
+  s = s.replace(/class="st0"/g, 'style="fill:var(--color-icon-gray-black)"');
+  s = s.replace(/class="st1"/g, 'style="fill:var(--color-icon-gray-black)"');
+  s = s.replace(/class="st2"/g, 'style="fill:var(--color-icon-gray-white)"');
   return s.trim();
 }
 
@@ -61,7 +62,7 @@ function stripIconRootDimensions(svg: string): string {
 /** What's New thumbnail hover: frame neutral, arrow brand (`27437:44169`). */
 function popoutWindowArrowIcon(raw: string): string {
   let s = stripIconRootDimensions(raw);
-  s = s.replace(/<path class="st0"/g, '<path style="fill:var(--color-icon-neutral)"');
+  s = s.replace(/<path class="st0"/g, '<path style="fill:var(--color-icon-gray-neutral-base)"');
   s = s.replace(/<polygon class="st0"/g, '<polygon style="fill:var(--color-icon-brand-base)"');
   return s.trim();
 }
@@ -70,20 +71,20 @@ function popoutWindowArrowIcon(raw: string): string {
 function popoutDoubleIcon(raw: string): string {
   let s = stripIconRootDimensions(raw);
   s = s.replace(/<path class="st0"/g, '<path style="fill:var(--color-border-brand-base)"');
-  s = s.replace(/<polygon class="st0"/g, '<polygon style="fill:var(--color-icon-neutral)"');
+  s = s.replace(/<polygon class="st0"/g, '<polygon style="fill:var(--color-icon-gray-neutral-base)"');
   return s.trim();
 }
 
 export const ICON_INLINE_SVG_RAW_BY_SLUG: Readonly<Record<string, string>> = {
-  "grid-square-9-16": stripXmlDeclaration(gridSquare9Raw),
-  "shield-encrypt-alt": stripXmlDeclaration(shieldEncryptAltRaw),
-  "col-sort-up-16": monoIconFromAsset(colSortUp16Raw),
-  "col-sort-down-16": monoIconFromAsset(colSortDown16Raw),
+  "grid-square-9-16": stripXmlDeclaration(idsRawSvg(gridSquare9Raw, "grid-square-9-16")),
+  "shield-encrypt-alt": stripXmlDeclaration(idsRawSvg(shieldEncryptAltRaw, "shield-encrypt-alt")),
+  "col-sort-up-16": monoIconFromAsset(idsRawSvg(colSortUp16Raw, "col-sort-up-16")),
+  "col-sort-down-16": monoIconFromAsset(idsRawSvg(colSortDown16Raw, "col-sort-down-16")),
   filter: FILTER_OUTLINE_SVG,
-  "filter-solid": monoIconFromAsset(filterSolidRaw),
-  "search-16": monoIconFromAsset(search16Raw),
-  "settings-gear": monoIconFromAsset(settingsGearRaw),
-  "status-warn-tri-solid": warnMinorAlertIcon(statusWarnTriSolidRaw),
-  "popout-window-arrow": popoutWindowArrowIcon(popoutWindowArrowRaw),
-  "popout-double": popoutDoubleIcon(popoutDoubleRaw),
+  "filter-solid": monoIconFromAsset(idsRawSvg(filterSolidRaw, "filter-solid")),
+  "search-16": monoIconFromAsset(idsRawSvg(search16Raw, "search-16")),
+  "settings-gear": monoIconFromAsset(idsRawSvg(settingsGearRaw, "settings-gear")),
+  "status-warn-tri-solid": warnMinorAlertIcon(idsRawSvg(statusWarnTriSolidRaw, "status-warn-tri-solid")),
+  "popout-window-arrow": popoutWindowArrowIcon(idsRawSvg(popoutWindowArrowRaw, "popout-window-arrow")),
+  "popout-double": popoutDoubleIcon(idsRawSvg(popoutDoubleRaw, "popout-double")),
 };

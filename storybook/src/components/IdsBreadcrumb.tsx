@@ -1,115 +1,294 @@
-import { useState } from "react";
-import type { ComponentProps } from "react";
+import { useEffect, useMemo, useRef, useState, type ComponentProps } from "react";
+
+import { IdsLink } from "../../../lib/react/ids/link";
+
+import idsLinkStyles from "../../../lib/react/ids/link/IdsLink.module.css";
+
+import { DropdownMenu } from "../../../lib/react/ids/dropdown-shared";
+
 import styles from "./IdsBreadcrumb.module.css";
 
+
+
 interface BreadcrumbItem {
+
   label: string;
+
   href?: string;
+
 }
+
+
 
 interface IdsBreadcrumbProps extends ComponentProps<"nav"> {
+
   /** Array of breadcrumb items */
+
   items: BreadcrumbItem[];
-  /** Current page text (for two-line variant) */
+
+  /** Current page text (displayed below breadcrumb trail) */
+
   currentPage?: string;
-  /** Whether to use two-line layout */
-  twoLines?: boolean;
-  /** Whether to truncate with "..." when items exceed maxVisibleItems */
-  truncate?: boolean;
-  /** Maximum number of items to show before truncating (default: 4) */
+
+  /** Maximum number of items to show before truncating (default: 3) */
+
   maxVisibleItems?: number;
-  /** Whether to show dropdown menu on hover of "..." */
-  showDropdown?: boolean;
+
+
 }
+
+
 
 export function IdsBreadcrumb({
-  items,
-  currentPage,
-  twoLines = false,
-  truncate = false,
-  maxVisibleItems = 4,
-  showDropdown = false,
-  className,
-  ...rest
-}: IdsBreadcrumbProps) {
-  const [dropdownOpen, setDropdownOpen] = useState(false);
 
-  const shouldTruncate = truncate && items.length > maxVisibleItems;
+  items,
+
+  currentPage,
+
+  maxVisibleItems = 3,
+
+  className,
+
+  ...rest
+
+}: IdsBreadcrumbProps) {
+
+  const shouldTruncate = items.length > maxVisibleItems;
+
   const visibleItems = shouldTruncate
+
     ? [items[0], items[items.length - 1]]
+
     : items;
+
   const hiddenItems = shouldTruncate ? items.slice(1, -1) : [];
 
+  const [dropdownContainer, setDropdownContainer] = useState<HTMLDivElement | null>(null);
+
+  const [dropdownOpen, setDropdownOpen] = useState(false);
+
+  useEffect(() => {
+    if (!dropdownOpen || !dropdownContainer) return;
+    const frame = requestAnimationFrame(() => {
+      const firstItem = dropdownContainer.querySelector<HTMLElement>(
+        'button:not(:disabled), [role="menuitem"]:not([aria-disabled="true"])',
+      );
+      firstItem?.focus();
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [dropdownOpen, dropdownContainer]);
+
+  const navRef = useRef<HTMLElement>(null);
+  const listRef = useRef<HTMLOListElement>(null);
+  const [labelCap, setLabelCap] = useState<number | null>(null);
+
+  const displayedItems = useMemo(() => {
+    if (labelCap == null) return visibleItems;
+    return visibleItems.map((item) => {
+      if (item.label.length <= labelCap) return item;
+      return { ...item, label: `${item.label.slice(0, labelCap)}...` };
+    });
+  }, [visibleItems, labelCap]);
+
+  const originalMax = useMemo(
+    () => Math.max(0, ...visibleItems.map((item) => item.label.length)),
+    [visibleItems],
+  );
+
+  useEffect(() => {
+    const nav = navRef.current;
+    const list = listRef.current;
+    const parent = nav?.parentElement;
+    if (!nav || !list) return;
+
+    const checkOverflow = () => {
+      const listRect = list.getBoundingClientRect();
+      const contentRight = listRect.left + list.scrollWidth;
+
+      let nextEdge: number | null = null;
+      if (parent) {
+        for (const child of parent.children) {
+          if (child === nav) continue;
+          const childRect = child.getBoundingClientRect();
+          if (childRect.width === 0 || childRect.height === 0) continue;
+          if (childRect.right > listRect.left) {
+            if (nextEdge == null || childRect.left < nextEdge) {
+              nextEdge = childRect.left;
+            }
+          }
+        }
+      }
+
+      if (nextEdge == null) {
+        const navRect = nav.getBoundingClientRect();
+        nextEdge = navRect.left + nav.clientWidth;
+      }
+
+      const spacing = nextEdge - contentRight;
+      if (spacing < 24) {
+        setLabelCap((prev) => {
+          if (prev == null) return Math.max(1, originalMax - 1);
+          return Math.max(1, prev - 1);
+        });
+      } else if (spacing >= 48) {
+        setLabelCap((prev) => {
+          if (prev == null) return prev;
+          const next = prev + 1;
+          if (next >= originalMax) return null;
+          return next;
+        });
+      }
+    };
+
+    const observer = new ResizeObserver(checkOverflow);
+    observer.observe(nav);
+    observer.observe(list);
+    if (parent) observer.observe(parent);
+    checkOverflow();
+    return () => observer.disconnect();
+  }, [originalMax]);
+
+
+
   return (
+
     <nav
+
       aria-label="Breadcrumb"
+
+      ref={navRef}
+
       className={[styles.breadcrumbContainer, className].filter(Boolean).join(" ")}
+
       {...rest}
+
     >
-      <ol className={styles.breadcrumbList}>
-        {visibleItems.map((item, index) => {
-          const isLast = index === visibleItems.length - 1;
+
+      <ol ref={listRef} className={styles.breadcrumbList}>
+
+        {displayedItems.map((item, index) => {
+
+          const isLast = index === displayedItems.length - 1;
+
+
 
           return (
+
             <li key={index} className={styles.breadcrumbItem}>
-              <a href={item.href ?? "#"} className={styles.breadcrumbLink}>
-                {item.label}
-              </a>
+
+              <IdsLink
+
+                label={item.label}
+
+                href={item.href ?? "#"}
+
+                type="standalone"
+
+              />
+
               {!isLast ? (
+
                 <>
+
                   <span className={styles.separator} aria-hidden="true">
+
                     /
+
                   </span>
+
                   {shouldTruncate && index === 0 && (
-                    <span
-                      className={[styles.breadcrumbLink, styles.ellipsis].join(" ")}
-                      onMouseEnter={() => showDropdown && setDropdownOpen(true)}
-                      onMouseLeave={() => setDropdownOpen(false)}
-                      aria-haspopup={showDropdown ? "true" : undefined}
-                      aria-expanded={showDropdown ? dropdownOpen : undefined}
-                    >
-                      ...
-                      {showDropdown && dropdownOpen && (
-                        <div
-                          className={styles.dropdownMenu}
-                          onMouseEnter={() => setDropdownOpen(true)}
-                          onMouseLeave={() => setDropdownOpen(false)}
-                        >
-                          <div className={styles.dropdownOptions}>
-                            {hiddenItems.map((hiddenItem, hiddenIndex) => (
-                              <a
-                                key={hiddenIndex}
-                                href={hiddenItem.href ?? "#"}
-                                className={styles.dropdownOption}
-                              >
-                                {hiddenItem.label}
-                              </a>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-                    </span>
+
+                    <>
+
+                      <DropdownMenu
+
+                        trigger={
+
+                          <span
+
+                            className={[idsLinkStyles["ids-link"], idsLinkStyles["ids-link--standalone"]].join(" ")}
+
+                            aria-label="Collapsed breadcrumbs"
+
+                          >
+
+                            ...
+
+                          </span>
+
+                        }
+
+                        items={hiddenItems.map((hiddenItem) => ({
+
+                          label: hiddenItem.label,
+
+                          selectable: true,
+
+                          onClick: () => {
+
+                            window.location.href = hiddenItem.href ?? "#";
+
+                          },
+
+                        }))}
+
+                        selectionMode="single"
+
+                        menuWidth="content"
+                        portalContainer={dropdownContainer}
+                        onOpenChange={setDropdownOpen}
+
+                      />
+
+                      <div ref={setDropdownContainer} style={{ display: "contents" }} />
+
+                    </>
+
                   )}
+
                   {shouldTruncate && index === 0 && (
+
                     <span className={styles.separator} aria-hidden="true">
+
                       /
+
                     </span>
+
                   )}
+
                 </>
-              ) : twoLines && (
+
+              ) : (
+
                 <span className={styles.separator} aria-hidden="true">
+
                   /
+
                 </span>
+
               )}
+
             </li>
+
           );
+
         })}
+
       </ol>
-      {twoLines && currentPage && (
+
+      {currentPage && (
+
         <span className={styles.currentPage} aria-current="page">
+
           {currentPage}
+
         </span>
+
       )}
+
     </nav>
+
   );
+
 }
+

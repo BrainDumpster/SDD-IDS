@@ -88,7 +88,7 @@ export const SizeScale: Story = {{
 export const FocusVisibleAndPointerFocus: Story = {{
   render: () => (
     <div style={{{{ display: "grid", gap: 12, maxWidth: 300 }}}}>
-      <p style={{{{ margin: 0, fontSize: 12, color: "var(--color-text-neutral)" }}}}>
+      <p style={{{{ margin: 0, fontSize: 12, color: "var(--color-text-gray-neutral)" }}}}>
         pointer focus and focus-visible: click inside input for pointer focus; use Tab for focus-visible ring.
       </p>
       <{component_name} value="Focus behavior demo" helperText="Helper text" />

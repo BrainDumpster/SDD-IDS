@@ -10,7 +10,7 @@ import {
 } from "../spec-contracts/synapse-date-picker.contract";
 
 const meta: Meta<typeof SynapseDatePicker> = {
-  title: "Spec Generated/Synapse/Date Picker",
+  title: "Components/Synapse/Date Picker",
   component: SynapseDatePicker,
   parameters: {
     layout: "padded",

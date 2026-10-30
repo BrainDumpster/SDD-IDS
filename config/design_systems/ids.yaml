@@ -30,6 +30,8 @@ qdrant_collection: design_knowledge
 framework_layer: ""
 root_spec_path: components/ids/root-spec.md
 generated_storybook_dir: storybook-generated/ids
+generated_angular_storybook_dir: storybook-angular/src/generated/ids
+angular_storybook_dir: storybook-angular
 strict_storybook_gate: false
 
 # Optional: concrete paths for codegen / agents in this repository only (not part of Figma contract).

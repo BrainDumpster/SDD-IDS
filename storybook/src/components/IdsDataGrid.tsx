@@ -2,7 +2,14 @@ import { useEffect, useLayoutEffect, useMemo, useRef, useState, type ReactNode }
 import { RadioGroup } from "@base-ui-components/react/radio-group";
 import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
-import { IdsDetailPanel } from "./IdsDetailPanel";
+import {
+  IdsDetailPanel,
+  IdsDetailPanelBlock,
+  IdsDetailPanelBody,
+  IdsDetailPanelField,
+  IdsDetailPanelHeader,
+  IdsDetailPanelSection,
+} from "./IdsDetailPanel";
 import { IdsPagination } from "./IdsPagination";
 import { IdsDataGridSelectionCheckbox } from "./IdsDataGridSelectionCheckbox";
 import { IdsDataGridSelectionRadio } from "./IdsDataGridSelectionRadio";
@@ -81,22 +88,59 @@ export function resolveIdsDataGridColumnFilterActive(column: IdsDataGridColumn):
 export interface IdsDataGridFilterSearchFieldProps {
   placeholder?: string;
   "aria-label": string;
+  /** Controlled query. When omitted, the field manages its own value. */
+  value?: string;
+  /** Fired on type and when the clear (close) control resets the field. */
+  onChange?: (value: string) => void;
 }
 
-/** Optional search row for `column.filterPanel` — not required for every filter type. */
+/**
+ * Column Search filter field — same search/clear behavior as DropdownMenu /
+ * Combobox-Multiselect search (Figma `37822:91077`).
+ * Clear (`ctrl-close-16`) shows only when the query is non-empty.
+ */
 export function IdsDataGridFilterSearchField({
   placeholder = "Search",
   "aria-label": ariaLabel,
+  value,
+  onChange,
 }: IdsDataGridFilterSearchFieldProps) {
+  const [uncontrolledValue, setUncontrolledValue] = useState("");
+  const query = value ?? uncontrolledValue;
+  const showClear = query.length > 0;
+
+  const setQuery = (next: string) => {
+    if (value === undefined) setUncontrolledValue(next);
+    onChange?.(next);
+  };
+
   return (
-    <div className={styles.filterPopupSearchRow}>
+    <div className={styles.filterPopupSearchRow} data-text-filter>
       <Icon shapeName="search-16" className={styles.filterPopupSearchIcon} />
-      <input
-        type="search"
-        className={styles.filterPopupSearchInput}
-        placeholder={placeholder}
-        aria-label={ariaLabel}
-      />
+      <div className={styles.filterPopupSearchInputWrap}>
+        <input
+          type="search"
+          className={styles.filterPopupSearchInput}
+          placeholder={placeholder}
+          aria-label={ariaLabel}
+          value={query}
+          onChange={(event) => setQuery(event.target.value)}
+        />
+        {showClear ? (
+          <button
+            type="button"
+            className={styles.filterPopupSearchClear}
+            aria-label="Clear search"
+            onClick={() => setQuery("")}
+          >
+            <Icon
+              shapeName="ctrl-close-16"
+              className={styles.filterPopupSearchClearIcon}
+              style={{ width: 12, height: 12 }}
+            />
+          </button>
+        ) : null}
+      </div>
     </div>
   );
 }
@@ -126,7 +170,18 @@ export interface IdsDataGridProps {
    */
   showSingleSelectionRadio?: boolean;
   withDetailPanel?: boolean;
+  /**
+   * Controlled active (highlighted) row. Use it with a page-level `IdsDetailPanel`
+   * beside the grid: the IDS guideline keeps one row highlighted there at all times
+   * (the first row by default), so pass the shown row and update it from `onRowClick`.
+   * Omit to let the grid manage the active row.
+   */
+  activeRowId?: string | null;
+  /** Fired on every row body click with the row id. */
+  onRowClick?: (rowId: string) => void;
   pageSize?: number;
+  /** When set, drives footer pagination visibility and page count (server-side). Omit for client slice from `rows`. */
+  totalPages?: number | null;
   /** When true, row hover uses `surface-1` (Figma "Hover on read only table"); otherwise brand-lighter. */
   readOnly?: boolean;
   /** When true, selected rows show the 4px leading `brand-base` bar (Figma `verticalBlueLine`). */
@@ -160,7 +215,10 @@ function columnBaseWidthPx(column: IdsDataGridColumn): number {
   return Math.max(floor, preferred);
 }
 
-type FilterMenuPos = { top: number; right: number };
+type FilterMenuPos = { top: number; right: number; maxPanelWidth?: number };
+
+/** Keep L-frame filter panels inside the grid (right-anchored menus must not spill past the left edge). */
+const FILTER_MENU_EDGE_PAD_PX = 8;
 
 type GridSectionPart = "header" | "body";
 
@@ -183,7 +241,10 @@ export function IdsDataGrid({
   selectionMode = "single",
   showSingleSelectionRadio = true,
   withDetailPanel = false,
+  activeRowId: activeRowIdProp,
+  onRowClick,
   pageSize = 6,
+  totalPages: totalPagesInput = null,
   readOnly = false,
   rowVerticalIndicator = false,
   headerColorAndBorder = true,
@@ -208,7 +269,8 @@ export function IdsDataGrid({
   const [columnVisibilityValidation, setColumnVisibilityValidation] = useState<string | null>(
     null,
   );
-  const [activeRowId, setActiveRowId] = useState<string | null>(null);
+  const [activeRowIdState, setActiveRowId] = useState<string | null>(null);
+  const activeRowId = activeRowIdProp !== undefined ? activeRowIdProp : activeRowIdState;
   const [detailPanelOpen, setDetailPanelOpen] = useState(false);
   const [columnOrder, setColumnOrder] = useState(columns.map((column) => column.key));
   const [currentPage, setCurrentPage] = useState(1);
@@ -248,6 +310,8 @@ export function IdsDataGrid({
     });
   }, [columns]);
 
+  const shellRef = useRef<HTMLDivElement | null>(null);
+  const gridWrapRef = useRef<HTMLDivElement | null>(null);
   const bodyViewportRef = useRef<HTMLDivElement | null>(null);
   const headerUnifiedTrackRef = useRef<HTMLDivElement | null>(null);
   const headerFrozenTrackRef = useRef<HTMLDivElement | null>(null);
@@ -438,9 +502,19 @@ export function IdsDataGrid({
       const anchor = filterAnchorRefs.current.get(openFilterColumn);
       if (!anchor) return;
       const r = anchor.getBoundingClientRect();
+      const boundsEl = gridWrapRef.current ?? shellRef.current;
+      const boundsLeft = boundsEl
+        ? boundsEl.getBoundingClientRect().left
+        : FILTER_MENU_EDGE_PAD_PX;
+      // Right-anchored L-frame: available width is from grid/viewport left → anchor right.
+      const maxPanelWidth = Math.max(
+        FILTER_MENU_EDGE_PAD_PX,
+        r.right - boundsLeft - FILTER_MENU_EDGE_PAD_PX,
+      );
       setFilterMenuPos({
         top: r.top + 5,
         right: document.documentElement.clientWidth - r.right,
+        maxPanelWidth,
       });
     };
 
@@ -497,8 +571,21 @@ export function IdsDataGrid({
     return next;
   }, [rows, sortKey, sortDirection]);
 
-  const totalPages = Math.max(1, Math.ceil(sortedRows.length / pageSize));
-  const visibleRows = sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize);
+  const resolvedTotalPages =
+    totalPagesInput != null && Number.isFinite(totalPagesInput)
+      ? Math.max(1, Math.trunc(totalPagesInput))
+      : !pageSize || pageSize <= 0
+        ? 1
+        : Math.max(1, Math.ceil(sortedRows.length / pageSize));
+  const showPagination =
+    totalPagesInput != null && Number.isFinite(totalPagesInput)
+      ? totalPagesInput > 1
+      : !pageSize || pageSize <= 0
+        ? false
+        : sortedRows.length > pageSize;
+  const visibleRows = showPagination
+    ? sortedRows.slice((currentPage - 1) * pageSize, currentPage * pageSize)
+    : sortedRows;
   const visibleRowIds = useMemo(() => visibleRows.map((row) => row.id), [visibleRows]);
 
   const activeRow = useMemo(
@@ -548,6 +635,7 @@ export function IdsDataGrid({
   };
 
   const handleRowClick = (rowId: string) => {
+    onRowClick?.(rowId);
     if (withDetailPanel) {
       if (activeRowId === rowId && detailPanelOpen) {
         setDetailPanelOpen(false);
@@ -1203,14 +1291,16 @@ export function IdsDataGrid({
 
   return (
     <div
+      ref={shellRef}
       className={styles.shell}
       data-with-detail-panel={withDetailPanel ? "true" : undefined}
+      data-header-styled={headerColorAndBorder ? "true" : "false"}
     >
       <div className={styles.topBar}>
         <span className={styles.modeLabel}>View: {viewMode}</span>
       </div>
       <div className={styles.contentRow}>
-        <div className={styles.gridWrap}>
+        <div ref={gridWrapRef} className={styles.gridWrap}>
           {showSelectionColumn && selectionMode === "single" ? (
             <RadioGroup
               className={styles.rowSelectionGroup}
@@ -1225,13 +1315,16 @@ export function IdsDataGrid({
           ) : (
             tableViewport
           )}
-          <div className={styles.footer}>
-            <IdsPagination
-              currentPage={currentPage}
-              totalPages={totalPages}
-              onPageChange={setCurrentPage}
-            />
-          </div>
+          {showPagination ? (
+            <div className={styles.footer}>
+              <IdsPagination
+                currentPage={currentPage}
+                totalPages={resolvedTotalPages}
+                embeddedInDatagrid
+                onPageChange={setCurrentPage}
+              />
+            </div>
+          ) : null}
         </div>
         {withDetailPanel ? (
           <IdsDetailPanel
@@ -1242,21 +1335,26 @@ export function IdsDataGrid({
               setDetailPanelOpen(next);
               if (!next) setActiveRowId(null);
             }}
-            title={activeRow ? String(activeRow.values.name ?? "Details") : "Details"}
-            body={
-              activeRow ? (
-                <div className={styles.detailBody}>
+          >
+            <IdsDetailPanelHeader>
+              {activeRow ? String(activeRow.values.name ?? "Details") : "Details"}
+            </IdsDetailPanelHeader>
+            <IdsDetailPanelBody>
+              {activeRow ? (
+                <IdsDetailPanelSection>
                   {visibleOrderedColumns.map((column) => (
-                    <p key={column.key}>
-                      <b>{column.title}:</b> {String(activeRow.values[column.key] ?? "")}
-                    </p>
+                    <IdsDetailPanelField key={column.key} label={<>{column.title}:</>}>
+                      {String(activeRow.values[column.key] ?? "")}
+                    </IdsDetailPanelField>
                   ))}
-                </div>
+                </IdsDetailPanelSection>
               ) : (
-                <div className={styles.detailBody}>Select a row to view details.</div>
-              )
-            }
-          />
+                <IdsDetailPanelBlock className={styles.detailEmpty}>
+                  Select a row to view details.
+                </IdsDetailPanelBlock>
+              )}
+            </IdsDetailPanelBody>
+          </IdsDetailPanel>
         ) : null}
       </div>
       {typeof document !== "undefined" &&
@@ -1271,6 +1369,10 @@ export function IdsDataGrid({
             right: filterMenuPos?.right ?? 0,
             visibility: filterMenuPos ? "visible" : "hidden",
             pointerEvents: filterMenuPos ? "auto" : "none",
+            ["--ids-datagrid-filter-panel-max-width" as string]:
+              filterMenuPos?.maxPanelWidth != null
+                ? `${filterMenuPos.maxPanelWidth}px`
+                : undefined,
           }}
           onClick={(event) => event.stopPropagation()}
         >

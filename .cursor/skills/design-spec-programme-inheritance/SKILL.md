@@ -253,6 +253,10 @@ More Synapse walkthrough detail: `docs/design-spec-synapse-ids-fork.md` (referen
 
 ---
 
+## User-facing completion (chat)
+
+When inheritance spec work or a parity fix is **done**, close with a **compact summary** only — `.cursor/rules/compact-task-completion.mdc`. Keep full evidence in the spec file, not the chat reply.
+
 ## Completion checklist (before Status: active)
 
 - [ ] Programme config loaded; IDS baseline linked in opening section

@@ -74,19 +74,19 @@
 - `PageErrorErrorName`:
   - Font: `var(--font-size-header-2, 36px) / var(--font-line-height-line-height-44, 44px)`.
   - Weight: `400` (regular).
-  - Color: `var(--color-text-neutral-strong, #252525)`.
+  - Color: `var(--color-text-gray-neutral-strong, #252525)`.
   - Text-align: center; `word-break: break-word`.
   - `margin: 0`.
 - `PageErrorErrorCode`:
   - Font: `var(--font-size-header-5, 24px) / var(--font-line-height-line-height-32, 32px)`.
   - Weight: `400`.
-  - Color: `var(--color-text-neutral-strong, #252525)`.
+  - Color: `var(--color-text-gray-neutral-strong, #252525)`.
   - Text-align: center.
   - `margin: 0`.
 - `PageErrorProbableCause`:
   - Font: `var(--font-size-body-1, 16px) / var(--font-line-height-line-height-24, 24px)`.
   - Weight: `400`.
-  - Color: `var(--color-text-neutral, #4d4d4d)`.
+  - Color: `var(--color-text-gray-neutral, #4d4d4d)`.
   - Text-align: center.
   - `margin: 0`.
 - `PageErrorResolutionSection`:
@@ -96,7 +96,7 @@
   - Gap: `var(--spacing-space-16, 16px)`.
 - `PageErrorResolutionsSuggestions`:
   - Font: `var(--font-size-body-1, 16px) / var(--font-line-height-line-height-24, 24px)`.
-  - Color: `var(--color-text-neutral, #4d4d4d)`.
+  - Color: `var(--color-text-gray-neutral, #4d4d4d)`.
   - Text-align: center.
   - `margin: 0`.
 - `PageErrorActionButton`:
@@ -114,7 +114,7 @@
 | `PageErrorRoot` | padding | `var(--padding-padding-24, 24px)` | `26744:12102` | `get_design_context` + `get_variable_defs` |
 | `PageErrorRoot` | gap (icon → content) | `var(--spacing-space-32, 32px)` | `26744:12102` | `get_design_context` + `get_variable_defs` |
 | `PageErrorIconSlot` | width / height | `80px` fixed | `26744:12088` | `get_design_context` |
-| `PageErrorIconSlot` | icon color | `var(--color-icon-disabled, #757575)` | `26744:12089` | `get_variable_defs` |
+| `PageErrorIconSlot` | icon color | `var(--color-icon-gray-disabled, #757575)` | `26744:12089` | `get_variable_defs` |
 | `PageErrorContent` | gap | `var(--spacing-space-16, 16px)` | `26744:12091` | `get_design_context` + `get_variable_defs` |
 | `PageErrorErrorName` | typography | `var(--font-size-header-2, 36px)` / `var(--font-line-height-line-height-44, 44px)` | `26744:12092` | `get_design_context` + `get_variable_defs` |
 | `PageErrorErrorCode` | typography | `var(--font-size-header-5, 24px)` / `var(--font-line-height-line-height-32, 32px)` | `26744:12093` | `get_design_context` + `get_variable_defs` |
@@ -147,11 +147,11 @@
 
 ### Colors and surfaces
 - `PageErrorRoot` has no background fill; it inherits the page/surface background.
-- `var(--color-text-neutral-strong, #252525)` — `PageErrorErrorName`, `PageErrorErrorCode`.
-- `var(--color-text-neutral, #4d4d4d)` — `PageErrorProbableCause`, `PageErrorResolutionsSuggestions`.
+- `var(--color-text-gray-neutral-strong, #252525)` — `PageErrorErrorName`, `PageErrorErrorCode`.
+- `var(--color-text-gray-neutral, #4d4d4d)` — `PageErrorProbableCause`, `PageErrorResolutionsSuggestions`.
 - `var(--color-text-brand-strong, #055fa9)` — `PageErrorActionButton` label.
 - `var(--color-border-brand-base, #0672cb)` — `PageErrorActionButton` border.
-- `var(--color-icon-disabled, #757575)` — `PageErrorIconSlot` glyph color (verified from Figma `26744:12089`).
+- `var(--color-icon-gray-disabled, #757575)` — `PageErrorIconSlot` glyph color (verified from Figma `26744:12089`).
 
 ### Spacing and sizing
 - `var(--spacing-space-32, 32px)` — gap between icon and content.
@@ -171,11 +171,11 @@ Page Error is a static pattern; the root text slots have no hover/press states. 
 
 | Slot | State | Background | Border | Text/Icon |
 | --- | --- | --- | --- | --- |
-| `PageErrorActionButton` | default | `var(--color-background-component, #ffffff)` | `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
-| `PageErrorActionButton` | hover | `var(--color-background-brand-lighter, #ebf4fb)` | `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
-| `PageErrorActionButton` | press | `var(--color-background-brand-light, #daeaf7)` | `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
-| `PageErrorActionButton` | focus-visible | `var(--color-background-component, #ffffff)` + `var(--button-focus-ring-offset, 3px)` outline | `var(--color-border-brand-base, #0672cb)` + focus ring `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
-| `PageErrorActionButton` | disabled | `var(--color-background-component-light, #f4f4f4)` | `var(--color-border-disabled, #757575)` | `var(--color-text-disabled, #757575)` |
+| `PageErrorActionButton` | default | `var(--color-background-surface-component, #ffffff)` | `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
+| `PageErrorActionButton` | hover | `var(--color-background-brand-lighter-slate, #ebf4fb)` | `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
+| `PageErrorActionButton` | press | `var(--color-background-brand-light-slate, #daeaf7)` | `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
+| `PageErrorActionButton` | focus-visible | `var(--color-background-surface-component, #ffffff)` + `var(--button-focus-ring-offset, 3px)` outline | `var(--color-border-brand-base, #0672cb)` + focus ring `var(--color-border-brand-base, #0672cb)` | `var(--color-text-brand-strong, #055fa9)` |
+| `PageErrorActionButton` | disabled | `var(--color-background-surface-component-light, #f4f4f4)` | `var(--color-border-gray-disabled, #757575)` | `var(--color-text-gray-disabled, #757575)` |
 
 Root text slots are static in all states.
 
@@ -184,16 +184,16 @@ Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved v
 
 | Slot | State | Background | Border | Text/Icon |
 | --- | --- | --- | --- | --- |
-| `PageErrorActionButton` | default | `var(--color-background-component, #111619)` | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
-| `PageErrorActionButton` | hover | `var(--color-background-brand-lighter, #1e262c)` | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
-| `PageErrorActionButton` | press | `var(--color-background-brand-light, #34414c)` | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
-| `PageErrorActionButton` | focus-visible | `var(--color-background-component, #111619)` + focus ring | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
-| `PageErrorActionButton` | disabled | `var(--color-background-component-light, #1e262c)` | `var(--color-border-disabled, #9e9e9e)` | `var(--color-text-disabled, #9e9e9e)` |
+| `PageErrorActionButton` | default | `var(--color-background-surface-component, #111619)` | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
+| `PageErrorActionButton` | hover | `var(--color-background-brand-lighter-slate, #1e262c)` | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
+| `PageErrorActionButton` | press | `var(--color-background-brand-light-slate, #34414c)` | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
+| `PageErrorActionButton` | focus-visible | `var(--color-background-surface-component, #111619)` + focus ring | `var(--color-border-brand-base, #509cda)` | `var(--color-text-brand-strong, #97c4e9)` |
+| `PageErrorActionButton` | disabled | `var(--color-background-surface-component-light, #1e262c)` | `var(--color-border-gray-disabled, #9e9e9e)` | `var(--color-text-gray-disabled, #9e9e9e)` |
 
 Text tokens resolve automatically in dark mode:
-- `var(--color-text-neutral-strong)` → `#e6e9ec`
-- `var(--color-text-neutral)` → `#b8c1c9`
-- `var(--color-icon-disabled)` → `#9e9e9e`
+- `var(--color-text-gray-neutral-strong)` → `#e6e9ec`
+- `var(--color-text-gray-neutral)` → `#b8c1c9`
+- `var(--color-icon-gray-disabled)` → `#9e9e9e`
 
 ## Interactions
 - `PageErrorActionButton` click: triggers `onAction` callback.
@@ -289,7 +289,7 @@ PageErrorRoot
   - `display: flex; align-items: center; justify-content: center;`
 - `PageErrorIconSlot > *`:
   - Use `Icon` component with `shapeName={iconName}` and `style={{ width: 80, height: 80 }}`.
-  - Color: `var(--color-icon-disabled, #757575)`.
+  - Color: `var(--color-icon-gray-disabled, #757575)`.
 - `PageErrorContent`:
   - `display: flex; flex-direction: column; align-items: center;`
   - `gap: var(--spacing-space-16, 16px);`
@@ -297,16 +297,16 @@ PageErrorRoot
 - `PageErrorErrorName`:
   - `font: var(--font-size-header-2, 36px) / var(--font-line-height-line-height-44, 44px) var(--typography-font-style-primary, 'Roboto');`
   - `font-weight: 400;`
-  - `color: var(--color-text-neutral-strong, #252525);`
+  - `color: var(--color-text-gray-neutral-strong, #252525);`
   - `text-align: center; word-break: break-word;`
 - `PageErrorErrorCode`:
   - `font: var(--font-size-header-5, 24px) / var(--font-line-height-line-height-32, 32px) var(--typography-font-style-primary, 'Roboto');`
   - `font-weight: 400;`
-  - `color: var(--color-text-neutral-strong, #252525);`
+  - `color: var(--color-text-gray-neutral-strong, #252525);`
   - `text-align: center;`
 - `PageErrorProbableCause`:
   - `font: var(--font-size-body-1, 16px) / var(--font-line-height-line-height-24, 24px) var(--typography-font-style-primary, 'Roboto');`
-  - `color: var(--color-text-neutral, #4d4d4d);`
+  - `color: var(--color-text-gray-neutral, #4d4d4d);`
   - `text-align: center;`
 - `PageErrorResolutionSection`:
   - `display: flex; flex-direction: column; align-items: center;`
@@ -350,9 +350,9 @@ PageErrorRoot
 ### Validation checklist
 - [ ] `PageErrorRoot` uses `width: 100%` and `height: fit-content`, not the Figma sample `726px`.
 - [ ] Icon slot is `80x80` and uses `Icon` with `state-error` slug.
-- [ ] `PageErrorErrorName` uses `var(--font-size-header-2, 36px)` and `var(--color-text-neutral-strong)`.
-- [ ] `PageErrorErrorCode` uses `var(--font-size-header-5, 24px)` and `var(--color-text-neutral-strong)`.
-- [ ] `PageErrorProbableCause` and `PageErrorResolutionsSuggestions` use `var(--font-size-body-1, 16px)` and `var(--color-text-neutral)`.
+- [ ] `PageErrorErrorName` uses `var(--font-size-header-2, 36px)` and `var(--color-text-gray-neutral-strong)`.
+- [ ] `PageErrorErrorCode` uses `var(--font-size-header-5, 24px)` and `var(--color-text-gray-neutral-strong)`.
+- [ ] `PageErrorProbableCause` and `PageErrorResolutionsSuggestions` use `var(--font-size-body-1, 16px)` and `var(--color-text-gray-neutral)`.
 - [ ] `PageErrorActionButton` uses `var(--border-width-border-default, 1px)` `var(--color-border-brand-base)` border and `var(--button-control-radius)`.
 - [ ] `showResolution` correctly toggles the resolution section.
 - [ ] `action` is optional; when omitted, no button is rendered.

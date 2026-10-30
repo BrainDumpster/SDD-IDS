@@ -1,0 +1,15 @@
+@if (item.isOpen()) {
+  <div
+    class="ids-accordion__panel"
+    [id]="accordion.panelId(item.value)"
+    role="region"
+    [attr.aria-labelledby]="accordion.triggerId(item.value)"
+    [attr.data-open]="'true'"
+  >
+    <ng-content select="ids-accordion-content" />
+    <ng-content select="ids-accordion-meta" />
+    @if (accordion.variant === "form") {
+      <ng-content select="ids-accordion-form-slot" />
+    }
+  </div>
+}

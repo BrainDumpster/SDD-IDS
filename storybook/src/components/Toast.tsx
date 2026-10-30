@@ -31,6 +31,8 @@ interface ToastSetupProps {
   children: ReactNode;
   position?: ToastPosition;
   duration?: number;
+  /** Maximum number of toasts displayed at once. Default is unlimited so all toast buttons remain interactive. */
+  limit?: number;
 }
 
 /**
@@ -41,9 +43,10 @@ export function ToastSetup({
   children,
   position = "top-right",
   duration = 8000,
+  limit = Number.MAX_SAFE_INTEGER,
 }: ToastSetupProps) {
   return (
-    <BaseToast.Provider timeout={duration}>
+    <BaseToast.Provider timeout={duration} limit={limit}>
       {children}
       <ToastViewport position={position} />
     </BaseToast.Provider>
@@ -67,6 +70,7 @@ function ToastViewport({ position }: { position: ToastPosition }) {
             key={toast.id}
             toast={toast}
             className={`${styles.root} ${styles[variant]}`}
+            tabIndex={-1}
           >
             <div className={styles.contentGroup}>
               <div className={styles.iconWrap}>
@@ -80,21 +84,23 @@ function ToastViewport({ position }: { position: ToastPosition }) {
             </div>
             <div className={styles.actionsGroup}>
               {showLink ? (
-                <BaseToast.Action
-                  className={styles.link}
+                <Button
+                  variant="tertiary"
+                  size="sm"
+                  className={styles.linkButton}
                   onClick={() => {
                     onLinkClick?.();
                   }}
                 >
-                  <span>{linkLabel}</span>
-                </BaseToast.Action>
+                  {linkLabel}
+                </Button>
               ) : null}
               {closable ? (
                 <Button
                   variant="tertiary"
                   size="sm"
                   iconOnly
-                  icon={<Icon shapeName="shape-x" variant="mask" style={{ width: "100%", height: "100%" }} />}
+                  icon={<Icon shapeName="shape-x" variant="mask" color="var(--color-icon-gray-white)" style={{ width: "100%", height: "100%" }} />}
                   aria-label="Close"
                   type="button"
                   className={styles.closeButton}

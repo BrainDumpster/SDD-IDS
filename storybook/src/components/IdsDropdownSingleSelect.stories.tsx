@@ -33,9 +33,10 @@ function SingleSelectTrigger({
       error={error}
       hover={hover}
       focusVisible={focusVisible}
+      filled={Boolean(value)}
       left={
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-          {value ?? placeholder}
+          {value || placeholder}
         </span>
       }
     />
@@ -43,9 +44,16 @@ function SingleSelectTrigger({
 }
 
 const meta: Meta<typeof DropdownMenu> = {
-  title: "Spec Generated/IDS/Dropdown/Single Select",
+  title: "Components/IDS/Dropdown/Single Select",
   component: DropdownMenu,
-  parameters: { layout: "centered" },
+  parameters: { layout: "fullscreen" },
+  decorators: [
+    (Story) => (
+      <div style={{ display: "flex", justifyContent: "center", padding: "32px 16px" }}>
+        <Story />
+      </div>
+    ),
+  ],
   argTypes: {
     showSingleSelectRadio: { control: "boolean" },
   },
@@ -146,10 +154,14 @@ export const MainScenarios: Story = {
               trigger={<SingleSelectTrigger value={smallValue} />}
               items={disabledOptionItems}
               selectionMode="single"
-              selectedValues={[smallValue]}
+              selectedValues={smallValue ? [smallValue] : []}
               showSingleSelectRadio={showSingleSelectRadio}
+              /* Default option is "Option 2": Reset to Default sits in the footer
+                 action-button slot and appears only when a different option is
+                 selected; clicking it restores the default. */
+              footerActionLabel={smallValue !== "Option 2" ? "Reset to Default" : undefined}
+              onFooterActionClick={() => setSmallValue("Option 2")}
               defaultOpen
-              maxHeight={220}
             />
           </div>
           <div style={{ display: "grid", gap: 6, width: 300 }}>
@@ -161,7 +173,6 @@ export const MainScenarios: Story = {
               selectedValues={[overflowValue]}
               showSingleSelectRadio={showSingleSelectRadio}
               defaultOpen
-              maxHeight={220}
             />
           </div>
           <div style={{ display: "grid", gap: 6, width: 300 }}>
@@ -173,7 +184,6 @@ export const MainScenarios: Story = {
               selectedValues={[sectionValue]}
               showSingleSelectRadio={showSingleSelectRadio}
               defaultOpen
-              maxHeight={220}
             />
           </div>
           <div style={{ display: "grid", gap: 6, width: 300 }}>
@@ -189,7 +199,7 @@ export const MainScenarios: Story = {
               defaultOpen
               maxHeight={180}
             />
-            <div style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+            <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
               <strong>onActionClick:</strong> {actionEvent}
             </div>
           </div>
@@ -233,13 +243,13 @@ export const FieldStatesMatrix: Story = {
     const helperStyle: React.CSSProperties = {
       fontSize: "var(--font-size-body-2)",
       lineHeight: "var(--font-line-height-line-height-20)",
-      color: "var(--color-text-neutral)",
+      color: "var(--color-text-gray-neutral)",
       fontWeight: 400,
     };
     const errorMsgStyle: React.CSSProperties = {
       fontSize: "var(--font-size-body-2)",
       lineHeight: "var(--font-line-height-line-height-20)",
-      color: "var(--color-text-critical)",
+      color: "var(--color-text-alerting-critical-base)",
       fontWeight: 400,
       display: "flex",
       alignItems: "center",
@@ -352,7 +362,7 @@ export const FieldStatesMatrix: Story = {
               showSingleSelectRadio={false}
               defaultOpen
               maxHeight={280}
-              sideOffset={0}
+              sideOffset={-1}
             />
             {helper}
           </div>
@@ -411,7 +421,6 @@ export const OptionalRadioButton: Story = {
             selectedValues={[selected]}
             showSingleSelectRadio={false}
             defaultOpen
-            maxHeight={220}
           />
         </div>
         <div style={{ width: 300, display: "grid", gap: 6 }}>
@@ -423,7 +432,6 @@ export const OptionalRadioButton: Story = {
             selectedValues={[selected]}
             showSingleSelectRadio
             defaultOpen
-            maxHeight={220}
           />
         </div>
       </div>
@@ -451,9 +459,8 @@ export const DisabledOptionState: Story = {
           selectedValues={[selected]}
           showSingleSelectRadio={showSingleSelectRadio}
           defaultOpen
-          maxHeight={220}
         />
-        <span style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+        <span style={{ fontSize: 12, color: "var(--color-text-gray-neutral)" }}>
           Option 3 is disabled at option level.
         </span>
       </div>

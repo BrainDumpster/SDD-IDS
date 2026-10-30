@@ -1,0 +1,32 @@
+<span
+  class="ids-avatar"
+  [class.ids-avatar--photo]="mode === 'photo'"
+  [class.ids-avatar--icon]="mode === 'icon'"
+  [class.ids-avatar--initials]="mode === 'initials'"
+  [style.width]="resolvedSize"
+  [style.height]="resolvedSize"
+  role="img"
+  [attr.aria-hidden]="mode === 'empty' ? 'true' : null"
+  [attr.aria-label]="
+    mode === 'initials' && initials
+      ? 'User initials ' + initials
+      : mode === 'photo'
+        ? imageAlt
+        : null
+  "
+>
+  @if (mode === 'photo') {
+    <img class="ids-avatar__image" [src]="imageSrc" [alt]="imageAlt" />
+  } @else if (mode === 'icon') {
+    <span class="ids-avatar__glyph" aria-hidden="true">
+      <ids-icon
+        [shapeName]="icon!"
+        variant="mask"
+        [size]="resolvedIconSize"
+        color="var(--ids-avatar-icon-color, var(--color-icon-gray-white))"
+      />
+    </span>
+  } @else if (mode === 'initials') {
+    <span class="ids-avatar__initials">{{ initials }}</span>
+  }
+</span>

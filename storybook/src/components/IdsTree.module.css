@@ -27,7 +27,7 @@
 }
 
 .rowSelected {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   box-shadow: inset 4px 0 0 var(--color-border-brand-base);
 }
 
@@ -102,7 +102,7 @@
   font-size: var(--font-size-body-2);
   line-height: var(--line-height-body-2, 20px);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .rowSelected .label {
@@ -118,9 +118,9 @@
   height: 18px;
   padding: 0 5.5px;
   border-radius: var(--corner-radius-radius-round);
-  border: 1px solid var(--color-border-white);
-  background: var(--color-background-controls-brand-base);
-  color: var(--color-text-white);
+  border: 1px solid var(--color-border-gray-white);
+  background: var(--color-background-controls-base);
+  color: var(--color-text-gray-white);
   font-size: 12px;
   line-height: 1;
 }
@@ -145,7 +145,7 @@
 }
 
 .programmeSynapse .rowSelected .label {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .programmeSynapse .rowSelected:hover {

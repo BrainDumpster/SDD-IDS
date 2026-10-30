@@ -4,7 +4,7 @@ import { DropdownMenu } from "./DropdownMenu";
 import { Tag } from "./Tag";
 
 const meta: Meta<typeof Tag> = {
-  title: "Spec Generated/IDS/Tag",
+  title: "Components/IDS/Tag",
   component: Tag,
   argTypes: {
     tone: {

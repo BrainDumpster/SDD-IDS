@@ -28,10 +28,10 @@
 - Checkbox size: 16px × 16px
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -67,13 +67,13 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Table Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `UI Palettes/Gray/gray-900` (#252525) | `icon-standard-gray` (#616161) |
-| Header Row | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `Base Styles/Data Header` (Roboto Medium 14px/20px) | `icon-standard-gray` (#616161) |
-| Data Row (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
-| Data Row (Hover) | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
-| Data Row (Selected) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Sortable Header | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-accessible)` (#757575) | `Base Styles/Data Header` (Roboto Medium 14px/20px) | `var(--color-icon-brand-base)` (#0076ce) |
-| Checkbox Cell | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
+| Table Container | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `UI Palettes/Gray/gray-900` (#252525) | `icon-standard-gray` (#616161) |
+| Header Row | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-gray-neutral-base)` (#757575) | `Base Styles/Data Header` (Roboto Medium 14px/20px) | `icon-standard-gray` (#616161) |
+| Data Row (Default) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
+| Data Row (Hover) | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-gray-neutral-base)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
+| Data Row (Selected) | `var(--color-background-controls-base)` (#0076ce) | `var(--color-background-controls-base)` (#0076ce) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Sortable Header | `UI Palettes/Gray/gray-100` (#F4F4F4) | `var(--color-border-gray-neutral-base)` (#757575) | `Base Styles/Data Header` (Roboto Medium 14px/20px) | `var(--color-icon-brand-base)` (#0076ce) |
+| Checkbox Cell | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `Body 2` (Roboto Regular 14px/20px) | `icon-standard-gray` (#616161) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Text and border colors remain consistent via semantic variables

@@ -2,9 +2,9 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral-strong);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
   min-height: 843px;
   width: 100%;
 }
@@ -27,7 +27,7 @@
 }
 
 .modalRoot {
-  border-radius: var(--modal-control-radius);
+  border-radius: var(--corner-radius-radius-none, 0px);
   overflow: hidden;
 }
 
@@ -48,7 +48,7 @@
   font-size: 24px;
   line-height: 32px;
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .closeButton {
@@ -74,7 +74,7 @@
 .closeIcon {
   width: 16px;
   height: 16px;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   background-color: currentColor;
 }
 
@@ -86,7 +86,7 @@
 
 .stepsPane {
   width: 256px;
-  border-right: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-right: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   overflow: auto;
 }
 
@@ -94,12 +94,12 @@
 .substepItem {
   width: 100%;
   border: 0;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   display: flex;
   align-items: center;
   gap: 8px;
   padding: 8px 16px 8px 34px;
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   font-size: 16px;
   line-height: 24px;
   cursor: pointer;
@@ -113,13 +113,13 @@
 }
 
 .stepItemActive {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
   box-shadow: inset 4px 0 0 0 var(--color-text-brand-strong);
 }
 
 .substepItemActive {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   color: var(--color-text-brand-strong);
 }
 
@@ -142,15 +142,15 @@
 }
 
 .statussuccess {
-  color: var(--color-icon-alerting-success);
+  color: var(--color-icon-alerting-success-base);
 }
 
 .statuswarning {
-  color: var(--color-icon-alerting-minor);
+  color: var(--color-icon-alerting-minor-base);
 }
 
 .statuserror {
-  color: var(--color-icon-alerting-critical);
+  color: var(--color-icon-alerting-critical-base);
 }
 
 .statusnone {
@@ -173,7 +173,7 @@
   font-size: 24px;
   line-height: 32px;
   font-weight: 400;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .pageContent {
@@ -201,18 +201,18 @@
 .fallbackText {
   font-size: 14px;
   line-height: 20px;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .footer {
-  border-top: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-bottom: 0;
   display: flex;
   align-items: center;
   justify-content: flex-start;
   padding: 24px;
   gap: 16px;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   box-shadow: none;
 }
 
@@ -221,7 +221,7 @@
   min-width: 0;
   font-size: 14px;
   line-height: 20px;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .footerActions {
@@ -241,22 +241,22 @@
 }
 
 .secondaryButton {
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-gray-lighter);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .primaryButton {
-  border: var(--border-width-border-1) solid var(--color-border-transparent-brand);
-  background: var(--color-background-controls-brand-base);
-  color: var(--color-text-white);
+  border: var(--border-width-border-1) solid var(--color-border-brand-transparent-brand);
+  background: var(--color-background-controls-base);
+  color: var(--color-text-gray-white);
 }
 
 .secondaryButton:disabled,
 .primaryButton:disabled {
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
   background: var(--color-background-gray-lighter);
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   cursor: not-allowed;
 }
 

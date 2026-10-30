@@ -49,12 +49,12 @@ export const PushDrawer: Story = {{
     );
     const tags = useMemo(() => ["Tag:Value", "Tag:Value", "Tag:Demo"], []);
     return (
-      <div style={{{{ height: "100vh", background: "var(--color-background-surface-1)" }}}}>
+      <div style={{{{ height: "100vh", background: "var(--color-background-surface-primary)" }}}}>
         <div
           style={{{{
             padding: 16,
-            borderBottom: "1px solid var(--color-border-light)",
-            background: "var(--color-background-component)",
+            borderBottom: "1px solid var(--color-border-gray-neutral-light)",
+            background: "var(--color-background-surface-component)",
           }}}}
         >
           <Button onClick={{() => setOpen((v) => !v)}}>{{open ? "Close Side Panel" : "Open Side Panel"}}</Button>
@@ -67,7 +67,7 @@ export const PushDrawer: Story = {{
               padding: 24,
               boxSizing: "border-box",
               overflow: "auto",
-              background: "var(--color-background-surface-1)",
+              background: "var(--color-background-surface-primary)",
             }}}}
           >
             <h2 style={{{{ marginTop: 0 }}}}>Application Body</h2>

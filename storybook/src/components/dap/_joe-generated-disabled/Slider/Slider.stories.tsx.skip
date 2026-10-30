@@ -1,0 +1,198 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import { useState } from "react";
+import "../tokens.css";
+import Slider from "./Slider";
+import type { SliderValue } from "./Slider";
+
+/**
+ * Joe-Generated Slider (regenerated from MDX) — uses only:
+ * - storybook/src/components/dap/joe-generated/Slider/Slider.tsx
+ * - storybook/src/components/dap/joe-generated/Slider/Slider.css
+ * - storybook/src/components/dap/joe-generated/tokens.css
+ * Spec MDX: components/DAP/joe-generated/Slider/slider.mdx
+ *
+ * Previous: Slider.previous.tsx / Slider.previous.css (ignored by these stories).
+ */
+
+const meta: Meta<typeof Slider> = {
+  title: "Spec Generated/DAP/Joe-Generated/Slider",
+  component: Slider,
+  parameters: {
+    layout: "padded",
+    docs: {
+      description: {
+        component:
+          "Joe-generated DAP Slider regenerated from `slider.mdx`. Previous copy: `Slider.previous.tsx` / `.css` (ignored).",
+      },
+    },
+  },
+  argTypes: {
+    mode: { control: "select", options: ["single", "range"] },
+    min: { control: "number" },
+    max: { control: "number" },
+    step: { control: "number" },
+    disabled: { control: "boolean" },
+    showStepper: { control: "boolean" },
+    showTicks: { control: "boolean" },
+    stepperFrequency: { control: "number" },
+    showValueLabel: { control: "boolean" },
+    showValueInput: { control: "boolean" },
+    minLabel: { control: "text" },
+    maxLabel: { control: "text" },
+    onValueChange: { action: "onValueChange" },
+    onValueCommit: { action: "onValueCommit" },
+  },
+  args: {
+    mode: "single",
+    min: 0,
+    max: 100,
+    step: 1,
+    defaultValue: 40,
+    disabled: false,
+    showStepper: false,
+    showValueLabel: true,
+    showValueInput: false,
+    minLabel: "Min",
+    maxLabel: "Max",
+  },
+  decorators: [
+    (Story) => (
+      <div style={{ width: "100%", maxWidth: 525 }}>
+        <Story />
+      </div>
+    ),
+  ],
+};
+
+export default meta;
+type Story = StoryObj<typeof Slider>;
+
+/** MDX default: single, value label on */
+export const Default: Story = {
+  args: {
+    mode: "single",
+    defaultValue: 40,
+    minLabel: "0",
+    maxLabel: "100",
+  },
+};
+
+/** Range mode — two thumbs, no crossing */
+export const Range: Story = {
+  args: {
+    mode: "range",
+    defaultValue: [20, 70],
+    minLabel: "Low",
+    maxLabel: "High",
+  },
+};
+
+/** Stepper / ticks on (8px markers) */
+export const WithStepper: Story = {
+  args: {
+    mode: "single",
+    defaultValue: 40,
+    showStepper: true,
+    stepperFrequency: 10,
+    step: 10,
+    minLabel: "0",
+    maxLabel: "100",
+  },
+};
+
+/** Range + stepper */
+export const RangeWithStepper: Story = {
+  args: {
+    mode: "range",
+    defaultValue: [20, 60],
+    showStepper: true,
+    stepperFrequency: 10,
+    step: 10,
+    minLabel: "Min",
+    maxLabel: "Max",
+  },
+};
+
+/** Value input (32px) */
+export const WithValueInput: Story = {
+  args: {
+    mode: "single",
+    defaultValue: 35,
+    showValueLabel: true,
+    showValueInput: true,
+    minLabel: "0",
+    maxLabel: "100",
+  },
+};
+
+/** Range value inputs with "-" separator */
+export const RangeWithValueInputs: Story = {
+  args: {
+    mode: "range",
+    defaultValue: [25, 75],
+    showValueInput: true,
+    showValueLabel: true,
+    minLabel: "Min",
+    maxLabel: "Max",
+  },
+};
+
+/** Disabled state matrix */
+export const Disabled: Story = {
+  args: {
+    mode: "single",
+    defaultValue: 50,
+    disabled: true,
+    showStepper: true,
+    stepperFrequency: 25,
+    minLabel: "0",
+    maxLabel: "100",
+  },
+};
+
+/** No value label */
+export const WithoutValueLabel: Story = {
+  args: {
+    mode: "single",
+    defaultValue: 60,
+    showValueLabel: false,
+    minLabel: "Start",
+    maxLabel: "End",
+  },
+};
+
+/** Controlled */
+export const Controlled: Story = {
+  render: function ControlledStory() {
+    const [value, setValue] = useState<SliderValue>(30);
+    return (
+      <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+        <Slider
+          mode="single"
+          min={0}
+          max={100}
+          step={5}
+          value={value}
+          minLabel="0"
+          maxLabel="100"
+          showValueLabel
+          onValueChange={setValue}
+          onValueCommit={setValue}
+        />
+        <span style={{ fontSize: 12, color: "var(--color-text-neutral)" }}>
+          value={String(value)}
+        </span>
+      </div>
+    );
+  },
+};
+
+/** Endpoint active labels (thumb at min/max) */
+export const AtEndpoints: Story = {
+  args: {
+    mode: "single",
+    defaultValue: 0,
+    minLabel: "Minimum",
+    maxLabel: "Maximum",
+  },
+};

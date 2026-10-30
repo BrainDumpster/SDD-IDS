@@ -37,38 +37,38 @@
 - Font sizes: 16px (header), 14px (results), 14px (section headers)
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Surface background: `var(--color-background-surface-1)` = #f4f4f4
-- Surface 2: `var(--color-background-surface-2)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Surface background: `var(--color-background-surface-primary)` = #f4f4f4
+- Surface 2: `var(--color-background-surface-secondary)` = #ffffff
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
 - Brand strong text: `var(--color-text-brand-strong)` = #0062ab
 - Link brand text: `var(--color-text-link-brand-base)` = #0062ab
-- White text: `var(--color-text-white)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
+- White text: `var(--color-text-gray-white)` = #ffffff
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
-- Light border: `var(--color-border-light)` = #c5c5c5
-- White border: `var(--color-border-white)` = #ffffff
-- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+- Light border: `var(--color-border-gray-neutral-light)` = #c5c5c5
+- White border: `var(--color-border-gray-white)` = #ffffff
+- Transparent neutral: `var(--color-border-gray-neutral-transparent-base)` = #ffffff00
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
+- Neutral icon: `var(--color-icon-gray-neutral-base)` = #4d4d4d
+- Neutral strong icon: `var(--color-icon-gray-neutral-strong)` = #252525
 - Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
-- Accessible icon: `var(--color-icon-accessible)` = #757575
-- Inverse icon: `var(--color-icon-inverse)` = #ffffff
-- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
+- Accessible icon: `var(--color-icon-gray-neutral-accessible)` = #757575
+- Inverse icon: `var(--color-icon-gray-inverse)` = #ffffff
+- Minor icon: `var(--color-icon-alerting-minor-base)` = #ffc700
 
 ### Background Colors
-- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
+- Brand lighter: `var(--color-background-brand-lighter-slate)` = #ebf4fb
 - Gray lighter: `var(--color-background-gray-lighter)` = #f4f4f4
 - Gray light: `var(--color-background-gray-light)` = #eaeaea
 - Gray base: `var(--color-background-gray-base)` = #757575
 - Brand base: `var(--color-background-brand-base)` = #0076ce
-- Masthead brand: `var(--color-background-masthead-brand-base)` = #0076ce
+- Masthead brand: `var(--color-background-masthead-base)` = #0076ce
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -110,23 +110,23 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Modal Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | - | - |
-| Header | `var(--color-background-component)` (#ffffff) | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-accessible)` (#757575) |
-| Search Box Container | `var(--color-background-component)` (#ffffff) | transparent | - | - |
-| Filter Dropdown | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Search Input | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Clear Button | transparent | transparent | `var(--color-icon-accessible)` (#757575) | `var(--color-icon-accessible)` (#757575) |
-| Results Area | `var(--color-background-component)` (#ffffff) | transparent | - | - |
-| Section Header | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Line Separator | transparent | `var(--color-border-light)` (#c5c5c5) | - | - |
+| Modal Container | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | - | - |
+| Header | `var(--color-background-surface-component)` (#ffffff) | transparent | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-icon-gray-neutral-accessible)` (#757575) |
+| Search Box Container | `var(--color-background-surface-component)` (#ffffff) | transparent | - | - |
+| Filter Dropdown | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Search Input | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Clear Button | transparent | transparent | `var(--color-icon-gray-neutral-accessible)` (#757575) | `var(--color-icon-gray-neutral-accessible)` (#757575) |
+| Results Area | `var(--color-background-surface-component)` (#ffffff) | transparent | - | - |
+| Section Header | transparent | transparent | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Line Separator | transparent | `var(--color-border-gray-neutral-light)` (#c5c5c5) | - | - |
 | Result Item (Default) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | - |
-| Result Item (Hover) | `var(--color-background-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-link-brand-base)` (#0062ab) | - |
-| Result Metadata | transparent | transparent | `var(--color-text-neutral)` (#4d4d4d) | - |
-| No Results Text | transparent | transparent | `var(--color-text-neutral-strong)` (#252525) | - |
-| Loading Spinner | transparent | transparent | `var(--color-text-neutral)` (#4d4d4d) | - |
+| Result Item (Hover) | `var(--color-background-brand-lighter-slate)` (#ebf4fb) | transparent | `var(--color-text-link-brand-base)` (#0062ab) | - |
+| Result Metadata | transparent | transparent | `var(--color-text-gray-neutral)` (#4d4d4d) | - |
+| No Results Text | transparent | transparent | `var(--color-text-gray-neutral-strong)` (#252525) | - |
+| Loading Spinner | transparent | transparent | `var(--color-text-gray-neutral)` (#4d4d4d) | - |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#f4f4f4), `var(--color-background-surface-2)` (#ffffff)
+- Surface tokens: `var(--color-background-surface-primary)` (#f4f4f4), `var(--color-background-surface-secondary)` (#ffffff)
 - Text and border colors remain consistent via semantic variables
 - Search dropdown maintains visibility in dark theme
 - Result items adapt to dark theme

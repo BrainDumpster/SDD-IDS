@@ -103,8 +103,31 @@ Document and implement interaction behavior in spec:
 - Runtime default must stay interactive.
 - Forced state attributes (`data-state`) are demo/testing-only and must not block runtime interaction.
 
+## Composition Pattern Sync (mandatory when API shape changes)
+When introducing or changing a **composition API** (group wrapper + projected child components), update the matching `design-spec.md` **in the same change** — do not ship implementation-only.
+
+**Triggers (any of):**
+- New group/item split (e.g. `ids-checkbox-group` + `ids-checkbox`, `ids-radio-button-group` + `ids-radio-button`)
+- Replacing an aggregate `options[]` / `items[]` prop with projected children
+- New group-level inputs (`orientation`, `disabled` cascade, shared `name`, selection state on group)
+- New `component-contracts/<programme>/<slug>.contract.ts` anatomy reflecting composition
+
+**Required spec updates** (`components/<programme>/<slug>/design-spec.md`):
+1. **`## Anatomy`** — document `groupRoot` (or equivalent) and item slots.
+2. **`## Composition & API (runtime)`** — separate **Group** and **Item** tables; include deterministic child-order diagram; prefer projected children over aggregate props; link `component-contracts/...` mirror.
+3. **`## Codegen Contract` → `### Deterministic structure`** — `groupRoot` → repeated `*Item` → item anatomy (match implementation).
+4. **`## Source Mapping`** — runtime contract path + reference implementation folder (e.g. `storybook-angular/src/components/ids-<slug>/`).
+5. **`## Implementation Notes`** — group gap tokens, cascade rules, framework selectors when a reference port exists.
+
+**Reference implementations:** `components/ids/accordion/design-spec.md`, `components/ids/checkbox/design-spec.md`, `components/ids/radio-button/design-spec.md`. **Synapse IDS-fork:** `components/synapse/checkbox/design-spec.md`, `components/synapse/radio-button/design-spec.md` (inherit IDS composition; programme deltas only).
+
+**Forbidden:** adding composition-only Storybook/code without updating the spec; documenting `options[]` as canonical when composition is the preferred API.
+
+**Storybook sync (spec → implementation):** When `design-spec.md` changes composition, API, variants, or story defaults, update Storybook examples for **all applicable programmes** in the same change — see `.cursor/rules/design-spec-storybook-sync.mdc` (IDS, DAP, Synapse cascade via `data/programme-inheritance-registry.json`).
+
 ## Optional Implementation / Codegen Rules
 Only apply this section when the user explicitly asks for implementation or code generation.
+- **Composition-first:** If implementation uses a group + projected children API, update `design-spec.md` per **Composition Pattern Sync** before marking work complete.
 - Framework is user-driven and not fixed: Angular, React, Vue, Lit, or other requested target.
 - Parse design spec sections, do not hardcode drift-prone values.
 - Treat design spec as single source of truth; generated code must be derivable from spec without hidden assumptions.
@@ -160,6 +183,9 @@ Only apply this section when user requests token drift validation.
   - verification method (`Figma MCP` or `Figma REST API`)
   - date/time (or session context) of last live verification
 
+## User-facing completion (chat)
+When the task is done, reply with a **compact summary** only (see `.cursor/rules/compact-task-completion.mdc`). Do not dump investigation steps, full checklists, or long Figma evidence in chat — that belongs in the spec/metadata, not the final message.
+
 ## Completion Checklist
 - [ ] Spec sections are concrete and Figma-aligned.
 - [ ] Codegen Contract is complete and deterministic.
@@ -169,6 +195,8 @@ Only apply this section when user requests token drift validation.
 - [ ] Accessibility and asset/bundling contracts are documented.
 - [ ] Implementation/codegen executed only if explicitly requested.
 - [ ] If implementation exists, generated component reflects spec behavior.
+- [ ] If a composition API (group + items) was added or changed, **Composition & API**, **Anatomy**, **Codegen structure**, and **Source Mapping** in `design-spec.md` were updated in the same change.
+- [ ] If the spec change affects runtime API, composition, variants, or story defaults, **Spec Accurate Design** Storybook examples were updated for all applicable programmes (`.cursor/rules/design-spec-storybook-sync.mdc`).
 - [ ] If requested, global vars generated from required collections.
 - [ ] If requested, drift checker runs with zero mismatches.
 - [ ] Visual deltas (if any) are documented in spec notes.

@@ -76,7 +76,7 @@ const columns: IdsDataGridColumn[] = [
 ];
 ```
 
-Angular mapping: set width on `<def-dg-column>` via the same logical field your adapter maps to `DatagridColumn.width`.
+Angular mapping: set width on `ids-datagrid-column` via `[width]` (maps to `DatagridColumn.width`). Product Angular uses `<def-dg-column>` with the same field contract.
 
 ## Implementation tips
 
@@ -93,13 +93,13 @@ Angular mapping: set width on `<def-dg-column>` via the same logical field your 
 
 Read [`design-spec.md`](./design-spec.md) sections in order:
 
-1. **Anatomy** + **Framework-Agnostic Component Tree** (slot order, Angular `def-dg` mapping)
+1. **Anatomy** + **Composition pattern** (projected columns/rows; `ids-datagrid` / `IdsDataGridComposed`)
 2. **Table Layout Algorithm (codegen)** — especially **Chrome columns & table slack (codegen-critical)**
 3. **Composition & API (runtime)**
 4. **Codegen Contract** (DOM trees, validation checklist)
 5. **Storybook Generation Contract**
 
-Angular child components (`def-dg-column`, `def-datagrid-filter`, `def-dg-cell`) are valid when **table chrome** (colgroup, sticky, filter portal, grow column) stays in the grid host — same split as React `IdsDataGrid`.
+Angular child components (`ids-datagrid-column`, `ids-datagrid-filter`, `ids-datagrid-cell`) are valid when **table chrome** (colgroup, sticky, filter portal, grow column) stays in the grid host — same split as React `IdsDataGrid`.
 
 ## Related commands
 

@@ -1,0 +1,23 @@
+<button
+  type="button"
+  class="ids-segmented-buttons__segment ids-segmented-buttons__segment--icon"
+  [class.ids-segmented-buttons__segment--selected]="isSelected"
+  [id]="optionId"
+  role="radio"
+  [attr.aria-checked]="isSelected"
+  [attr.aria-label]="ariaLabel"
+  [attr.title]="title || ariaLabel"
+  [disabled]="isDisabled"
+  [attr.data-simulated-state]="simulatedStateAttr"
+  [tabIndex]="tabIndex"
+  (click)="onSelect()"
+  (keydown)="onKeydown($event)"
+  (focus)="onFocus()"
+>
+  <ids-icon
+    [shapeName]="shape"
+    variant="mask"
+    className="ids-segmented-buttons__icon-glyph"
+    [size]="16"
+  />
+</button>

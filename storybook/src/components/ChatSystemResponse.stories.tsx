@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ChatSystemResponse } from "./ChatSystemResponse";
 
 const meta: Meta<typeof ChatSystemResponse> = {
-  title: "Spec Generated/Synapse/Chat and Layout/Chat System Response",
+  title: "Components/Synapse/Chat and Layout/Chat System Response",
   component: ChatSystemResponse,
   parameters: {
     layout: "centered",

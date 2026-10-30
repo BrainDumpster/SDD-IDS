@@ -8,7 +8,7 @@ import {
 } from "./IdsGetStarted";
 
 const meta: Meta<typeof IdsGetStarted> = {
-  title: "Spec Generated/IDS/Get Started",
+  title: "Components/IDS/Get Started",
   component: IdsGetStarted,
   parameters: { layout: "fullscreen" },
 };

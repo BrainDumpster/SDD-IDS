@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { ChatArea } from "./ChatArea";
 
 const meta: Meta<typeof ChatArea> = {
-  title: "Spec Generated/Synapse/Chat and Layout/Chat Area",
+  title: "Components/Synapse/Chat and Layout/Chat Area",
   component: ChatArea,
   parameters: {
     layout: "fullscreen",

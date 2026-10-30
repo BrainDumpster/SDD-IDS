@@ -1,0 +1,29 @@
+@if (!dismissed && queuedVisible) {
+  <div class="ids-toast-content" data-ids="ids-toast-content">
+    <ng-content select="ids-toast-icon-container" />
+    @if (!hasIconSlot) {
+      <div class="ids-toast-icon-container" data-ids="ids-toast-icon-container">
+        <ids-icon
+          [shapeName]="iconShape"
+          variant="img"
+          [size]="16"
+          className="ids-toast-status-icon"
+        />
+      </div>
+    }
+    <ng-content select="ids-toast-message" />
+    @if (!hasMessageSlot) {
+      <p class="ids-toast-message" data-ids="ids-toast-message">{{ resolvedMessage }}</p>
+    }
+  </div>
+  <div class="ids-toast-action-container" data-ids="ids-toast-action-container">
+    <ng-content select="ids-toast-view-details-action" />
+    @if (showFallbackViewDetails) {
+      <ids-toast-view-details-action />
+    }
+    <ng-content select="ids-toast-close-action" />
+    @if (showFallbackClose) {
+      <ids-toast-close-action />
+    }
+  </div>
+}

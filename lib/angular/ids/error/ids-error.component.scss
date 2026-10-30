@@ -1,0 +1,33 @@
+.ids-error {
+  display: inline-flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-4, 4px);
+  color: var(--color-text-alerting-critical-base, var(--color-background-alerting-critical-base, #af0000));
+  font-family: var(--typography-font-style-primary, inherit);
+  font-size: var(--font-size-body-3, 12px);
+  line-height: var(--font-line-height-line-height-16, 1.333);
+  font-weight: 400;
+}
+
+.ids-error__icon {
+  display: inline-flex;
+  align-items: center;
+  flex-shrink: 0;
+  padding-top: 1px;
+}
+
+.ids-error__icon-mask {
+  display: block;
+  background-color: currentColor;
+  mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  -webkit-mask-size: contain;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+}
+
+.ids-error__text {
+  flex: 1 1 auto;
+  min-width: 0;
+}

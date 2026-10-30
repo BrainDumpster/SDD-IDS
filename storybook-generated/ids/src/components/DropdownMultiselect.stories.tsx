@@ -20,7 +20,7 @@ const options: Option[] = [
 ];
 
 const meta: Meta<typeof IdsDropdownMultiselect> = {
-  title: "Spec Generated/IDS/Dropdown/Multi Select",
+  title: "Components/IDS/Dropdown/Multi Select",
   component: IdsDropdownMultiselect,
   parameters: { layout: "centered" },
 };
@@ -33,6 +33,7 @@ function Trigger({ selected, disabled = false }: { selected: string[]; disabled?
   return (
     <IdsDropdownTriggerShell
       disabled={disabled}
+      filled={selected.length > 0}
       left={
         <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
           {text}
@@ -81,7 +82,6 @@ export const Playground: Story = {
         onClearAllClick={() => setSelected([])}
         clearAllDisabled={selected.length === 0}
         defaultOpen
-        maxHeight={220}
       />
     );
   },
@@ -125,7 +125,6 @@ export const Overflowing: Story = {
         selectionMode="multi"
         selectedValues={selected}
         defaultOpen
-        maxHeight={220}
       />
     );
   },
@@ -173,7 +172,6 @@ export const Sectioned: Story = {
         selectionMode="multi"
         selectedValues={selected}
         defaultOpen
-        maxHeight={220}
       />
     );
   },
@@ -207,7 +205,6 @@ export const WithAction: Story = {
           footerActionLabel="Action"
           onFooterActionClick={() => setActionEvent("action clicked")}
           defaultOpen
-          maxHeight={220}
         />
         <div style={{ fontSize: 12 }}>with-action: {actionEvent}</div>
       </div>
@@ -230,8 +227,8 @@ export const StateHarness: Story = {
   ),
 };
 
-const specTokens = ["--padding-padding-16", "--padding-padding-10", "--padding-padding-6", "--color-background-component", "--color-border-accessible", "--color-border-strong", "--color-border-brand-base", "--color-text-neutral", "--color-text-neutral-strong", "--color-text-disabled", "--color-background-gray-light", "--color-background-gray-lighter", "--color-background-controls-brand-lighter", "--color-background-controls-brand-base", "--color-background-controls-brand-strong", "--color-text-brand-strong", "--color-border-transparent-brand", "--color-icon-white", "--color-icon-inverse", "--color-border-alerting-critical-base", "--color-icon-alerting-critical", "--color-text-critical", "--corner-radius-radius-2", "--corner-radius-radius-4", "--spacing-space-8", "--padding-padding-8"] as const;
-const specTokenRefs = {"--padding-padding-16": ["Layout & Measurements: - Field horizontal padding: `var(--padding-padding-16)`.", "Tokens: - `var(--padding-padding-16)`"], "--padding-padding-10": ["Layout & Measurements: - Large: `var(--padding-padding-10)`", "Tokens: - `var(--padding-padding-10)`"], "--padding-padding-6": ["Layout & Measurements: - Small: `var(--padding-padding-6)`"], "--color-background-component": ["Tokens: - `var(--color-background-component)`"], "--color-border-accessible": ["Tokens: - `var(--color-border-accessible)`"], "--color-border-strong": ["Tokens: - `var(--color-border-strong)`"], "--color-border-brand-base": ["Tokens: - `var(--color-border-brand-base)`"], "--color-text-neutral": ["Tokens: - `var(--color-text-neutral)`"], "--color-text-neutral-strong": ["Tokens: - `var(--color-text-neutral-strong)`"], "--color-text-disabled": ["Tokens: - `var(--color-text-disabled)`"], "--color-background-gray-light": ["Tokens: - `var(--color-background-gray-light)`"], "--color-background-gray-lighter": ["Tokens: - `var(--color-background-gray-lighter)`"], "--color-background-controls-brand-lighter": ["Tokens: - `var(--color-background-controls-brand-lighter)`"], "--color-background-controls-brand-base": ["Tokens: - `var(--color-background-controls-brand-base)`"], "--color-background-controls-brand-strong": ["Tokens: - `var(--color-background-controls-brand-strong)`"], "--color-text-brand-strong": ["Tokens: - `var(--color-text-brand-strong)`"], "--color-border-transparent-brand": ["Tokens: - `var(--color-border-transparent-brand)`"], "--color-icon-white": ["Tokens: - `var(--color-icon-white)`"], "--color-icon-inverse": ["Tokens: - `var(--color-icon-inverse)`"], "--color-border-alerting-critical-base": ["Tokens: - `var(--color-border-alerting-critical-base)`"], "--color-icon-alerting-critical": ["Tokens: - `var(--color-icon-alerting-critical)`"], "--color-text-critical": ["Tokens: - `var(--color-text-critical)`"], "--corner-radius-radius-2": ["Tokens: - `var(--corner-radius-radius-2)`"], "--corner-radius-radius-4": ["Tokens: - `var(--corner-radius-radius-4)`"], "--spacing-space-8": ["Tokens: - `var(--spacing-space-8)`"], "--padding-padding-8": ["Tokens: - `var(--padding-padding-8)`"]} as Record<string, string[]>;
+const specTokens = ["--padding-padding-16", "--padding-padding-10", "--padding-padding-6", "--color-background-surface-component", "--color-border-gray-neutral-base", "--color-border-gray-neutral-strong", "--color-border-brand-base", "--color-text-gray-neutral", "--color-text-gray-neutral-strong", "--color-text-gray-disabled", "--color-background-gray-light", "--color-background-gray-lighter", "--color-background-controls-lighter", "--color-background-controls-base", "--color-background-controls-strong", "--color-text-brand-strong", "--color-border-brand-transparent-brand", "--color-icon-gray-white", "--color-icon-gray-inverse", "--color-border-alerting-critical-base", "--color-icon-alerting-critical-base", "--color-text-alerting-critical-base", "--corner-radius-radius-2", "--corner-radius-radius-4", "--spacing-space-8", "--padding-padding-8"] as const;
+const specTokenRefs = {"--padding-padding-16": ["Layout & Measurements: - Field horizontal padding: `var(--padding-padding-16)`.", "Tokens: - `var(--padding-padding-16)`"], "--padding-padding-10": ["Layout & Measurements: - Large: `var(--padding-padding-10)`", "Tokens: - `var(--padding-padding-10)`"], "--padding-padding-6": ["Layout & Measurements: - Small: `var(--padding-padding-6)`"], "--color-background-surface-component": ["Tokens: - `var(--color-background-surface-component)`"], "--color-border-gray-neutral-base": ["Tokens: - `var(--color-border-gray-neutral-base)`"], "--color-border-gray-neutral-strong": ["Tokens: - `var(--color-border-gray-neutral-strong)`"], "--color-border-brand-base": ["Tokens: - `var(--color-border-brand-base)`"], "--color-text-gray-neutral": ["Tokens: - `var(--color-text-gray-neutral)`"], "--color-text-gray-neutral-strong": ["Tokens: - `var(--color-text-gray-neutral-strong)`"], "--color-text-gray-disabled": ["Tokens: - `var(--color-text-gray-disabled)`"], "--color-background-gray-light": ["Tokens: - `var(--color-background-gray-light)`"], "--color-background-gray-lighter": ["Tokens: - `var(--color-background-gray-lighter)`"], "--color-background-controls-lighter": ["Tokens: - `var(--color-background-controls-lighter)`"], "--color-background-controls-base": ["Tokens: - `var(--color-background-controls-base)`"], "--color-background-controls-strong": ["Tokens: - `var(--color-background-controls-strong)`"], "--color-text-brand-strong": ["Tokens: - `var(--color-text-brand-strong)`"], "--color-border-brand-transparent-brand": ["Tokens: - `var(--color-border-brand-transparent-brand)`"], "--color-icon-gray-white": ["Tokens: - `var(--color-icon-gray-white)`"], "--color-icon-gray-inverse": ["Tokens: - `var(--color-icon-gray-inverse)`"], "--color-border-alerting-critical-base": ["Tokens: - `var(--color-border-alerting-critical-base)`"], "--color-icon-alerting-critical-base": ["Tokens: - `var(--color-icon-alerting-critical-base)`"], "--color-text-alerting-critical-base": ["Tokens: - `var(--color-text-alerting-critical-base)`"], "--corner-radius-radius-2": ["Tokens: - `var(--corner-radius-radius-2)`"], "--corner-radius-radius-4": ["Tokens: - `var(--corner-radius-radius-4)`"], "--spacing-space-8": ["Tokens: - `var(--spacing-space-8)`"], "--padding-padding-8": ["Tokens: - `var(--padding-padding-8)`"]} as Record<string, string[]>;
 
 export const TokenInspector: Story = {
   render: () => (
@@ -255,7 +252,7 @@ export const TokenInspector: Story = {
           padding: 6px 8px;
           border: 1px solid var(--color-border-neutral-light, #c5c5c5);
           border-radius: 4px;
-          background: var(--color-background-component, #ffffff);
+          background: var(--color-background-surface-component, #ffffff);
         }
         .sbTokenCode {
           font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
@@ -267,7 +264,7 @@ export const TokenInspector: Story = {
         .sbTokenSwatch {
           width: 64px;
           height: 20px;
-          border: 1px solid var(--color-border-accessible, #757575);
+          border: 1px solid var(--color-border-gray-neutral-base, #757575);
           border-radius: 2px;
           background: transparent;
         }

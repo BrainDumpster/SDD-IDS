@@ -430,8 +430,8 @@ export function ChatInputBox({
                     shapeName="arrow-right"
                     color={
                       elementState === "selected"
-                        ? "var(--color-icon-white)"
-                        : "var(--color-icon-disabled)"
+                        ? "var(--color-icon-gray-white)"
+                        : "var(--color-icon-gray-disabled)"
                     }
                   />
                 </button>
@@ -450,7 +450,7 @@ export function ChatInputBox({
       {showFooter ? (
         <footer className={styles.footer}>
           <div className={styles.footerMeta}>
-            <Icon shapeName="info-circ-solid" color="var(--color-icon-disabled)" />
+            <Icon shapeName="info-circ-solid" color="var(--color-icon-gray-disabled)" />
             <p className={styles.footerText}>
               <span className={styles.footerCount}>{questionsRemaining}</span>
               {` questions remaining (resets in ${questionsResetLabel})`}

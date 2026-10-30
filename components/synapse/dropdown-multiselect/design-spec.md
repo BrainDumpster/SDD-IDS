@@ -5,8 +5,8 @@
 Synapse **Dropdown Multiselect** is an **ids-fork** of the IDS **Dropdown: Multiselect** family. Anatomy, checkbox leading controls, select-all row, option rows, and runtime API **inherit IDS** unless listed in **Synapse programme deltas** below.
 
 - **IDS source of truth:** [`components/ids/dropdown-multiselect/design-spec.md`](../ids/dropdown-multiselect/design-spec.md)
-- **Shared implementation:** `storybook/src/components/DropdownMenu.tsx`, `IdsDropdownTriggerShell.tsx`
-- **Synapse wrapper:** `storybook/src/components/SynapseDropdownMenu.tsx`, `SynapseDropdownTriggerShell.tsx`
+- **Shared implementation:** `storybook/src/components/DropdownMenu.tsx`, `IdsDropdownTriggerShell.tsx`, `IdsDropdown.tsx` (compound API)
+- **Synapse wrapper:** `storybook/src/components/SynapseDropdown.tsx` (re-exports IDS compound API), `SynapseDropdownTriggerShell.tsx`
 - **Theme CSS:** `components/synapse-theme.css` (overrides `--dropdown-control-radius`, `--dropdown-menu-radius`)
 
 ## Metadata
@@ -34,6 +34,7 @@ Synapse **Dropdown Multiselect** is an **ids-fork** of the IDS **Dropdown: Multi
 | Focus outer ring radius | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **Same** (inherit IDS) |
 | Detached / standalone menu radius | `var(--dropdown-menu-radius)` → `0` (square) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) |
 | Field-attached popup | bottom corners square (IDS) | bottom corners `var(--dropdown-menu-radius)`; field top-only when open |
+| Popup above trigger (flip) | full border + top-only popup radius; field square top | **Same behavior**; Synapse resolves corners via `--dropdown-menu-radius` (4px) |
 | Checkbox corner radius (leading control) | `var(--corner-radius-radius-2)` | **Same** (inherit IDS — not field shell) |
 | Field / option colors, spacing | IDS contract | **Same** (inherit IDS) |
 | Runtime API | IDS contract | **Same** (inherit IDS) |
@@ -51,6 +52,7 @@ Synapse-specific layout (alias-driven):
 - Field corner radius: **`var(--dropdown-control-radius)`** → `var(--corner-radius-radius-4)`
 - Detached menu corner radius: **`var(--dropdown-menu-radius)`** → `var(--corner-radius-radius-4)`
 - Field-attached popup: bottom corners `var(--dropdown-menu-radius)`; field top-only radius when open (Figma `52737:60513`)
+- **Popup placement & width:** inherit IDS runtime contract ([`components/ids/dropdown-single-select/design-spec.md`](../ids/dropdown-single-select/design-spec.md) → Menu popup placement & width); Synapse theme only changes resolved radius values.
 
 ## Tokens
 
@@ -86,6 +88,8 @@ Inherit IDS **Accessibility**.
 
 Codegen **MUST** resolve props and events from IDS **Composition & API (runtime)** in [`components/ids/dropdown-multiselect/design-spec.md`](../ids/dropdown-multiselect/design-spec.md).
 
+**Storybook composition API:** `SynapseDropdown` + projected `SynapseDropdownMenu` / `SynapseDropdownMenuItem` / `SynapseDropdownTriggerShell` / helper / error — see `storybook/src/components/synapse-dropdown.developer-usage.ts` and `SynapseDropdownMultiSelect.stories.tsx`.
+
 ### Synapse-only runtime flags
 
 None.
@@ -120,7 +124,7 @@ Inherit IDS: `size` × field state × selection set × option row states × opti
 |---|---|---|
 | Trigger shell | `border-radius` | `var(--dropdown-control-radius)` |
 | Focus ring | `border-radius` | `var(--dropdown-focus-ring-radius)` |
-| Attached `.popup` | `border-radius` | `0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)` |
+| Attached `.popup` | `border-radius` | `0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)` (below); `var(--dropdown-menu-radius) var(--dropdown-menu-radius) 0 0` when above |
 | Detached `.popupStandalone` | `border-radius` | `var(--dropdown-menu-radius)` |
 | Option row checkbox | `border-radius` | `var(--checkbox-control-radius, var(--corner-radius-radius-2))` |
 | Other slots | per IDS | Inherit IDS |
@@ -153,6 +157,8 @@ Programme additions:
 - [x] Codegen Contract subsections concrete
 - [x] Leading checkbox remains `radius-2` (not field `radius-4`)
 - [x] Storybook `Spec Generated/Synapse/Dropdown/Multiselect` loads `components/synapse-theme.css`
+- [x] Composition Storybook uses `SynapseDropdown` compound API (not legacy imperative menu wrapper)
+- [x] Popup width + above-flip inherit IDS; Synapse radius aliases applied
 - [x] Registry: `data/programme-inheritance-registry.json` → `synapse` / `dropdown-multiselect`
 
 ## Source Mapping
@@ -165,7 +171,8 @@ Programme additions:
 | Main component set | `11067:54555` |
 | Rounded menu evidence | `52737:60513` |
 | Theme overrides | `components/synapse-theme.css` |
-| Implementation | `SynapseDropdownMenu.tsx`, `SynapseDropdownTriggerShell.tsx` |
+| Implementation | `SynapseDropdown.tsx`, `SynapseDropdownTriggerShell.tsx`, `DropdownMenu.tsx` |
+| Developer usage | `storybook/src/components/synapse-dropdown.developer-usage.ts` |
 | Spec contract | `storybook/src/spec-contracts/synapse-dropdown-multiselect.contract.ts` |
 | Storybook | `storybook/src/components/SynapseDropdownMultiSelect.stories.tsx` |
-| Verification | IDS baseline + theme alias contract (2026-06-12) |
+| Verification | IDS baseline + theme alias contract; composition parity 2026-06-30 |

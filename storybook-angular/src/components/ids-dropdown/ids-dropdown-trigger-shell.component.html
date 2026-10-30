@@ -1,0 +1,52 @@
+<div
+  class="field"
+  [attr.data-size]="size === 'small' ? 'small' : null"
+  [attr.data-disabled]="disabled || null"
+  [attr.data-error]="error || null"
+  [attr.data-hover]="hover || null"
+  [attr.data-focus]="focusVisible || null"
+  [attr.data-filled]="filled || null"
+>
+  <div class="main">
+    @if (showBadge && showSelectedTooltip) {
+      <!-- Badge + value text share one tooltip trigger. Hovering either opens
+           the tooltip anchored above the badge (side=top + arrowAlign=start),
+           listing the selected items as bullets. -->
+      <ids-tooltip side="top" arrowAlign="start" [hugContent]="true">
+        <ids-tooltip-trigger>
+          <span class="triggerContent">
+            <span class="badgeTrigger">
+              <ids-badge [value]="selectedCount" [type]="badgeType" />
+            </span>
+            <ng-content />
+          </span>
+        </ids-tooltip-trigger>
+        <ids-tooltip-panel>
+          <ids-tooltip-header>
+            <ids-tooltip-title>{{ selectedCount }} Items</ids-tooltip-title>
+          </ids-tooltip-header>
+          <ids-tooltip-body>
+            <ul class="selectedList">
+              @for (label of selectedLabels; track $index) {
+                <li>{{ label }}</li>
+              }
+            </ul>
+          </ids-tooltip-body>
+          <ids-tooltip-arrow />
+        </ids-tooltip-panel>
+      </ids-tooltip>
+    } @else {
+      <span class="triggerContent">
+        @if (showBadge) {
+          <span class="badgeTrigger">
+            <ids-badge [value]="selectedCount" [type]="badgeType" />
+          </span>
+        }
+        <ng-content />
+      </span>
+    }
+  </div>
+  <span class="caret-wrap" aria-hidden="true">
+    <ids-icon shapeName="arrow-drop-tri-caret" [size]="10" />
+  </span>
+</div>

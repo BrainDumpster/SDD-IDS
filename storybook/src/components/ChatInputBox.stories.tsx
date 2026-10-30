@@ -58,7 +58,7 @@ const specAccurateArgs = {
 const storyDecoratorPadding = 28;
 
 const meta: Meta<typeof ChatInputBox> = {
-  title: "Spec Generated/Synapse/Chat and Layout/Chat Input",
+  title: "Components/Synapse/Chat and Layout/Chat Input",
   component: ChatInputBox,
   parameters: {
     layout: "centered",
@@ -80,7 +80,7 @@ const meta: Meta<typeof ChatInputBox> = {
         style={{
           width: 370,
           padding: storyDecoratorPadding,
-          background: "var(--color-background-surface-1)",
+          background: "var(--color-background-surface-primary)",
           boxSizing: "border-box",
         }}
       >
@@ -225,7 +225,7 @@ export const ElementStateMatrix: Story = {
             style={{
               margin: "0 0 8px",
               fontSize: 12,
-              color: "var(--color-text-neutral)",
+              color: "var(--color-text-gray-neutral)",
             }}
           >
             {caption} — {SYNAPSE_CHAT_INPUT_BOX_ELEMENT_STATE_NODES[state]}
@@ -369,7 +369,7 @@ export const WithSuggestedPromptsVertical: Story = {
 
 /**
  * Back-compat alias — story id `spec-generated-synapse-chat-input-box--suggested-prompt-chip`.
- * Canonical implementation: **Spec Generated/Synapse/Chat and Layout/Suggested Prompt**.
+ * Canonical implementation: **Components/Synapse/Chat and Layout/Suggested Prompt**.
  */
 export const SuggestedPromptChip: Story = {
   name: "Suggested Prompt",

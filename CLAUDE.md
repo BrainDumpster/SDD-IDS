@@ -129,6 +129,8 @@ The primary workflow is creating/maintaining `components/ids/<slug>/design-spec.
 4. Never hardcode colors/spacing/typography — always reference CSS variables/design tokens.
 5. Light and Dark state tables must be structurally parallel.
 6. Global token CSS is built from Figma collections (priority: `Tokens` > `Primitive` > `Density Primitive`) and stored in `components/ids-theme.css` — shared across IDS components, not per-component.
+7. **Composition API sync:** when adding group + projected children in Storybook/framework code, update the matching `design-spec.md` in the same change (see `docs/design-spec-authoring-contract.md` → **Composition pattern sync** and `.cursor/rules/composition-design-spec-sync.mdc`).
+8. **Synapse Storybook:** React only (`storybook/` / `storybook-generated/synapse/`). Do not add Synapse examples under `storybook-angular/` unless explicitly requested.
 
 ## Environment
 

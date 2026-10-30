@@ -20,7 +20,7 @@ const specAccurateArgs: ComponentProps<typeof SynapseProgressBar> = {
 };
 
 const meta: Meta<typeof SynapseProgressBar> = {
-  title: "Spec Generated/Synapse/Progress Bar",
+  title: "Components/Synapse/Progress Bar",
   component: SynapseProgressBar,
   parameters: {
     layout: "padded",

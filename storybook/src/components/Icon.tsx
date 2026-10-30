@@ -2,20 +2,26 @@ import type { CSSProperties } from "react";
 
 import styles from "./Icon.module.css";
 import { ICON_INLINE_SVG_RAW_BY_SLUG, stripXmlDeclaration } from "./iconInlineRegistry";
+import { IDS_ICON_URL_BY_SHAPE } from "../../../lib/react/ids/shared/idsAssetRegistry.generated";
 
 /** Resolved asset URLs only (Vite `?url`); never inline `data:image/svg+xml`. */
 const iconUrlBySlug: Record<string, string> = (() => {
-  const modules = import.meta.glob<string>("../../../assets/icons/*.svg", {
-    eager: true,
-    query: "?url",
-    import: "default",
-  });
   const out: Record<string, string> = {};
-  for (const path of Object.keys(modules)) {
-    const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
-    if (file && modules[path] != null) out[file] = modules[path] as string;
+  try {
+    const modules = import.meta.glob<string>("../../../assets/icons/*.svg", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    });
+    for (const path of Object.keys(modules)) {
+      const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
+      if (file && modules[path] != null) out[file] = modules[path] as string;
+    }
+  } catch {
+    // Non-Vite bundler (esbuild): `import.meta.glob` is not a function. Fall through.
   }
-  return out;
+  // Vite populates `out` (unchanged behaviour); esbuild falls back to the generated registry.
+  return Object.keys(out).length > 0 ? out : IDS_ICON_URL_BY_SHAPE;
 })();
 
 export interface IconProps {
@@ -31,6 +37,8 @@ export interface IconProps {
   color?: string;
   /** Merged into the root element; use for width/height in stories or rare overrides. */
   style?: CSSProperties;
+  /** Icon box size in px (default 16). Overrides default width/height unless `style` sets them. */
+  size?: number;
   /**
    * `mask` (default): CSS mask + `background-color: currentColor` (from `color` prop or ancestor).
    * `img`: `<img src>` for full-color SVGs (e.g. alert severity glyphs).
@@ -50,9 +58,11 @@ export function Icon({
   title,
   color,
   style: styleProp,
+  size = 16,
   variant = "mask",
 }: IconProps) {
   const colorStyle = color ? ({ color } as CSSProperties) : undefined;
+  const dimensionStyle = { width: size, height: size, boxSizing: "border-box" as const };
   const inlineRaw =
     variant === "inline" ? ICON_INLINE_SVG_RAW_BY_SLUG[shapeName] : undefined;
 
@@ -90,10 +100,8 @@ export function Icon({
         className={className}
         title={title}
         style={{
-          width: 16,
-          height: 16,
           display: "block",
-          boxSizing: "border-box",
+          ...dimensionStyle,
           ...colorStyle,
           ...styleProp,
         }}
@@ -104,9 +112,7 @@ export function Icon({
   const style = {
     backgroundColor: "currentColor",
     display: "inline-block",
-    width: 16,
-    height: 16,
-    boxSizing: "border-box",
+    ...dimensionStyle,
     WebkitMaskImage: `url("${src}")`,
     WebkitMaskRepeat: "no-repeat",
     WebkitMaskPosition: "center",
@@ -121,3 +127,5 @@ export function Icon({
 
   return <span className={className} style={style} aria-hidden="true" title={title} />;
 }
+
+Icon.displayName = "Icon";

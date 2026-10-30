@@ -51,6 +51,20 @@ export function IdsDataGridTypeComboboxSingleSelectFilterPanel({
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
+              {searchQuery.length > 0 ? (
+                <button
+                  type="button"
+                  className={styles.searchClear}
+                  aria-label="Clear search"
+                  onClick={() => setSearchQuery("")}
+                >
+                  <Icon
+                    shapeName="ctrl-close-16"
+                    className={styles.searchClearIcon}
+                    style={{ width: 12, height: 12 }}
+                  />
+                </button>
+              ) : null}
             </div>
           </div>
         </div>

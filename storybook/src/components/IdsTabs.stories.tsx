@@ -34,7 +34,7 @@ const overflowItems = [
 ];
 
 const meta: Meta<typeof Tabs> = {
-  title: "Spec Generated/IDS/Tab",
+  title: "Components/IDS/Tab",
   component: Tabs,
   args: {
     items: baseItems,
@@ -171,7 +171,7 @@ export const UnselectedPressStateSecondary: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Click and hold on any unselected tab to see the press state. The press state uses `var(--color-background-brand-light)` background and `var(--color-text-brand-strong)` text color as specified in the design spec.",
+        story: "Click and hold on any unselected tab to see the press state. The press state uses `var(--color-background-brand-light-slate)` background and `var(--color-text-brand-strong)` text color as specified in the design spec.",
       },
     },
   },
@@ -186,7 +186,7 @@ export const UnselectedPressStatePrimary: Story = {
   parameters: {
     docs: {
       description: {
-        story: "Click and hold on any unselected tab to see the press state. The press state uses `var(--color-background-brand-light)` background and `var(--color-text-brand-strong)` text color as specified in the design spec.",
+        story: "Click and hold on any unselected tab to see the press state. The press state uses `var(--color-background-brand-light-slate)` background and `var(--color-text-brand-strong)` text color as specified in the design spec.",
       },
     },
   },

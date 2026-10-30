@@ -422,7 +422,7 @@ function TreeRow({
   const iconShape = node.iconShape ?? DEFAULT_ICON_SHAPE;
   const iconColor =
     programme === "synapse" || !isSelected
-      ? "var(--color-icon-neutral)"
+      ? "var(--color-icon-gray-neutral-base)"
       : "var(--color-icon-brand-base)";
 
   return (

@@ -1,0 +1,16 @@
+@if (useItemsApi) {
+  @for (item of visibleItems; track item.id) {
+    <ids-toast-item
+      [id]="item.id"
+      [type]="item.type ?? 'info'"
+      [message]="item.message"
+      [duration]="item.duration ?? 8000"
+      [closable]="item.closable ?? true"
+      [link]="item.link"
+      [role]="item.role ?? 'status'"
+      (onClose)="handleItemClose($event)"
+    />
+  }
+} @else {
+  <ng-content select="ids-toast-item" />
+}

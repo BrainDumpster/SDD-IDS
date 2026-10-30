@@ -1,0 +1,10 @@
+<div
+  class="ids-dropdown-button"
+  [attr.data-style]="buttonStyle"
+  [attr.data-size]="size"
+  [attr.data-open]="isOpen ? 'true' : null"
+  [attr.data-disabled]="disabled ? 'true' : null"
+>
+  <ng-content select="ids-dropdown-button-trigger" />
+  <ng-content select="ids-dropdown-button-menu" />
+</div>

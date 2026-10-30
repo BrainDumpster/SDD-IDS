@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from "@storybook/react";
 import { PageLayout } from "./PageLayout";
 
 const meta: Meta<typeof PageLayout> = {
-  title: "Spec Generated/Synapse/Page Layout",
+  title: "Components/Synapse/Page Layout",
   component: PageLayout,
 };
 

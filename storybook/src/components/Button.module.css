@@ -3,9 +3,6 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-space-8);
-  /* Use box-shadow instead of border so the stroke does not add to layout height/width.
-     Figma auto-layout frames use inside strokes which don't expand frame bounds;
-     box-shadow: inset is the CSS equivalent. */
   border: none;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   border-radius: var(--button-control-radius);
@@ -17,7 +14,6 @@
   transition: all 150ms ease;
   position: relative;
   white-space: nowrap;
-  /* Native <button> focus ring; Base UI does not set data-focus-visible on Button */
   outline: none;
 }
 
@@ -35,58 +31,112 @@
   padding: var(--padding-padding-10) var(--padding-padding-16);
 }
 
-/* Icon-only padding synced to Figma (48×32 / 48×40 intrinsic with 16×16 icon) */
-.iconOnly.md {
-  min-height: var(--scale-32);
-  padding: var(--padding-padding-8) var(--padding-padding-16);
+/* Icon-only — square, padding-none (Icon Button set `52172:249499`) */
+.iconOnly {
+  gap: 0;
+  min-width: 0;
+  max-width: none;
 }
-
-.iconOnly.lg {
-  min-height: var(--scale-40);
-  padding: var(--padding-padding-12) var(--padding-padding-16);
-}
-
-/* Small icon-only: not in inspected Primary set; symmetric padding around 16×16 */
 .iconOnly.sm {
-  min-height: var(--scale-24);
-  padding: var(--padding-padding-4) var(--padding-padding-16);
+  width: var(--sizing-size-24);
+  height: var(--sizing-size-24);
+  min-height: var(--sizing-size-24);
+  padding: var(--padding-padding-none);
+}
+.iconOnly.md {
+  width: var(--sizing-size-32);
+  height: var(--sizing-size-32);
+  min-height: var(--sizing-size-32);
+  padding: var(--padding-padding-none);
+}
+.iconOnly.lg {
+  width: var(--sizing-size-40);
+  height: var(--sizing-size-40);
+  min-height: var(--sizing-size-40);
+  padding: var(--padding-padding-none);
 }
 
 .iconSlot {
   display: inline-flex;
   flex-shrink: 0;
-  width: 16px;
-  height: 16px;
+  width: var(--ui-icon-spacing-icon-16);
+  height: var(--ui-icon-spacing-icon-16);
   align-items: center;
   justify-content: center;
   color: inherit;
 }
 
-/* Icon colors per variant */
-.primary .iconSlot {
-  color: var(--color-icon-white);
+.iconOnly.sm .iconSlot {
+  width: var(--ui-icon-spacing-icon-12);
+  height: var(--ui-icon-spacing-icon-12);
+}
+.iconOnly.md .iconSlot {
+  width: var(--ui-icon-spacing-icon-14);
+  height: var(--ui-icon-spacing-icon-14);
+}
+.iconOnly.lg .iconSlot {
+  width: var(--ui-icon-spacing-icon-16);
+  height: var(--ui-icon-spacing-icon-16);
+}
+.primary .iconSlot,
+.danger .iconSlot {
+  color: var(--color-icon-gray-white);
 }
 .secondary .iconSlot,
-.tertiary .iconSlot,
-.ghost .iconSlot {
+.tertiary .iconSlot {
   color: var(--color-icon-brand-base);
 }
-.danger .iconSlot {
-  color: var(--color-icon-white);
+.iconOnly.secondary:hover:not(:disabled) .iconSlot,
+.iconOnly.secondary:focus-visible:not(:disabled) .iconSlot,
+.iconOnly.secondary[data-state="hover"] .iconSlot,
+.iconOnly.secondary[data-state="focus-visible"] .iconSlot {
+  color: var(--color-icon-brand-strong);
+}
+.iconOnly.secondary:active:not(:disabled) .iconSlot,
+.iconOnly.secondary[data-state="press"] .iconSlot {
+  color: var(--color-icon-brand-stronger);
+}
+.iconOnly.tertiary .iconSlot,
+.iconOnly.tertiary:hover:not(:disabled) .iconSlot,
+.iconOnly.tertiary:focus-visible:not(:disabled) .iconSlot,
+.iconOnly.tertiary[data-state="hover"] .iconSlot,
+.iconOnly.tertiary[data-state="focus-visible"] .iconSlot {
+  color: var(--color-icon-brand-strong);
+}
+.iconOnly.tertiary:active:not(:disabled) .iconSlot,
+.iconOnly.tertiary[data-state="press"] .iconSlot {
+  color: var(--color-icon-brand-stronger);
+}
+.ghost .iconSlot,
+.ghost-neutral .iconSlot {
+  color: var(--color-icon-gray-neutral-base);
+}
+.ghost:hover:not(:disabled) .iconSlot,
+.ghost-neutral:hover:not(:disabled) .iconSlot,
+.ghost:active:not(:disabled) .iconSlot,
+.ghost-neutral:active:not(:disabled) .iconSlot,
+.ghost:focus-visible:not(:disabled) .iconSlot,
+.ghost-neutral:focus-visible:not(:disabled) .iconSlot,
+.ghost[data-state="hover"] .iconSlot,
+.ghost-neutral[data-state="hover"] .iconSlot,
+.ghost[data-state="press"] .iconSlot,
+.ghost-neutral[data-state="press"] .iconSlot,
+.ghost[data-state="focus-visible"] .iconSlot,
+.ghost-neutral[data-state="focus-visible"] .iconSlot {
+  color: var(--color-icon-gray-neutral-strong);
 }
 
-/* Disabled: all variants */
-.button:disabled .iconSlot {
-  color: var(--color-icon-disabled);
+.button:disabled .iconSlot,
+.button[data-state="disabled"] .iconSlot {
+  color: var(--color-icon-gray-disabled);
 }
 
-/* Leading icon: Figma `9662:25505` uses a 16×16 frame; fill slot when child omits size (e.g. legacy nodes). */
 .iconSlot > * {
   flex-shrink: 0;
   width: 100%;
   height: 100%;
-  max-width: 16px;
-  max-height: 16px;
+  max-width: 100%;
+  max-height: 100%;
   box-sizing: border-box;
 }
 
@@ -108,20 +158,31 @@
 
 /* Variants */
 .primary {
-  background: var(--color-background-controls-brand-base);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-transparent-brand);
-  color: var(--color-text-white);
+  background: var(--color-background-controls-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
 }
-.primary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-strong);
+.primary:hover:not(:disabled),
+.primary[data-state="hover"] {
+  background: var(--color-background-controls-strong);
 }
-.primary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-stronger);
+.primary:active:not(:disabled),
+.primary[data-state="press"] {
+  background: var(--color-background-controls-stronger);
 }
-.primary:disabled {
+.primary:disabled,
+.primary[data-state="disabled"] {
   background: var(--color-background-gray-lighter);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+.primary:focus-visible:not(:disabled),
+.primary[data-state="focus-visible"] {
+  background: var(--color-background-controls-strong);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-transparent-brand),
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .secondary {
@@ -129,16 +190,32 @@
   color: var(--color-text-brand-strong);
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
 }
-.secondary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter);
+.secondary:hover:not(:disabled),
+.secondary[data-state="hover"] {
+  background: var(--color-background-controls-light);
 }
-.secondary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-light);
+.secondary:active:not(:disabled),
+.secondary[data-state="press"] {
+  background: var(--color-background-controls-press, var(--color-background-controls-light));
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-strong);
 }
-.secondary:disabled {
+.iconOnly.secondary:active:not(:disabled),
+.iconOnly.secondary[data-state="press"] {
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+}
+.secondary:disabled,
+.secondary[data-state="disabled"] {
   background: transparent;
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+.secondary:focus-visible:not(:disabled),
+.secondary[data-state="focus-visible"] {
+  background: var(--color-background-controls-light);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base),
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .tertiary {
@@ -146,78 +223,126 @@
   color: var(--color-text-brand-strong);
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
-.tertiary:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-lighter);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+.tertiary:hover:not(:disabled),
+.tertiary[data-state="hover"] {
+  background: var(--color-background-controls-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
-.tertiary:active:not(:disabled) {
-  background: var(--color-background-controls-brand-light);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+.tertiary:active:not(:disabled),
+.tertiary[data-state="press"] {
+  background: var(--color-background-controls-press, var(--color-background-controls-light));
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
-.tertiary:disabled {
+.tertiary:disabled,
+.tertiary[data-state="disabled"] {
   background: transparent;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
+}
+.tertiary:focus-visible:not(:disabled),
+.tertiary[data-state="focus-visible"] {
+  background: var(--color-background-controls-light);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) transparent,
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
-.ghost {
+.ghost,
+.ghost-neutral {
   background: transparent;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-icon-gray-neutral-base);
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
-.ghost:hover:not(:disabled) {
-  background: var(--color-background-gray-lighter);
+/* Ghost fills: Figma binds a duplicate gray-neutral-lighter variable whose
+   resolved RGB is slate-600 (#455666) with baked alpha — 10% hover/focus,
+   20% press. Expressed as slate-600 color-mix to keep the opacity step. */
+.ghost:hover:not(:disabled),
+.ghost-neutral:hover:not(:disabled),
+.ghost[data-state="hover"],
+.ghost-neutral[data-state="hover"] {
+  background: color-mix(
+    in srgb,
+    var(--ui-palette-slate-600) 10%,
+    transparent
+  );
 }
-.ghost:disabled {
+.ghost:active:not(:disabled),
+.ghost-neutral:active:not(:disabled),
+.ghost[data-state="press"],
+.ghost-neutral[data-state="press"] {
+  background: color-mix(
+    in srgb,
+    var(--ui-palette-slate-600) 20%,
+    transparent
+  );
+}
+.ghost:disabled,
+.ghost-neutral:disabled,
+.ghost[data-state="disabled"],
+.ghost-neutral[data-state="disabled"] {
   background: transparent;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
-  color: var(--color-text-disabled);
+  color: var(--color-icon-gray-disabled);
+}
+.ghost:focus-visible:not(:disabled),
+.ghost-neutral:focus-visible:not(:disabled),
+.ghost[data-state="focus-visible"],
+.ghost-neutral[data-state="focus-visible"] {
+  background: color-mix(
+    in srgb,
+    var(--ui-palette-slate-600) 10%,
+    transparent
+  );
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) transparent,
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .danger {
-  background: var(--color-background-alerting-critical);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-transparent-critical);
-  color: var(--color-text-white);
+  background: var(--color-background-alerting-critical-base);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
 }
-.danger:hover:not(:disabled) {
+.danger:hover:not(:disabled),
+.danger[data-state="hover"] {
   background: var(--color-background-alerting-critical-strong);
 }
-.danger:active:not(:disabled) {
+.danger:active:not(:disabled),
+.danger[data-state="press"] {
   background: var(--color-background-alerting-critical-stronger);
 }
-.danger:disabled {
+.danger:disabled,
+.danger[data-state="disabled"] {
   background: var(--color-background-gray-lighter);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-disabled);
-  color: var(--color-text-disabled);
+  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+.danger:focus-visible:not(:disabled),
+.danger[data-state="focus-visible"] {
+  background: var(--color-background-alerting-critical-strong);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-alerting-critical-transparent-base),
+    0 0 0 var(--scale-2) var(--color-border-gray-white),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
-/* States */
 .button:disabled {
   cursor: not-allowed;
 }
 
-/* Focus: outer ring 1px brand, offset from --button-focus-ring-offset (IDS default outline) */
-.button:focus-visible:not(:disabled) {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: var(--button-focus-ring-offset);
-}
-
-.programmeSynapse:focus-visible:not(:disabled) {
+.button:focus-visible:not(:disabled),
+.button[data-state="focus-visible"] {
   outline: none;
 }
 
-.programmeSynapse:focus-visible:not(:disabled)::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * var(--button-focus-ring-offset));
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius);
-  pointer-events: none;
+/* Synapse programme wrapper may still opt into offset-only ring via theme aliases */
+.programmeSynapse:focus-visible:not(:disabled),
+.programmeSynapse[data-state="focus-visible"] {
+  outline: none;
 }
 
-/* box-shadow already set per-variant above; focus-visible only needs the outer outline ring */
-
-/* Loading */
 .loading {
   cursor: wait;
 }
@@ -232,6 +357,11 @@
 }
 .labelHidden {
   visibility: hidden;
+}
+
+.label {
+  display: inline-flex;
+  align-items: center;
 }
 @keyframes spin {
   to { transform: rotate(360deg); }

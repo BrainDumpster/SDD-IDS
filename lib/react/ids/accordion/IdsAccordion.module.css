@@ -1,0 +1,224 @@
+/**
+ * IDS Accordion styles — derived from components/ids/accordion/design-spec.md
+ * Selectors use IDS prefix: ids-accordion, ids-accordion-header, …
+ * Theme: import components/ids-theme.css at the application / story root.
+ */
+
+.ids-accordion {
+  /* Fluid by default — fills its container; consumers override via the
+     `width`/`maxWidth` props (inline style). */
+  width: 100%;
+  min-width: 240px;
+  box-sizing: border-box;
+}
+
+.ids-accordion--form {
+  background: var(--color-background-surface-component);
+}
+
+.ids-accordion-item {
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+  margin-top: calc(-1 * var(--border-width-border-1));
+  background: var(--color-background-surface-component);
+}
+
+.ids-accordion-item--first {
+  margin-top: 0;
+}
+
+/* Reset <h3> UA styles so header typography comes only from the trigger contract. */
+.ids-accordion-header {
+  margin: 0;
+  padding: 0;
+  font: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  color: inherit;
+}
+
+.ids-accordion-trigger {
+  width: 100%;
+  height: auto;
+  min-height: var(--scale-40);
+  box-sizing: border-box;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-space-8);
+  padding: var(--padding-padding-10) var(--padding-padding-16);
+  border: 0;
+  margin: 0;
+  cursor: pointer;
+  text-align: left;
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
+  font-family: inherit;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  appearance: none;
+  -webkit-appearance: none;
+}
+
+.ids-accordion-trigger--left {
+  justify-content: flex-start;
+  gap: var(--spacing-space-8);
+}
+
+.ids-accordion-trigger--right {
+  justify-content: space-between;
+}
+
+.ids-accordion-title {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral-strong);
+  max-width: 900px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ids-accordion-chevron {
+  /* Size/color come from IdsIcon + this class; keep layout for trigger flex row.
+     margin-top (not padding): the glyph is a CSS mask centered in a fixed 16px
+     box, so padding only grows the box — margin pushes the icon itself down
+     2px onto the 20px title line while header content stays top-aligned. */
+  flex-shrink: 0;
+  margin-top: var(--padding-padding-2);
+  color: var(--color-icon-gray-neutral-accessible);
+  transition: transform 120ms ease;
+}
+
+.ids-accordion-trigger:hover:not(:disabled) {
+  background: var(--color-background-brand-lighter-slate);
+}
+
+/* Focus (IDS Design Library .Accordion-Element-Left State=Focus): tinted header,
+   1px neutral border (inset shadow, no layout shift), double ring — 2px separator +
+   4px brand outer ring — radius-4. z-index keeps the ring above sibling panels. */
+.ids-accordion-trigger:focus-visible {
+  outline: none;
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-4);
+  background-color: var(--color-background-brand-lighter-slate);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
+}
+
+.ids-accordion-trigger:focus-visible .ids-accordion-chevron,
+.ids-accordion-trigger--open:focus-visible .ids-accordion-chevron,
+.ids-accordion-item--open .ids-accordion-trigger:focus-visible .ids-accordion-chevron,
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger:focus-visible .ids-accordion-chevron {
+  color: var(--color-icon-gray-neutral-strong);
+}
+
+/* Expanded + focused header: hide the 4px left brand strip — the focus ring
+   is the indicator while focused. Panel body keeps its strip. The
+   `:hover:not(:disabled)` variants are required because the open-hover rules
+   below carry higher specificity and would repaint the strip while the
+   pointer rests on the focused header. */
+.ids-accordion-trigger--open:focus-visible,
+.ids-accordion-item--open .ids-accordion-trigger:focus-visible,
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger:focus-visible,
+.ids-accordion-trigger--open:focus-visible:hover:not(:disabled),
+.ids-accordion-item--open .ids-accordion-trigger:focus-visible:hover:not(:disabled),
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger:focus-visible:hover:not(:disabled) {
+  background-image: none;
+}
+
+.ids-accordion-trigger:disabled,
+.ids-accordion-trigger--disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.ids-accordion-trigger--open,
+.ids-accordion-item--open .ids-accordion-trigger,
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger {
+  background-color: var(--color-background-brand-lighter-slate);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-brand-base) 0,
+    var(--color-border-brand-base) 4px,
+    var(--color-background-brand-lighter-slate) 4px,
+    var(--color-background-brand-lighter-slate) 100%
+  );
+}
+
+.ids-accordion-trigger--open:hover:not(:disabled),
+.ids-accordion-item--open .ids-accordion-trigger:hover:not(:disabled),
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger:hover:not(:disabled) {
+  background-color: var(--color-background-brand-lighter-slate);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-brand-base) 0,
+    var(--color-border-brand-base) 4px,
+    var(--color-background-brand-lighter-slate) 4px,
+    var(--color-background-brand-lighter-slate) 100%
+  );
+}
+
+.ids-accordion-trigger--open .ids-accordion-chevron,
+.ids-accordion-item--open .ids-accordion-trigger .ids-accordion-chevron,
+.ids-accordion-item[data-open="true"] .ids-accordion-trigger .ids-accordion-chevron {
+  transform: rotate(180deg);
+  color: var(--color-icon-gray-neutral-accessible);
+}
+
+/* Must come after the open rules: the [data-open] selector ties this rule at
+   0,4,0, so source order decides — hover (strong) wins on expanded items too. */
+.ids-accordion-trigger:hover:not(:disabled) .ids-accordion-chevron {
+  color: var(--color-icon-gray-neutral-strong);
+}
+
+.ids-accordion-body {
+  overflow: hidden;
+}
+
+.ids-accordion-body--hidden {
+  display: none;
+}
+
+.ids-accordion-content {
+  box-sizing: border-box;
+  min-width: 50px;
+  min-height: 50px;
+  padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-16)
+    calc(var(--padding-padding-32) + var(--padding-padding-8));
+  background-color: var(--color-background-surface-component);
+  border-top: none;
+}
+
+.ids-accordion-item--open .ids-accordion-content,
+.ids-accordion-item[data-open="true"] .ids-accordion-content {
+  background-color: var(--color-background-surface-component);
+  background-image: linear-gradient(
+    90deg,
+    var(--color-border-brand-base) 0,
+    var(--color-border-brand-base) 4px,
+    var(--color-background-surface-component) 4px,
+    var(--color-background-surface-component) 100%
+  );
+}
+
+/* Optional inner content card — spec: no background, no border, no padding;
+   it only holds the body text (max-width 900px). */
+.ids-accordion-content-card {
+  max-width: 900px;
+  color: var(--color-text-gray-neutral);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+}
+
+.ids-accordion-content-card a {
+  color: var(--color-text-link-brand-base);
+}

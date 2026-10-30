@@ -31,42 +31,42 @@
 - Icon size: 16px × 16px
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Surface background: `var(--color-background-surface-2)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Surface background: `var(--color-background-surface-secondary)` = #ffffff
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
 - Link brand text: `var(--color-text-link-brand-base)` = #0062ab
-- White text: `var(--color-text-white)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
-- White border: `var(--color-border-white)` = #ffffff
-- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
+- White text: `var(--color-text-gray-white)` = #ffffff
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
+- White border: `var(--color-border-gray-white)` = #ffffff
+- Transparent brand: `var(--color-border-brand-transparent-brand)` = #ffffff00
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- White icon: `var(--color-icon-white)` = #ffffff
-- Info icon: `var(--color-icon-alerting-info)` = #005ece
-- Critical icon: `var(--color-icon-alerting-critical)` = #af0000
-- Major icon: `var(--color-icon-alerting-major)` = #ed6400
-- Success icon: `var(--color-icon-alerting-success)` = #1b8500
-- Minor icon: `var(--color-icon-alerting-minor)` = #ffc700
+- Neutral icon: `var(--color-icon-gray-neutral-base)` = #4d4d4d
+- White icon: `var(--color-icon-gray-white)` = #ffffff
+- Info icon: `var(--color-icon-alerting-info-base)` = #005ece
+- Critical icon: `var(--color-icon-alerting-critical-base)` = #af0000
+- Major icon: `var(--color-icon-alerting-major-base)` = #ed6400
+- Success icon: `var(--color-icon-alerting-success-base)` = #1b8500
+- Minor icon: `var(--color-icon-alerting-minor-base)` = #ffc700
 
 ### Alert Backgrounds
 - Critical light: `var(--color-background-alerting-critical-light)` = #f3d9d9
-- Critical transparent: `var(--color-border-alerting-critical-transparent)` = #af0000
+- Critical transparent: `var(--color-border-alerting-critical-base-transparent)` = #af0000
 - Major light: `var(--color-background-alerting-major-light)` = #fce8d9
-- Major transparent: `var(--color-border-alerting-major-transparent)` = #ed6400
+- Major transparent: `var(--color-border-alerting-major-base-transparent)` = #ed6400
 - Info light: `var(--color-background-alerting-info-light)` = #d9e7f8
-- Info transparent: `var(--color-border-alerting-info-transparent)` = #005ece
+- Info transparent: `var(--color-border-alerting-info-base-transparent)` = #005ece
 - Success light: `var(--color-background-alerting-success-light)` = #ddedd9
-- Success transparent: `var(--color-border-alerting-success-transparent)` = #1b8500
+- Success transparent: `var(--color-border-alerting-success-base-transparent)` = #1b8500
 - Minor light: `var(--color-background-alerting-minor-light)` = #fff7d9
-- Minor transparent: `var(--color-border-alerting-minor-transparent)` = #9c622e
+- Minor transparent: `var(--color-border-alerting-minor-base)` = #9c622e
 
 ### Alert Borders
-- Info border: `var(--color-border-alerting-info-white)` = #005ece
+- Info border: `var(--color-border-alerting-info-base-white)` = #005ece
 - Warning border: `Color/Border/Alerting/Warning-Accessible` = #9c622e
 
 ### UI Palettes
@@ -97,20 +97,20 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Login Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
+| Login Container | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
 | Logo Section | transparent | transparent | `Header 1` (Roboto Regular 48px/58px) | `var(--color-icon-brand-base)` (#0076ce) |
-| Input Field (Default) | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Input Field (Focus) | `var(--color-background-component)` (#ffffff) | `var(--color-background-controls-brand-base)` (#0076ce) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-brand-base)` (#0076ce) |
-| Input Field (Error) | `var(--color-background-component)` (#ffffff) | `var(--color-icon-alerting-critical)` (#af0000) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-alerting-critical)` (#af0000) |
-| Login Button (Default) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-background-controls-brand-base)` (#0076ce) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Login Button (Hover) | `var(--color-icon-alerting-major)` (#ed6400) | `var(--color-icon-alerting-major)` (#ed6400) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
+| Input Field (Default) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Input Field (Focus) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-background-controls-base)` (#0076ce) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-brand-base)` (#0076ce) |
+| Input Field (Error) | `var(--color-background-surface-component)` (#ffffff) | `var(--color-icon-alerting-critical-base)` (#af0000) | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-alerting-critical-base)` (#af0000) |
+| Login Button (Default) | `var(--color-background-controls-base)` (#0076ce) | `var(--color-background-controls-base)` (#0076ce) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Login Button (Hover) | `var(--color-icon-alerting-major-base)` (#ed6400) | `var(--color-icon-alerting-major-base)` (#ed6400) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
 | Forgot Password Link | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
-| Success Message | `var(--color-background-alerting-success-light)` (#ddedd9) | `var(--color-border-alerting-success-transparent)` (#1b8500) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-success)` (#1b8500) |
-| Error Message | `var(--color-background-alerting-critical-light)` (#f3d9d9) | `var(--color-border-alerting-critical-transparent)` (#af0000) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical)` (#af0000) |
-| Warning Message | `var(--color-background-alerting-minor-light)` (#fff7d9) | `var(--color-border-alerting-minor-transparent)` (#9c622e) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-alerting-minor)` (#ffc700) |
+| Success Message | `var(--color-background-alerting-success-light)` (#ddedd9) | `var(--color-border-alerting-success-base-transparent)` (#1b8500) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-alerting-success-base)` (#1b8500) |
+| Error Message | `var(--color-background-alerting-critical-light)` (#f3d9d9) | `var(--color-border-alerting-critical-base-transparent)` (#af0000) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-alerting-critical-base)` (#af0000) |
+| Warning Message | `var(--color-background-alerting-minor-light)` (#fff7d9) | `var(--color-border-alerting-minor-base)` (#9c622e) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-alerting-minor-base)` (#ffc700) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-2)` (#ffffff)
+- Surface tokens: `var(--color-background-surface-secondary)` (#ffffff)
 - Text and border colors remain consistent via semantic variables
 - Login container maintains visibility in dark theme
 - Alert messages adapt to dark theme

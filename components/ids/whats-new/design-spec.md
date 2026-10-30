@@ -44,13 +44,15 @@
 
 ## Anatomy
 
+Root slot is **`WhatsNew`** (compound alias; not `WhatsNewRoot`). DOM selectors use **Ids camelCase** (`data-ids="IdsWhatsNew"`, class `IdsWhatsNew`) — not Base UI `data-slot="WhatsNew"` / kebab `ids-whats-new`. Nested Modal and Dropdown keep their own `data-ids` (`ids-modal-surface`, `ids-dropdown-single-select`, …).
+
 ### Modal stack (runtime — authoritative)
 
 Three stacked IDS **Modal** layers (`IdsModal`). **Do not** replace the list body in-place.
 
 | Layer | When visible | Header title | Body height | Footer close dismisses |
 |---|---|---|---|---|
-| **Main (`WhatsNewRoot`)** | `open=true` | `title` (default `What's New`) | list (flex) | entire pattern |
+| **Main (`WhatsNew`)** | `open=true` | `title` (default `What's New`) | list (flex) | entire pattern |
 | **Carousel (`WhatsNewCarouselModal`)** | Thumbnail click | `section.title` | **up to 523px** (`.WhatsNew-Element-Content` `27437:44146`; flex remainder) | carousel only |
 | **Single preview (`WhatsNewSinglePreviewModal`)** | `popout-double` in carousel | `section.title` | **up to 523px** (Preview Single `27437:44163`; flex remainder) | single preview only |
 
@@ -63,12 +65,12 @@ Hosts may supply content via **(A) data props** (`sections[]`) or **(B) child co
 
 #### Root
 
-- **`WhatsNewRoot`** — main IDS **Modal** (`IdsModal`, `layer=main`); `open` default `true`; owns carousel + single-preview stack state, `dontShowAgain`, filter (when uncontrolled).
+- **`WhatsNew`** — main IDS **Modal** (`IdsModal`, `layer=main`); `open` default `true`; owns carousel + single-preview stack state, `dontShowAgain`, filter (when uncontrolled).
 
 #### Main list modal (deterministic child order)
 
 ```
-WhatsNewRoot
+WhatsNew
 ├── WhatsNewHeader                    (Figma header row — not in carousel)
 │   ├── WhatsNewTitle                 (Header 5; default "What's New")
 │   └── WhatsNewCloseButton           (shape-x 16×16)
@@ -135,14 +137,14 @@ WhatsNewSinglePreviewModal
 
 ### Main modal slots (summary)
 
-- `WhatsNewRoot` — main IDS **Modal** (`IdsModal`); **`open` defaults to `true`**
+- `WhatsNew` — main IDS **Modal** (`IdsModal`); **`open` defaults to `true`**
   - Shell: `Modal-Main` border + elevation
   - `WhatsNewHeader` — title row + close (always main copy)
     - `WhatsNewTitle` — **Header 5** (`What's New`)
     - `WhatsNewCloseButton` — shared **`Icon`** (`shape-x`, **`variant="img"`**, **`16×16`**)
-  - `WhatsNewSummary` — **Body 2** intro (`padding-bottom: 16px`); separate row below header (Figma `summary` **`27437:44104`**)
+  - `WhatsNewSummary` — **Body 2** intro (`padding-bottom: 16px`); separate row below header (Figma `summary` **`27437:44104`*
   - `WhatsNewBody` — list only; **only `WhatsNewSectionsScroll` scrolls vertically**
-    - `WhatsNewVersionFilterRow` — **Version** + **Filter**; `border-bottom: 1px solid var(--color-border-accessible)`
+    - `WhatsNewVersionFilterRow` — **Version** + **Filter**; `border-bottom: 1px solid var(--color-border-gray-neutral-base)`
     - `WhatsNewSectionsScroll` → `WhatsNewSection` × *n*
       - thumbnail, bookmark star button, title, description (+ inline link), Show More
   - `WhatsNewFooter` — root toggle + **Close** (dismiss main)
@@ -162,7 +164,7 @@ Figma: **Preview Single** `27437:44151`, **Preview Multiple** `27437:44134`
 | Region | Figma frame / measurement | Runtime |
 |---|---|---|
 | Modal shell (`Modal-Main`) | **`1152×708`** sample | `width: 100%`, `max-width` from host; `min-height` content-driven; `box-sizing: border-box` |
-| Modal border | `1px` accessible | `border: 1px solid var(--color-border-accessible)` |
+| Modal border | `1px` accessible | `border: 1px solid var(--color-border-gray-neutral-base)` |
 | Modal elevation | Shadow 4 stack (4 layers) | use shadow-4 CSS variables |
 | Header title row | close aligned top; title `padding-bottom: 24px` | flex row |
 | Close hit target | icon **`16×16`** via `Icon` `variant="img"` | no CSS mask tinting for close |
@@ -172,7 +174,7 @@ Figma: **Preview Single** `27437:44151`, **Preview Multiple** `27437:44134`
 | Sections scroll | `overflow-y: auto` on sections container only | version/filter row stays fixed |
 | Divider gradient | when sections overflow and not scrolled to bottom | `linear-gradient` on **footer** top divider (`19px` above border) using overflow vertical tokens |
 | Filter trigger | **`200×32`**, `px: 16px`, `py: 6px`; caret **`10×10`** | square corners (`border-radius: 0`) |
-| List item row | thumbnail **`200×112.5`** + text column; row `gap: 16px`; `pb: 8px` | dashed `border-bottom: 1px var(--color-border-light)` |
+| List item row | thumbnail **`200×112.5`** + text column; row `gap: 16px`; `pb: 8px` | dashed `border-bottom: 1px var(--color-border-gray-neutral-light)` |
 | Thumbnail (carousel strip) | **`184×103`** per tile; inter-tile `gap: 16px`; **`flex-shrink: 0`** | selected tile `4px` brand border; default `1px` accessible |
 | Thumbnail (list) | **`200×112.5`** | same border states as carousel |
 | Carousel content (`.WhatsNew-Element-Content`) | **up to `523px`** (`27437:44146`); fills remainder after footer/header | `py: 16px` `px: 24px`; `min-height: 0`; shrinks on short viewports |
@@ -182,7 +184,7 @@ Figma: **Preview Single** `27437:44151`, **Preview Multiple** `27437:44134`
 | Caption row | numbered label **Body 1** + **`32×32`** popout icon | `justify-between` |
 | Carousel nav buttons | `chev-left` / `chev-right` **`16×16`**; padding `16px/12px` | ghost icon buttons; **`Icon` `mask`**; hidden when single image |
 | Carousel nav icon | enabled | n/a | n/a | `var(--color-icon-brand-base)` (`27437:44200`) |
-| Carousel nav icon | disabled (at ends) | n/a | n/a | `var(--color-icon-disabled)` |
+| Carousel nav icon | disabled (at ends) | n/a | n/a | `var(--color-icon-gray-disabled)` |
 | Strip trailing overlay | **`32×103`**; `position: absolute; right: 0` on strip viewport (`27437:44208`) | inner `103×32` bar, `-90deg` rotate; `linear-gradient(180deg, vertical overflow tokens)`; overflow only |
 | Footer | `border-top: 1px accessible`; `padding: 24px` | toggle left, **Close** right |
 | Primary Close button | `px: 16px`, `py: 10px` | IDS Button primary |
@@ -216,8 +218,8 @@ Figma: **Preview Single** `27437:44151`, **Preview Multiple** `27437:44134`
 | Show More text button | border-radius | `var(--corner-radius-radius-2, 2px)` | `27437:44231` | `get_design_context` on `27437:44190` |
 | Carousel nav icon button | border-radius | `var(--corner-radius-radius-2, 2px)` | `27437:44200` | `get_design_context` on `27437:44198` |
 | Scrollbar thumb | border-radius | `var(--corner-radius-radius-8, 8px)` | `27437:44110` | `get_variable_defs` on `27437:44110` |
-| List thumbnail (default) | border + content | `200×112.5`; `1px solid var(--color-border-accessible)`; photos + “Swap image” + “Learn to swap” | `27437:44174` | `get_design_context` on `27437:44174` / `27437:44168` |
-| List thumbnail (hover) | border + overlay | `4px solid var(--color-border-brand-base)` + `var(--color-background-component)` @ 80% + centered `popout-window-arrow` 32×32 | `27437:44169` | `get_design_context` on `27437:44168` |
+| List thumbnail (default) | border + content | `200×112.5`; `1px solid var(--color-border-gray-neutral-base)`; photos + “Swap image” + “Learn to swap” | `27437:44174` | `get_design_context` on `27437:44174` / `27437:44168` |
+| List thumbnail (hover) | border + overlay | `4px solid var(--color-border-brand-base)` + `var(--color-background-surface-component)` @ 80% + centered `popout-window-arrow` 32×32 | `27437:44169` | `get_design_context` on `27437:44168` |
 | List thumbnail (selected) | border | `4px solid var(--color-border-brand-base)`; content fully visible (no overlay) | `27437:44178` | `get_design_context` on `27437:44168` |
 | Thumbnail multi badge | `+N` | `var(--ui-palette-gray-500)` chip; `N = images.length - 1` when `images.length > 1` | `27437:44177` | `get_design_context` on `27437:44174` |
 
@@ -227,34 +229,34 @@ Figma: **Preview Single** `27437:44151`, **Preview Multiple** `27437:44134`
 
 | Slot | Token / Figma style | Size / line-height |
 |---|---|---|
-| Modal title | **Header 5** | `var(--font-size-header-5, 24px)` / `var(--font-line-height-line-height-32, 32px)` — `var(--color-text-neutral-strong)` |
-| Description (header) | **Body 2** | `var(--font-size-body-2, 14px)` / `20px` (Figma `1.5`) — `var(--color-text-neutral)` |
+| Modal title | **Header 5** | `var(--font-size-header-5, 24px)` / `var(--font-line-height-line-height-32, 32px)` — `var(--color-text-gray-neutral-strong)` |
+| Description (header) | **Body 2** | `var(--font-size-body-2, 14px)` / `20px` (Figma `1.5`) — `var(--color-text-gray-neutral)` |
 | Version (header, optional) | **Header 6** | `var(--font-size-header-6, 18px)` / `var(--font-line-height-line-height-25, 25px)` |
-| Filter value | **Body 2** | `14px` / `20px` — `var(--color-text-neutral)` |
-| Section header | **Body 2 Medium** | `14px` / `20px` — `var(--color-text-neutral-strong)` |
-| Description / links | **Body 2** | `14px` / `20px` — `var(--color-text-neutral)`; links `var(--color-text-link-brand-base)` / `var(--color-text-brand-strong)` |
+| Filter value | **Body 2** | `14px` / `20px` — `var(--color-text-gray-neutral)` |
+| Section header | **Body 2 Medium** | `14px` / `20px` — `var(--color-text-gray-neutral-strong)` |
+| Description / links | **Body 2** | `14px` / `20px` — `var(--color-text-gray-neutral)`; links `var(--color-text-link-brand-base)` / `var(--color-text-brand-strong)` |
 | Swap placeholder title | **Header 6** | `18px` / `25px` |
 | Swap helper copy | **Body 3** | `12px` / `18px` |
 | Caption label | **Body 1** | `16px` / `24px` |
 | Footer toggle label | **Body 2** | `14px` / `16px` (Figma sample) |
-| Close button label | **Body 2** | `14px` / `20px` — `var(--color-text-white)` |
+| Close button label | **Body 2** | `14px` / `20px` — `var(--color-text-gray-white)` |
 
 ### Colors and surfaces
 
-- `var(--color-background-component)` — modal shell, filter trigger, footer background
-- `var(--color-border-accessible)` — modal border, header/footer dividers, default thumbnail border, filter border
-- `var(--color-border-light)` — dashed list row separators
+- `var(--color-background-surface-component)` — modal shell, filter trigger, footer background
+- `var(--color-border-gray-neutral-base)` — modal border, header/footer dividers, default thumbnail border, filter border
+- `var(--color-border-gray-neutral-light)` — dashed list row separators
 - `var(--color-border-brand-base)` — selected/hover thumbnail border, inline link accents
-- `var(--color-text-neutral-strong)` — titles, section headers
-- `var(--color-text-neutral)` — body copy, filter text
+- `var(--color-text-gray-neutral-strong)` — titles, section headers
+- `var(--color-text-gray-neutral)` — body copy, filter text
 - `var(--color-text-brand-strong)` — **Show More**, tertiary actions
 - `var(--color-text-link-brand-base)` — inline and helper links
-- `var(--color-text-white)` — primary **Close** label
+- `var(--color-text-gray-white)` — primary **Close** label
 - `var(--color-icon-brand-base)` — carousel nav (enabled), expand (`popout-double`)
-- `var(--color-icon-neutral)` — close (`shape-x`), filter caret
-- `var(--color-icon-disabled)` — carousel nav disabled
-- `var(--color-background-controls-brand-base)` — primary **Close** fill
-- `var(--color-border-transparent-brand)` — primary button border
+- `var(--color-icon-gray-neutral-base)` — close (`shape-x`), filter caret
+- `var(--color-icon-gray-disabled)` — carousel nav disabled
+- `var(--color-background-controls-base)` — primary **Close** fill
+- `var(--color-border-brand-transparent-brand)` — primary button border
 - `var(--color-background-gray-lighter)` — scrollbar track
 - `var(--color-background-gray-base)` — scrollbar thumb
 - `var(--color-gradient-overflow-vertical-start)` / `var(--color-gradient-overflow-vertical-end)` — scroll/footer fade
@@ -276,13 +278,13 @@ Use the shared IDS **`Icon`** component (`shapeName` = slug under `assets/icons/
 | Slot | `shapeName` | Size | `Icon` variant | Color / notes | Figma evidence |
 |---|---|---:|---|---|---|
 | Thumbnail / hero placeholder (no `src` or broken `src`) | **`photos`** | `32×32` | **`img`** | full-color glyph; render via `Icon`; on `img` `onError` fall back to swap placeholder with `photos` | `27437:44174`, `27437:44168` |
-| List thumbnail hover overlay | **`popout-window-arrow`** | **`32×32`** | **`inline`** | two-tone: window frame `var(--color-icon-neutral)`; **arrow only** `var(--color-icon-brand-base)`; list thumbnails only | `27437:44169` |
+| List thumbnail hover overlay | **`popout-window-arrow`** | **`32×32`** | **`inline`** | two-tone: window frame `var(--color-icon-gray-neutral-base)`; **arrow only** `var(--color-icon-brand-base)`; list thumbnails only | `27437:44169` |
 | Section bookmark (default) | **`star-fav`** | `16×16` | **`img`** | `isBookmarked=false` | `27437:44182` |
 | Section bookmark (active) | **`star-fav-solid`** | `16×16` | **`img`** | `isBookmarked=true` | `27437:44182` |
-| Carousel / single preview expand | **`popout-double`** | **`32×32`** | **`inline`** | two-tone: **frame/border only** `var(--color-border-brand-base)`; inner arrows `var(--color-icon-neutral)` — do not tint arrows brand | `27437:44212` |
-| Carousel previous | **`chev-left`** | `16×16` | **`mask`** | enabled `var(--color-icon-brand-base)`; disabled `var(--color-icon-disabled)` | `27437:44200` |
+| Carousel / single preview expand | **`popout-double`** | **`32×32`** | **`inline`** | two-tone: **frame/border only** `var(--color-border-brand-base)`; inner arrows `var(--color-icon-gray-neutral-base)` — do not tint arrows brand | `27437:44212` |
+| Carousel previous | **`chev-left`** | `16×16` | **`mask`** | enabled `var(--color-icon-brand-base)`; disabled `var(--color-icon-gray-disabled)` | `27437:44200` |
 | Carousel next | **`chev-right`** | `16×16` | **`mask`** | same as previous | `27437:44213` |
-| Modal close (all layers) | **`shape-x`** | `16×16` | **`img`** | `var(--color-icon-neutral)` — **do not use mask** | header close nodes |
+| Modal close (all layers) | **`shape-x`** | `16×16` | **`img`** | `var(--color-icon-gray-neutral-base)` — **do not use mask** | header close nodes |
 
 #### Image media resolution (thumbnails + hero)
 
@@ -298,10 +300,10 @@ Register in `iconInlineRegistry` (or equivalent) — **do not** use single-color
 
 | Slug | Layer | Fill token |
 |---|---|---|
-| `popout-window-arrow` | window frame paths | `var(--color-icon-neutral)` |
+| `popout-window-arrow` | window frame paths | `var(--color-icon-gray-neutral-base)` |
 | `popout-window-arrow` | arrow polygon | `var(--color-icon-brand-base)` |
 | `popout-double` | outer frame path | `var(--color-border-brand-base)` |
-| `popout-double` | inner arrow polygons | `var(--color-icon-neutral)` |
+| `popout-double` | inner arrow polygons | `var(--color-icon-gray-neutral-base)` |
 
 Contract mirror constants: `storybook/src/spec-contracts/ids-whats-new.contract.ts` → `WHATS_NEW_ICON_*`.
 
@@ -319,24 +321,24 @@ Contract mirror constants: `storybook/src/spec-contracts/ids-whats-new.contract.
 
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Modal shell | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | n/a |
-| Close control | default | transparent | none | `var(--color-icon-neutral)` |
+| Modal shell | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | n/a |
+| Close control | default | transparent | none | `var(--color-icon-gray-neutral-base)` |
 | Close control | hover/focus-visible | transparent | focus ring per IDS | unchanged |
-| Filter trigger | default | `var(--color-background-component)` | `1px solid var(--color-border-accessible)` | `var(--color-text-neutral)` + caret `var(--color-icon-neutral)` |
+| Filter trigger | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` + caret `var(--color-icon-gray-neutral-base)` |
 | Filter option row | hover/selected | per Dropdown Single Select spec | per dropdown spec | per dropdown spec |
-| List thumbnail | default | transparent | `1px solid var(--color-border-accessible)` | **`photos`** `32×32` + swap copy |
-| List thumbnail | hover | `var(--color-background-component)` @ 80% overlay | `4px solid var(--color-border-brand-base)` | **`popout-window-arrow`** `32×32`; arrow `var(--color-icon-brand-base)` |
+| List thumbnail | default | transparent | `1px solid var(--color-border-gray-neutral-base)` | **`photos`** `32×32` + swap copy |
+| List thumbnail | hover | `var(--color-background-surface-component)` @ 80% overlay | `4px solid var(--color-border-brand-base)` | **`popout-window-arrow`** `32×32`; arrow `var(--color-icon-brand-base)` |
 | List thumbnail | selected | transparent | `4px solid var(--color-border-brand-base)` | unchanged (no hover overlay) |
 | Section title star | `isBookmarked=false` | n/a | n/a | **`star-fav`** `16×16` (`Icon` `variant="img"`) |
 | Section title star | `isBookmarked=true` | n/a | n/a | **`star-fav-solid`** `16×16` (`Icon` `variant="img"`) |
 | Close Icon | default | transparent | none | `shape-x` via `Icon` **`variant="img"`** (no mask) |
 | Show More | default | transparent | none | `var(--color-text-brand-strong)` |
 | Show More | hover | transparent | none | underline optional per link pattern |
-| Primary Close | default | `var(--color-background-controls-brand-base)` | `1px solid var(--color-border-transparent-brand)` | `var(--color-text-white)` |
+| Primary Close | default | `var(--color-background-controls-base)` | `1px solid var(--color-border-brand-transparent-brand)` | `var(--color-text-gray-white)` |
 | Toggle | off/on | per Toggle Switch spec | per Toggle Switch spec | label neutral |
 | Carousel nav | default | transparent | none | **`chev-left`** / **`chev-right`** — `Icon` **`mask`**, `var(--color-icon-brand-base)` |
-| Carousel expand | default | transparent | none | **`popout-double`** `32×32` — frame `var(--color-border-brand-base)`; arrows `var(--color-icon-neutral)` |
-| Carousel nav | disabled | transparent | none | `var(--color-icon-disabled)` |
+| Carousel expand | default | transparent | none | **`popout-double`** `32×32` — frame `var(--color-border-brand-base)`; arrows `var(--color-icon-gray-neutral-base)` |
+| Carousel nav | disabled | transparent | none | `var(--color-icon-gray-disabled)` |
 | Scrollbar thumb | default | `var(--color-background-gray-base)` | none | n/a |
 
 ## States (Dark Theme)
@@ -410,7 +412,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 | Model | Role | Entry |
 |---|---|---|
-| **B — Child components (canonical)** | **Primary public API** for codegen and product hosts | `<WhatsNewRoot>` + `WhatsNewSection` / `WhatsNewThumbnail` / `WhatsNewDescription` / `WhatsNewImages` / `WhatsNewImage` |
+| **B — Child components (canonical)** | **Primary public API** for codegen and product hosts | `<WhatsNew>` + `WhatsNewSection` / `WhatsNewThumbnail` / `WhatsNewDescription` / `WhatsNewImages` / `WhatsNewImage` |
 | **A — Data props (convenience)** | CMS/JSON demos, Storybook shortcuts only | `sections?: WhatsNewSection[]` on root |
 
 **Codegen rule:** Implement and document **Model B** as the exported compound API (`IdsWhatsNew.Section`, `.Thumbnail`, `.Description`, `.Images`, `.Image`, …). Model A may exist as an internal normalizer or optional convenience wrapper; generated usage examples and tests must use child composition, not `sections[]`.
@@ -427,11 +429,11 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 ### Child component API (composition model B)
 
-Framework names may vary (`WhatsNew.Section`, `ids-whats-new-section`, etc.); **slot semantics are fixed**:
+Framework names may vary (`WhatsNew.Section`, `IdsWhatsNewSection`, etc.); **slot semantics are fixed**. DOM identity is Ids camelCase (`data-ids="IdsWhatsNewSection"`), not kebab `ids-whats-new-section` or Base UI `data-slot`.
 
 ```typescript
 // --- Main shell ---
-interface WhatsNewRootProps {
+interface WhatsNewProps {
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   dontShowAgain?: boolean;
@@ -509,7 +511,7 @@ interface WhatsNewImageProps {
 ### JSX composition example (model B)
 
 ```tsx
-<WhatsNewRoot open onOpenChange={setOpen} versionNumber="1.11.11.1">
+<WhatsNew open onOpenChange={setOpen} versionNumber="1.11.11.1">
   <WhatsNewHeader>
     <WhatsNewTitle>What's New</WhatsNewTitle>
     <WhatsNewCloseButton />
@@ -546,7 +548,7 @@ interface WhatsNewImageProps {
   </WhatsNewBody>
 
   <WhatsNewFooter />
-</WhatsNewRoot>
+</WhatsNew>
 ```
 
 `WhatsNewCarouselModal` / `WhatsNewSinglePreviewModal` are **internal** — hosts do not mount them; root opens them from thumbnail / expand interactions.
@@ -661,7 +663,7 @@ Exported compound components (names may be prefixed per framework, e.g. `IdsWhat
 
 | Export | Role |
 |---|---|
-| `WhatsNewRoot` / `IdsWhatsNew` | Main dialog + stack state |
+| `WhatsNew` / `IdsWhatsNew` | Main dialog + stack state |
 | `WhatsNewSection` | Repeatable list row |
 | `WhatsNewThumbnail` | List tile (`200×112.5`); opens carousel |
 | `WhatsNewSectionHeader` | Bookmark + title row |
@@ -673,7 +675,7 @@ Exported compound components (names may be prefixed per framework, e.g. `IdsWhat
 | `WhatsNewImage` | Single carousel slide (`src` or `children`) |
 | `WhatsNewHeader`, `WhatsNewTitle`, `WhatsNewSummary`, `WhatsNewBody`, `WhatsNewSectionsScroll`, `WhatsNewFooter` | Optional shell slots; root props may substitute defaults |
 
-Reference implementation: `storybook/src/components/IdsWhatsNew.tsx` + `IdsWhatsNew.compose.ts` (child walker).
+Reference implementation: `lib/react/ids/whats-new/IdsWhatsNew.tsx` (root is `WhatsNew`, not `WhatsNewRoot`). Selectors are Ids camelCase (`data-ids="IdsWhatsNew"`, `IdsWhatsNewHeader`, …).
 
 ### Deterministic structure
 
@@ -681,7 +683,7 @@ Reference implementation: `storybook/src/components/IdsWhatsNew.tsx` + `IdsWhats
 
 **Main (list):**
 
-1. `WhatsNewRoot`
+1. `WhatsNew`
 2. `WhatsNewHeader` → `WhatsNewTitle` + `WhatsNewCloseButton`
 3. `WhatsNewSummary`
 4. `WhatsNewBody` → `WhatsNewVersionFilterRow` (`WhatsNewVersion?` + `WhatsNewFilter`) → `WhatsNewSectionsScroll` → `WhatsNewSection[]`
@@ -711,15 +713,15 @@ Reference implementation: `storybook/src/components/IdsWhatsNew.tsx` + `IdsWhats
 
 | Slot | Contract |
 |---|---|
-| Modal shell | `background: var(--color-background-component)`; `border: 1px solid var(--color-border-accessible)`; shadow-4; square corners |
-| Header title | Header 5 / `var(--color-text-neutral-strong)` |
+| Modal shell | `background: var(--color-background-surface-component)`; `border: 1px solid var(--color-border-gray-neutral-base)`; shadow-4; square corners |
+| Header title | Header 5 / `var(--color-text-gray-neutral-strong)` |
 | Close Icon | `Icon` `shapeName="shape-x"` **`variant="img"`** `16×16` — **do not use mask** |
 | Expand control | `Icon` `shapeName="popout-double"` **`variant="inline"`** `32×32`; two-tone per table above |
 | Carousel nav | `Icon` `shapeName="chev-left"` / `"chev-right"` **`variant="mask"`** `16×16` |
 | Filter trigger | `200×32`, square corners, Body 2 |
 | Section thumbnail | `200×112.5` list / `184×103` strip; borders per state table |
 | Footer Close | IDS Button primary; `border-radius: var(--corner-radius-radius-2)` |
-| Dashed section rule | `border-bottom: 1px dashed var(--color-border-light)` |
+| Dashed section rule | `border-bottom: 1px dashed var(--color-border-gray-neutral-light)` |
 
 ### Behavior contract
 
@@ -783,6 +785,7 @@ Resolve from `assets/icons/<slug>.svg` via project `Icon` component. Do **not** 
 - [ ] Icons: `photos` `32×32`; `popout-window-arrow` hover (brand arrow only); `popout-double` expand (brand frame only); `chev-left`/`chev-right` nav
 - [ ] Strip trailing `32×103` viewport overlay (`27437:44208`) on overflow only; gradient via overflow vertical tokens + `corner-radius-radius-none`
 - [ ] Semantic tokens only; slot geometry cites live Figma nodes
+- [ ] Root slot is `WhatsNew` — not `WhatsNewRoot`. Selectors are Ids camelCase (`data-ids="IdsWhatsNew"`, `IdsWhatsNewHeader`, …) not Base UI `data-slot` / kebab `ids-whats-new`
 - [ ] **Canonical compound API exported** (`WhatsNewSection`, `WhatsNewThumbnail`, `WhatsNewDescription`, `WhatsNewImages`, `WhatsNewImage`)
 - [ ] Generated examples / Storybook primary story use **child composition**, not `sections[]`
 - [ ] `WhatsNewThumbnail` / `WhatsNewDescription` / `WhatsNewImage` slots wired for custom `children` overrides
@@ -797,6 +800,6 @@ Resolve from `assets/icons/<slug>.svg` via project `Icon` component. Do **not** 
 | Elements | `27437:44190` (list content), `27437:44198` (preview content), `27437:44182` (section header), `27437:44220` (filter), `27437:44168` (thumbnail states) |
 | Map entry | `data/component-figma-map.json` → `Whats New` |
 | Design spec path | `components/ids/whats-new/design-spec.md` |
-| Reference implementation | `storybook/src/components/IdsWhatsNew.tsx` (uses `storybook/src/components/IdsModal.tsx`) |
+| Reference implementation | `lib/react/ids/whats-new/IdsWhatsNew.tsx` (slots + `IdsModal` host); Storybook reference `storybook/src/components/IdsWhatsNew.tsx` |
 | Contract mirror | `storybook/src/spec-contracts/ids-whats-new.contract.ts` |
 | Verification | Figma MCP — session **2026-07-08** |

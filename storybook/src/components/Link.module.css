@@ -20,7 +20,7 @@
 }
 
 .link[data-type="dark-bg"] {
-  color: var(--color-text-white);
+  color: var(--color-text-gray-white);
 }
 
 .link:hover:not([data-disabled]),
@@ -69,7 +69,7 @@
 
 .link[data-type="dark-bg"]:focus-visible:not([data-disabled]),
 .link[data-type="dark-bg"][data-demo-state="focus-visible"]:not([data-disabled]) {
-  box-shadow: 0 0 0 1px var(--color-border-white);
+  box-shadow: 0 0 0 1px var(--color-border-gray-white);
 }
 
 .link[data-type="standalone"]:focus-visible:not([data-disabled]),

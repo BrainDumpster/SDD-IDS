@@ -21,21 +21,21 @@
 - Minimum width: 200px (expandable)
 ## Tokens
 ### Colors
-- White: `var(--color-icon-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Disabled text: `var(--color-text-disabled)` = #757575
-- Accessible border: `var(--color-border-accessible)` = #757575
+- White: `var(--color-icon-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Disabled text: `var(--color-text-gray-disabled)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
-- Strong border: `var(--color-border-strong)` = #252525
+- Strong border: `var(--color-border-gray-neutral-strong)` = #252525
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Accessible icon: `var(--color-icon-accessible)` = #757575
+- Accessible icon: `var(--color-icon-gray-neutral-accessible)` = #757575
 
 ### Surfaces
-- Surface dark: `var(--color-background-surface-1)` = #111619
+- Surface dark: `var(--color-background-surface-primary)` = #111619
 
 ### UI Palettes
 - Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
@@ -52,13 +52,13 @@
 ## States (Light Theme)
 | State | Background | Border | Text | Icons |
 |---|---|---|---|---|
-| Default | `var(--color-background-component)` (#ffffff) | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-accessible)` (#757575) |
-| Hover | `var(--color-background-component)` (#ffffff) | `var(--color-border-strong)` (#252525) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-accessible)` (#757575) |
-| Focus | `var(--color-background-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
-| Disabled | `var(--color-background-component)` (#ffffff) | `var(--color-border-disabled)` (#757575) | `var(--color-text-disabled)` (#757575) | `var(--color-icon-accessible)` (#757575) |
+| Default | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-accessible)` (#757575) |
+| Hover | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-strong)` (#252525) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-gray-neutral-accessible)` (#757575) |
+| Focus | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-text-gray-neutral)` (#4d4d4d) | `var(--color-icon-brand-base)` (#0076ce) |
+| Disabled | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-disabled)` (#757575) | `var(--color-text-gray-disabled)` (#757575) | `var(--color-icon-gray-neutral-accessible)` (#757575) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#111619)
+- Surface tokens: `var(--color-background-surface-primary)` (#111619)
 - Text and border colors remain consistent via semantic variables
 - Disabled state uses gray tokens for dark theme compatibility
 ## Interactions

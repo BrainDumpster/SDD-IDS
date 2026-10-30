@@ -1,0 +1,43 @@
+<nav
+  class="ids-main-menu-left"
+  [class.ids-main-menu-left--expanded]="railExpanded"
+  [class.ids-main-menu-left--collapsed]="!railExpanded"
+  [attr.aria-label]="ariaLabel"
+>
+  <div class="ids-main-menu-left__content">
+    <ng-content />
+    @if (!useComposition) {
+      <ids-main-menu-left-items-adapter
+        [items]="legacyItems"
+        [railExpanded]="railExpanded"
+        [forceStates]="forceStates"
+        [selectedKey]="selectedKey"
+        [expandedChildrenKey]="expandedGroupId"
+        [selectedSecondaryParentKey]="selectedSecondaryParentKey"
+        [selectedSecondaryKey]="selectedSecondaryKey"
+        (selectedKeyChange)="selectedKey = $event"
+        (expandedChildrenKeyChange)="expandedGroupId = $event"
+        (selectedSecondaryParentKeyChange)="selectedSecondaryParentKey = $event"
+        (selectedSecondaryKeyChange)="selectedSecondaryKey = $event"
+        (navigate)="navigate.emit($event)"
+        (selectedChange)="selectedChange.emit($event)"
+      />
+    }
+  </div>
+
+  <div class="ids-main-menu-left__bottom-toggle">
+    <button
+      type="button"
+      class="ids-main-menu-left__bottom-toggle-button"
+      [attr.aria-label]="railExpanded ? 'Collapse navigation' : 'Expand navigation'"
+      (click)="onToggleExpanded()"
+    >
+      <ids-icon
+        className="ids-main-menu-left__bottom-toggle-icon"
+        [shapeName]="railExpanded ? 'double-chev-left' : 'double-chev-right'"
+        variant="mask"
+        [size]="16"
+      />
+    </button>
+  </div>
+</nav>

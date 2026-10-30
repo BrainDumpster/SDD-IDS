@@ -1,0 +1,536 @@
+/**
+ * IDS Alert styles — derived from components/ids/alert/design-spec.md
+ * Theme: components/ids-theme.css
+ */
+
+/* ========== Shared link / focus utilities ========== */
+.ids-alert-global-link,
+.ids-alert-global-link-button,
+.ids-alert-inline-link,
+.ids-alert-inline-link-button {
+  padding: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.ids-alert-global-link:focus-visible,
+.ids-alert-global-link-button:focus-visible,
+.ids-alert-inline-link:focus-visible,
+.ids-alert-inline-link-button:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+/* ========== Global (application banner) ========== */
+.ids-alert-global {
+  position: relative;
+  width: 100%;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding-left: 0;
+  border: var(--border-width-border-1) solid transparent;
+  font-family: inherit;
+}
+
+.ids-alert-global:not([data-carousel="true"]) {
+  padding-left: var(--padding-padding-20);
+}
+
+.ids-alert-global[data-carousel="true"] .ids-alert-global-content {
+  padding-left: 148px;
+}
+
+.ids-alert-global-content {
+  min-width: 0;
+  flex: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-8);
+  padding-block: var(--padding-padding-10);
+}
+
+.ids-alert-global-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: var(--spacing-space-16);
+  padding-inline: var(--padding-padding-16);
+  flex-shrink: 0;
+}
+
+.ids-alert-global-actions[data-has-action="false"] {
+  align-items: flex-start;
+  padding-block: 14px;
+}
+
+.ids-alert-global-actions[data-has-action="true"] {
+  align-items: center;
+  padding-block: var(--padding-padding-8);
+}
+
+.ids-alert-global-icon-wrap {
+  display: flex;
+  align-items: center;
+  padding-top: 2px;
+}
+
+.ids-alert-global-icon {
+  width: 16px;
+  height: 16px;
+  display: inline-block;
+  object-fit: contain;
+}
+
+.ids-alert-global-message {
+  margin: 0;
+  min-width: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: inherit;
+}
+
+.ids-alert-global-link,
+.ids-alert-global-link-button {
+  color: inherit;
+  line-height: inherit;
+}
+
+.ids-alert-global-action {
+  min-height: 24px;
+  padding: 2px 16px;
+  border: var(--border-width-border-1) solid currentColor;
+  border-radius: var(--alert-action-control-radius, var(--corner-radius-radius-2));
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  font-weight: 400;
+  line-height: var(--font-line-height-line-height-20);
+  cursor: pointer;
+}
+
+.ids-alert-global-dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 10px;
+  margin: -10px;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ids-alert-global-carousel-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+  flex-shrink: 0;
+}
+
+.ids-alert-global-dismiss-icon,
+.ids-alert-global-carousel-chevron {
+  width: 12px;
+  height: 12px;
+  display: inline-block;
+  object-fit: contain;
+}
+
+.ids-alert-global-dismiss:focus-visible,
+.ids-alert-global-carousel-button:focus-visible,
+.ids-alert-global-action:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.ids-alert-global-carousel-rail {
+  position: absolute;
+  top: -1px;
+  bottom: -1px;
+  left: -1px;
+  width: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  padding: var(--padding-padding-10) var(--padding-padding-14);
+  border: var(--border-width-border-1) solid;
+  border-color: inherit;
+}
+
+.ids-alert-global-carousel-count {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-text-gray-white);
+  white-space: nowrap;
+}
+
+.ids-alert-global[data-severity="critical"] {
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-critical-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
+}
+
+.ids-alert-global[data-severity="warning-major"] {
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-alerting-major-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-major-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
+}
+
+.ids-alert-global[data-severity="warning-minor"] {
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+  color: var(--color-text-gray-black);
+  --alert-icon-color: var(--color-icon-gray-black);
+  --icon-contrast-color: var(--color-icon-gray-black);
+}
+
+.ids-alert-global[data-severity="informational"] {
+  background: var(--color-background-alerting-info-1, var(--color-background-alerting-info-base));
+  border-color: var(--color-border-alerting-info-transparent-base);
+  color: var(--color-text-gray-white);
+  --alert-icon-color: var(--color-icon-alerting-info-base);
+  --icon-contrast-color: var(--color-icon-gray-white);
+}
+
+.ids-alert-global[data-severity="warning-major"] .ids-alert-global-dismiss,
+.ids-alert-global[data-severity="warning-minor"] .ids-alert-global-dismiss {
+  color: var(--color-icon-gray-black);
+}
+
+.ids-alert-global[data-severity="critical"] .ids-alert-global-dismiss,
+.ids-alert-global[data-severity="informational"] .ids-alert-global-dismiss {
+  color: var(--color-icon-gray-white);
+}
+
+.ids-alert-global[data-severity="critical"] .ids-alert-global-action,
+.ids-alert-global[data-severity="informational"] .ids-alert-global-action {
+  border-color: var(--color-border-gray-white);
+  color: var(--color-text-gray-white);
+}
+
+.ids-alert-global[data-severity="warning-major"] .ids-alert-global-action,
+.ids-alert-global[data-severity="warning-minor"] .ids-alert-global-action {
+  border-color: var(--color-border-gray-black);
+  color: var(--color-text-gray-black);
+}
+
+.ids-alert-global[data-severity="critical"] .ids-alert-global-carousel-rail {
+  background: var(--color-background-alerting-critical-strong);
+}
+
+.ids-alert-global[data-severity="warning-major"] .ids-alert-global-carousel-rail {
+  background: var(--color-background-alerting-major-strong);
+}
+
+.ids-alert-global[data-severity="warning-minor"] .ids-alert-global-carousel-rail {
+  background: var(--color-background-alerting-minor-strong);
+}
+
+.ids-alert-global[data-severity="informational"] .ids-alert-global-carousel-rail {
+  background: var(--color-background-alerting-info-strong);
+}
+
+.ids-alert-global[data-severity="critical"] .ids-alert-global-carousel-chevron,
+.ids-alert-global[data-severity="warning-major"] .ids-alert-global-carousel-chevron,
+.ids-alert-global[data-severity="informational"] .ids-alert-global-carousel-chevron {
+  filter: brightness(0) invert(1);
+}
+
+.ids-alert-global[data-severity="warning-minor"] .ids-alert-global-carousel-chevron {
+  filter: brightness(0);
+}
+
+.ids-alert-global[data-severity="warning-minor"] .ids-alert-global-carousel-count {
+  color: var(--color-text-gray-black);
+}
+
+/* ========== Inline (Figma InlineAlert — light “tint + inset rail”) ========== */
+.ids-alert-inline {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-space-12);
+  width: 100%;
+  box-sizing: border-box;
+  min-height: var(--scale-40);
+  padding-left: var(--padding-padding-20);
+  border: var(--border-width-border-1) solid transparent;
+  border-radius: 0;
+  font-family: inherit;
+}
+
+/* Detailed + title: action lives in the title row; text padding-right (16) is the only
+   action↔dismiss gap (Figma `11946:230988`). Root gap must stay 0 so spacing is not 28px. */
+.ids-alert-inline[data-action-in-title="true"] {
+  gap: 0;
+}
+
+/* Rail sits on top of the border via ::before (box-shadow inset renders behind border,
+   which is transparent in light mode but opaque in dark mode). */
+.ids-alert-inline::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  width: 4px;
+  /* --inline-rail is set per severity; fallbacks cover numbered alerting token names (info-1 / success-1). */
+  background: var(
+    --inline-rail,
+    var(--color-background-alerting-info-base, var(--color-background-alerting-info-1))
+  );
+  pointer-events: none;
+}
+
+.ids-alert-inline-main {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  align-items: flex-start;
+  gap: var(--spacing-space-8);
+}
+
+.ids-alert-inline[data-density="compact"] .ids-alert-inline-main {
+  padding-block: var(--padding-padding-10);
+  padding-right: var(--padding-padding-8);
+}
+
+.ids-alert-inline[data-density="detailed"] .ids-alert-inline-main {
+  padding-block: var(--padding-padding-12);
+}
+
+.ids-alert-inline[data-density="compact"] .ids-alert-inline-icon-wrap {
+  padding-top: var(--padding-padding-2);
+}
+
+.ids-alert-inline[data-density="detailed"] .ids-alert-inline-icon-wrap {
+  /* Align 16px icon to the visual center of 24px title line box. */
+  padding-top: var(--padding-padding-4);
+}
+
+.ids-alert-inline-icon-wrap {
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+}
+
+.ids-alert-inline-icon {
+  width: var(--scale-16);
+  height: var(--scale-16);
+  display: inline-block;
+  object-fit: contain;
+  color: var(--inline-alert-icon);
+}
+
+.ids-alert-inline-text {
+  min-width: 0;
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  /* Figma detailed `11946:230988`: title row (24) then message at y=24 — no extra gap */
+  gap: 0;
+  padding-right: var(--padding-padding-16);
+}
+
+.ids-alert-inline-title-row {
+  display: flex;
+  align-items: flex-start;
+  gap: 4px;
+  width: 100%;
+}
+
+.ids-alert-inline-title-row .ids-alert-inline-title {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.ids-alert-inline-title-row .ids-alert-inline-action {
+  flex-shrink: 0;
+}
+
+.ids-alert-inline-title {
+  margin: 0;
+  font-size: var(--font-size-body-1);
+  line-height: var(--font-line-height-line-height-24);
+  font-weight: 400;
+  color: var(--color-static-gray-900);
+}
+
+.ids-alert-inline-message {
+  margin: 0;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  color: var(--color-static-gray-900);
+}
+
+.ids-alert-inline-link,
+.ids-alert-inline-link-button {
+  color: var(--color-static-brand-500);
+  font-size: inherit;
+  line-height: inherit;
+  font-weight: 400;
+}
+
+.ids-alert-inline-link-button {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.ids-alert-inline-trailing {
+  display: flex;
+  flex-shrink: 0;
+  align-items: flex-start;
+  justify-content: flex-end;
+  /* Figma compact `11946:230538` / detailed `42903:139032`: 16px between action + dismiss */
+  gap: var(--spacing-space-16);
+}
+
+.ids-alert-inline[data-density="compact"] .ids-alert-inline-trailing {
+  align-items: center;
+  box-sizing: border-box;
+  height: var(--scale-40);
+  padding: var(--padding-padding-8) var(--padding-padding-16);
+}
+
+.ids-alert-inline[data-density="detailed"] .ids-alert-inline-trailing {
+  align-items: flex-start;
+  box-sizing: border-box;
+  padding: var(--padding-padding-16) 17px var(--padding-padding-16) 0;
+}
+
+/* Figma Close frame `41757:42773`: height 44 when trailing is dismiss-only (action in title row) */
+.ids-alert-inline[data-density="detailed"][data-action-in-title="true"] .ids-alert-inline-trailing,
+.ids-alert-inline[data-density="detailed"] .ids-alert-inline-trailing[data-has-action="false"] {
+  height: 44px;
+}
+
+.ids-alert-inline[data-density="detailed"] .ids-alert-inline-trailing .ids-alert-inline-action {
+  /* Align action top with content row padding-block (12px); close (x) stays at trailing 16px inset */
+  margin-top: calc(var(--padding-padding-12) - var(--padding-padding-16));
+}
+
+.ids-alert-inline[data-action-in-title="true"] .ids-alert-inline-trailing .ids-alert-inline-action {
+  margin-top: 0;
+}
+
+.ids-alert-inline-action {
+  box-sizing: border-box;
+  min-height: 24px;
+  padding: var(--padding-padding-2) var(--padding-padding-16);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--alert-action-control-radius, var(--corner-radius-radius-2));
+  background: transparent;
+  color: var(--color-text-brand-strong);
+  font: inherit;
+  font-weight: 400;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.ids-alert-inline-dismiss {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  border: none;
+  background: transparent;
+  color: var(--color-icon-gray-black);
+  cursor: pointer;
+  padding: var(--padding-padding-10);
+  margin: calc(-1 * var(--padding-padding-10));
+}
+
+.ids-alert-inline-dismiss-icon {
+  width: var(--scale-12);
+  height: var(--scale-12);
+  display: block;
+  object-fit: contain;
+}
+
+.ids-alert-inline-dismiss:focus-visible,
+.ids-alert-inline-action:focus-visible {
+  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
+  outline-offset: 1px;
+}
+
+.ids-alert-inline--compact {
+  min-height: var(--scale-40);
+}
+
+.ids-alert-inline--detailed {
+  /* Figma detailed row height (sample frame); width is container-driven */
+  min-height: 68px;
+}
+
+.ids-alert-inline[data-severity="informational"] {
+  --inline-alert-icon: var(--color-icon-alerting-info-base, var(--color-icon-alerting-info-1));
+  --inline-rail: var(--color-background-alerting-info-base, var(--color-background-alerting-info-1));
+  background: var(--color-background-alerting-info-light);
+  border-color: var(--color-border-alerting-info-base-transparent);
+}
+
+.ids-alert-inline[data-severity="success"] {
+  --inline-alert-icon: var(--color-icon-alerting-success-base, var(--color-icon-alerting-success-1));
+  --inline-rail: var(--color-background-alerting-success-base, var(--color-background-alerting-success-1));
+  background: var(--color-background-alerting-success-light);
+  border-color: var(--color-border-alerting-success-base-transparent);
+}
+
+/* Warning-minor: 4px rail = solid minor fill + 1px inner edge (Figma warning-accessible stroke). */
+.ids-alert-inline[data-severity="warning-minor"] {
+  --inline-alert-icon: var(--color-icon-alerting-minor-base);
+  --inline-rail: var(--color-background-alerting-minor-base);
+  background: var(--color-background-alerting-minor-light);
+  border-color: var(--color-border-alerting-minor-base);
+}
+
+.ids-alert-inline[data-severity="warning-minor"]::before {
+  content: "";
+  position: absolute;
+  left: -1px;
+  top: -1px;
+  bottom: -1px;
+  width: 4px;
+  background: var(--color-background-alerting-minor-base);
+  border: 1px solid var(--color-border-alerting-warning-accessible, var(--color-border-alerting-minor-minor));
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.ids-alert-inline[data-severity="warning-major"] {
+  --inline-alert-icon: var(--color-icon-alerting-major-base);
+  --inline-rail: var(--color-background-alerting-major-base);
+  background: var(--color-background-alerting-major-light);
+  border-color: var(--color-border-alerting-major-base-transparent);
+}
+
+.ids-alert-inline[data-severity="critical"] {
+  --inline-alert-icon: var(--color-icon-alerting-critical-base);
+  --inline-rail: var(--color-background-alerting-critical-base);
+  background: var(--color-background-alerting-critical-light);
+  border-color: var(--color-border-alerting-critical-base-transparent);
+}

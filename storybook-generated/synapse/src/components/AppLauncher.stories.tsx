@@ -30,7 +30,7 @@ const twoProductArgs = {
 };
 
 const meta: Meta<typeof SynapseAppLauncher> = {
-  title: "Spec Generated/Synapse/App Launcher",
+  title: "Components/Synapse/App Launcher",
   component: SynapseAppLauncher,
   parameters: {
     layout: "centered",

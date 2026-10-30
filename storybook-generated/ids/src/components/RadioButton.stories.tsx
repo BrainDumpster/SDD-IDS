@@ -40,7 +40,7 @@ const sharedRadioStoryStyles = `
     text-transform: uppercase;
     margin: 0;
     opacity: 0.72;
-    border-bottom: 1px solid var(--color-border-accessible, #757575);
+    border-bottom: 1px solid var(--color-border-gray-neutral-base, #757575);
     padding-bottom: 8px;
   }
   .sbHarness {
@@ -66,7 +66,7 @@ const sharedRadioStoryStyles = `
     text-transform: uppercase;
     opacity: 0.72;
     padding-bottom: 6px;
-    border-bottom: 1px solid var(--color-border-accessible, #757575);
+    border-bottom: 1px solid var(--color-border-gray-neutral-base, #757575);
   }
   .sbHarnessTitle {
     font-size: 12px;
@@ -90,7 +90,7 @@ const sharedRadioStoryStyles = `
   .sbHarnessFull {
     grid-column: 1 / -1;
     padding-top: 8px;
-    border-top: 1px solid var(--color-border-accessible, #757575);
+    border-top: 1px solid var(--color-border-gray-neutral-base, #757575);
     margin-top: 4px;
   }
   .sbHarnessFullTitle {
@@ -106,7 +106,7 @@ const sharedRadioStoryStyles = `
 `;
 
 const meta: Meta<typeof IdsRadioButton> = {
-  title: "Spec Generated/IDS/Radio Button",
+  title: "Components/IDS/Radio Button",
   component: IdsRadioButton,
   parameters: { layout: "padded" },
   decorators: [

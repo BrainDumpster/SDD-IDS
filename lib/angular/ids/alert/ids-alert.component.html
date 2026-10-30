@@ -1,0 +1,179 @@
+@if (!dismissed) {
+  @if (isGlobal) {
+    <section
+      class="ids-alert ids-alert--global"
+      [attr.data-severity]="severity"
+      [attr.data-carousel]="showCarousel ? 'true' : 'false'"
+      role="alert"
+      aria-live="assertive"
+    >
+      @if (showCarousel && carousel) {
+        <div class="ids-alert__carousel-rail">
+          <button
+            type="button"
+            class="ids-alert__carousel-button"
+            aria-label="Previous alert"
+            (click)="carouselPrevious.emit()"
+          >
+            <ids-icon shape="chev-left-16" variant="img" [size]="12" className="ids-alert__carousel-chevron" />
+          </button>
+          <span class="ids-alert__carousel-count">{{ carouselCounter }}</span>
+          <button
+            type="button"
+            class="ids-alert__carousel-button"
+            aria-label="Next alert"
+            (click)="carouselNext.emit()"
+          >
+            <ids-icon shape="chev-right-16" variant="img" [size]="12" className="ids-alert__carousel-chevron" />
+          </button>
+        </div>
+      }
+
+      <div class="ids-alert__global-content">
+        <ids-icon
+          [shape]="statusIcon.shape"
+          [variant]="statusIcon.variant"
+          [color]="statusIcon.color"
+          [size]="16"
+          className="ids-alert__global-icon"
+        />
+        <p class="ids-alert__global-message">
+          {{ resolvedMessage }}
+          @if (showLink) {
+            @if (linkSlot) {
+              <ng-content select="ids-alert-link" />
+            } @else if (resolvedLink; as linkRef) {
+              @if (linkRef.href) {
+                <a
+                  class="ids-alert__link"
+                  [href]="linkRef.href"
+                  (click)="onLinkActivate($event)"
+                >
+                  {{ linkRef.label }}
+                </a>
+              } @else {
+                <button
+                  type="button"
+                  class="ids-alert__link-button"
+                  (click)="onLinkActivate($event)"
+                >
+                  {{ linkRef.label }}
+                </button>
+              }
+            }
+          }
+        </p>
+      </div>
+
+      <div class="ids-alert__global-actions" [attr.data-has-action]="showAction ? 'true' : 'false'">
+        @if (showAction) {
+          <button type="button" class="ids-alert__global-action" (click)="action.emit()">
+            {{ resolvedActionLabel }}
+          </button>
+        }
+        @if (showDismissGlobal) {
+          <button
+            type="button"
+            class="ids-alert__global-dismiss"
+            aria-label="Dismiss alert"
+            (click)="onDismissClick()"
+          >
+            <ids-icon shape="shape-x" variant="img" [size]="12" className="ids-alert__global-dismiss-icon" />
+          </button>
+        }
+      </div>
+    </section>
+  } @else {
+    <div
+      class="ids-alert ids-alert--inline"
+      [class.ids-alert--inline-compact]="density === 'compact'"
+      [class.ids-alert--inline-detailed]="density === 'detailed'"
+      [attr.data-severity]="severity"
+      [attr.data-density]="density"
+      [attr.data-action-in-title]="showActionInTitleRow ? 'true' : 'false'"
+      role="alert"
+    >
+      <div class="ids-alert__inline-main">
+        <span class="ids-alert__inline-icon-wrap">
+          <ids-icon
+            [shape]="statusIcon.shape"
+            [variant]="statusIcon.variant"
+            [color]="statusIcon.color"
+            [size]="16"
+            className="ids-alert__inline-icon"
+          />
+        </span>
+        <div class="ids-alert__inline-text">
+          @if (showTitleRow) {
+            <div class="ids-alert__title-row">
+              @if (hasTitleSlot) {
+                <p class="ids-alert__inline-title">{{ resolvedTitle }}</p>
+              } @else {
+                <p class="ids-alert__inline-title">{{ title }}</p>
+              }
+              <button type="button" class="ids-alert__inline-action" (click)="action.emit()">
+                {{ resolvedActionLabel }}
+              </button>
+            </div>
+          } @else if (showTitle) {
+            @if (hasTitleSlot) {
+              <p class="ids-alert__inline-title">{{ resolvedTitle }}</p>
+            } @else {
+              <p class="ids-alert__inline-title">{{ title }}</p>
+            }
+          }
+
+          <p class="ids-alert__inline-message">
+            {{ resolvedMessage }}
+            @if (showLink && !linkSlot && resolvedLink; as linkRef) {
+              @if (linkRef.href) {
+                <a
+                  class="ids-alert__inline-link"
+                  [href]="linkRef.href"
+                  (click)="onLinkActivate($event)"
+                >
+                  {{ linkRef.label }}
+                </a>
+              } @else {
+                <button
+                  type="button"
+                  class="ids-alert__inline-link-button"
+                  (click)="onLinkActivate($event)"
+                >
+                  {{ linkRef.label }}
+                </button>
+              }
+            }
+          </p>
+
+          @if (showLink && linkSlot) {
+            <ng-content select="ids-alert-link" />
+          }
+        </div>
+      </div>
+
+      @if (showTrailing) {
+        <div
+          class="ids-alert__inline-trailing"
+          [attr.data-has-action]="showActionInTrailing ? 'true' : 'false'"
+        >
+          @if (showActionInTrailing) {
+            <button type="button" class="ids-alert__inline-action" (click)="action.emit()">
+              {{ resolvedActionLabel }}
+            </button>
+          }
+          @if (showDismissInline) {
+            <button
+              type="button"
+              class="ids-alert__inline-dismiss"
+              aria-label="Dismiss alert"
+              (click)="onDismissClick()"
+            >
+              <ids-icon shape="shape-x" variant="img" [size]="12" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+  }
+}

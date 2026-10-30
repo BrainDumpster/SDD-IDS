@@ -38,10 +38,10 @@ const DESIGN_SPEC_PATH = "{DESIGN_SPEC_PATH}";
 
 const baseStepContentStyle = {{
   border: "1px solid var(--color-border-brand-base)",
-  background: "var(--color-background-brand-lighter)",
+  background: "var(--color-background-brand-lighter-slate)",
   padding: 16,
   minHeight: 120,
-  color: "var(--color-text-neutral)",
+  color: "var(--color-text-gray-neutral)",
 }} as const;
 
 const meta: Meta<typeof IdsWizard> = {{
@@ -94,7 +94,7 @@ export const SpecAccurateDesign: Story = {{
           onNext={{(evt) => setLastEvent(`next ${{evt.stepCode}}`)}}
           onFinish={{(evt) => setLastEvent(`finish ${{evt.stepCode}}`)}}
         />
-        <p style={{{{ marginTop: 16, color: "var(--color-text-neutral-strong)" }}}}>
+        <p style={{{{ marginTop: 16, color: "var(--color-text-gray-neutral-strong)" }}}}>
           Last event: {{lastEvent}}
         </p>
       </div>

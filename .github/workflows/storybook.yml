@@ -1,0 +1,148 @@
+name: Build and Publish Storybook Preview Environments
+
+on:
+  push:
+    branches:
+      - master      
+  pull_request:
+    types: [opened, synchronize]
+
+# Core permissions required for official Pages deployment and PR commenting
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  pull-requests: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24 
+          cache: 'npm'
+          # Caching configuration can be adjusted or repeated if paths share dependencies
+          cache-dependency-path: |
+            storybook/package-lock.json
+            storybook-angular/package-lock.json
+
+      # --- 1. BUILD REACT STORYBOOK ---
+      - name: Install React dependencies
+        working-directory: ./storybook
+        run: npm ci
+
+      - name: Build React Storybook
+        working-directory: ./storybook
+        env:
+          CI: true
+        run: npm run build
+
+      # --- 2. BUILD ANGULAR STORYBOOK ---
+      - name: Install Angular dependencies
+        working-directory: ./storybook-angular
+        run: npm ci
+
+      - name: Build Angular Storybook
+        working-directory: ./storybook-angular
+        env:
+          CI: true
+        run: npm run build
+
+      # --- 3. MERGE OUTPUTS INTO A UNIFIED STRUCTURE ---
+      - name: Stage Combined Public Site
+        run: |
+          mkdir -p public-site
+          
+          # Move built files to explicit subfolders
+          cp -r storybook/storybook-static public-site/react
+          cp -r storybook-angular/storybook-static public-site/angular
+
+          # Shared assets once at site root (both Storybooks resolve via idsAssetUrl):
+          #   https://<org>.github.io/<repo>/assets/icons/...
+          # Local Storybook still serves the same folder via staticDirs → /assets
+          cp -r assets public-site/assets
+
+          # Shared theme CSS at site root (Angular preview resolves via idsComponentsUrl):
+          #   https://<org>.github.io/<repo>/components/ids-theme.css
+          mkdir -p public-site/components
+          cp components/*.css public-site/components/
+          
+          # Create a clean landing index.html file at the root
+          cat << 'EOF' > public-site/index.html
+          <!DOCTYPE html>
+          <html lang="en">
+          <head>
+              <meta charset="UTF-8">
+              <meta name="viewport" content="width=device-width, initial-scale=1.0">
+              <title>Storybook Environments</title>
+              <style>
+                  body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; display: flex; justify-content: center; align-items: center; height: 100vh; background: #f4f6f9; margin: 0; }
+                  .container { text-align: center; background: white; padding: 3rem; border-radius: 12px; box-shadow: 0 4px 6px rgba(0,0,0,0.05); }
+                  h1 { color: #1c1e21; margin-bottom: 2rem; }
+                  .btn { display: inline-block; width: 160px; margin: 10px; padding: 12px 24px; font-weight: bold; text-decoration: none; border-radius: 6px; color: white; transition: transform 0.2s; }
+                  .btn:hover { transform: translateY(-2px); }
+                  .react { background-color: #61dafb; color: #000; }
+                  .angular { background-color: #dd0031; }
+              </style>
+          </head>
+          <body>
+              <div class="container">
+                  <h1>Select Storybook Environment</h1>
+                  <a href="./react/" class="btn react">React Storybook</a>
+                  <a href="./angular/" class="btn angular">Angular Storybook</a>
+              </div>
+          </body>
+          </html>
+          EOF
+
+      # --- STRATEGY A: DEPLOY COMBINED FOLDER TO GH PAGES ---
+      - name: Upload GitHub Pages Artifact (Main Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'public-site'
+
+      - name: Deploy to GitHub Pages (Main Only)
+        if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # --- STRATEGY B: ZIP COMBINED ARTIFACT FOR PRs ---
+      - name: Upload PR Preview Artifact (PRs Only)
+        if: github.event_name == 'pull_request'
+        uses: actions/upload-artifact@v4
+        with:
+          name: storybook-combined-pr-${{ github.event.number }}
+          path: 'public-site'
+          retention-days: 7 
+
+      # --- POST PR COMMENT VIA GITHUB CLI ---
+      - name: Comment PR Status via GitHub CLI
+        if: github.event_name == 'pull_request'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.number }}
+          REPO: ${{ github.repository }}
+        run: |
+          COMMENT_BODY="📦 **Storybook Builds Ready!** 
+          Because third-party actions are restricted, the live web server is reserved for the \`master\` branch. 
+          
+          To review components for this PR:
+          1. Go to the **Actions** tab or the bottom of this PR.
+          2. Click on the summary of this run.
+          3. Download the **\`storybook-combined-pr-${PR_NUMBER}\`** zip file.
+          4. Extract and open \`index.html\` to choose between the **React** and **Angular** environments locally."
+          
+          EXISTING_COMMENT_ID=$(gh api repos/${REPO}/issues/${PR_NUMBER}/comments \
+            --jq '.[] | select(.body | contains("Storybook Builds Ready!")) | .id' | head -n 1)
+          
+          if [ -z "$EXISTING_COMMENT_ID" ]; then
+            gh pr comment $PR_NUMBER --body "$COMMENT_BODY"
+          else
+            gh api -X PATCH repos/${REPO}/issues/comments/$EXISTING_COMMENT_ID -f body="$COMMENT_BODY"
+          fi

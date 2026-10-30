@@ -13,7 +13,7 @@
   margin-top: var(--spacing-space-4);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .serialRow {
@@ -27,7 +27,7 @@
 .serialLabel {
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
 }
 
@@ -73,6 +73,6 @@
   margin: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-align: center;
 }

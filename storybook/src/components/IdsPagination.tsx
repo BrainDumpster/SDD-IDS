@@ -1,10 +1,13 @@
 import {
   useEffect,
+  useLayoutEffect,
   useMemo,
   useRef,
   useState,
   type ComponentProps,
+  type RefObject,
 } from "react";
+import { createPortal } from "react-dom";
 import { Icon } from "./Icon";
 import styles from "./IdsPagination.module.css";
 
@@ -21,6 +24,11 @@ export interface IdsPaginationProps extends ComponentProps<"nav"> {
   currentPage: number;
   totalPages: number;
   onPageChange?: (page: number) => void;
+  onPageSizeChange?: (size: number) => void;
+  onFirstPageNavigate?: () => void;
+  onPreviousPageNavigate?: () => void;
+  onNextPageNavigate?: () => void;
+  onLastPageNavigate?: () => void;
   pageSize?: number;
   pageSizeOptions?: number[];
   onPageSizeChange?: (size: number) => void;
@@ -31,7 +39,7 @@ export interface IdsPaginationProps extends ComponentProps<"nav"> {
   dropdownState?: IdsPaginationDropdownState;
   pageOffsetDropdownState?: IdsPaginationDropdownState;
   background?: IdsPaginationBackground;
-  disabled?: boolean;
+  embeddedInDatagrid?: boolean;
 }
 
 function clamp(value: number, min: number, max: number): number {
@@ -45,13 +53,102 @@ function normalizePageSizeOptions(options: number[]): number[] {
   return uniquePositive.length > 0 ? uniquePositive : [25, 50, 75, 100];
 }
 
+type PaginationMenuPos = { top: number; left: number; width: number };
+
+function computeMenuPos(
+  trigger: HTMLElement | null,
+  menu: HTMLElement | null,
+  placement: Exclude<IdsPaginationDropdownState, "collapsed">,
+): PaginationMenuPos | null {
+  if (!trigger) return null;
+  const rect = trigger.getBoundingClientRect();
+  const width = rect.width;
+  const left = rect.left;
+  if (placement === "expanded-above") {
+    const menuHeight = menu?.getBoundingClientRect().height ?? 0;
+    return { top: rect.top + 1 - menuHeight, left, width };
+  }
+  return { top: rect.top + rect.height - 1, left, width };
+}
+
+function usePortaledMenuPosition(
+  open: boolean,
+  placement: IdsPaginationDropdownState,
+  triggerRef: React.RefObject<HTMLElement | null>,
+  menuRef: React.RefObject<HTMLElement | null>,
+): PaginationMenuPos | null {
+  const [pos, setPos] = useState<PaginationMenuPos | null>(null);
+
+  useEffect(() => {
+    if (!open || placement === "collapsed") {
+      setPos(null);
+      return;
+    }
+
+    const update = () => {
+      const next = computeMenuPos(
+        triggerRef.current,
+        menuRef.current,
+        placement,
+      );
+      setPos(next);
+    };
+
+    update();
+    const frame = requestAnimationFrame(() => {
+      update();
+    });
+    window.addEventListener("resize", update);
+    window.addEventListener("scroll", update, true);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("resize", update);
+      window.removeEventListener("scroll", update, true);
+    };
+  }, [menuRef, open, placement, triggerRef]);
+
+  return pos;
+}
+
+const DROPDOWN_OPTION_HEIGHT = 40;
+
+function useViewportDropdownPlacement<T extends HTMLElement>(
+  triggerRef: RefObject<T | null>,
+  isOpen: boolean,
+  itemCount: number,
+): "below" | "above" {
+  const [placement, setPlacement] = useState<"below" | "above">("below");
+
+  useLayoutEffect(() => {
+    if (typeof window === "undefined" || !isOpen) {
+      setPlacement("below");
+      return;
+    }
+    const trigger = triggerRef.current;
+    if (!trigger) return;
+    const rect = trigger.getBoundingClientRect();
+    const menuHeight = itemCount * DROPDOWN_OPTION_HEIGHT + 2;
+    const spaceBelow = window.innerHeight - rect.bottom;
+    const spaceAbove = rect.top;
+    setPlacement(
+      spaceBelow < menuHeight && spaceAbove >= menuHeight ? "above" : "below",
+    );
+  }, [isOpen, itemCount, triggerRef]);
+
+  return placement;
+}
+
 export function IdsPagination({
   currentPage,
   totalPages,
   onPageChange,
+  onPageSizeChange,
+  onFirstPageNavigate,
+  onPreviousPageNavigate,
+  onNextPageNavigate,
+  onLastPageNavigate,
   pageSize = 25,
   pageSizeOptions = [25, 50, 75, 100],
-  onPageSizeChange,
   showPerPage = true,
   showFirstLast = true,
   showPageOffset = false,
@@ -59,11 +156,14 @@ export function IdsPagination({
   dropdownState = "collapsed",
   pageOffsetDropdownState = "collapsed",
   background = "gray",
-  disabled = false,
+  embeddedInDatagrid = false,
   className,
   ...rest
 }: IdsPaginationProps) {
-  const pageOffsetRef = useRef<HTMLDivElement | null>(null);
+  const pageOffsetRef = useRef<HTMLButtonElement | null>(null);
+  const perPageTriggerRef = useRef<HTMLButtonElement | null>(null);
+  const perPageMenuRef = useRef<HTMLUListElement | null>(null);
+  const pageOffsetMenuRef = useRef<HTMLUListElement | null>(null);
   const safeTotalPages = Math.max(1, totalPages);
   const controlledCurrentPage = clamp(currentPage, 1, safeTotalPages);
   const safePageSizeOptions = normalizePageSizeOptions(pageSizeOptions);
@@ -85,19 +185,45 @@ export function IdsPagination({
   );
   const [perPageMenuOpen, setPerPageMenuOpen] = useState(false);
   const [pageOffsetMenuOpen, setPageOffsetMenuOpen] = useState(false);
+  const perPagePlacement = useViewportDropdownPlacement(
+    perPageTriggerRef,
+    perPageMenuOpen,
+    safePageSizeOptions.length,
+  );
+  const pageOffsetPlacement = useViewportDropdownPlacement(
+    pageOffsetRef,
+    pageOffsetMenuOpen,
+    offsetOptions.length,
+  );
   const resolvedPerPageDropdownState =
     dropdownState !== "collapsed"
       ? dropdownState
       : perPageMenuOpen
-        ? "expanded-below"
+        ? perPagePlacement === "above"
+          ? "expanded-above"
+          : "expanded-below"
         : "collapsed";
   const safeCurrentPage = onPageChange ? controlledCurrentPage : internalPage;
   const resolvedPageOffsetDropdownState =
     pageOffsetDropdownState !== "collapsed"
       ? pageOffsetDropdownState
       : pageOffsetMenuOpen
-        ? "expanded-below"
+        ? pageOffsetPlacement === "above"
+          ? "expanded-above"
+          : "expanded-below"
         : "collapsed";
+  const perPageMenuPos = usePortaledMenuPosition(
+    resolvedPerPageDropdownState !== "collapsed",
+    resolvedPerPageDropdownState,
+    perPageTriggerRef,
+    perPageMenuRef,
+  );
+  const pageOffsetMenuPos = usePortaledMenuPosition(
+    resolvedPageOffsetDropdownState !== "collapsed",
+    resolvedPageOffsetDropdownState,
+    pageOffsetRef,
+    pageOffsetMenuRef,
+  );
 
   useEffect(() => {
     if (onPageChange) return;
@@ -112,7 +238,6 @@ export function IdsPagination({
   const atLastPage = safeCurrentPage >= safeTotalPages;
 
   const goToPage = (nextPage: number) => {
-    if (disabled) return;
     const clamped = clamp(nextPage, 1, safeTotalPages);
     if (onPageChange) {
       onPageChange(clamped);
@@ -131,7 +256,7 @@ export function IdsPagination({
   };
 
   const togglePageOffsetMenu = () => {
-    if (disabled) return;
+    closePerPageMenu();
     setPageOffsetMenuOpen((prev) => !prev);
   };
 
@@ -140,7 +265,7 @@ export function IdsPagination({
   };
 
   const togglePerPageMenu = () => {
-    if (disabled) return;
+    closePageOffsetMenu();
     setPerPageMenuOpen((prev) => !prev);
   };
 
@@ -149,6 +274,7 @@ export function IdsPagination({
   };
 
   return (
+    <>
     <nav
       aria-label="Pagination"
       className={[
@@ -158,6 +284,7 @@ export function IdsPagination({
           : background === "none"
             ? styles.rootNone
             : styles.rootGray,
+        embeddedInDatagrid ? styles.rootEmbedded : "",
         className,
       ]
         .filter(Boolean)
@@ -169,20 +296,16 @@ export function IdsPagination({
           <span className={styles.label}>Show:</span>
           <div className={styles.dropdownWrap}>
             <button
+              ref={perPageTriggerRef}
               className={styles.dropdownTrigger}
               type="button"
-              disabled={disabled}
               aria-haspopup="listbox"
               aria-expanded={resolvedPerPageDropdownState !== "collapsed"}
               aria-label="Items per page"
               onClick={togglePerPageMenu}
               onBlur={(event) => {
                 const nextTarget = event.relatedTarget as Node | null;
-                if (
-                  nextTarget &&
-                  event.currentTarget.parentElement?.contains(nextTarget)
-                )
-                  return;
+                if (nextTarget?.closest("[data-ids-pagination-per-page-menu]")) return;
                 closePerPageMenu();
               }}
             >
@@ -193,45 +316,6 @@ export function IdsPagination({
                 style={CARET_ICON_SIZE}
               />
             </button>
-            {resolvedPerPageDropdownState !== "collapsed" ? (
-              <ul
-                className={[
-                  styles.dropdownMenu,
-                  resolvedPerPageDropdownState === "expanded-above"
-                    ? styles.dropdownMenuAbove
-                    : styles.dropdownMenuBelow,
-                ]
-                  .filter(Boolean)
-                  .join(" ")}
-                role="listbox"
-                aria-label="Items per page options"
-              >
-                {safePageSizeOptions.map((option) => {
-                  const selected = option === safePageSize;
-                  return (
-                    <li key={option} className={styles.dropdownOptionWrap}>
-                      <button
-                        type="button"
-                        role="option"
-                        aria-selected={selected}
-                        className={[
-                          styles.dropdownOption,
-                          selected ? styles.dropdownOptionSelected : "",
-                        ]
-                          .filter(Boolean)
-                          .join(" ")}
-                        onClick={() => {
-                          onPageSizeChange?.(option);
-                          closePerPageMenu();
-                        }}
-                      >
-                        {option}
-                      </button>
-                    </li>
-                  );
-                })}
-              </ul>
-            ) : null}
           </div>
           <span className={styles.label}>per page</span>
         </div>
@@ -248,8 +332,11 @@ export function IdsPagination({
               <button
                 className={styles.iconButton}
                 type="button"
-                onClick={() => goToPage(1)}
-                disabled={disabled || atFirstPage}
+                onClick={() => {
+                  onFirstPageNavigate?.();
+                  goToPage(1);
+                }}
+                disabled={atFirstPage}
                 aria-label="First page"
               >
                 <Icon
@@ -262,8 +349,11 @@ export function IdsPagination({
             <button
               className={styles.iconButton}
               type="button"
-              onClick={() => goToPage(safeCurrentPage - 1)}
-              disabled={disabled || atFirstPage}
+              onClick={() => {
+                onPreviousPageNavigate?.();
+                goToPage(safeCurrentPage - 1);
+              }}
+              disabled={atFirstPage}
               aria-label="Previous page"
             >
               <Icon
@@ -278,7 +368,6 @@ export function IdsPagination({
                   ref={pageOffsetRef}
                   className={styles.pageOffsetTrigger}
                   type="button"
-                  disabled={disabled}
                   aria-haspopup="listbox"
                   aria-expanded={
                     resolvedPageOffsetDropdownState !== "collapsed"
@@ -287,10 +376,7 @@ export function IdsPagination({
                   onClick={togglePageOffsetMenu}
                   onBlur={(event) => {
                     const nextTarget = event.relatedTarget as Node | null;
-                    if (
-                      nextTarget &&
-                      pageOffsetRef.current?.parentElement?.contains(nextTarget)
-                    )
+                    if (nextTarget?.closest("[data-ids-pagination-page-offset-menu]"))
                       return;
                     closePageOffsetMenu();
                   }}
@@ -302,48 +388,6 @@ export function IdsPagination({
                     style={CARET_ICON_SIZE}
                   />
                 </button>
-                {resolvedPageOffsetDropdownState !== "collapsed" ? (
-                  <ul
-                    className={[
-                      styles.pageOffsetMenu,
-                      resolvedPageOffsetDropdownState === "expanded-above"
-                        ? styles.pageOffsetMenuAbove
-                        : styles.pageOffsetMenuBelow,
-                    ]
-                      .filter(Boolean)
-                      .join(" ")}
-                    role="listbox"
-                    aria-label="Page offsets"
-                  >
-                    {offsetOptions.map((pageOffset) => {
-                      const selected = pageOffset === safeCurrentPage;
-                      return (
-                        <li
-                          key={pageOffset}
-                          className={styles.pageOffsetOptionWrap}
-                        >
-                          <button
-                            type="button"
-                            role="option"
-                            aria-selected={selected}
-                            className={[
-                              styles.pageOffsetOption,
-                              selected ? styles.pageOffsetOptionSelected : "",
-                            ]
-                              .filter(Boolean)
-                              .join(" ")}
-                            onClick={() => {
-                              goToPage(pageOffset);
-                              closePageOffsetMenu();
-                            }}
-                          >
-                            {pageOffset}
-                          </button>
-                        </li>
-                      );
-                    })}
-                  </ul>
-                ) : null}
               </div>
             ) : (
               <div className={styles.pageInputWrap}>
@@ -368,8 +412,11 @@ export function IdsPagination({
             <button
               className={styles.iconButton}
               type="button"
-              onClick={() => goToPage(safeCurrentPage + 1)}
-              disabled={disabled || atLastPage}
+              onClick={() => {
+                onNextPageNavigate?.();
+                goToPage(safeCurrentPage + 1);
+              }}
+              disabled={atLastPage}
               aria-label="Next page"
             >
               <Icon
@@ -382,8 +429,11 @@ export function IdsPagination({
               <button
                 className={styles.iconButton}
                 type="button"
-                onClick={() => goToPage(safeTotalPages)}
-                disabled={disabled || atLastPage}
+                onClick={() => {
+                  onLastPageNavigate?.();
+                  goToPage(safeTotalPages);
+                }}
+                disabled={atLastPage}
                 aria-label="Last page"
               >
                 <Icon
@@ -397,5 +447,112 @@ export function IdsPagination({
         )}
       </div>
     </nav>
+    {resolvedPerPageDropdownState !== "collapsed" &&
+    typeof document !== "undefined"
+      ? createPortal(
+          <ul
+            ref={perPageMenuRef}
+            className={[
+              styles.dropdownMenu,
+              styles.dropdownMenuPortaled,
+              resolvedPerPageDropdownState === "expanded-above"
+                ? styles.dropdownMenuAbove
+                : styles.dropdownMenuBelow,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            data-ids-pagination-per-page-menu
+            style={{
+              position: "fixed",
+              top: perPageMenuPos?.top ?? 0,
+              left: perPageMenuPos?.left ?? 0,
+              width: perPageMenuPos?.width ?? 90,
+            }}
+            role="listbox"
+            aria-label="Items per page options"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {safePageSizeOptions.map((option) => {
+              const selected = option === safePageSize;
+              return (
+                <li key={option} className={styles.dropdownOptionWrap}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    className={[
+                      styles.dropdownOption,
+                      selected ? styles.dropdownOptionSelected : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    onClick={() => {
+                      onPageSizeChange?.(option);
+                      closePerPageMenu();
+                    }}
+                  >
+                    {option}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>,
+          document.body,
+        )
+      : null}
+    {resolvedPageOffsetDropdownState !== "collapsed" &&
+    typeof document !== "undefined"
+      ? createPortal(
+          <ul
+            ref={pageOffsetMenuRef}
+            className={[
+              styles.pageOffsetMenu,
+              styles.pageOffsetMenuPortaled,
+              resolvedPageOffsetDropdownState === "expanded-above"
+                ? styles.pageOffsetMenuAbove
+                : styles.pageOffsetMenuBelow,
+            ]
+              .filter(Boolean)
+              .join(" ")}
+            data-ids-pagination-page-offset-menu
+            style={{
+              position: "fixed",
+              top: pageOffsetMenuPos?.top ?? 0,
+              left: pageOffsetMenuPos?.left ?? 0,
+              width: pageOffsetMenuPos?.width ?? 40,
+            }}
+            role="listbox"
+            aria-label="Page offsets"
+            onClick={(event) => event.stopPropagation()}
+          >
+            {offsetOptions.map((pageOffset) => {
+              const selected = pageOffset === safeCurrentPage;
+              return (
+                <li key={pageOffset} className={styles.pageOffsetOptionWrap}>
+                  <button
+                    type="button"
+                    role="option"
+                    aria-selected={selected}
+                    className={[
+                      styles.pageOffsetOption,
+                      selected ? styles.pageOffsetOptionSelected : "",
+                    ]
+                      .filter(Boolean)
+                      .join(" ")}
+                    onClick={() => {
+                      goToPage(pageOffset);
+                      closePageOffsetMenu();
+                    }}
+                  >
+                    {pageOffset}
+                  </button>
+                </li>
+              );
+            })}
+          </ul>,
+          document.body,
+        )
+      : null}
+    </>
   );
 }

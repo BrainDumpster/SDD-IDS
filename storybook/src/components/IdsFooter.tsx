@@ -1,6 +1,8 @@
-import type { ComponentProps } from "react";
+import { useEffect, useState, type ComponentProps } from "react";
 
+import { Button } from "./Button";
 import { Icon } from "./Icon";
+import { IdsTooltip } from "./IdsTooltip";
 import styles from "./IdsFooter.module.css";
 
 export interface IdsFooterProps extends Omit<ComponentProps<"footer">, "children"> {
@@ -15,6 +17,30 @@ export interface IdsFooterProps extends Omit<ComponentProps<"footer">, "children
   timeZoneDisabled?: boolean;
   onCopySwid?: (swid: string) => void;
   onTimeZoneClick?: () => void;
+}
+
+/**
+ * At or below this viewport width the inline date/time group is hidden and
+ * surfaced in a tooltip on the time zone button instead.
+ */
+const COMPACT_BREAKPOINT_PX = 1024;
+
+/** True while the viewport is at/below the compact footer breakpoint. */
+function useCompactFooter(): boolean {
+  const [compact, setCompact] = useState(() => {
+    if (typeof window === "undefined") return false;
+    return window.matchMedia(`(max-width: ${COMPACT_BREAKPOINT_PX}px)`).matches;
+  });
+
+  useEffect(() => {
+    const mq = window.matchMedia(`(max-width: ${COMPACT_BREAKPOINT_PX}px)`);
+    const onChange = () => setCompact(mq.matches);
+    setCompact(mq.matches);
+    mq.addEventListener("change", onChange);
+    return () => mq.removeEventListener("change", onChange);
+  }, []);
+
+  return compact;
 }
 
 async function copyTextToClipboard(text: string): Promise<void> {
@@ -49,6 +75,33 @@ export function IdsFooter({
   ...rest
 }: IdsFooterProps) {
   const canCopy = Boolean(swid) && !copyDisabled;
+  const isCompact = useCompactFooter();
+  const showDateTimeTooltip =
+    isCompact && showCurrentDateAndTime && currentDateTime != null && currentDateTime !== "";
+
+  const truncatedHostname = hostname.length > 48 ? `${hostname.slice(0, 48)}...` : hostname;
+
+  const [valueEl, setValueEl] = useState<HTMLSpanElement | null>(null);
+  const [isOverflowed, setIsOverflowed] = useState(false);
+
+  useEffect(() => {
+    if (!valueEl) return;
+
+    const updateOverflow = () => {
+      setIsOverflowed(valueEl.scrollWidth > valueEl.clientWidth);
+    };
+
+    updateOverflow();
+
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(updateOverflow) : null;
+    if (ro) ro.observe(valueEl);
+
+    return () => {
+      if (ro) ro.disconnect();
+    };
+  }, [valueEl, truncatedHostname]);
+
+  const showTooltip = isOverflowed || hostname.length >= 48;
 
   const handleCopy = async () => {
     if (!canCopy || !swid) return;
@@ -68,9 +121,20 @@ export function IdsFooter({
     >
       <div className={styles.left}>
         {showHostname && (
-          <div className={styles.field}>
+          <div className={[styles.field, styles.hostnameField].join(' ')}>
             <span className={styles.label}>Host Name:</span>
-            <span className={styles.value}>{hostname}</span>
+            <span className={styles.hostnameValue}>
+              {showTooltip ? (
+                <IdsTooltip
+                  content={<span style={{ overflowWrap: "break-word" }}>{hostname}</span>}
+                  triggerDisplay="block"
+                >
+                  <span ref={setValueEl} className={styles.hostnameText}>{truncatedHostname}</span>
+                </IdsTooltip>
+              ) : (
+                <span ref={setValueEl} className={styles.hostnameText}>{truncatedHostname}</span>
+              )}
+            </span>
           </div>
         )}
         {swid != null && swid !== "" && (
@@ -96,35 +160,46 @@ export function IdsFooter({
           </div>
         )}
       </div>
-      {showCurrentDateAndTime && currentDateTime != null && currentDateTime !== "" && (
+      {showCurrentDateAndTime && !isCompact && currentDateTime != null && currentDateTime !== "" && (
         <div className={styles.timeGroup}>
           <Icon
             shapeName="time-clock"
             variant="mask"
-            color="var(--color-icon-neutral)"
+            color="var(--color-icon-gray-neutral-base)"
             style={{ width: 16, height: 16 }}
           />
           <span className={styles.dateTime}>{currentDateTime}</span>
         </div>
       )}
-      {showTimeZone && (
-        <div className={styles.timeZoneGroup}>
-          <Icon
-            shapeName="world-globe"
-            variant="mask"
-            color="var(--color-icon-brand-base)"
-            style={{ width: 16, height: 16 }}
-          />
-          <button
+      {showTimeZone && (() => {
+        const timeZoneButton = (
+          <Button
             type="button"
-            className={styles.timeZoneButton}
+            variant="tertiary"
+            size="sm"
+            iconSlug="world-globe"
             disabled={timeZoneDisabled}
             onClick={() => onTimeZoneClick?.()}
           >
             {timeZoneLabel || "Time zone"}
-          </button>
-        </div>
-      )}
+          </Button>
+        );
+
+        return showDateTimeTooltip ? (
+          <IdsTooltip
+            hugContent
+            content={
+              <span className={styles.dateTimeTooltip}>
+                {currentDateTime}
+              </span>
+            }
+          >
+            {timeZoneButton}
+          </IdsTooltip>
+        ) : (
+          timeZoneButton
+        );
+      })()}
     </footer>
   );
 }

@@ -41,12 +41,12 @@ export const WithExternalIcon: Story = {{ args: {{ href: "https://example.com", 
 
 export const DarkBackground: Story = {{
   args: {{ href: "#", children: "This is a link", type: "dark-bg", demoState: "default" }},
-  decorators: [(Story) => <div style={{{{ background: "var(--color-background-controls-brand-base)", padding: 16 }}}}><Story /></div>],
+  decorators: [(Story) => <div style={{{{ background: "var(--color-background-controls-base)", padding: 16 }}}}><Story /></div>],
 }};
 
 export const StateMatrixWithIcon: Story = {{
   render: () => (
-    <div style={{{{ background: "var(--color-background-surface-1)", padding: 24 }}}}>
+    <div style={{{{ background: "var(--color-background-surface-primary)", padding: 24 }}}}>
       <div style={{{{ display: "grid", gridTemplateColumns: "1fr 1fr 134px", columnGap: 56 }}}}>
         <div style={{{{ display: "flex", flexDirection: "column", gap: 14 }}}}>
           <{component_name} href="#" type="standalone" demoState="default">This is a link</{component_name}>
@@ -60,7 +60,7 @@ export const StateMatrixWithIcon: Story = {{
           <{component_name} href="#" type="inline" demoState="press">This is a link</{component_name}>
           <{component_name} href="#" type="inline" demoState="focus-visible">This is a link</{component_name}>
         </div>
-        <div style={{{{ background: "var(--color-background-controls-brand-base)", padding: "2px 18px", display: "flex", flexDirection: "column", gap: 14 }}}}>
+        <div style={{{{ background: "var(--color-background-controls-base)", padding: "2px 18px", display: "flex", flexDirection: "column", gap: 14 }}}}>
           <{component_name} href="#" type="dark-bg" demoState="default">This is a link</{component_name}>
           <{component_name} href="#" type="dark-bg" demoState="hover">This is a link</{component_name}>
           <{component_name} href="#" type="dark-bg" demoState="press">This is a link</{component_name}>

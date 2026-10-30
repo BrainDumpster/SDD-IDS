@@ -16,7 +16,7 @@
   box-sizing: content-box;
   border-radius: 999px;
   background: var(--color-background-gray-neutral-darker);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   padding: 0;
   cursor: inherit;
   transition: background 150ms ease;
@@ -47,17 +47,17 @@
 
 .root:hover:not([data-disabled]):not([data-checked]) {
   background: var(--color-background-gray-neutral-dark);
-  border-color: var(--color-border-strong);
+  border-color: var(--color-border-gray-neutral-strong);
 }
 
 .root[data-checked]:hover:not([data-disabled]) {
   background: var(--color-background-brand-strong);
-  border-color: var(--color-border-brand-dark);
+  border-color: var(--color-border-brand-strong);
 }
 
 .root[data-disabled] {
   background: var(--color-background-gray-light);
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
 }
 
 .thumb {
@@ -65,8 +65,8 @@
   width: 1rem;
   height: 1rem;
   border-radius: 50%;
-  background: var(--color-background-component);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  background: var(--color-background-surface-component);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   transition: transform 150ms ease;
   box-sizing: border-box;
 }
@@ -76,16 +76,16 @@
 }
 
 .root[data-disabled][data-checked] .thumb {
-  background: var(--color-background-component);
-  border-color: var(--color-border-disabled);
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-disabled);
 }
 
 .root[data-disabled]:not([data-checked]) .thumb {
-  border-color: var(--color-border-disabled);
+  border-color: var(--color-border-gray-disabled);
 }
 
 .formLabel {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   user-select: none;
@@ -96,14 +96,14 @@
 }
 
 .stateText {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: 16px;
   user-select: none;
 }
 
 .stateTextDisabled {
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   font-size: var(--font-size-body-2);
   line-height: 16px;
   user-select: none;

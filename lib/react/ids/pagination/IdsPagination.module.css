@@ -1,0 +1,163 @@
+/**
+ * IDS Pagination — CSS Modules from `components/ids/pagination/design-spec.md`
+ * Theme: `components/ids-theme.css`
+ */
+
+.root {
+  position: relative;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-16);
+  width: 100%;
+  min-width: 495px;
+  height: 48px;
+  overflow: hidden;
+  border: var(--border-width-border-default, 1px) solid
+    var(--color-border-gray-neutral-base);
+  padding: 0 calc(var(--padding-padding-16) * 2) 0 var(--padding-padding-24);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.rootGray {
+  background: var(--color-background-surface-primary);
+}
+
+.rootWhite {
+  background: var(--color-background-surface-component);
+}
+
+.rootNone {
+  background: transparent;
+}
+
+.resultsGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.resultsGroupCollapsed {
+  display: none;
+}
+
+.label {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral-strong);
+  white-space: nowrap;
+}
+
+.dropdownWrap {
+  position: relative;
+  flex-shrink: 0;
+}
+
+/* Per-page trigger — the shared IDS single-select field shell
+   (`dropdown-shared/IdsDropdownTriggerShell`) sized to the pagination spec
+   field: 90px wide, 32px high (shell `size="small"`). Scoped under
+   `.dropdownWrap` so it beats the shell's own `.field` sizing
+   (`width: 300px; min-width: 186px`) regardless of CSS bundle order. */
+.dropdownWrap .perPageTrigger {
+  width: 90px;
+  min-width: 90px;
+  max-width: 90px;
+}
+
+/* Real hover border — the shell only exposes hover via the demo `data-hover`
+   attribute, so apply the IDS hover token directly. */
+.dropdownWrap .perPageTrigger:hover {
+  --trigger-border: var(--color-border-gray-neutral-strong);
+}
+
+.pageNavGroup {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16);
+  flex-shrink: 0;
+  margin-left: auto;
+  min-width: 0;
+}
+
+.iconButton {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--color-icon-brand-base);
+  cursor: pointer;
+}
+
+.iconButton:hover:not(:disabled) {
+  color: var(--color-icon-brand-base);
+}
+
+.iconButton:focus-visible {
+  outline: none;
+}
+
+.iconButton:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: -4px;
+  border: var(--border-width-border-default, 1px) solid
+    var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
+}
+
+.iconButton:disabled {
+  color: var(--color-icon-gray-disabled);
+  cursor: not-allowed;
+}
+
+.iconButtonCollapsed {
+  display: none;
+}
+
+.pageInput {
+  width: 52px;
+  min-width: 52px;
+  max-width: 52px;
+  flex: 0 0 52px;
+}
+
+.pageInput [data-ids="ids-text-box-control"] {
+  padding: 0 4px;
+}
+
+.pageInput [data-ids="ids-text-box-input"] {
+  text-align: center;
+}
+
+.pageInput [data-ids="ids-text-box-control"]:has([data-ids="ids-text-box-input"]:focus-visible):not([data-state="disabled"]):not([data-state="error"]) {
+  border-color: var(--color-border-brand-base);
+}
+
+.pageInput [data-ids="ids-text-box-control"]:has([data-ids="ids-text-box-input"]:focus-visible):not([data-state="disabled"]):not([data-state="error"])::after {
+  content: none;
+}
+
+.pageInputCollapsed {
+  display: none;
+}
+
+.countText {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral-strong);
+  white-space: nowrap;
+}

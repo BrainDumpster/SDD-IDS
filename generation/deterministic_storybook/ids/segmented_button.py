@@ -15,35 +15,36 @@ def generate_ids_segmented_button_story(
     contract: SpecContract,
     options: Optional[DeterministicStorybookOptions] = None,
 ) -> str:
-    """Re-export hand-maintained stories from storybook/src."""
+    """Wire hand-maintained Docs stories from storybook/src (no bare re-exports)."""
     options = options or DeterministicStorybookOptions()
     component_name = prefixed_component_export_name("segmented-button", options.component_prefix)
-    import_path = "../../../../storybook/src/components/SegmentedButton"
+    composition_path = "../../../../storybook/src/components/SegmentedButtonComposition"
+    definitions_path = "../../../../storybook/src/components/SegmentedButton.story-definitions"
 
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
-import {{ SegmentedButton as {component_name} }} from "{import_path}";
+import {{ SegmentedButtons as {component_name} }} from "{composition_path}";
+import {{
+  SEGMENTED_BUTTON_DOCS_DESCRIPTION,
+  iconModesStory,
+  specAccurateDesignStory,
+}} from "{definitions_path}";
 
 const meta: Meta<typeof {component_name}> = {{
-  title: "{options.title_prefix}/Segmented Button",
+  title: "Spec Generated/IDS/Segmented Button",
   component: {component_name},
-  parameters: {{ layout: "centered" }},
+  tags: ["autodocs"],
+  parameters: {{
+    layout: "padded",
+    docs: {{
+      canvas: {{ sourceState: "open" }},
+      description: {{ component: SEGMENTED_BUTTON_DOCS_DESCRIPTION }},
+    }},
+  }},
 }};
 
 export default meta;
 type Story = StoryObj<typeof {component_name}>;
 
-export {{
-  StateMatrixText,
-  StateMatrixIcon,
-  StateMatrixTextDark,
-  SpecAccurateDesign,
-  TextThreeOptions,
-  TextTwoAndFiveOptions,
-  IconListTreeGrid,
-  IconModes,
-  TextTwoOptions,
-  TextThreeToFiveOptions,
-  IconCustomSlot,
-  OnChangePayload,
-}} from "../../../../storybook/src/components/SegmentedButton.stories";
+export const SpecAccurateDesign: Story = specAccurateDesignStory;
+export const IconModes: Story = iconModesStory;
 """

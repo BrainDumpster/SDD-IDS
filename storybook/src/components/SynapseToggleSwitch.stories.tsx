@@ -12,7 +12,7 @@ import {
 } from "../spec-contracts/synapse-toggle-switch.contract";
 
 const meta: Meta<typeof SynapseToggleSwitch> = {
-  title: "Spec Generated/Synapse/Toggle Switch",
+  title: "Components/Synapse/Toggle Switch",
   component: SynapseToggleSwitch,
   parameters: {
     layout: "centered",

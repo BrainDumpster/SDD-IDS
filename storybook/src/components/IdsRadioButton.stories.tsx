@@ -4,7 +4,7 @@ import { useState } from "react";
 import { RadioButton } from "./RadioButton";
 
 const meta: Meta<typeof RadioButton> = {
-  title: "Spec Generated/IDS/Radio Button",
+  title: "Components/IDS/Radio Button",
   component: RadioButton,
   argTypes: {
     orientation: { control: "select", options: ["vertical", "horizontal"] },
@@ -32,7 +32,7 @@ export const Default: Story = {
 export const StateMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 20 }}>
-      <div style={{ fontSize: 12, color: "var(--color-text-neutral-strong)" }}>
+      <div style={{ fontSize: 12, color: "var(--color-text-gray-neutral-strong)" }}>
         Live groups: hover the Hover row for pointer parity. Focus column pins simulatedState focus-visible per Figma node 8505:14225.
       </div>
       <div style={{ display: "flex", gap: 28, flexWrap: "wrap", alignItems: "flex-start" }}>

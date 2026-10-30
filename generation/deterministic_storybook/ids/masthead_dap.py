@@ -38,7 +38,7 @@ export const Default: Story = {{
   render: (args) => {{
     const [lastAction, setLastAction] = useState("No selection yet");
     return (
-      <div style={{{{ background: "var(--color-background-surface-1)", minHeight: 360 }}}}>
+      <div style={{{{ background: "var(--color-background-surface-primary)", minHeight: 360 }}}}>
         <{component_name}
           {{...args}}
           onHelpSelect={{(label) => setLastAction(`Help: ${{label}}`)}}
@@ -48,7 +48,7 @@ export const Default: Story = {{
         <div
           style={{{{
             padding: "16px 24px",
-            color: "var(--color-text-neutral-strong)",
+            color: "var(--color-text-gray-neutral-strong)",
             fontSize: "var(--font-size-body-2)",
             lineHeight: "var(--font-line-height-line-height-20)",
           }}}}
@@ -62,7 +62,7 @@ export const Default: Story = {{
 
 export const ProductLabels: Story = {{
   render: () => (
-    <div style={{{{ background: "var(--color-background-surface-1)" }}}}>
+    <div style={{{{ background: "var(--color-background-surface-primary)" }}}}>
       <{component_name}
         productName="Dell Automation Platform"
         productAreaLabel="Portal"

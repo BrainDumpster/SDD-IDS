@@ -1,0 +1,676 @@
+/**
+ * IDS Whats New styles — from components/ids/whats-new/design-spec.md
+ * Theme: components/ids-theme.css
+ * Selectors: IdsWhatsNew, IdsWhatsNewHeader, …
+ */
+
+:global([data-ids="ids-modal-surface"]).IdsWhatsNewSurface {
+  width: 100%;
+  max-width: 1152px;
+  height: min(708px, calc(100vh - 48px));
+  max-height: calc(100vh - 48px);
+  box-sizing: border-box;
+}
+
+:global([data-ids="ids-modal-content"]).IdsWhatsNewModalContent {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+}
+
+.IdsWhatsNew {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  background: var(--color-background-surface-component);
+  border: 1px solid var(--color-border-gray-neutral-base);
+  border-radius: 0;
+  box-shadow:
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 2px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 2px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 4px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 4px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 8px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 8px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08)),
+    var(--shadow-shadow-4-drop-shadow-4-x, 0) var(--shadow-shadow-4-drop-shadow-4-y, 16px)
+      var(--shadow-shadow-4-drop-shadow-4-blur, 16px)
+      var(--shadow-shadow-4-drop-shadow-4-spread, 0)
+      var(--shadow-shadow-4-drop-shadow-4-color, rgba(0, 0, 0, 0.08));
+}
+
+.IdsWhatsNew--preview {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+}
+
+.IdsWhatsNew--preview .IdsWhatsNewCarouselHeader {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  min-height: 80px;
+  padding: var(--padding-padding-24, 24px);
+  box-sizing: border-box;
+}
+
+.IdsWhatsNew--preview .IdsWhatsNewCarouselBody {
+  flex: 1 1 0;
+  min-height: 0;
+  height: auto;
+  max-height: none;
+  overflow: hidden;
+}
+
+.IdsWhatsNew--preview .IdsWhatsNewFooter {
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  min-height: 88px;
+  box-sizing: border-box;
+}
+
+.IdsWhatsNewHeader {
+  display: flex;
+  flex-direction: column;
+  padding: var(--padding-padding-24, 24px) var(--padding-padding-24, 24px) 0;
+  flex: 0 0 auto;
+}
+
+.IdsWhatsNewHeaderRow {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-space-16, 16px);
+  padding-bottom: var(--padding-padding-24, 24px);
+}
+
+.IdsWhatsNewCarouselHeader {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: var(--spacing-space-16, 16px);
+  padding: var(--padding-padding-24, 24px);
+  flex: 0 0 auto;
+}
+
+.IdsWhatsNewCarouselBody {
+  flex: 0 0 523px;
+  height: 523px;
+  max-height: 523px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: var(--padding-padding-16, 16px) var(--padding-padding-24, 24px);
+  box-sizing: border-box;
+}
+
+.IdsWhatsNewTitle {
+  margin: 0;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-header-5, 24px);
+  line-height: var(--font-line-height-line-height-32, 32px);
+  font-weight: 400;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.IdsWhatsNewCloseButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-icon-gray-neutral-base);
+  flex: 0 0 auto;
+}
+
+.IdsWhatsNewCloseButton:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.IdsWhatsNewSummary {
+  margin: 0;
+  padding-bottom: var(--padding-padding-16, 16px);
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: 1.5;
+  color: var(--color-text-gray-neutral);
+}
+
+.IdsWhatsNewVersion {
+  margin: 0;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-header-6, 18px);
+  line-height: var(--font-line-height-line-height-25, 25px);
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.IdsWhatsNewBody {
+  flex: 1 1 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  padding: 0 var(--padding-padding-24, 24px);
+}
+
+.IdsWhatsNewVersionFilterRow {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-16, 16px);
+  padding-bottom: var(--padding-padding-8, 8px);
+  border-bottom: 1px solid var(--color-border-gray-neutral-base);
+}
+
+.IdsWhatsNewSectionsScroll {
+  flex: 1 1 0;
+  min-height: 0;
+  overflow-y: auto;
+  padding-top: var(--padding-padding-16, 16px);
+}
+
+.IdsWhatsNewSectionsScroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.IdsWhatsNewSectionsScroll::-webkit-scrollbar-track {
+  background: var(--color-background-gray-lighter);
+}
+
+.IdsWhatsNewSectionsScroll::-webkit-scrollbar-thumb {
+  height: 60px;
+  background: var(--color-background-gray-base);
+  border-radius: var(--corner-radius-radius-8, 8px);
+}
+
+.IdsWhatsNewScrollShadow {
+  height: 19px;
+  flex-shrink: 0;
+  background: linear-gradient(
+    180deg,
+    var(--color-gradient-overflow-vertical-end, rgba(255, 255, 255, 0)) 0%,
+    var(--color-gradient-overflow-vertical-start, rgba(182, 182, 182, 0.4)) 100%
+  );
+}
+
+.IdsWhatsNewFilter {
+  width: 200px;
+  flex: 0 0 200px;
+  --dropdown-control-radius: var(--corner-radius-radius-none, 0);
+}
+
+.IdsWhatsNewFilter :global([data-ids="ids-dropdown-single-select-container"]),
+.IdsWhatsNewFilter :global([data-ids="ids-dropdown-single-select"]) {
+  width: 200px;
+  max-width: 200px;
+}
+
+.IdsWhatsNewFilter :global([data-size="small"]) {
+  width: 200px;
+  min-width: 200px;
+  max-width: 200px;
+  border-radius: var(--corner-radius-radius-none, 0);
+}
+
+.IdsWhatsNewBookmarkButton {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  flex: 0 0 auto;
+  color: var(--color-icon-gray-neutral-base);
+}
+
+.IdsWhatsNewSectionsList {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16, 16px);
+  padding-bottom: var(--padding-padding-16, 16px);
+}
+
+.IdsWhatsNewSection {
+  display: flex;
+  gap: var(--spacing-space-16, 16px);
+  align-items: flex-start;
+  padding-bottom: var(--padding-padding-8, 8px);
+  border-bottom: 1px dashed var(--color-border-gray-neutral-light);
+}
+
+.IdsWhatsNewThumbnail,
+.IdsWhatsNewStripThumbnail {
+  position: relative;
+  flex: 0 0 auto;
+  box-sizing: border-box;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-background-surface-component);
+  padding: 0;
+  cursor: pointer;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+.IdsWhatsNewThumbnail {
+  width: 200px;
+  height: 112.5px;
+}
+
+.IdsWhatsNewStripThumbnail {
+  width: 184px;
+  height: 103px;
+  flex: 0 0 184px;
+  flex-shrink: 0;
+  scroll-snap-align: start;
+}
+
+.IdsWhatsNewThumbnailStripViewport {
+  position: relative;
+  width: 100%;
+  flex: 0 0 auto;
+  overflow: hidden;
+}
+
+.IdsWhatsNewStripTrailingOverlay {
+  pointer-events: none;
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 32px;
+  height: 103px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: var(--corner-radius-radius-none, 0);
+}
+
+.IdsWhatsNewStripTrailingOverlay::before {
+  content: "";
+  width: 103px;
+  height: 32px;
+  flex-shrink: 0;
+  transform: rotate(-90deg);
+  border-radius: var(--corner-radius-radius-none, 0);
+  background: linear-gradient(
+    180deg,
+    var(--color-gradient-overflow-vertical-end, rgba(217, 217, 217, 0)) 0%,
+    var(--color-gradient-overflow-vertical-start, rgba(182, 182, 182, 0.4)) 100%
+  );
+}
+
+.IdsWhatsNewThumbnailStrip {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16, 16px);
+  overflow-x: auto;
+  overflow-y: hidden;
+  width: 100%;
+  max-width: 100%;
+  scrollbar-width: none;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.IdsWhatsNewThumbnailStrip::-webkit-scrollbar {
+  display: none;
+}
+
+.IdsWhatsNewThumbnail--selected {
+  border-width: var(--border-width-border-strong, 4px);
+  border-color: var(--color-border-brand-base);
+}
+
+.IdsWhatsNewThumbnailContent {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.IdsWhatsNewThumbnailHover {
+  display: none;
+  position: absolute;
+  inset: 0;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  background: color-mix(in srgb, var(--color-background-surface-component) 80%, transparent);
+  border: var(--border-width-border-strong, 4px) solid var(--color-border-brand-base);
+  box-sizing: border-box;
+}
+
+.IdsWhatsNewThumbnail:hover:not(.IdsWhatsNewThumbnail--selected) {
+  border-color: transparent;
+}
+
+.IdsWhatsNewThumbnail:hover:not(.IdsWhatsNewThumbnail--selected) .IdsWhatsNewThumbnailHover,
+.IdsWhatsNewStripThumbnail:hover:not(.IdsWhatsNewThumbnail--selected)
+  .IdsWhatsNewThumbnailHover {
+  display: flex;
+}
+
+.IdsWhatsNewThumbnail--no-hover:hover:not(.IdsWhatsNewThumbnail--selected) {
+  border-color: var(--color-border-gray-neutral-base);
+}
+
+.IdsWhatsNewThumbnail--no-hover:hover:not(.IdsWhatsNewThumbnail--selected)
+  .IdsWhatsNewThumbnailHover {
+  display: none;
+}
+
+.IdsWhatsNewStripThumbnail:hover:not(.IdsWhatsNewThumbnail--selected) {
+  border-color: var(--color-border-gray-neutral-base);
+}
+
+.IdsWhatsNewThumbnailBadge {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 28px;
+  box-sizing: border-box;
+  padding: var(--padding-padding-4, 4px) var(--padding-padding-6, 6px);
+  background: var(--ui-palette-gray-500, #757575);
+  border: 1px solid var(--ui-palette-gray-500, #757575);
+  color: var(--color-text-gray-inverse, #ffffff);
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  pointer-events: none;
+}
+
+.IdsWhatsNewSwap,
+.IdsWhatsNewSwap--hero {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: var(--spacing-space-2, 2px);
+  text-align: center;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  box-sizing: border-box;
+  pointer-events: none;
+}
+
+.IdsWhatsNewSwap--hero {
+  gap: var(--spacing-space-4, 4px);
+  padding: var(--padding-padding-24, 24px);
+}
+
+.IdsWhatsNewSwapTitle {
+  margin: 0;
+  font-size: var(--font-size-header-6, 18px);
+  line-height: var(--font-line-height-line-height-25, 25px);
+  color: var(--color-text-gray-neutral);
+}
+
+.IdsWhatsNewSwapLink {
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-text-link-brand-base);
+  text-decoration: underline;
+}
+
+.IdsWhatsNewSwapHelper {
+  margin: 0;
+  max-width: 380px;
+  font-size: var(--font-size-body-3, 12px);
+  line-height: var(--font-line-height-line-height-18, 18px);
+  color: var(--color-text-gray-neutral);
+}
+
+.IdsWhatsNewSwapHelper strong {
+  font-weight: 500;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.IdsWhatsNewImage {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.IdsWhatsNewSectionText {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.IdsWhatsNewSectionHeader {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+  margin-bottom: 4px;
+}
+
+.IdsWhatsNewSectionTitle {
+  margin: 0;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  font-weight: 500;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.IdsWhatsNewDescription {
+  margin: 0 0 4px;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-gray-neutral);
+}
+
+.IdsWhatsNewDescription--collapsed {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+  overflow: hidden;
+}
+
+.IdsWhatsNewLink {
+  color: var(--color-text-link-brand-base);
+  text-decoration: underline;
+}
+
+.IdsWhatsNewShowMore {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--padding-padding-10, 10px) var(--padding-padding-16, 16px);
+  border: 0;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  background: transparent;
+  color: var(--color-text-brand-strong);
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  cursor: pointer;
+}
+
+.IdsWhatsNewCarouselContent {
+  box-sizing: border-box;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.IdsWhatsNewSinglePreviewInner {
+  display: flex;
+  flex: 1 1 auto;
+  min-height: 0;
+  height: 100%;
+  width: 100%;
+  align-items: center;
+}
+
+.IdsWhatsNewCarouselInner {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-16, 16px);
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  flex: 1 1 auto;
+}
+
+.IdsWhatsNewCarouselNav {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  align-self: center;
+  padding: var(--padding-padding-12, 12px) var(--padding-padding-16, 16px);
+  border: 0;
+  border-radius: var(--corner-radius-radius-2, 2px);
+  background: transparent;
+  cursor: pointer;
+  color: var(--color-icon-brand-base);
+}
+
+.IdsWhatsNewCarouselNav:disabled {
+  color: var(--color-icon-gray-disabled, var(--color-border-gray-disabled));
+  cursor: not-allowed;
+}
+
+.IdsWhatsNewCarouselMain {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16, 16px);
+  height: 100%;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.IdsWhatsNew--preview .IdsWhatsNewCarouselMain {
+  justify-content: flex-start;
+}
+
+.IdsWhatsNewHero {
+  flex: 1 1 auto;
+  min-height: 0;
+  border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  background: var(--color-background-surface-component);
+  padding: var(--padding-padding-24, 24px);
+  box-sizing: border-box;
+}
+
+.IdsWhatsNewCaptionRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  flex-shrink: 0;
+}
+
+.IdsWhatsNewCaption {
+  margin: 0;
+  padding: 0;
+  list-style-position: outside;
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-1, 16px);
+  line-height: var(--font-line-height-line-height-24, 24px);
+  color: var(--color-text-gray-neutral);
+}
+
+.IdsWhatsNewCaption li {
+  margin-left: 24px;
+}
+
+.IdsWhatsNewExpand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  flex: 0 0 auto;
+}
+
+.IdsWhatsNewFooter {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--spacing-space-16, 16px);
+  padding: var(--padding-padding-24, 24px);
+  border-top: 1px solid var(--color-border-gray-neutral-base);
+  flex: 0 0 auto;
+  flex-shrink: 0;
+  min-height: 88px;
+  box-sizing: border-box;
+  background: var(--color-background-surface-component);
+}
+
+.IdsWhatsNewFooterToggle {
+  display: flex;
+  align-items: center;
+  gap: var(--spacing-space-8, 8px);
+}
+
+.IdsWhatsNewFooterToggleLabel {
+  font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: 16px;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.IdsWhatsNewFooterActions {
+  display: flex;
+  flex: 1 1 auto;
+  justify-content: flex-end;
+}
+
+.IdsWhatsNewImages {
+  display: none;
+}

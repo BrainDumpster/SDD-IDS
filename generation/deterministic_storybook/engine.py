@@ -10,6 +10,10 @@ from generation.deterministic_storybook.ids.anchor_menu import generate_ids_anch
 from generation.deterministic_storybook.ids.app_launcher import generate_ids_app_launcher_story
 from generation.deterministic_storybook.ids.badge import generate_ids_badge_story
 from generation.deterministic_storybook.ids.button import generate_ids_button_story
+from generation.deterministic_storybook.ids.accordion_angular import generate_ids_accordion_story_angular
+from generation.deterministic_storybook.ids.alert_angular import generate_ids_alert_story_angular
+from generation.deterministic_storybook.ids.badge_angular import generate_ids_badge_story_angular
+from generation.deterministic_storybook.ids.button_angular import generate_ids_button_story_angular
 from generation.deterministic_storybook.ids.card import generate_ids_card_story
 from generation.deterministic_storybook.ids.checkbox import generate_ids_checkbox_story
 from generation.deterministic_storybook.ids.dashboard import generate_ids_dashboard_story
@@ -25,6 +29,9 @@ from generation.deterministic_storybook.ids.dual_list_box import generate_ids_du
 from generation.deterministic_storybook.ids.footer import generate_ids_footer_story
 from generation.deterministic_storybook.ids.link import generate_ids_link_story
 from generation.deterministic_storybook.ids.main_menu_left import generate_ids_main_menu_left_story
+from generation.deterministic_storybook.ids.main_menu_left_angular import (
+    generate_ids_main_menu_left_story_angular,
+)
 from generation.deterministic_storybook.ids.main_menu_top import generate_ids_main_menu_top_story
 from generation.deterministic_storybook.ids.masthead import generate_ids_masthead_story
 from generation.deterministic_storybook.ids.masthead_dap import generate_dap_masthead_story
@@ -50,6 +57,7 @@ from generation.deterministic_storybook.ids.tree import generate_ids_tree_story
 from generation.deterministic_storybook.ids.wizard import generate_ids_wizard_story
 from generation.deterministic_storybook.ids.wizard_inline import generate_ids_wizard_inline_story
 from generation.deterministic_storybook.ids.wizard_modal import generate_ids_wizard_modal_story
+from generation.deterministic_storybook.synapse.tab import generate_synapse_tab_story
 from generation.deterministic_storybook.models import DeterministicStorybookOptions
 from validation.spec_contract_parser import SpecContract
 
@@ -106,10 +114,19 @@ REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
     ("ids", "wizard"): generate_ids_wizard_story,
     ("ids", "wizard-inline"): generate_ids_wizard_inline_story,
     ("ids", "wizard-modal"): generate_ids_wizard_modal_story,
+    ("synapse", "tab"): generate_synapse_tab_story,
     # DAP-only slugs (resolved via ("ids", slug) fallback when design system is `dap`)
     ("ids", "masthead-dap"): generate_dap_masthead_story,
     ("ids", "settings-menu"): generate_dap_settings_menu_story,
     ("ids", "side-panel"): generate_dap_side_panel_story,
+}
+
+ANGULAR_REGISTRY: Dict[Tuple[str, str], StoryGenerator] = {
+    ("ids", "accordion"): generate_ids_accordion_story_angular,
+    ("ids", "alert"): generate_ids_alert_story_angular,
+    ("ids", "badge"): generate_ids_badge_story_angular,
+    ("ids", "button"): generate_ids_button_story_angular,
+    ("ids", "main-menu-left"): generate_ids_main_menu_left_story_angular,
 }
 
 
@@ -121,17 +138,30 @@ def generate_story_for_component(
     story_path: Path,
     contract: SpecContract,
     options: DeterministicStorybookOptions | None = None,
+    framework: str = "react",
 ) -> str | None:
+    registry = ANGULAR_REGISTRY if framework.lower() == "angular" else REGISTRY
     key = (design_system.lower(), component.lower())
-    generator = REGISTRY.get(key)
+    generator = registry.get(key)
     if not generator:
         # Allow baseline IDS generator reuse in program contexts.
-        generator = REGISTRY.get(("ids", component.lower()))
+        generator = registry.get(("ids", component.lower()))
     if not generator:
         return None
+    merged_options = options or DeterministicStorybookOptions()
+    if framework.lower() == "angular":
+        merged_options = DeterministicStorybookOptions(
+            title_prefix=merged_options.title_prefix,
+            include_state_harness=merged_options.include_state_harness,
+            component_prefix=merged_options.component_prefix,
+            design_system_slug=merged_options.design_system_slug,
+            apply_program_deltas=merged_options.apply_program_deltas,
+            framework="angular",
+            spec_text=merged_options.spec_text,
+        )
     return generator(
         repo_root=repo_root,
         story_path=story_path,
         contract=contract,
-        options=options,
+        options=merged_options,
     )

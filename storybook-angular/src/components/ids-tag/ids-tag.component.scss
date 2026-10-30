@@ -1,0 +1,246 @@
+:host {
+  display: inline-flex;
+}
+
+.ids-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  border: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--corner-radius-radius-24);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
+  white-space: nowrap;
+  font-family: inherit;
+}
+
+.small {
+  min-height: 20px;
+  padding: 0 var(--padding-padding-8);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+}
+
+.large {
+  height: 28px;
+  padding: var(--padding-padding-4) var(--padding-padding-12);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+}
+
+.read-only,
+.clickable,
+.type-badge {
+  cursor: default;
+}
+
+.clickable {
+  cursor: pointer;
+  min-height: 28px;
+  padding: var(--padding-padding-4) var(--padding-padding-12);
+  gap: var(--spacing-space-8);
+  border-color: var(--color-border-brand-base);
+}
+
+.type-badge {
+  min-height: 28px;
+  padding: var(--padding-padding-4) var(--padding-padding-12);
+  gap: var(--spacing-space-8);
+}
+
+.editable {
+  min-height: 28px;
+  padding: var(--padding-padding-4) var(--padding-padding-12);
+  gap: var(--spacing-space-8);
+}
+
+.ids-tag[data-disabled] {
+  pointer-events: none;
+}
+
+.ids-tag[data-error] {
+  border-color: var(--color-border-alerting-critical-base);
+}
+
+.ids-tag[data-focus] {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.tone-none {
+  background: var(--color-background-surface-component);
+  border-color: var(--color-border-gray-neutral-base);
+  color: var(--color-text-gray-neutral);
+}
+
+.tone-informational {
+  background: var(--color-background-alerting-info-base);
+  border-color: var(--color-border-alerting-info-base-white);
+  color: var(--color-text-gray-white);
+}
+
+.tone-success {
+  background: var(--color-background-alerting-success-base);
+  border-color: var(--color-border-alerting-success-base-white);
+  color: var(--color-text-gray-white);
+}
+
+.tone-minor {
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
+  color: var(--color-text-alerting-major-strong);
+}
+
+.tone-major {
+  background: var(--color-background-alerting-major-base);
+  border-color: var(--color-border-alerting-major-base-white);
+  color: var(--color-text-gray-white);
+}
+
+.tone-critical {
+  background: var(--color-background-alerting-critical-base);
+  border-color: var(--color-border-alerting-critical-base-white);
+  color: var(--color-text-gray-white);
+}
+
+.clickable.selected {
+  background: var(--color-background-controls-base);
+  border-color: var(--color-border-brand-transparent-brand);
+  color: var(--color-text-gray-white);
+}
+
+.clickable.tone-none:not(.selected) {
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral);
+}
+
+.clickable:not(.selected) {
+  border-color: var(--color-border-brand-base);
+}
+
+.clickable.tone-none:not(.selected):hover:not([data-disabled]),
+.clickable.tone-none:not(.selected)[data-hover]:not([data-disabled]) {
+  background: var(--color-background-controls-lighter);
+  border-color: var(--color-border-brand-base);
+}
+
+.clickable.selected:hover:not([data-disabled]),
+.clickable.selected[data-hover]:not([data-disabled]) {
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-border-brand-transparent-brand);
+}
+
+.ids-tag[data-disabled] {
+  background: var(--color-background-gray-light);
+  border-color: var(--color-border-gray-disabled);
+  color: var(--color-text-gray-disabled);
+}
+
+.ids-tag[data-disabled].editable {
+  background: var(--color-background-gray-lighter);
+}
+
+.ids-tag[data-disabled] .label,
+.ids-tag[data-disabled] .prefix {
+  color: var(--color-text-gray-disabled);
+}
+
+.label,
+.prefix {
+  user-select: none;
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+}
+
+.content {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-2);
+  min-height: 20px;
+}
+
+.prefix {
+  display: inline-flex;
+  align-items: baseline;
+  white-space: nowrap;
+}
+
+.prefix-text {
+  font-weight: 500;
+}
+
+.prefix-colon {
+  font-weight: 400;
+}
+
+.text-field {
+  display: inline-flex;
+  align-items: center;
+  min-height: 20px;
+  padding: 0 var(--padding-padding-2);
+  border: var(--border-width-border-default) solid transparent;
+  border-radius: var(--corner-radius-radius-2);
+  outline: none;
+}
+
+.editable .text-field:focus-visible,
+.editable .text-field:focus,
+.editable[data-focus] .text-field,
+.editable .text-field[data-focus-on-text] {
+  border-color: var(--color-border-brand-base);
+}
+
+.leading-icon {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
+}
+
+.badge {
+  box-sizing: border-box;
+  min-width: var(--sizing-size-18);
+  height: var(--sizing-size-18);
+  padding: 0 var(--padding-padding-4);
+  border-radius: 999px;
+  border: var(--border-width-border-default) solid var(--color-border-gray-white);
+  background: var(--color-background-alerting-info-1);
+  color: var(--color-text-gray-white);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--font-size-body-3);
+  line-height: 1;
+}
+
+.ids-tag[data-disabled] .badge {
+  background: var(--color-static-gray-500);
+  border-color: var(--color-border-gray-white);
+}
+
+.menu-caret {
+  display: inline-flex;
+  flex-shrink: 0;
+  width: var(--sizing-size-10);
+  height: var(--sizing-size-10);
+}
+
+.dismiss {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 10px;
+  border: none;
+  background: transparent;
+  color: inherit;
+  padding: 0;
+  cursor: pointer;
+}
+
+.ids-tag[data-disabled] .dismiss {
+  color: var(--color-icon-gray-disabled);
+}

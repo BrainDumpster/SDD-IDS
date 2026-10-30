@@ -1,0 +1,3740 @@
+{
+  "source": {
+    "themeCss": "components/ids-theme.css",
+    "figmaCollections": {
+      "primitives": "Primitive",
+      "semantic": "Color Modes"
+    },
+    "variablesLibrary": "https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library"
+  },
+  "primitives": [
+    {
+      "group": "Alert",
+      "tokens": [
+        {
+          "name": "--alert-blue-100",
+          "value": "#ebf2fb"
+        },
+        {
+          "name": "--alert-blue-200",
+          "value": "#d9e7f8"
+        },
+        {
+          "name": "--alert-blue-300",
+          "value": "#94bbea"
+        },
+        {
+          "name": "--alert-blue-400",
+          "value": "#4c8edd"
+        },
+        {
+          "name": "--alert-blue-500",
+          "value": "#005ece"
+        },
+        {
+          "name": "--alert-blue-600",
+          "value": "#004eab"
+        },
+        {
+          "name": "--alert-blue-700",
+          "value": "#003e88"
+        },
+        {
+          "name": "--alert-blue-800",
+          "value": "#002e65"
+        },
+        {
+          "name": "--alert-blue-900",
+          "value": "#001e42"
+        },
+        {
+          "name": "--alert-green-100",
+          "value": "#edf5eb"
+        },
+        {
+          "name": "--alert-green-200",
+          "value": "#ddedd9"
+        },
+        {
+          "name": "--alert-green-300",
+          "value": "#9fcc94"
+        },
+        {
+          "name": "--alert-green-400",
+          "value": "#5faa4c"
+        },
+        {
+          "name": "--alert-green-500",
+          "value": "#1b8500"
+        },
+        {
+          "name": "--alert-green-600",
+          "value": "#166e00"
+        },
+        {
+          "name": "--alert-green-700",
+          "value": "#125800"
+        },
+        {
+          "name": "--alert-green-800",
+          "value": "#0d4100"
+        },
+        {
+          "name": "--alert-green-900",
+          "value": "#092b00"
+        },
+        {
+          "name": "--alert-orange-100",
+          "value": "#fef3eb"
+        },
+        {
+          "name": "--alert-orange-200",
+          "value": "#fce8d9"
+        },
+        {
+          "name": "--alert-orange-300",
+          "value": "#f7be94"
+        },
+        {
+          "name": "--alert-orange-400",
+          "value": "#f2934c"
+        },
+        {
+          "name": "--alert-orange-500",
+          "value": "#ed6400"
+        },
+        {
+          "name": "--alert-orange-600",
+          "value": "#c55300"
+        },
+        {
+          "name": "--alert-orange-700",
+          "value": "#9c4200"
+        },
+        {
+          "name": "--alert-orange-800",
+          "value": "#743100"
+        },
+        {
+          "name": "--alert-orange-900",
+          "value": "#4c2000"
+        },
+        {
+          "name": "--alert-red-100",
+          "value": "#f9ebeb"
+        },
+        {
+          "name": "--alert-red-200",
+          "value": "#f3d9d9"
+        },
+        {
+          "name": "--alert-red-300",
+          "value": "#dd9494"
+        },
+        {
+          "name": "--alert-red-400",
+          "value": "#c74c4c"
+        },
+        {
+          "name": "--alert-red-500",
+          "value": "#af0000"
+        },
+        {
+          "name": "--alert-red-600",
+          "value": "#910000"
+        },
+        {
+          "name": "--alert-red-700",
+          "value": "#730000"
+        },
+        {
+          "name": "--alert-red-800",
+          "value": "#560000"
+        },
+        {
+          "name": "--alert-red-900",
+          "value": "#380000"
+        },
+        {
+          "name": "--alert-yellow-100",
+          "value": "#fffbeb"
+        },
+        {
+          "name": "--alert-yellow-200",
+          "value": "#fff7d9"
+        },
+        {
+          "name": "--alert-yellow-300",
+          "value": "#ffe794"
+        },
+        {
+          "name": "--alert-yellow-400",
+          "value": "#ffd84c"
+        },
+        {
+          "name": "--alert-yellow-500",
+          "value": "#ffc700"
+        },
+        {
+          "name": "--alert-yellow-600",
+          "value": "#e5a51a"
+        },
+        {
+          "name": "--alert-yellow-700",
+          "value": "#c48429"
+        },
+        {
+          "name": "--alert-yellow-800",
+          "value": "#9c622e"
+        },
+        {
+          "name": "--alert-yellow-900",
+          "value": "#6d4028"
+        }
+      ]
+    },
+    {
+      "group": "Secondary Palette",
+      "tokens": [
+        {
+          "name": "--secondary-palette-berry-100",
+          "value": "#f7ebf2"
+        },
+        {
+          "name": "--secondary-palette-berry-200",
+          "value": "#f1d9e7"
+        },
+        {
+          "name": "--secondary-palette-berry-300",
+          "value": "#d894bd"
+        },
+        {
+          "name": "--secondary-palette-berry-400",
+          "value": "#bd4c90"
+        },
+        {
+          "name": "--secondary-palette-berry-500",
+          "value": "#a10061"
+        },
+        {
+          "name": "--secondary-palette-berry-600",
+          "value": "#860051"
+        },
+        {
+          "name": "--secondary-palette-berry-700",
+          "value": "#6a0040"
+        },
+        {
+          "name": "--secondary-palette-berry-800",
+          "value": "#4f0030"
+        },
+        {
+          "name": "--secondary-palette-berry-900",
+          "value": "#34001f"
+        },
+        {
+          "name": "--secondary-palette-teal-100",
+          "value": "#ebf5f7"
+        },
+        {
+          "name": "--secondary-palette-teal-200",
+          "value": "#d9ecf0"
+        },
+        {
+          "name": "--secondary-palette-teal-300",
+          "value": "#94cad6"
+        },
+        {
+          "name": "--secondary-palette-teal-400",
+          "value": "#4ca7bb"
+        },
+        {
+          "name": "--secondary-palette-teal-500",
+          "value": "#00819e"
+        },
+        {
+          "name": "--secondary-palette-teal-600",
+          "value": "#006b83"
+        },
+        {
+          "name": "--secondary-palette-teal-700",
+          "value": "#005568"
+        },
+        {
+          "name": "--secondary-palette-teal-800",
+          "value": "#003f4d"
+        },
+        {
+          "name": "--secondary-palette-teal-900",
+          "value": "#002933"
+        },
+        {
+          "name": "--secondary-palette-violet-100",
+          "value": "#f5ebf9"
+        },
+        {
+          "name": "--secondary-palette-violet-200",
+          "value": "#ebd9f4"
+        },
+        {
+          "name": "--secondary-palette-violet-300",
+          "value": "#c894e1"
+        },
+        {
+          "name": "--secondary-palette-violet-400",
+          "value": "#a34dcd"
+        },
+        {
+          "name": "--secondary-palette-violet-500",
+          "value": "#7c01b7"
+        },
+        {
+          "name": "--secondary-palette-violet-600",
+          "value": "#670198"
+        },
+        {
+          "name": "--secondary-palette-violet-700",
+          "value": "#520179"
+        },
+        {
+          "name": "--secondary-palette-violet-800",
+          "value": "#3d005a"
+        },
+        {
+          "name": "--secondary-palette-violet-900",
+          "value": "#28003b"
+        }
+      ]
+    },
+    {
+      "group": "UI Palette",
+      "tokens": [
+        {
+          "name": "--ui-palette-brand-100",
+          "value": "#ebf4fb"
+        },
+        {
+          "name": "--ui-palette-brand-200",
+          "value": "#daeaf7"
+        },
+        {
+          "name": "--ui-palette-brand-300",
+          "value": "#97c4e9"
+        },
+        {
+          "name": "--ui-palette-brand-400",
+          "value": "#509cda"
+        },
+        {
+          "name": "--ui-palette-brand-500",
+          "value": "#0672cb"
+        },
+        {
+          "name": "--ui-palette-brand-600",
+          "value": "#055fa9"
+        },
+        {
+          "name": "--ui-palette-brand-700",
+          "value": "#044b86"
+        },
+        {
+          "name": "--ui-palette-brand-800",
+          "value": "#033864"
+        },
+        {
+          "name": "--ui-palette-brand-900",
+          "value": "#022541"
+        },
+        {
+          "name": "--ui-palette-gray-100",
+          "value": "#f4f4f4"
+        },
+        {
+          "name": "--ui-palette-gray-200",
+          "value": "#eaeaea"
+        },
+        {
+          "name": "--ui-palette-gray-300",
+          "value": "#c5c5c5"
+        },
+        {
+          "name": "--ui-palette-gray-400",
+          "value": "#9e9e9e"
+        },
+        {
+          "name": "--ui-palette-gray-500",
+          "value": "#757575"
+        },
+        {
+          "name": "--ui-palette-gray-600",
+          "value": "#616161"
+        },
+        {
+          "name": "--ui-palette-gray-700",
+          "value": "#4d4d4d"
+        },
+        {
+          "name": "--ui-palette-gray-800",
+          "value": "#393939"
+        },
+        {
+          "name": "--ui-palette-gray-900",
+          "value": "#252525"
+        },
+        {
+          "name": "--ui-palette-slate-100",
+          "value": "#f2f3f5"
+        },
+        {
+          "name": "--ui-palette-slate-200",
+          "value": "#e6e9ec"
+        },
+        {
+          "name": "--ui-palette-slate-300",
+          "value": "#b8c1c9"
+        },
+        {
+          "name": "--ui-palette-slate-400",
+          "value": "#8898a5"
+        },
+        {
+          "name": "--ui-palette-slate-500",
+          "value": "#566c7f"
+        },
+        {
+          "name": "--ui-palette-slate-600",
+          "value": "#455666"
+        },
+        {
+          "name": "--ui-palette-slate-700",
+          "value": "#34414c"
+        },
+        {
+          "name": "--ui-palette-slate-800",
+          "value": "#1e262c"
+        },
+        {
+          "name": "--ui-palette-slate-900",
+          "value": "#111619"
+        }
+      ]
+    },
+    {
+      "group": "White",
+      "tokens": [
+        {
+          "name": "--white",
+          "value": "#ffffff"
+        }
+      ]
+    },
+    {
+      "group": "Opacity",
+      "tokens": [
+        {
+          "name": "--opacity-0",
+          "value": "0"
+        },
+        {
+          "name": "--opacity-10",
+          "value": "0.1"
+        },
+        {
+          "name": "--opacity-100",
+          "value": "1.0"
+        },
+        {
+          "name": "--opacity-20",
+          "value": "0.2"
+        },
+        {
+          "name": "--opacity-30",
+          "value": "0.3"
+        },
+        {
+          "name": "--opacity-40",
+          "value": "0.4"
+        },
+        {
+          "name": "--opacity-50",
+          "value": "0.5"
+        },
+        {
+          "name": "--opacity-60",
+          "value": "0.6"
+        },
+        {
+          "name": "--opacity-70",
+          "value": "0.7"
+        },
+        {
+          "name": "--opacity-80",
+          "value": "0.8"
+        },
+        {
+          "name": "--opacity-90",
+          "value": "0.9"
+        }
+      ]
+    },
+    {
+      "group": "Scale",
+      "tokens": [
+        {
+          "name": "--scale--1",
+          "value": "-1px"
+        },
+        {
+          "name": "--scale-0",
+          "value": "0px"
+        },
+        {
+          "name": "--scale-1",
+          "value": "1px"
+        },
+        {
+          "name": "--scale-10",
+          "value": "10px"
+        },
+        {
+          "name": "--scale-112",
+          "value": "112px"
+        },
+        {
+          "name": "--scale-12",
+          "value": "12px"
+        },
+        {
+          "name": "--scale-120",
+          "value": "120px"
+        },
+        {
+          "name": "--scale-128",
+          "value": "128px"
+        },
+        {
+          "name": "--scale-14",
+          "value": "14px"
+        },
+        {
+          "name": "--scale-144",
+          "value": "144px"
+        },
+        {
+          "name": "--scale-16",
+          "value": "16px"
+        },
+        {
+          "name": "--scale-18",
+          "value": "18px"
+        },
+        {
+          "name": "--scale-2",
+          "value": "2px"
+        },
+        {
+          "name": "--scale-20",
+          "value": "20px"
+        },
+        {
+          "name": "--scale-22",
+          "value": "22px"
+        },
+        {
+          "name": "--scale-24",
+          "value": "24px"
+        },
+        {
+          "name": "--scale-256",
+          "value": "256px"
+        },
+        {
+          "name": "--scale-26",
+          "value": "26px"
+        },
+        {
+          "name": "--scale-28",
+          "value": "28px"
+        },
+        {
+          "name": "--scale-32",
+          "value": "32px"
+        },
+        {
+          "name": "--scale-34",
+          "value": "34px"
+        },
+        {
+          "name": "--scale-36",
+          "value": "36px"
+        },
+        {
+          "name": "--scale-4",
+          "value": "4px"
+        },
+        {
+          "name": "--scale-40",
+          "value": "40px"
+        },
+        {
+          "name": "--scale-44",
+          "value": "44px"
+        },
+        {
+          "name": "--scale-48",
+          "value": "48px"
+        },
+        {
+          "name": "--scale-512",
+          "value": "512px"
+        },
+        {
+          "name": "--scale-52",
+          "value": "52px"
+        },
+        {
+          "name": "--scale-56",
+          "value": "56px"
+        },
+        {
+          "name": "--scale-58",
+          "value": "58px"
+        },
+        {
+          "name": "--scale-6",
+          "value": "6px"
+        },
+        {
+          "name": "--scale-60",
+          "value": "60px"
+        },
+        {
+          "name": "--scale-64",
+          "value": "64px"
+        },
+        {
+          "name": "--scale-72",
+          "value": "72px"
+        },
+        {
+          "name": "--scale-8",
+          "value": "8px"
+        },
+        {
+          "name": "--scale-80",
+          "value": "80px"
+        },
+        {
+          "name": "--scale-88",
+          "value": "88px"
+        },
+        {
+          "name": "--scale-96",
+          "value": "96px"
+        }
+      ]
+    },
+    {
+      "group": "Typography",
+      "tokens": [
+        {
+          "name": "--typography-font-style-lo-res",
+          "value": "'Comic Sans MS'"
+        },
+        {
+          "name": "--typography-font-style-primary",
+          "value": "'Roboto'"
+        },
+        {
+          "name": "--typography-font-weight-medium",
+          "value": "'Medium'"
+        },
+        {
+          "name": "--typography-font-weight-regular",
+          "value": "'Regular'"
+        }
+      ]
+    },
+    {
+      "group": "UI Icon Spacing",
+      "tokens": [
+        {
+          "name": "--ui-icon-spacing-icon-14",
+          "value": "14px"
+        },
+        {
+          "name": "--ui-icon-spacing-icon-16",
+          "value": "16px"
+        },
+        {
+          "name": "--ui-icon-spacing-icon-18",
+          "value": "18px"
+        },
+        {
+          "name": "--ui-icon-spacing-icon-22",
+          "value": "22px"
+        },
+        {
+          "name": "--ui-icon-spacing-icon-24",
+          "value": "24px"
+        },
+        {
+          "name": "--ui-icon-spacing-icon-28",
+          "value": "28px"
+        },
+        {
+          "name": "--ui-icon-spacing-icon-32",
+          "value": "32px"
+        },
+        {
+          "name": "--ui-icon-spacing-icon-48",
+          "value": "48px"
+        }
+      ]
+    }
+  ],
+  "semantic": [
+    {
+      "group": "Annotation",
+      "tokens": [
+        {
+          "name": "--annotation",
+          "light": "#e8178a",
+          "dark": "#f174b9"
+        }
+      ]
+    },
+    {
+      "group": "Color / Background",
+      "tokens": [
+        {
+          "name": "--color-background-alerting-critical-base",
+          "light": "#af0000",
+          "dark": "#c74c4c"
+        },
+        {
+          "name": "--color-background-alerting-critical-light",
+          "light": "#f3d9d9",
+          "dark": "#f3d9d9"
+        },
+        {
+          "name": "--color-background-alerting-critical-lighter",
+          "light": "#f9ebeb",
+          "dark": "#380000"
+        },
+        {
+          "name": "--color-background-alerting-critical-strong",
+          "light": "#910000",
+          "dark": "#af0000"
+        },
+        {
+          "name": "--color-background-alerting-critical-stronger",
+          "light": "#730000",
+          "dark": "#910000"
+        },
+        {
+          "name": "--color-background-alerting-info-base",
+          "light": "#005ece",
+          "dark": "#4c8edd"
+        },
+        {
+          "name": "--color-background-alerting-info-light",
+          "light": "#d9e7f8",
+          "dark": "#d9e7f8"
+        },
+        {
+          "name": "--color-background-alerting-info-lighter",
+          "light": "#ebf2fb",
+          "dark": "#001e42"
+        },
+        {
+          "name": "--color-background-alerting-info-strong",
+          "light": "#004eab",
+          "dark": "#005ece"
+        },
+        {
+          "name": "--color-background-alerting-info-stronger",
+          "light": "#003e88",
+          "dark": "#004eab"
+        },
+        {
+          "name": "--color-background-alerting-major-base",
+          "light": "#ed6400",
+          "dark": "#ed6400"
+        },
+        {
+          "name": "--color-background-alerting-major-base-alt",
+          "light": "#ed6400",
+          "dark": "#f2934c"
+        },
+        {
+          "name": "--color-background-alerting-major-light",
+          "light": "#fce8d9",
+          "dark": "#fce8d9"
+        },
+        {
+          "name": "--color-background-alerting-major-lighter",
+          "light": "#fef3eb",
+          "dark": "#4c2000"
+        },
+        {
+          "name": "--color-background-alerting-major-strong",
+          "light": "#ed6400",
+          "dark": "#c55300"
+        },
+        {
+          "name": "--color-background-alerting-major-stronger",
+          "light": "#9c4200",
+          "dark": "#9c4200"
+        },
+        {
+          "name": "--color-background-alerting-minor-base",
+          "light": "#ffc700",
+          "dark": "#ffc700"
+        },
+        {
+          "name": "--color-background-alerting-minor-base-alt",
+          "light": "#ffc700",
+          "dark": "#ffd84c"
+        },
+        {
+          "name": "--color-background-alerting-minor-light",
+          "light": "#fff7d9",
+          "dark": "#fff7d9"
+        },
+        {
+          "name": "--color-background-alerting-minor-lighter",
+          "light": "#fffbeb",
+          "dark": "#6d4028"
+        },
+        {
+          "name": "--color-background-alerting-minor-strong",
+          "light": "#e5a51a",
+          "dark": "#e5a51a"
+        },
+        {
+          "name": "--color-background-alerting-minor-stronger",
+          "light": "#c48429",
+          "dark": "#c48429"
+        },
+        {
+          "name": "--color-background-alerting-success-base",
+          "light": "#1b8500",
+          "dark": "#5faa4c"
+        },
+        {
+          "name": "--color-background-alerting-success-light",
+          "light": "#ddedd9",
+          "dark": "#ddedd9"
+        },
+        {
+          "name": "--color-background-alerting-success-lighter",
+          "light": "#edf5eb",
+          "dark": "#092b00"
+        },
+        {
+          "name": "--color-background-alerting-success-strong",
+          "light": "#166e00",
+          "dark": "#1b8500"
+        },
+        {
+          "name": "--color-background-alerting-success-stronger",
+          "light": "#125800",
+          "dark": "#166e00"
+        },
+        {
+          "name": "--color-background-brand-base",
+          "light": "#0672cb",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-background-brand-light-slate",
+          "light": "#daeaf7",
+          "dark": "#34414c"
+        },
+        {
+          "name": "--color-background-brand-lighter-slate",
+          "light": "#ebf4fb",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-background-brand-strong",
+          "light": "#055fa9",
+          "dark": "#97c4e9"
+        },
+        {
+          "name": "--color-background-brand-stronger",
+          "light": "#044b86",
+          "dark": "#daeaf7"
+        },
+        {
+          "name": "--color-background-controls-base",
+          "light": "#0672cb",
+          "dark": "#0672cb"
+        },
+        {
+          "name": "--color-background-controls-light",
+          "light": "#daeaf7",
+          "dark": "#033864"
+        },
+        {
+          "name": "--color-background-controls-lighter",
+          "light": "#ebf4fb",
+          "dark": "#022541"
+        },
+        {
+          "name": "--color-background-controls-strong",
+          "light": "#055fa9",
+          "dark": "#055fa9"
+        },
+        {
+          "name": "--color-background-controls-stronger",
+          "light": "#044b86",
+          "dark": "#044b86"
+        },
+        {
+          "name": "--color-background-gray-base",
+          "light": "#757575",
+          "dark": "#9e9e9e"
+        },
+        {
+          "name": "--color-background-gray-light",
+          "light": "#eaeaea",
+          "dark": "#393939"
+        },
+        {
+          "name": "--color-background-gray-lighter",
+          "light": "#f4f4f4",
+          "dark": "#393939"
+        },
+        {
+          "name": "--color-background-gray-neutral-base",
+          "light": "#757575",
+          "dark": "#8898a5"
+        },
+        {
+          "name": "--color-background-gray-neutral-light",
+          "light": "#eaeaea",
+          "dark": "#34414c"
+        },
+        {
+          "name": "--color-background-gray-neutral-light-alt",
+          "light": "#eaeaea",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-background-gray-neutral-lighter",
+          "light": "#f4f4f4",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-background-gray-neutral-strong",
+          "light": "#4d4d4d",
+          "dark": "#566c7f"
+        },
+        {
+          "name": "--color-background-gray-neutral-stronger",
+          "light": "#252525",
+          "dark": "#b8c1c9"
+        },
+        {
+          "name": "--color-background-gray-strong",
+          "light": "#616161",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-background-gray-stronger",
+          "light": "#252525",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-background-masthead-base",
+          "light": "#0672cb",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-background-masthead-strong",
+          "light": "#055fa9",
+          "dark": "#34414c"
+        },
+        {
+          "name": "--color-background-masthead-stronger",
+          "light": "#044b86",
+          "dark": "#455666"
+        },
+        {
+          "name": "--color-background-secondary-berry-base",
+          "light": "#a10061",
+          "dark": "#bd4c90"
+        },
+        {
+          "name": "--color-background-secondary-berry-light",
+          "light": "#f1d9e7",
+          "dark": "#6a0040"
+        },
+        {
+          "name": "--color-background-secondary-berry-lighter",
+          "light": "#f7ebf2",
+          "dark": "#34001f"
+        },
+        {
+          "name": "--color-background-secondary-berry-strong",
+          "light": "#860051",
+          "dark": "#d894bd"
+        },
+        {
+          "name": "--color-background-secondary-berry-stronger",
+          "light": "#6a0040",
+          "dark": "#f1d9e7"
+        },
+        {
+          "name": "--color-background-secondary-teal-base",
+          "light": "#00819e",
+          "dark": "#4ca7bb"
+        },
+        {
+          "name": "--color-background-secondary-teal-base-alt",
+          "light": "#00819e",
+          "dark": "#00819e"
+        },
+        {
+          "name": "--color-background-secondary-teal-light",
+          "light": "#d9ecf0",
+          "dark": "#005568"
+        },
+        {
+          "name": "--color-background-secondary-teal-lighter",
+          "light": "#ebf5f7",
+          "dark": "#002933"
+        },
+        {
+          "name": "--color-background-secondary-teal-strong",
+          "light": "#006b83",
+          "dark": "#94cad6"
+        },
+        {
+          "name": "--color-background-secondary-teal-stronger",
+          "light": "#005568",
+          "dark": "#d9ecf0"
+        },
+        {
+          "name": "--color-background-secondary-violet-base",
+          "light": "#7c01b7",
+          "dark": "#a34dcd"
+        },
+        {
+          "name": "--color-background-secondary-violet-base-strong",
+          "light": "#7c01b7",
+          "dark": "#c894e1"
+        },
+        {
+          "name": "--color-background-secondary-violet-light",
+          "light": "#ebd9f4",
+          "dark": "#520179"
+        },
+        {
+          "name": "--color-background-secondary-violet-lighter",
+          "light": "#f5ebf9",
+          "dark": "#28003b"
+        },
+        {
+          "name": "--color-background-secondary-violet-strong",
+          "light": "#670198",
+          "dark": "#c894e1"
+        },
+        {
+          "name": "--color-background-secondary-violet-stronger",
+          "light": "#520179",
+          "dark": "#ebd9f4"
+        },
+        {
+          "name": "--color-background-surface-black",
+          "light": "#252525",
+          "dark": "#252525"
+        },
+        {
+          "name": "--color-background-surface-component",
+          "light": "#ffffff",
+          "dark": "#111619"
+        },
+        {
+          "name": "--color-background-surface-component-light",
+          "light": "#f4f4f4",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-background-surface-overlay",
+          "light": "rgba(37,37,37,0.65)",
+          "dark": "rgba(17,22,25,0.75)"
+        },
+        {
+          "name": "--color-background-surface-primary",
+          "light": "#f4f4f4",
+          "dark": "#111619"
+        },
+        {
+          "name": "--color-background-surface-secondary",
+          "light": "#ffffff",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-background-surface-white",
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        }
+      ]
+    },
+    {
+      "group": "Color / Border",
+      "tokens": [
+        {
+          "name": "--color-border-alerting-critical-base",
+          "light": "#af0000",
+          "dark": "#dd9494"
+        },
+        {
+          "name": "--color-border-alerting-critical-base-transparent",
+          "light": "#af0000",
+          "dark": "rgba(221,148,148,0.00)"
+        },
+        {
+          "name": "--color-border-alerting-critical-base-white",
+          "light": "#af0000",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-border-alerting-critical-light",
+          "light": "#dd9494",
+          "dark": "#c74c4c"
+        },
+        {
+          "name": "--color-border-alerting-critical-lighter",
+          "light": "#f3d9d9",
+          "dark": "#c74c4c"
+        },
+        {
+          "name": "--color-border-alerting-critical-transparent-base",
+          "light": "rgba(175,0,0,0.00)",
+          "dark": "#dd9494"
+        },
+        {
+          "name": "--color-border-alerting-info-base",
+          "light": "#005ece",
+          "dark": "#94bbea"
+        },
+        {
+          "name": "--color-border-alerting-info-base-transparent",
+          "light": "#005ece",
+          "dark": "rgba(148,187,234,0.00)"
+        },
+        {
+          "name": "--color-border-alerting-info-base-white",
+          "light": "#005ece",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-border-alerting-info-light",
+          "light": "#94bbea",
+          "dark": "#4c8edd"
+        },
+        {
+          "name": "--color-border-alerting-info-transparent-base",
+          "light": "rgba(0,94,206,0.00)",
+          "dark": "#94bbea"
+        },
+        {
+          "name": "--color-border-alerting-major-base",
+          "light": "#ed6400",
+          "dark": "#f7be94"
+        },
+        {
+          "name": "--color-border-alerting-major-base-transparent",
+          "light": "#ed6400",
+          "dark": "rgba(247,190,148,0.00)"
+        },
+        {
+          "name": "--color-border-alerting-major-base-white",
+          "light": "#ed6400",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-border-alerting-major-light",
+          "light": "#f7be94",
+          "dark": "#f2934c"
+        },
+        {
+          "name": "--color-border-alerting-major-transparent-base",
+          "light": "rgba(237,100,0,0.00)",
+          "dark": "#f7be94"
+        },
+        {
+          "name": "--color-border-alerting-minor-base",
+          "light": "#e5a51a",
+          "dark": "#ffc700"
+        },
+        {
+          "name": "--color-border-alerting-minor-strong",
+          "light": "#9c622e",
+          "dark": "#9c622e"
+        },
+        {
+          "name": "--color-border-alerting-minor-strong-transparent",
+          "light": "#9c622e",
+          "dark": "rgba(255,255,255,0.00)"
+        },
+        {
+          "name": "--color-border-alerting-minor-strong-white",
+          "light": "#9c622e",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-border-alerting-minor-transparent-white",
+          "light": "rgba(255,199,0,0.00)",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-border-alerting-success-base",
+          "light": "#1b8500",
+          "dark": "#9fcc94"
+        },
+        {
+          "name": "--color-border-alerting-success-base-transparent",
+          "light": "#1b8500",
+          "dark": "rgba(159,204,148,0.00)"
+        },
+        {
+          "name": "--color-border-alerting-success-base-white",
+          "light": "#1b8500",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-border-alerting-success-light",
+          "light": "#9fcc94",
+          "dark": "#5faa4c"
+        },
+        {
+          "name": "--color-border-alerting-success-transparent-base",
+          "light": "rgba(27,133,0,0.00)",
+          "dark": "#9fcc94"
+        },
+        {
+          "name": "--color-border-brand-base",
+          "light": "#0672cb",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-border-brand-base-neutral",
+          "light": "#0672cb",
+          "dark": "#8898a5"
+        },
+        {
+          "name": "--color-border-brand-light",
+          "light": "#97c4e9",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-border-brand-strong",
+          "light": "#055fa9",
+          "dark": "#97c4e9"
+        },
+        {
+          "name": "--color-border-brand-transparent-brand",
+          "light": "rgba(255,255,255,0.00)",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-border-gray-black",
+          "light": "#252525",
+          "dark": "#252525"
+        },
+        {
+          "name": "--color-border-gray-disabled",
+          "light": "#757575",
+          "dark": "#9e9e9e"
+        },
+        {
+          "name": "--color-border-gray-neutral-base",
+          "light": "#757575",
+          "dark": "#8898a5"
+        },
+        {
+          "name": "--color-border-gray-neutral-inverse",
+          "light": "#ffffff",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-border-gray-neutral-light",
+          "light": "#c5c5c5",
+          "dark": "#34414c"
+        },
+        {
+          "name": "--color-border-gray-neutral-light-base",
+          "light": "#c5c5c5",
+          "dark": "#566c7f"
+        },
+        {
+          "name": "--color-border-gray-neutral-lighter",
+          "light": "#eaeaea",
+          "dark": "#1e262c"
+        },
+        {
+          "name": "--color-border-gray-neutral-strong",
+          "light": "#4d4d4d",
+          "dark": "#8898a5"
+        },
+        {
+          "name": "--color-border-gray-neutral-stronger",
+          "light": "#252525",
+          "dark": "#b8c1c9"
+        },
+        {
+          "name": "--color-border-gray-neutral-transparent-base",
+          "light": "rgba(255,255,255,0.00)",
+          "dark": "#8898a5"
+        },
+        {
+          "name": "--color-border-gray-white",
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-border-secondary-berry-base",
+          "light": "#a10061",
+          "dark": "#bd4c90"
+        },
+        {
+          "name": "--color-border-secondary-berry-light",
+          "light": "#bd4c90",
+          "dark": "#6a0040"
+        },
+        {
+          "name": "--color-border-secondary-berry-lighter",
+          "light": "#d894bd",
+          "dark": "#bd4c90"
+        },
+        {
+          "name": "--color-border-secondary-berry-strong",
+          "light": "#4f0030",
+          "dark": "#f1d9e7"
+        },
+        {
+          "name": "--color-border-secondary-teal-base",
+          "light": "#00819e",
+          "dark": "#4ca7bb"
+        },
+        {
+          "name": "--color-border-secondary-teal-light",
+          "light": "#4ca7bb",
+          "dark": "#005568"
+        },
+        {
+          "name": "--color-border-secondary-teal-lighter",
+          "light": "#94cad6",
+          "dark": "#4ca7bb"
+        },
+        {
+          "name": "--color-border-secondary-teal-strong",
+          "light": "#003f4d",
+          "dark": "#d9ecf0"
+        },
+        {
+          "name": "--color-border-secondary-violet-base",
+          "light": "#7c01b7",
+          "dark": "#a34dcd"
+        },
+        {
+          "name": "--color-border-secondary-violet-base-strong",
+          "light": "#7c01b7",
+          "dark": "#c894e1"
+        },
+        {
+          "name": "--color-border-secondary-violet-light",
+          "light": "#c894e1",
+          "dark": "#a34dcd"
+        },
+        {
+          "name": "--color-border-secondary-violet-strong",
+          "light": "#670198",
+          "dark": "#c894e1"
+        }
+      ]
+    },
+    {
+      "group": "Color / Data",
+      "tokens": [
+        {
+          "name": "--color-data-vis-categorial-category-1",
+          "light": "#044b86",
+          "dark": "#97c4e9"
+        },
+        {
+          "name": "--color-data-vis-categorial-category-2",
+          "light": "#97c4e9",
+          "dark": "#055fa9"
+        },
+        {
+          "name": "--color-data-vis-categorial-category-3",
+          "light": "#a10061",
+          "dark": "#bd4c90"
+        },
+        {
+          "name": "--color-data-vis-categorial-category-4",
+          "light": "#00819e",
+          "dark": "#4ca7bb"
+        },
+        {
+          "name": "--color-data-vis-categorial-category-5",
+          "light": "#670198",
+          "dark": "#c894e1"
+        },
+        {
+          "name": "--color-data-vis-categorial-category-6",
+          "light": "#5faa4c",
+          "dark": "#1b8500"
+        },
+        {
+          "name": "--color-data-vis-categorial-category-7",
+          "light": "#c55300",
+          "dark": "#f7be94"
+        },
+        {
+          "name": "--color-data-vis-categorial-category-8",
+          "light": "#c894e1",
+          "dark": "#670198"
+        }
+      ]
+    },
+    {
+      "group": "Color / Gradient",
+      "tokens": [
+        {
+          "name": "--color-gradient-overflow-horizontal-end",
+          "light": "rgba(244,244,244,0.00)",
+          "dark": "rgba(17,22,25,0.00)"
+        },
+        {
+          "name": "--color-gradient-overflow-horizontal-inverse-end",
+          "light": "rgba(255,255,255,0.00)",
+          "dark": "rgba(17,22,25,0.00)"
+        },
+        {
+          "name": "--color-gradient-overflow-horizontal-inverse-start",
+          "light": "#ffffff",
+          "dark": "#111619"
+        },
+        {
+          "name": "--color-gradient-overflow-horizontal-middle",
+          "light": "rgba(244,244,244,0.90)",
+          "dark": "rgba(17,22,25,0.90)"
+        },
+        {
+          "name": "--color-gradient-overflow-horizontal-start",
+          "light": "#f4f4f4",
+          "dark": "#111619"
+        },
+        {
+          "name": "--color-gradient-overflow-vertical-end",
+          "light": "rgba(255,255,255,0.00)",
+          "dark": "rgba(17,22,25,0.40)"
+        },
+        {
+          "name": "--color-gradient-overflow-vertical-scrollbar-end",
+          "light": "rgba(255,255,255,0.00)",
+          "dark": "rgba(17,22,25,0.00)"
+        },
+        {
+          "name": "--color-gradient-overflow-vertical-scrollbar-middle",
+          "light": "rgba(182,182,182,0.30)",
+          "dark": "rgba(17,22,25,0.40)"
+        },
+        {
+          "name": "--color-gradient-overflow-vertical-scrollbar-start",
+          "light": "rgba(117,117,117,0.60)",
+          "dark": "#111619"
+        },
+        {
+          "name": "--color-gradient-overflow-vertical-start",
+          "light": "rgba(182,182,182,0.40)",
+          "dark": "#111619"
+        }
+      ]
+    },
+    {
+      "group": "Color / Icon",
+      "tokens": [
+        {
+          "name": "--color-icon-alerting-critical-base",
+          "light": "#af0000",
+          "dark": "#c74c4c"
+        },
+        {
+          "name": "--color-icon-alerting-critical-strong",
+          "light": "#910000",
+          "dark": "#dd9494"
+        },
+        {
+          "name": "--color-icon-alerting-info-base",
+          "light": "#005ece",
+          "dark": "#4c8edd"
+        },
+        {
+          "name": "--color-icon-alerting-info-base-alt",
+          "light": "#005ece",
+          "dark": "#005ece"
+        },
+        {
+          "name": "--color-icon-alerting-major-base",
+          "light": "#ed6400",
+          "dark": "#ed6400"
+        },
+        {
+          "name": "--color-icon-alerting-major-base-strong",
+          "light": "#c55300",
+          "dark": "#f7be94"
+        },
+        {
+          "name": "--color-icon-alerting-major-strong",
+          "light": "#9c4200",
+          "dark": "#f2934c"
+        },
+        {
+          "name": "--color-icon-alerting-minor-base",
+          "light": "#ffc700",
+          "dark": "#ffc700"
+        },
+        {
+          "name": "--color-icon-alerting-minor-strong",
+          "light": "#c48429",
+          "dark": "#ffc700"
+        },
+        {
+          "name": "--color-icon-alerting-minor-strong-alt",
+          "light": "#6d4028",
+          "dark": "#6d4028"
+        },
+        {
+          "name": "--color-icon-alerting-minor-stronger",
+          "light": "#6d4028",
+          "dark": "#ffc700"
+        },
+        {
+          "name": "--color-icon-alerting-success-base",
+          "light": "#1b8500",
+          "dark": "#5faa4c"
+        },
+        {
+          "name": "--color-icon-alerting-success-base-alt",
+          "light": "#1b8500",
+          "dark": "#1b8500"
+        },
+        {
+          "name": "--color-icon-brand-base",
+          "light": "#0672cb",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-icon-brand-strong",
+          "light": "#055fa9",
+          "dark": "#97c4e9"
+        },
+        {
+          "name": "--color-icon-brand-stronger",
+          "light": "#044b86",
+          "dark": "#daeaf7"
+        },
+        {
+          "name": "--color-icon-gray-black",
+          "light": "#252525",
+          "dark": "#252525"
+        },
+        {
+          "name": "--color-icon-gray-disabled",
+          "light": "#757575",
+          "dark": "#9e9e9e"
+        },
+        {
+          "name": "--color-icon-gray-inverse",
+          "light": "#ffffff",
+          "dark": "#252525"
+        },
+        {
+          "name": "--color-icon-gray-neutral-accessible",
+          "light": "#757575",
+          "dark": "#8898a5"
+        },
+        {
+          "name": "--color-icon-gray-neutral-base",
+          "light": "#4d4d4d",
+          "dark": "#8898a5"
+        },
+        {
+          "name": "--color-icon-gray-neutral-light",
+          "light": "#616161",
+          "dark": "#b8c1c9"
+        },
+        {
+          "name": "--color-icon-gray-neutral-strong",
+          "light": "#252525",
+          "dark": "#b8c1c9"
+        },
+        {
+          "name": "--color-icon-gray-white",
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-icon-secondary-berry-base",
+          "light": "#a10061",
+          "dark": "#bd4c90"
+        },
+        {
+          "name": "--color-icon-secondary-berry-strong",
+          "light": "#6a0040",
+          "dark": "#d894bd"
+        },
+        {
+          "name": "--color-icon-secondary-berry-stronger",
+          "light": "#4f0030",
+          "dark": "#f1d9e7"
+        },
+        {
+          "name": "--color-icon-secondary-teal-base",
+          "light": "#00819e",
+          "dark": "#4ca7bb"
+        },
+        {
+          "name": "--color-icon-secondary-teal-strong",
+          "light": "#005568",
+          "dark": "#94cad6"
+        },
+        {
+          "name": "--color-icon-secondary-teal-stronger",
+          "light": "#003f4d",
+          "dark": "#d9ecf0"
+        },
+        {
+          "name": "--color-icon-secondary-violet-base",
+          "light": "#7c01b7",
+          "dark": "#a34dcd"
+        },
+        {
+          "name": "--color-icon-secondary-violet-strong",
+          "light": "#670198",
+          "dark": "#c894e1"
+        },
+        {
+          "name": "--color-icon-secondary-violet-stronger",
+          "light": "#3d005a",
+          "dark": "#ebd9f4"
+        }
+      ]
+    },
+    {
+      "group": "Color / Static",
+      "tokens": [
+        {
+          "name": "--color-static-brand-100",
+          "light": "#ebf4fb",
+          "dark": "#ebf4fb"
+        },
+        {
+          "name": "--color-static-brand-200",
+          "light": "#daeaf7",
+          "dark": "#daeaf7"
+        },
+        {
+          "name": "--color-static-brand-300",
+          "light": "#97c4e9",
+          "dark": "#97c4e9"
+        },
+        {
+          "name": "--color-static-brand-400",
+          "light": "#509cda",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-static-brand-500",
+          "light": "#0672cb",
+          "dark": "#0672cb"
+        },
+        {
+          "name": "--color-static-brand-600",
+          "light": "#055fa9",
+          "dark": "#055fa9"
+        },
+        {
+          "name": "--color-static-brand-700",
+          "light": "#044b86",
+          "dark": "#044b86"
+        },
+        {
+          "name": "--color-static-brand-800",
+          "light": "#033864",
+          "dark": "#033864"
+        },
+        {
+          "name": "--color-static-brand-900",
+          "light": "#022541",
+          "dark": "#022541"
+        },
+        {
+          "name": "--color-static-gray-100",
+          "light": "#f4f4f4",
+          "dark": "#f4f4f4"
+        },
+        {
+          "name": "--color-static-gray-200",
+          "light": "#eaeaea",
+          "dark": "#eaeaea"
+        },
+        {
+          "name": "--color-static-gray-300",
+          "light": "#c5c5c5",
+          "dark": "#c5c5c5"
+        },
+        {
+          "name": "--color-static-gray-400",
+          "light": "#9e9e9e",
+          "dark": "#9e9e9e"
+        },
+        {
+          "name": "--color-static-gray-500",
+          "light": "#757575",
+          "dark": "#757575"
+        },
+        {
+          "name": "--color-static-gray-600",
+          "light": "#616161",
+          "dark": "#616161"
+        },
+        {
+          "name": "--color-static-gray-700",
+          "light": "#4d4d4d",
+          "dark": "#4d4d4d"
+        },
+        {
+          "name": "--color-static-gray-800",
+          "light": "#393939",
+          "dark": "#393939"
+        },
+        {
+          "name": "--color-static-gray-900",
+          "light": "#252525",
+          "dark": "#252525"
+        },
+        {
+          "name": "--color-static-gray-white",
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        }
+      ]
+    },
+    {
+      "group": "Color / Text",
+      "tokens": [
+        {
+          "name": "--color-text-alerting-critical-base",
+          "light": "#af0000",
+          "dark": "#dd9494"
+        },
+        {
+          "name": "--color-text-alerting-critical-strong",
+          "light": "#910000",
+          "dark": "#dd9494"
+        },
+        {
+          "name": "--color-text-alerting-info-base",
+          "light": "#004eab",
+          "dark": "#94bbea"
+        },
+        {
+          "name": "--color-text-alerting-info-strong",
+          "light": "#002e65",
+          "dark": "#d9e7f8"
+        },
+        {
+          "name": "--color-text-alerting-major-strong",
+          "light": "#9c4200",
+          "dark": "#f2934c"
+        },
+        {
+          "name": "--color-text-alerting-major-stronger",
+          "light": "#743100",
+          "dark": "#fce8d9"
+        },
+        {
+          "name": "--color-text-alerting-minor-strong",
+          "light": "#6d4028",
+          "dark": "#ffc700"
+        },
+        {
+          "name": "--color-text-alerting-minor-strong-alt",
+          "light": "#6d4028",
+          "dark": "#6d4028"
+        },
+        {
+          "name": "--color-text-alerting-success-base",
+          "light": "#166e00",
+          "dark": "#9fcc94"
+        },
+        {
+          "name": "--color-text-alerting-success-strong",
+          "light": "#0d4100",
+          "dark": "#ddedd9"
+        },
+        {
+          "name": "--color-text-brand-base",
+          "light": "#0672cb",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-text-brand-strong",
+          "light": "#055fa9",
+          "dark": "#97c4e9"
+        },
+        {
+          "name": "--color-text-gray-black",
+          "light": "#252525",
+          "dark": "#252525"
+        },
+        {
+          "name": "--color-text-gray-disabled",
+          "light": "#757575",
+          "dark": "#9e9e9e"
+        },
+        {
+          "name": "--color-text-gray-inverse",
+          "light": "#ffffff",
+          "dark": "#252525"
+        },
+        {
+          "name": "--color-text-gray-neutral",
+          "light": "#4d4d4d",
+          "dark": "#b8c1c9"
+        },
+        {
+          "name": "--color-text-gray-neutral-strong",
+          "light": "#252525",
+          "dark": "#e6e9ec"
+        },
+        {
+          "name": "--color-text-gray-white",
+          "light": "#ffffff",
+          "dark": "#ffffff"
+        },
+        {
+          "name": "--color-text-link-brand-base",
+          "light": "#055fa9",
+          "dark": "#509cda"
+        },
+        {
+          "name": "--color-text-link-brand-light",
+          "light": "#daeaf7",
+          "dark": "#daeaf7"
+        },
+        {
+          "name": "--color-text-link-brand-lighter",
+          "light": "#ebf4fb",
+          "dark": "#ebf4fb"
+        },
+        {
+          "name": "--color-text-link-brand-strong",
+          "light": "#044b86",
+          "dark": "#97c4e9"
+        },
+        {
+          "name": "--color-text-link-brand-stronger",
+          "light": "#033864",
+          "dark": "#daeaf7"
+        },
+        {
+          "name": "--color-text-secondary-berry-base",
+          "light": "#a10061",
+          "dark": "#bd4c90"
+        },
+        {
+          "name": "--color-text-secondary-berry-strong",
+          "light": "#6a0040",
+          "dark": "#d894bd"
+        },
+        {
+          "name": "--color-text-secondary-berry-stronger",
+          "light": "#34001f",
+          "dark": "#f1d9e7"
+        },
+        {
+          "name": "--color-text-secondary-teal-base",
+          "light": "#00819e",
+          "dark": "#4ca7bb"
+        },
+        {
+          "name": "--color-text-secondary-teal-strong",
+          "light": "#005568",
+          "dark": "#94cad6"
+        },
+        {
+          "name": "--color-text-secondary-teal-stronger",
+          "light": "#002933",
+          "dark": "#d9ecf0"
+        },
+        {
+          "name": "--color-text-secondary-violet-base",
+          "light": "#7c01b7",
+          "dark": "#a34dcd"
+        },
+        {
+          "name": "--color-text-secondary-violet-strong",
+          "light": "#520179",
+          "dark": "#c894e1"
+        },
+        {
+          "name": "--color-text-secondary-violet-stronger",
+          "light": "#28003b",
+          "dark": "#ebd9f4"
+        }
+      ]
+    },
+    {
+      "group": "Other",
+      "tokens": [
+        {
+          "name": "--icon-standard-gray",
+          "light": "#616161",
+          "dark": "#616161"
+        }
+      ]
+    },
+    {
+      "group": "Sizes",
+      "tokens": [
+        {
+          "name": "--border-width-border-1",
+          "light": "1px",
+          "dark": "1px"
+        },
+        {
+          "name": "--border-width-border-2",
+          "light": "2px",
+          "dark": "2px"
+        },
+        {
+          "name": "--border-width-border-4",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "name": "--border-width-border-6",
+          "light": "6px",
+          "dark": "6px"
+        },
+        {
+          "name": "--border-width-border-none",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--corner-radius-radius-10",
+          "light": "10px",
+          "dark": "10px"
+        },
+        {
+          "name": "--corner-radius-radius-12",
+          "light": "12px",
+          "dark": "12px"
+        },
+        {
+          "name": "--corner-radius-radius-16",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "name": "--corner-radius-radius-2",
+          "light": "2px",
+          "dark": "2px"
+        },
+        {
+          "name": "--corner-radius-radius-20",
+          "light": "20px",
+          "dark": "20px"
+        },
+        {
+          "name": "--corner-radius-radius-22",
+          "light": "22px",
+          "dark": "22px"
+        },
+        {
+          "name": "--corner-radius-radius-24",
+          "light": "24px",
+          "dark": "24px"
+        },
+        {
+          "name": "--corner-radius-radius-26",
+          "light": "26px",
+          "dark": "26px"
+        },
+        {
+          "name": "--corner-radius-radius-4",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "name": "--corner-radius-radius-6",
+          "light": "6px",
+          "dark": "6px"
+        },
+        {
+          "name": "--corner-radius-radius-8",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "name": "--corner-radius-radius-none",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--corner-radius-radius-round",
+          "light": "999999px",
+          "dark": "999999px"
+        },
+        {
+          "name": "--font-line-height-line-height-18",
+          "light": "18px",
+          "dark": "18px"
+        },
+        {
+          "name": "--font-line-height-line-height-20",
+          "light": "20px",
+          "dark": "20px"
+        },
+        {
+          "name": "--font-line-height-line-height-24",
+          "light": "24px",
+          "dark": "24px"
+        },
+        {
+          "name": "--font-line-height-line-height-25",
+          "light": "25px",
+          "dark": "25px"
+        },
+        {
+          "name": "--font-line-height-line-height-32",
+          "light": "32px",
+          "dark": "32px"
+        },
+        {
+          "name": "--font-line-height-line-height-34",
+          "light": "34px",
+          "dark": "34px"
+        },
+        {
+          "name": "--font-line-height-line-height-40",
+          "light": "40px",
+          "dark": "40px"
+        },
+        {
+          "name": "--font-line-height-line-height-44",
+          "light": "44px",
+          "dark": "44px"
+        },
+        {
+          "name": "--font-line-height-line-height-58",
+          "light": "58px",
+          "dark": "58px"
+        },
+        {
+          "name": "--font-line-height-line-height-8",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "name": "--font-size-body-1",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "name": "--font-size-body-2",
+          "light": "14px",
+          "dark": "14px"
+        },
+        {
+          "name": "--font-size-body-3",
+          "light": "12px",
+          "dark": "12px"
+        },
+        {
+          "name": "--font-size-header-1",
+          "light": "48px",
+          "dark": "48px"
+        },
+        {
+          "name": "--font-size-header-2",
+          "light": "36px",
+          "dark": "36px"
+        },
+        {
+          "name": "--font-size-header-3",
+          "light": "32px",
+          "dark": "32px"
+        },
+        {
+          "name": "--font-size-header-4",
+          "light": "28px",
+          "dark": "28px"
+        },
+        {
+          "name": "--font-size-header-5",
+          "light": "24px",
+          "dark": "24px"
+        },
+        {
+          "name": "--font-size-header-6",
+          "light": "18px",
+          "dark": "18px"
+        },
+        {
+          "name": "--padding-padding-1",
+          "light": "1px",
+          "dark": "1px"
+        },
+        {
+          "name": "--padding-padding-10",
+          "light": "10px",
+          "dark": "10px"
+        },
+        {
+          "name": "--padding-padding-112",
+          "light": "112px",
+          "dark": "112px"
+        },
+        {
+          "name": "--padding-padding-12",
+          "light": "12px",
+          "dark": "12px"
+        },
+        {
+          "name": "--padding-padding-120",
+          "light": "120px",
+          "dark": "120px"
+        },
+        {
+          "name": "--padding-padding-14",
+          "light": "14px",
+          "dark": "14px"
+        },
+        {
+          "name": "--padding-padding-144",
+          "light": "144px",
+          "dark": "144px"
+        },
+        {
+          "name": "--padding-padding-16",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "name": "--padding-padding-18",
+          "light": "18px",
+          "dark": "18px"
+        },
+        {
+          "name": "--padding-padding-2",
+          "light": "2px",
+          "dark": "2px"
+        },
+        {
+          "name": "--padding-padding-20",
+          "light": "20px",
+          "dark": "20px"
+        },
+        {
+          "name": "--padding-padding-24",
+          "light": "24px",
+          "dark": "24px"
+        },
+        {
+          "name": "--padding-padding-256",
+          "light": "256px",
+          "dark": "256px"
+        },
+        {
+          "name": "--padding-padding-28",
+          "light": "28px",
+          "dark": "28px"
+        },
+        {
+          "name": "--padding-padding-32",
+          "light": "32px",
+          "dark": "32px"
+        },
+        {
+          "name": "--padding-padding-4",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "name": "--padding-padding-40",
+          "light": "40px",
+          "dark": "40px"
+        },
+        {
+          "name": "--padding-padding-48",
+          "light": "48px",
+          "dark": "48px"
+        },
+        {
+          "name": "--padding-padding-52",
+          "light": "52px",
+          "dark": "52px"
+        },
+        {
+          "name": "--padding-padding-58",
+          "light": "58px",
+          "dark": "58px"
+        },
+        {
+          "name": "--padding-padding-6",
+          "light": "6px",
+          "dark": "6px"
+        },
+        {
+          "name": "--padding-padding-60",
+          "light": "60px",
+          "dark": "60px"
+        },
+        {
+          "name": "--padding-padding-64",
+          "light": "64px",
+          "dark": "64px"
+        },
+        {
+          "name": "--padding-padding-72",
+          "light": "72px",
+          "dark": "72px"
+        },
+        {
+          "name": "--padding-padding-8",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "name": "--padding-padding-88",
+          "light": "88px",
+          "dark": "88px"
+        },
+        {
+          "name": "--padding-padding-96",
+          "light": "96px",
+          "dark": "96px"
+        },
+        {
+          "name": "--padding-padding-none",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--sizing-size-10",
+          "light": "10px",
+          "dark": "10px"
+        },
+        {
+          "name": "--sizing-size-12",
+          "light": "12px",
+          "dark": "12px"
+        },
+        {
+          "name": "--sizing-size-14",
+          "light": "14px",
+          "dark": "14px"
+        },
+        {
+          "name": "--sizing-size-16",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "name": "--sizing-size-18",
+          "light": "18px",
+          "dark": "18px"
+        },
+        {
+          "name": "--sizing-size-20",
+          "light": "20px",
+          "dark": "20px"
+        },
+        {
+          "name": "--sizing-size-22",
+          "light": "22px",
+          "dark": "22px"
+        },
+        {
+          "name": "--sizing-size-24",
+          "light": "24px",
+          "dark": "24px"
+        },
+        {
+          "name": "--sizing-size-28",
+          "light": "28px",
+          "dark": "28px"
+        },
+        {
+          "name": "--sizing-size-32",
+          "light": "32px",
+          "dark": "32px"
+        },
+        {
+          "name": "--sizing-size-4",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "name": "--sizing-size-40",
+          "light": "40px",
+          "dark": "40px"
+        },
+        {
+          "name": "--sizing-size-44",
+          "light": "44px",
+          "dark": "44px"
+        },
+        {
+          "name": "--sizing-size-48",
+          "light": "48px",
+          "dark": "48px"
+        },
+        {
+          "name": "--sizing-size-52",
+          "light": "52px",
+          "dark": "52px"
+        },
+        {
+          "name": "--sizing-size-56",
+          "light": "56px",
+          "dark": "56px"
+        },
+        {
+          "name": "--sizing-size-6",
+          "light": "6px",
+          "dark": "6px"
+        },
+        {
+          "name": "--sizing-size-8",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "name": "--spacing-space-1",
+          "light": "1px",
+          "dark": "1px"
+        },
+        {
+          "name": "--spacing-space-10",
+          "light": "10px",
+          "dark": "10px"
+        },
+        {
+          "name": "--spacing-space-12",
+          "light": "12px",
+          "dark": "12px"
+        },
+        {
+          "name": "--spacing-space-16",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "name": "--spacing-space-2",
+          "light": "2px",
+          "dark": "2px"
+        },
+        {
+          "name": "--spacing-space-20",
+          "light": "20px",
+          "dark": "20px"
+        },
+        {
+          "name": "--spacing-space-24",
+          "light": "24px",
+          "dark": "24px"
+        },
+        {
+          "name": "--spacing-space-32",
+          "light": "32px",
+          "dark": "32px"
+        },
+        {
+          "name": "--spacing-space-34",
+          "light": "34px",
+          "dark": "34px"
+        },
+        {
+          "name": "--spacing-space-4",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "name": "--spacing-space-40",
+          "light": "40px",
+          "dark": "40px"
+        },
+        {
+          "name": "--spacing-space-48",
+          "light": "48px",
+          "dark": "48px"
+        },
+        {
+          "name": "--spacing-space-56",
+          "light": "56px",
+          "dark": "56px"
+        },
+        {
+          "name": "--spacing-space-6",
+          "light": "6px",
+          "dark": "6px"
+        },
+        {
+          "name": "--spacing-space-8",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "name": "--spacing-space-minus-1",
+          "light": "-1px",
+          "dark": "-1px"
+        },
+        {
+          "name": "--spacing-space-none",
+          "light": "0px",
+          "dark": "0px"
+        }
+      ]
+    },
+    {
+      "group": "Shadows",
+      "tokens": [
+        {
+          "name": "--shadow-drop-shadow-16-blur",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "name": "--shadow-drop-shadow-16-spread",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-16-x",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-16-y",
+          "light": "16px",
+          "dark": "16px"
+        },
+        {
+          "name": "--shadow-drop-shadow-2-blur",
+          "light": "2px",
+          "dark": "2px"
+        },
+        {
+          "name": "--shadow-drop-shadow-2-spread",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-2-x",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-2-y",
+          "light": "2px",
+          "dark": "2px"
+        },
+        {
+          "name": "--shadow-drop-shadow-32-blur",
+          "light": "32px",
+          "dark": "32px"
+        },
+        {
+          "name": "--shadow-drop-shadow-32-spread",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-32-x",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-32-y",
+          "light": "32px",
+          "dark": "32px"
+        },
+        {
+          "name": "--shadow-drop-shadow-4-blur",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "name": "--shadow-drop-shadow-4-spread",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-4-x",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-4-y",
+          "light": "4px",
+          "dark": "4px"
+        },
+        {
+          "name": "--shadow-drop-shadow-8-blur",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "name": "--shadow-drop-shadow-8-spread",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-8-x",
+          "light": "0px",
+          "dark": "0px"
+        },
+        {
+          "name": "--shadow-drop-shadow-8-y",
+          "light": "8px",
+          "dark": "8px"
+        },
+        {
+          "name": "--shadow-drop-shadow-16-color",
+          "light": "rgba(37,37,37,0.08)",
+          "dark": "rgba(17,22,25,0.08)"
+        },
+        {
+          "name": "--shadow-drop-shadow-2-color",
+          "light": "rgba(37,37,37,0.08)",
+          "dark": "rgba(17,22,25,0.08)"
+        },
+        {
+          "name": "--shadow-drop-shadow-32-color",
+          "light": "rgba(37,37,37,0.08)",
+          "dark": "rgba(17,22,25,0.08)"
+        },
+        {
+          "name": "--shadow-drop-shadow-4-color",
+          "light": "rgba(37,37,37,0.08)",
+          "dark": "rgba(17,22,25,0.08)"
+        },
+        {
+          "name": "--shadow-drop-shadow-8-color",
+          "light": "rgba(37,37,37,0.08)",
+          "dark": "rgba(17,22,25,0.08)"
+        }
+      ]
+    }
+  ],
+  "components": [
+    {
+      "group": "Component layout aliases",
+      "tokens": [
+        {
+          "name": "--card-control-radius",
+          "value": "var(--corner-radius-radius-none)"
+        },
+        {
+          "name": "--card-min-width",
+          "value": "430px"
+        },
+        {
+          "name": "--date-picker-control-radius",
+          "value": "var(--corner-radius-radius-none)"
+        },
+        {
+          "name": "--date-picker-focus-ring-radius",
+          "value": "var(--corner-radius-radius-4)"
+        },
+        {
+          "name": "--time-picker-control-radius",
+          "value": "var(--corner-radius-radius-none)"
+        },
+        {
+          "name": "--time-picker-focus-ring-radius",
+          "value": "var(--corner-radius-radius-4)"
+        }
+      ]
+    },
+    {
+      "group": "IDS dropdown shadow aliases",
+      "tokens": [
+        {
+          "name": "--shadow-shadow-4-drop-shadow-4-blur",
+          "value": "var(--shadow-drop-shadow-4-blur)"
+        },
+        {
+          "name": "--shadow-shadow-4-drop-shadow-4-color",
+          "value": "var(--shadow-drop-shadow-4-color)"
+        },
+        {
+          "name": "--shadow-shadow-4-drop-shadow-4-spread",
+          "value": "var(--shadow-drop-shadow-4-spread)"
+        },
+        {
+          "name": "--shadow-shadow-4-drop-shadow-4-x",
+          "value": "var(--shadow-drop-shadow-4-x)"
+        },
+        {
+          "name": "--shadow-shadow-4-drop-shadow-4-y",
+          "value": "var(--shadow-drop-shadow-4-y)"
+        }
+      ]
+    }
+  ],
+  "icons": [
+    "accessibility",
+    "active-directory-idap-group",
+    "active-directory-ldap",
+    "active-directory-ldap-group",
+    "air-filter",
+    "aisle",
+    "alert-alarm",
+    "alert-bell",
+    "alert-bell-16",
+    "alert-bell-slash",
+    "alert-bell-slash-solid",
+    "alert-bell-solid",
+    "alert-bell-solid-16",
+    "alert-flag",
+    "alert-flag-solid",
+    "alert-leak",
+    "alert-threshold",
+    "app-group-san",
+    "app-group-vm",
+    "app-window",
+    "app-window-fru",
+    "app-window-mirror",
+    "appic-dp-cloud-blue",
+    "arrow-arrange",
+    "arrow-back-left",
+    "arrow-circ-down",
+    "arrow-circ-down-solid",
+    "arrow-circ-left",
+    "arrow-circ-left-solid",
+    "arrow-circ-right",
+    "arrow-circ-right-solid",
+    "arrow-circ-up",
+    "arrow-circ-up-solid",
+    "arrow-cursor",
+    "arrow-cursor-clock",
+    "arrow-cursor-tri",
+    "arrow-decrease",
+    "arrow-down",
+    "arrow-download",
+    "arrow-download-doc",
+    "arrow-download-doc-solid",
+    "arrow-download-gear",
+    "arrow-drop",
+    "arrow-drop-tri-caret",
+    "arrow-export",
+    "arrow-import",
+    "arrow-increase",
+    "arrow-left",
+    "arrow-migrate",
+    "arrow-move-right",
+    "arrow-progress",
+    "arrow-refresh",
+    "arrow-reset",
+    "arrow-right",
+    "arrow-sync-horiz-16",
+    "arrow-sync-horiz-left",
+    "arrow-sync-horiz-left-16",
+    "arrow-sync-horiz-right",
+    "arrow-sync-horiz-right-16",
+    "arrow-sync-vert",
+    "arrow-tri-down",
+    "arrow-tri-down-solid",
+    "arrow-tri-left",
+    "arrow-tri-left-solid",
+    "arrow-tri-right",
+    "arrow-tri-right-solid",
+    "arrow-tri-up",
+    "arrow-tri-up-solid",
+    "arrow-undo",
+    "arrow-up",
+    "arrow-upload",
+    "arrows-circ",
+    "arrows-clone",
+    "arrows-compare",
+    "arrows-comparison",
+    "arrows-spin",
+    "arrows-switch",
+    "arrows-sync-horiz",
+    "arrows-update",
+    "assistance",
+    "audio-ear",
+    "audio-headset",
+    "audio-headset-alt",
+    "audio-notes",
+    "audio-speaker",
+    "audio-speaker-levels",
+    "audio-speaker-mute",
+    "audio-speaker-off",
+    "audio-speaker-on",
+    "barcode",
+    "battery-charge",
+    "battery-charge-plug",
+    "battery-empty",
+    "battery-horiz-charge",
+    "battery-horiz-full",
+    "battery-horiz-full-alt",
+    "battery-horiz-med",
+    "battery-horiz-med-alt",
+    "battery-level-med",
+    "bezel-filter",
+    "blueprint",
+    "bluetooth",
+    "bluetooth-alt",
+    "book-front",
+    "book-side-single",
+    "bookmarked",
+    "bookmarked-alt",
+    "bookmarked-solid",
+    "books-side-duo",
+    "books-side-group",
+    "box-alert",
+    "box-open",
+    "box-pkg",
+    "box-pkg-alt",
+    "box-pkg-circ-arrows",
+    "box-search",
+    "breakout-port-3",
+    "breakout-port-4",
+    "brightness",
+    "brightness-contrast",
+    "brightness-contrast-alt",
+    "brightness-solid",
+    "bug",
+    "bundle",
+    "cabinet-resources",
+    "calculator",
+    "calculator-sm",
+    "calendar-1-day",
+    "calendar-14-day",
+    "calendar-2-day",
+    "calendar-28-day",
+    "calendar-3-day",
+    "calendar-5-day",
+    "calendar-month",
+    "calendar-month-pick",
+    "calendar-rings-1-day",
+    "calendar-rings-14-day",
+    "calendar-rings-2-day",
+    "calendar-rings-28-day",
+    "calendar-rings-3-day",
+    "calendar-rings-5-day",
+    "calendar-rings-month",
+    "calendar-rings-week",
+    "calendar-simple",
+    "calendar-simple-16",
+    "calendar-simple-solid",
+    "calendar-week",
+    "calendar-week-globe",
+    "calendar-week-pick",
+    "camera",
+    "camera-alt",
+    "camera-barcode",
+    "camera-swap",
+    "camera-upload",
+    "capture-new",
+    "card-info",
+    "card-smartcard",
+    "card-swipe",
+    "card-swipe-left",
+    "card-swipe-right",
+    "caret-16",
+    "carrot-16",
+    "cart",
+    "center-arrow",
+    "certified-ribbon-outline",
+    "certified-ribbon-solid",
+    "chain-link",
+    "chain-unlink",
+    "chain-unlink-alt",
+    "charge-back",
+    "charge-back-folder",
+    "chart-bars",
+    "chart-bars-box",
+    "chart-bars-box-solid",
+    "chart-lines",
+    "chart-lines-axis",
+    "chart-lines-box",
+    "chart-pie",
+    "chart-pie-alt",
+    "chassis-slots",
+    "check-properties",
+    "check-property",
+    "checklist",
+    "checklist-solid",
+    "chev-circ-left",
+    "chev-circ-left-solid",
+    "chev-circ-right",
+    "chev-circ-right-solid",
+    "chev-down",
+    "chev-down-16",
+    "chev-down-thick",
+    "chev-left",
+    "chev-left-16",
+    "chev-left-thick",
+    "chev-right",
+    "chev-right-16",
+    "chev-right-thick",
+    "chev-up",
+    "chev-up-16",
+    "chev-up-thick",
+    "circ-left-16",
+    "circ-left-solid-16",
+    "circ-right-16",
+    "circ-right-solid-16",
+    "clipboard-blank",
+    "clipboard-blank-check",
+    "clipboard-blank-circ-check",
+    "clipboard-chart",
+    "clipboard-check",
+    "clipboard-checklist",
+    "clipboard-circ-check",
+    "clipboard-doc",
+    "clipboard-lines",
+    "clipboard-list",
+    "clipboard-list-check",
+    "clipboard-list-errors",
+    "clipboard-list-pending",
+    "clipboard-list-solid",
+    "clipboard-list-warn",
+    "clipboard-search",
+    "clipboard-task-assign",
+    "clipboard-task-down",
+    "clipboard-x",
+    "clock-arrow-left",
+    "clock-arrow-right",
+    "clone",
+    "close",
+    "close-x-square",
+    "close-x-square-solid",
+    "cloud",
+    "cloud-alt",
+    "cloud-lock",
+    "cloud-network",
+    "cloud-restore",
+    "cloud-simple",
+    "cloud-simple-solid",
+    "cloud-upload",
+    "cloud-wireless",
+    "cluster-badge",
+    "coin-stack",
+    "col-sort-down-16",
+    "col-sort-up-16",
+    "color-picker",
+    "column-picker",
+    "comment",
+    "comment-add",
+    "comment-check",
+    "comment-custom",
+    "comment-dots",
+    "config-protocol",
+    "config-template",
+    "connect-network",
+    "connect-network-solid",
+    "connectivity",
+    "consistency-group",
+    "console-cli",
+    "console-cli-alt",
+    "contrast",
+    "coolant-connector",
+    "coolant-filter",
+    "coolant-pump",
+    "copy",
+    "core-circle",
+    "ctrl-close-16",
+    "ctrl-maximize",
+    "ctrl-maximize-16",
+    "ctrl-minimize",
+    "ctrl-minimize-16",
+    "ctrl-restore",
+    "ctrl-restore-16",
+    "cube",
+    "cube-gear",
+    "currency",
+    "currency-coins",
+    "cut-doc-side",
+    "cut-doc-up",
+    "cut-side",
+    "cut-up",
+    "dashboard",
+    "dashboard-grid",
+    "dashboard-grid-alt",
+    "dashboard-gui",
+    "dashboard-solid",
+    "data-center",
+    "data-center-front",
+    "data-compute",
+    "data-io",
+    "data-mobility",
+    "data-protection",
+    "datastore",
+    "datastore-cluster",
+    "datastore-lock",
+    "datastore-solid",
+    "debug",
+    "debug-doc",
+    "delete-can",
+    "delete-can-solid",
+    "deploy",
+    "deploy-alt",
+    "deploy-solid",
+    "device-chassis-modular",
+    "device-chassis-modular-back",
+    "device-chassis-modular-config",
+    "device-chassis-modular-lead",
+    "device-chassis-modular-multi",
+    "device-chassis-modular-simple",
+    "device-chassis-modular-simple-lead",
+    "device-chassis-modular-switch",
+    "device-chassis-rack-alt",
+    "device-config-ui",
+    "device-download",
+    "device-fan",
+    "device-fan-alt",
+    "device-iom-blade",
+    "device-iscsi",
+    "device-laptop-alt",
+    "device-laptop-simple",
+    "device-laptop-thin",
+    "device-member",
+    "device-monitor",
+    "device-monitor-alt",
+    "device-monitor-alt2",
+    "device-monitor-console",
+    "device-monitor-low",
+    "device-monitor-play",
+    "device-monitor-tall",
+    "device-network-server",
+    "device-portable",
+    "device-profile",
+    "device-profiles",
+    "device-rack",
+    "device-rack-health",
+    "device-rack-simple",
+    "device-rack-solid",
+    "device-server-13g",
+    "device-server-blade",
+    "device-server-blade-multi",
+    "device-server-blades-horiz-2u",
+    "device-server-blades-vert",
+    "device-server-blades-vert-2u",
+    "device-server-chassis",
+    "device-server-cloud",
+    "device-server-cluster",
+    "device-server-network",
+    "device-server-repair",
+    "device-servers-multi",
+    "device-stack",
+    "device-stack-alt",
+    "device-stack-multi",
+    "device-storage-array",
+    "device-storage-array-alt",
+    "device-storage-array-multi",
+    "device-storage-controller",
+    "device-storage-drive",
+    "device-storage-drive-alt",
+    "device-storage-slots",
+    "device-storage-stack",
+    "device-switch-blade",
+    "device-switch-horiz-2u",
+    "device-switch-horiz-stack",
+    "device-switch-rack",
+    "device-switch-vert",
+    "device-switch-vert-2u",
+    "device-thin-client",
+    "device-usb",
+    "device-usb-multi",
+    "device-virtual-cloud",
+    "device-wireless",
+    "devices",
+    "diagnostic",
+    "diagnostic-solid",
+    "directory-service",
+    "disc",
+    "disc-check",
+    "disc-install",
+    "disc-upgrade",
+    "disconnect-network",
+    "disconnect-network-solid",
+    "discs",
+    "doc-analyze",
+    "doc-arrow-left",
+    "doc-arrow-right",
+    "doc-check",
+    "doc-checklist",
+    "doc-empty",
+    "doc-gear",
+    "doc-help",
+    "doc-help-solid",
+    "doc-lines",
+    "doc-lock",
+    "doc-manual",
+    "doc-manual-alt",
+    "doc-page",
+    "doc-page-check",
+    "doc-page-drop",
+    "doc-page-short",
+    "doc-plus",
+    "doc-plus-alt",
+    "doc-plus-alt-solid",
+    "doc-report",
+    "doc-report-alt",
+    "doc-reports",
+    "doc-reports-alt",
+    "doc-search",
+    "doc-search-alt",
+    "docs-bundle",
+    "docs-bundle-add",
+    "docs-copy",
+    "docs-copy-alt",
+    "docs-copy-solid",
+    "docs-copy-solid-alt",
+    "double-chev-down",
+    "double-chev-left",
+    "double-chev-left-16",
+    "double-chev-right",
+    "double-chev-right-16",
+    "double-chev-up",
+    "edit-brush",
+    "edit-brush-alt",
+    "edit-doc-pencil",
+    "edit-doc-pencil-16",
+    "edit-doc-pencil-alt",
+    "edit-pen-highlight",
+    "edit-pen-highlight-alt",
+    "edit-stylus",
+    "exclude-range",
+    "exit-door",
+    "exit-full-screen-16",
+    "external-host",
+    "eye-line",
+    "eye-view",
+    "eye-view-hide",
+    "file-system-clone",
+    "filter",
+    "filter-16",
+    "filter-add",
+    "filter-clear",
+    "filter-lines",
+    "filter-move",
+    "filter-remove",
+    "filter-solid",
+    "firmware",
+    "flash-auto",
+    "flash-off",
+    "flash-on",
+    "folder-add",
+    "folder-add-solid",
+    "folder-arrow",
+    "folder-closed",
+    "folder-closed-solid",
+    "folder-directory",
+    "folder-network",
+    "folder-open",
+    "folder-open-doc",
+    "folder-pref",
+    "folder-prefs",
+    "folder-security-lock",
+    "folder-share",
+    "folders",
+    "folders-solid",
+    "font-character",
+    "font-select-drop",
+    "full-screen",
+    "full-screen-16",
+    "gauge-humidity",
+    "gear-arrows",
+    "gear-arrows-alt",
+    "gear-circ",
+    "globe-connect",
+    "globe-lock",
+    "globe-wired",
+    "globe-wired-simple",
+    "gpu-card",
+    "grid-square-9",
+    "grid-square-9-16",
+    "grid-triangle",
+    "hand-cursor",
+    "hand-cursor-drag",
+    "hand-move",
+    "hand-touch",
+    "hand-touch-alt",
+    "hand-touch-finger",
+    "hand-touch-finger-alt",
+    "hand-touch-finger-multi",
+    "hand-truck",
+    "hba-card",
+    "hba-card-double",
+    "hba-connected",
+    "health",
+    "health-score-good",
+    "health-score-poor",
+    "health-score-unknown",
+    "health-score-warn",
+    "health-solid",
+    "heart",
+    "heart-16",
+    "heart-solid",
+    "heart-solid-16-01",
+    "help-circ",
+    "help-circ-16",
+    "help-circ-solid",
+    "help-circ-solid-16",
+    "help-circ-solid-ko",
+    "help-square",
+    "help-square-solid",
+    "help-square-solid-ko",
+    "home",
+    "home-solid",
+    "host-server",
+    "host-server-rack",
+    "hourglass",
+    "inbox",
+    "inbox-alt",
+    "inbox-arrow",
+    "infinity",
+    "infinity-thick",
+    "info-circ",
+    "info-circ-16",
+    "info-circ-solid",
+    "info-circ-solid-16",
+    "info-circ-solid-ko",
+    "info-square",
+    "info-square-solid",
+    "info-square-solid-ko",
+    "internal-host",
+    "inventory-list",
+    "inventory-list-solid",
+    "jobs-briefcase",
+    "jobs-queue",
+    "jobs-queue-stack",
+    "kebab-dots",
+    "keyboard",
+    "keyboard-thin",
+    "lasso",
+    "license-book-ribbon",
+    "license-ribbon",
+    "license-ribbon-angle",
+    "licenses-ribbon",
+    "light-bulb",
+    "light-bulb-idea",
+    "lock-alt-closed",
+    "lock-alt-closed-solid",
+    "lock-alt-open",
+    "lock-alt-open-solid",
+    "lock-closed",
+    "lock-closed-solid",
+    "lock-numb-open",
+    "lock-open",
+    "lock-open-16",
+    "lock-open-solid",
+    "log-in",
+    "log-out",
+    "logical-group",
+    "logical-group-solid",
+    "logo-alienware",
+    "logo-alienware-stack-below",
+    "logo-alienware-stacked-above-128",
+    "logo-alienware-stacked-above-256",
+    "logo-alienware-stacked-below-256",
+    "logo-dell-circle",
+    "logo-dell-circle-color",
+    "logo-dell-stack-128",
+    "logo-dell-stack-color-128",
+    "logo-dell-technology-128",
+    "logo-dell-technology-256",
+    "logo-dell-technology-color-128",
+    "logo-dell-technology-color-256",
+    "logo-delltech-horiz",
+    "logo-delltech-stacked",
+    "logo-delltech-stacked-white",
+    "logo-hdmi",
+    "mail",
+    "mail-alt",
+    "mail-incoming",
+    "mail-open",
+    "mail-outgoing",
+    "mail-solid",
+    "marker-1",
+    "marker-2",
+    "marker-3",
+    "marker-4",
+    "marker-5",
+    "marker-6",
+    "memory-chip-double",
+    "memory-chip-single",
+    "memory-dimm",
+    "memory-dimm-simple",
+    "memory-sd-card",
+    "memory-sd-card-med",
+    "memory-sd-card-mini",
+    "memory-sd-card-top",
+    "memory-smart-chip",
+    "memory-smart-chip-horiz",
+    "microphone-off",
+    "microphone-on",
+    "minimize",
+    "mobile-device",
+    "mobile-device-alt",
+    "mobile-nearfield",
+    "mobile-phone",
+    "mobile-phone-wireless",
+    "mobile-tablet",
+    "mobile-tablet-horiz",
+    "mobile-tablet-horiz-alt",
+    "mobile-tablet-vert",
+    "mobile-tablet-wide-vert",
+    "mobile-wireless",
+    "mouse",
+    "mouse-cord",
+    "mouse-wheel",
+    "mouse-wheel-simple",
+    "movie-clapper",
+    "movie-clapper-camera",
+    "movie-clapper-play",
+    "nas-server-clone",
+    "nas-volume-allocation",
+    "nav-tree",
+    "network-card",
+    "network-connect",
+    "network-connect-simple",
+    "network-connect-waves",
+    "network-console",
+    "network-consoles",
+    "network-consoles-alt",
+    "network-disconnect",
+    "network-domain-horiz",
+    "network-fabric",
+    "network-folder",
+    "network-horiz",
+    "network-internet-tower",
+    "network-nas",
+    "network-nic",
+    "network-share",
+    "network-simple",
+    "network-simple-disable",
+    "network-tree-vert",
+    "network-vert",
+    "network-vert-solid",
+    "network-volume",
+    "network-volumes-double",
+    "network-wifi",
+    "network-wifi-simple",
+    "newspaper",
+    "nfs-export",
+    "nic-card",
+    "nic-card-wifi-remote",
+    "num-square-1",
+    "num-square-2",
+    "num-square-3",
+    "objects",
+    "objects-square",
+    "office",
+    "open-hand-brackets",
+    "optical-drive",
+    "outlet",
+    "outlet-solid",
+    "overflow-menu-dots",
+    "overflow-menu-square",
+    "paint-palette",
+    "paper-clip-angle",
+    "paper-clip-vert",
+    "password-bullet-cursor",
+    "password-bullets",
+    "password-cursor-thin",
+    "password-entry",
+    "password-entry-alt",
+    "password-entry-cursor",
+    "password-keypad",
+    "pause",
+    "pause-circ",
+    "pause-circ-solid",
+    "pause-solid",
+    "pc-window-cli",
+    "pdu",
+    "pdu-gang",
+    "pdu-outlets",
+    "pencil",
+    "pencil-check",
+    "pencil-lock",
+    "pencil-thick",
+    "pencil-thick-solid",
+    "pencil-thin",
+    "pencil-underline",
+    "pencil-unlock",
+    "pencil-x",
+    "perform-alt",
+    "perform-dash",
+    "perform-dash-alt",
+    "perform-latency",
+    "performance",
+    "phone-receiver",
+    "photos",
+    "pin-down",
+    "pin-up",
+    "pipe-leak",
+    "play-arrow-circ",
+    "play-arrow-circ-alt",
+    "play-arrow-circ-solid",
+    "play-arrow-circ-solid-alt",
+    "play-arrow-right",
+    "play-arrow-right-solid",
+    "plug-in",
+    "plug-in-alt",
+    "plug-in-alt-solid",
+    "policy-agreement-bang",
+    "policy-agreement-check",
+    "policy-blank",
+    "policy-disable",
+    "policy-enable",
+    "pop-up-square",
+    "pop-up-square-16",
+    "pop-up-square-corner-big",
+    "popout-double",
+    "popout-expand",
+    "popout-share",
+    "popout-share-alt",
+    "popout-window",
+    "popout-window-arrow",
+    "port-dock",
+    "port-double",
+    "port-group",
+    "port-hdmi",
+    "port-hdmi-solid",
+    "port-plug",
+    "port-single",
+    "port-type-usb",
+    "port-type-usb30",
+    "port-usb",
+    "port-vga",
+    "port-vga-solid",
+    "power-battery-charge",
+    "power-bolt-alt",
+    "power-bolt-norm",
+    "power-off",
+    "power-off-alt",
+    "power-off-alt-solid",
+    "power-off-solid",
+    "power-on",
+    "power-on-alt",
+    "power-on-alt-solid",
+    "power-plug",
+    "power-plug-alt",
+    "power-plug-bolt",
+    "power-plug-horiz",
+    "power-plug-horiz-alt",
+    "power-plug-lines",
+    "power-plug-lines-horiz",
+    "power-supply",
+    "prefs-slider-horiz",
+    "prefs-slider-horiz-alt",
+    "prefs-slider-horiz-short",
+    "prefs-slider-vert",
+    "prefs-slider-vert-round",
+    "presentation-chart",
+    "presentation-chart-alt",
+    "presentation-slideshow",
+    "printer-short",
+    "processor",
+    "processor-detail",
+    "productivity",
+    "productivity-alt",
+    "profile",
+    "profile-encrypted",
+    "profiles-stack",
+    "psu",
+    "pulse",
+    "puzzle-piece",
+    "puzzle-piece-solid",
+    "qos",
+    "qr-code",
+    "qrl",
+    "rack",
+    "racks",
+    "receive-e-quote",
+    "recycle",
+    "recycle-arrows",
+    "recycle-solid",
+    "redo",
+    "removable-storage-usb",
+    "remove-circ",
+    "remove-circ-solid",
+    "remove-square",
+    "remove-square-solid",
+    "repair-hammer-wrench",
+    "replay-consistency",
+    "replay-profile",
+    "replay-profiles",
+    "replay-replication-domain",
+    "replay-rms",
+    "replay-schedule",
+    "replay-template",
+    "replay-unknown",
+    "replicat-live-migration",
+    "replicat-live-volume",
+    "replicat-live-volumes",
+    "replicat-managed",
+    "replicat-one-time-copy",
+    "replicat-portable-volume",
+    "replicat-portable-volumes",
+    "replicat-thin-import",
+    "replication",
+    "replication-alt",
+    "replication-file",
+    "report-charge-back",
+    "reports",
+    "reports-solid",
+    "resize-grabber-horiz",
+    "resize-grabber-vert",
+    "restore",
+    "rocket",
+    "rocket-alt",
+    "rocket-alt-solid",
+    "rocket-solid",
+    "room",
+    "router",
+    "save-disk",
+    "search",
+    "search-16",
+    "search-app",
+    "search-back",
+    "search-back-solid",
+    "search-barcode",
+    "search-barcode-scanner",
+    "search-book",
+    "search-calendar",
+    "search-calendar-alt",
+    "search-database",
+    "search-forward",
+    "search-forward-solid",
+    "search-next",
+    "search-previous",
+    "search-profile",
+    "search-profiles",
+    "search-scanner",
+    "search-server",
+    "search-system",
+    "search-system-laptop",
+    "search-zoom-in",
+    "search-zoom-out",
+    "security-fingerprint",
+    "security-fingerprint-detail",
+    "security-fingerprint-thick",
+    "security-key",
+    "security-key-alt",
+    "security-key-up",
+    "security-keyhole",
+    "security-keyhole-solid",
+    "security-shield",
+    "security-shield-alt",
+    "select",
+    "select-text",
+    "service-tag",
+    "setting-gear-16",
+    "setting-gear-solid-16",
+    "settings-gear",
+    "settings-gear-alt",
+    "settings-gear-arrow",
+    "settings-gear-detailed",
+    "settings-gear-multi",
+    "settings-gear-reset",
+    "settings-gear-solid",
+    "settings-gear-wrench",
+    "shape-bang",
+    "shape-bang-thick",
+    "shape-check",
+    "shape-check-checkbox",
+    "shape-check-thick",
+    "shape-circ",
+    "shape-circ-solid",
+    "shape-clock-hands",
+    "shape-clock-hands-thick",
+    "shape-dash",
+    "shape-dash-thick",
+    "shape-diamond",
+    "shape-diamond-solid",
+    "shape-double-dash",
+    "shape-i",
+    "shape-i-thick",
+    "shape-plus",
+    "shape-plus-thick",
+    "shape-question-mark",
+    "shape-question-mark-thick",
+    "shape-slash",
+    "shape-slash-thick",
+    "shape-square",
+    "shape-square-solid",
+    "shape-tri-down",
+    "shape-tri-down-solid",
+    "shape-tri-up",
+    "shape-tri-up-solid",
+    "shape-wrench",
+    "shape-x",
+    "shape-x-thick",
+    "shield-cloud",
+    "shield-cloud-alt",
+    "shield-disabled",
+    "shield-encrypt",
+    "shield-encrypt-alt",
+    "shield-firewall",
+    "skip-backward",
+    "skip-backward-solid",
+    "skip-forward",
+    "skip-forward-solid",
+    "skip-to-end",
+    "skip-to-end-solid",
+    "skip-to-front",
+    "skip-to-front-solid",
+    "smart-card-reader",
+    "smart-card-wifi",
+    "smart-cc-card-back",
+    "smart-cc-card-front",
+    "snapshot",
+    "snapshot-manual",
+    "snapshot-scheduled",
+    "snapshots",
+    "sort-a-z",
+    "sort-z-a",
+    "star-double",
+    "star-double-16",
+    "star-fav",
+    "star-fav-alt",
+    "star-fav-solid",
+    "star-fav-solid-alt",
+    "star-single",
+    "star-single-16",
+    "start-point",
+    "start-point-arrow",
+    "start-point-dot",
+    "start-point-dot-solid",
+    "state-add-circ",
+    "state-add-circ-solid",
+    "state-add-circ-solid-ko",
+    "state-cancelled",
+    "state-cancelled-solid",
+    "state-cancelled-solid-ko",
+    "state-disconnect-circ",
+    "state-disconnect-circ-solid",
+    "state-disconnect-circ-solid-ko",
+    "state-error",
+    "state-error-solid",
+    "state-error-solid-ko",
+    "state-maintenance-circ",
+    "state-maintenance-circ-solid",
+    "state-maintenance-circ-solid-ko",
+    "state-optional",
+    "state-optional-solid",
+    "state-optional-solid-ko",
+    "state-progress-circle",
+    "state-queued-clock",
+    "state-queued-clock-solid",
+    "state-remove",
+    "state-remove-solid",
+    "state-remove-solid-ko",
+    "state-standby-clock",
+    "state-standby-clock-solid",
+    "state-standby-clock-solid-ko",
+    "state-suspend-circ",
+    "state-suspend-circ-solid",
+    "state-suspend-circ-solid-ko",
+    "state-unknown-square",
+    "state-unknown-square-alt",
+    "state-unknown-square-solid",
+    "state-unknown-square-solid-ko",
+    "status-check-16",
+    "status-connected-tri",
+    "status-critical-circ",
+    "status-critical-circ-16",
+    "status-critical-circ-solid",
+    "status-critical-circ-solid-16",
+    "status-critical-circ-solid-ko",
+    "status-critical-square",
+    "status-critical-square-solid",
+    "status-critical-square-solid-ko",
+    "status-disconnected-tri",
+    "status-error-diamond",
+    "status-error-diamond-solid",
+    "status-error-diamond-solid-ko",
+    "status-ok-circ",
+    "status-ok-circ-16",
+    "status-ok-circ-solid",
+    "status-ok-circ-solid-16",
+    "status-ok-circ-solid-ko",
+    "status-ok-square",
+    "status-ok-square-solid",
+    "status-ok-square-solid-ko",
+    "status-unknown-diamond",
+    "status-unknown-diamond-solid",
+    "status-unknown-diamond-solid-ko",
+    "status-warn-tri",
+    "status-warn-tri-16",
+    "status-warn-tri-down",
+    "status-warn-tri-down-solid",
+    "status-warn-tri-down-solid-ko",
+    "status-warn-tri-solid",
+    "status-warn-tri-solid-16",
+    "status-warn-tri-solid-ko",
+    "sticky-note",
+    "storage-array",
+    "storage-array-folder",
+    "storage-array-lock",
+    "storage-array-snapshot",
+    "storage-array-solid",
+    "storage-arrays",
+    "storage-cleaning",
+    "storage-cluster",
+    "storage-drive",
+    "storage-drive-alt",
+    "storage-drive-ssd",
+    "storage-drives",
+    "storage-ext-drive",
+    "storage-ext-drives",
+    "storage-failback",
+    "storage-failover",
+    "storage-folder",
+    "storage-migrate",
+    "storage-mirror",
+    "storage-profile",
+    "storage-profile-multi",
+    "storage-replay",
+    "storage-type",
+    "storage-type-solid",
+    "storage-virtual",
+    "storage-virtual-disk",
+    "storage-virtual-disks",
+    "storage-volume",
+    "subnet",
+    "support-settings-doc",
+    "support-settings-doc-alt",
+    "support-settings-doc-solid",
+    "support-wrench-doc",
+    "support-wrench-doc-alt",
+    "swap",
+    "sys-factory-reset",
+    "sys-factory-reset-alt",
+    "tag",
+    "tag-debug",
+    "tag-price",
+    "target-circles",
+    "temp-airflow",
+    "temp-dew-point",
+    "temp-heat",
+    "temp-hot-flame",
+    "temp-liquid",
+    "temp-plus-minus",
+    "temp-snowflake",
+    "temp-snowflake-alt",
+    "temp-thermometer",
+    "temperature",
+    "template-cloud",
+    "templates",
+    "templates-stack",
+    "templates-stack-alt",
+    "thumb-down",
+    "thumb-down-16",
+    "thumb-down-solid",
+    "thumb-down-solid-16",
+    "thumb-up",
+    "thumb-up-16",
+    "thumb-up-solid",
+    "thumb-up-solid-16",
+    "time-calendar",
+    "time-clock",
+    "time-clock-16",
+    "time-detail",
+    "time-picker",
+    "toolbox",
+    "toolbox-support",
+    "trophy",
+    "unbookmarked",
+    "unbookmarked-alt",
+    "user-add",
+    "user-approval",
+    "user-base-star",
+    "user-card",
+    "user-card-alt",
+    "user-check",
+    "user-contact",
+    "user-custom",
+    "user-directory",
+    "user-disable",
+    "user-document",
+    "user-globe",
+    "user-group",
+    "user-group-custom",
+    "user-group-disable",
+    "user-group-solid",
+    "user-groups",
+    "user-groups-disable",
+    "user-link",
+    "user-lock",
+    "user-lock-16",
+    "user-lock-solid-16",
+    "user-remove",
+    "user-request",
+    "user-search",
+    "user-settings",
+    "user-single",
+    "user-single-16",
+    "user-single-bold-16",
+    "user-single-solid",
+    "user-star",
+    "user-unlock",
+    "user-unlock-16",
+    "user-unlock-solid-16",
+    "users-directory",
+    "video-card",
+    "video-card-alt",
+    "video-play",
+    "view-hamburger",
+    "view-sort-grid",
+    "view-sort-grid-alt",
+    "view-sort-grid-solid",
+    "view-sort-list",
+    "view-sort-table",
+    "view-table",
+    "virtual-disk",
+    "virtual-disk-alt",
+    "virtual-machine",
+    "virtual-template-cloud",
+    "virtual-templates-cloud",
+    "volume",
+    "volume-cluster",
+    "volume-folder",
+    "volume-lock",
+    "volume-profile",
+    "volume-solid",
+    "volume-virtual",
+    "volumes",
+    "wand",
+    "wand-alt",
+    "widget",
+    "widget-solid",
+    "wifi-status",
+    "witness-sled",
+    "workflow",
+    "world-globe",
+    "wrench",
+    "wrench-alt-short",
+    "wrench-short"
+  ]
+}

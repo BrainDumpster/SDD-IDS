@@ -5,7 +5,7 @@
 Synapse **Dropdown / Combo Box** shares the IDS **Dropdown-Combobox** family (single-select + multi-select field + menu popup). Field shell, search row, multi-select controls, and interaction contracts match the IDS spec unless noted in **Synapse programme deltas** below.
 
 - **IDS source of truth:** [`components/ids/dropdown-combo-box/design-spec.md`](../ids/dropdown-combo-box/design-spec.md)
-- **Shared implementation:** `storybook/src/components/DropdownMenu.tsx` + `IdsDropdownTriggerShell` (combobox field stories)
+- **Shared implementation:** `storybook/src/components/DropdownMenu.tsx` + `IdsDropdownTriggerShell` + `IdsDropdown.tsx` / `SynapseDropdown.tsx` (combobox field stories)
 - **Synapse detached action menu:** `storybook/src/components/SynapseDropdownActionMenu.module.css` + `LeftNavSecondaryContextMenu.tsx`
 - **Left Nav usage:** overflow trigger on secondary rows → detached `Dropdown-SingleSelect-Elements-Menu`
 
@@ -102,6 +102,7 @@ No search row, no radio/checkbox leading controls, no field trigger in this usag
 | Field corner radius | `var(--dropdown-control-radius)` → **`var(--corner-radius-radius-4)`** (4px) |
 | Focus ring radius | `var(--dropdown-focus-ring-radius)` → **`var(--corner-radius-radius-4)`** (4px) |
 | Field-attached menu popup radius | bottom corners: **`0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)`**; field when open: top corners only (bottom square) |
+| Popup placement & width | IDS runtime contract | **Inherit IDS** (field width, min 186px, flip above, right-align) |
 | Sizes / padding / borders | Inherit IDS — [`components/ids/dropdown-combo-box/design-spec.md`](../ids/dropdown-combo-box/design-spec.md) |
 
 ## Tokens
@@ -182,6 +183,8 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 
 Inherit IDS combobox API from [`components/ids/dropdown-combo-box/design-spec.md`](../ids/dropdown-combo-box/design-spec.md) for full field usage.
 
+**Field-attached Storybook:** `SynapseDropdown` compound API (`SynapseDropdownComboBox.stories.tsx`, `synapse-dropdown.developer-usage.ts`). Detached Left Nav action menu remains separate (`LeftNavSecondaryContextMenu.tsx`).
+
 ### Action-list menu option model
 
 | Prop | Required | Type | Notes |
@@ -248,6 +251,8 @@ See **Interactions → Accessibility**.
 - [x] Option rows: `padding-10`/`padding-16`, Body 2 Regular, `text-neutral`
 - [x] Left Nav story uses Figma sample labels (Open In a New Tab, Rename, Delete)
 - [x] Field radius aliases documented; inherit IDS field matrices via `dropdown-single-select` / `dropdown-multiselect` programme specs
+- [x] Field-attached composition uses `SynapseDropdown` compound API in Storybook
+- [x] Popup width + above-flip inherit IDS combobox contract
 - [x] Light/dark outputs remain semantic-token driven via `synapse-theme.css`
 
 ## Source Mapping
@@ -257,7 +262,8 @@ See **Interactions → Accessibility**.
 - **Synapse map:** `data/synapse-component-figma-map.json` → `Dropdown/Combo` (`11067:54551`)
 - **Programme inheritance:** `data/programme-inheritance-registry.json` → `dropdown-combo-box`
 - **Left Nav:** [`components/synapse/left-nav/design-spec.md`](../left-nav/design-spec.md)
-- **Implementation:** `SynapseDropdownActionMenu.module.css`, `LeftNavSecondaryContextMenu.tsx`, `SynapseDropdownMenu.tsx`, `SynapseDropdownTriggerShell.tsx`
+- **Implementation:** `SynapseDropdown.tsx`, `SynapseDropdownActionMenu.module.css`, `LeftNavSecondaryContextMenu.tsx`, `SynapseDropdownTriggerShell.tsx`
+- **Developer usage:** `storybook/src/components/synapse-dropdown.developer-usage.ts`
 - **Spec contract:** `storybook/src/spec-contracts/synapse-dropdown-combo-box.contract.ts`
 - **Storybook:** `storybook/src/components/SynapseDropdownComboBox.stories.tsx`
 - **Storybook group:** `Spec Generated/Synapse/Dropdown/Combo Box`

@@ -63,7 +63,13 @@ class DesignValidator:
 
         return self.report_builder.build(violations)
 
-    def validate_spec_storybook(self, spec_text: str, css_text: str, storybook_text: str):
+    def validate_spec_storybook(
+        self,
+        spec_text: str,
+        css_text: str,
+        storybook_text: str,
+        framework: str = "react",
+    ):
         """
         Strict gate validation for spec-driven Storybook generation.
         """
@@ -71,4 +77,5 @@ class DesignValidator:
             spec_text=spec_text,
             css_text=css_text,
             storybook_text=storybook_text,
+            framework=framework,
         )

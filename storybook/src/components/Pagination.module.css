@@ -16,10 +16,10 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-space-4);
-  border: var(--border-width-border-1) solid var(--color-border-light);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
   border-radius: var(--corner-radius-radius-4);
-  background: var(--color-background-component);
-  color: var(--color-text-neutral-strong);
+  background: var(--color-background-surface-component);
+  color: var(--color-text-gray-neutral-strong);
   font-family: inherit;
   font-size: var(--font-size-body-2);
   cursor: pointer;
@@ -27,7 +27,7 @@
 }
 
 .button:hover:not(:disabled) {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
   border-color: var(--color-border-neutral-light);
 }
 
@@ -53,14 +53,14 @@
 }
 
 .current {
-  background: var(--color-background-controls-brand-base);
-  color: var(--color-text-white);
-  border-color: var(--color-background-controls-brand-base);
+  background: var(--color-background-controls-base);
+  color: var(--color-text-gray-white);
+  border-color: var(--color-background-controls-base);
 }
 
 .current:hover:not(:disabled) {
-  background: var(--color-background-controls-brand-strong);
-  border-color: var(--color-background-controls-brand-strong);
+  background: var(--color-background-controls-strong);
+  border-color: var(--color-background-controls-strong);
 }
 
 .ellipsis {
@@ -69,7 +69,7 @@
   justify-content: center;
   min-width: var(--scale-32);
   height: var(--scale-32);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   user-select: none;
 }

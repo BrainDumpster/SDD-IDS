@@ -1,0 +1,47 @@
+<div class="field">
+  <label class="wrapper" [attr.data-disabled]="isDisabled ? '' : null">
+    <span
+      class="root"
+      [attr.data-checked]="isSelected ? '' : null"
+      [attr.data-disabled]="isDisabled ? '' : null"
+      [attr.data-error]="error ? 'true' : null"
+      [attr.data-simulated-state]="simulatedStateAttr"
+    >
+      <input
+        type="radio"
+        class="input"
+        [id]="optionId"
+        [name]="groupName"
+        [value]="value"
+        [checked]="isSelected"
+        [disabled]="isDisabled"
+        [tabIndex]="tabIndex"
+        [attr.aria-invalid]="error || null"
+        [attr.aria-describedby]="assistiveId"
+        (change)="onSelect()"
+        (keydown)="onKeydown($event)"
+        (focus)="onFocus()"
+      />
+      <span class="indicator"></span>
+    </span>
+    <span class="label">{{ label }}</span>
+  </label>
+  @if (helperText) {
+    <div
+      [id]="assistiveId"
+      class="assistiveText"
+      [class.assistiveTextError]="error"
+      [class.assistiveTextDisabled]="isDisabled"
+    >
+      @if (error && !isDisabled) {
+        <ids-icon
+          shapeName="status-critical-square-solid"
+          variant="img"
+          className="errorIcon"
+          [size]="16"
+        />
+      }
+      {{ helperText }}
+    </div>
+  }
+</div>

@@ -1,0 +1,49 @@
+<button
+  #triggerBtn
+  type="button"
+  class="ids-card-kebab-trigger"
+  [attr.aria-label]="triggerAriaLabel"
+  aria-haspopup="menu"
+  [attr.aria-expanded]="open"
+  [attr.aria-controls]="open ? menuId : null"
+  (click)="onTriggerClick()"
+  (keydown)="onTriggerKeyDown($event)"
+  data-ids="ids-card-filter"
+>
+  <ids-icon
+    shape="overflow-menu-dots"
+    [size]="16"
+    color="var(--color-icon-brand-base)"
+    className="ids-card-kebab-icon"
+  />
+</button>
+
+@if (open && coords) {
+  <ul
+    #popupEl
+    [attr.id]="menuId"
+    role="menu"
+    tabindex="-1"
+    class="ids-card-menu-popup"
+    [ngStyle]="popupStyle"
+    (keydown)="onPopupKeyDown($event)"
+    data-ids="ids-card-filter-menu"
+  >
+    @for (opt of options; track opt.value; let index = $index) {
+      <li role="none">
+        <button
+          type="button"
+          role="menuitem"
+          [attr.tabindex]="highlighted === index ? 0 : -1"
+          [disabled]="opt.disabled"
+          [attr.data-highlighted]="highlighted === index ? 'true' : null"
+          class="ids-card-menu-item"
+          (mouseenter)="onItemMouseEnter(index, opt)"
+          (click)="selectOption(opt)"
+        >
+          <span class="ids-card-menu-item-label">{{ opt.label }}</span>
+        </button>
+      </li>
+    }
+  </ul>
+}

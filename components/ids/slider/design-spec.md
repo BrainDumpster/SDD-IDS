@@ -12,7 +12,7 @@
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Component-map entry: `data/component-figma-map.json` -> `Slider` (legacy exploration link exists in map; this spec is validated against IDS Design Library nodes above).
 - Validated nodes: `22459:40319`, `22459:39022`, `22459:38985`, `22505:177044`, `42114:74026`
-- Last live verification: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) in this session.
+- Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`) 2026-08-19 (`22459:38985`, `22459:38992`, `22459:38998`).
 ## Anatomy
 Deterministic slider slots:
 1. `SliderRoot`
@@ -47,43 +47,54 @@ Element-part references from Figma:
 - Value labels are rendered below the corresponding thumb centerline.
 - Optional value input boxes (single/range) follow IDS compact text-input geometry: `32px` height with horizontal padding `var(--padding-padding-16)`.
 - Range value input mode renders two `32px` text boxes with a centered separator slot (`"-"`) between them.
+
+### Slot geometry (Figma-verified)
+| Slot | Property | Value | Figma evidence |
+|---|---|---|---|
+| Small marker (`SliderTick`) | visual diameter | `8px` | `.Slider-Element-Parts` `22459:38985` (`Markers-small` `22459:38986`) |
+| Large marker (`SliderThumb`) | size | `16px` × `16px` | spec parts matrix `22459:38985`; fill `var(--color-icon-brand-base)` on `22459:38992` (`get_variable_defs`) |
+| Track (`SliderRail`) | thickness | `4px` | `.Slider-Element-Parts` `22459:38985`; selected fill `var(--color-icon-brand-base)` on `22459:38998` (`get_variable_defs`) |
+| Range selector | sample width | `68px` (two 16px thumbs + selected rail) | `22459:39004` / `22459:39013` |
+| Focus halo | footprint | `22px` × `22px` | marker states `22505:177044` |
+| Value input | height | `32px` | compact text-input; padding `var(--padding-padding-16)` |
+
 ## Tokens
 Verified slider tokens from `22459:38985` and `22505:177044`:
 - `var(--color-icon-brand-base)` (selected marker/track)
 - `var(--color-icon-brand-strong)` (hover marker)
 - `var(--color-icon-brand-stronger)` (press marker)
 - `var(--color-border-brand-base)` (focus ring)
-- `var(--color-icon-disabled)` (disabled marker/track)
+- `var(--color-icon-gray-disabled)` (disabled marker/track)
 - `var(--color-text-brand-base)` (enabled value-under-thumb text)
-- `var(--color-text-disabled)` (disabled value-under-thumb text)
+- `var(--color-text-gray-disabled)` (disabled value-under-thumb text)
 - `var(--color-background-gray-light)` (unselected rail and disabled unselected small marker fill surface)
-- `var(--color-border-disabled)` (unselected small marker border and disabled outlines)
-- `var(--color-text-white)` (marker inner/focus contrast asset in marker state component)
+- `var(--color-border-gray-disabled)` (unselected small marker border and disabled outlines)
+- `var(--color-text-gray-white)` (marker inner/focus contrast asset in marker state component)
 
 Supporting semantic tokens used by slider compositions:
-- `var(--color-background-component)`
-- `var(--color-border-accessible)`
+- `var(--color-background-surface-component)`
+- `var(--color-border-gray-neutral-base)`
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | Rail (`SliderRail`) | default | `var(--color-background-gray-light)` | none | n/a |
-| Rail (`SliderRail`) | disabled | `var(--color-icon-disabled)` | none | n/a |
+| Rail (`SliderRail`) | disabled | `var(--color-icon-gray-disabled)` | none | n/a |
 | Progress/Range segment | selected | `var(--color-icon-brand-base)` | none | n/a |
-| Progress/Range segment | disabled | `var(--color-icon-disabled)` | none | n/a |
+| Progress/Range segment | disabled | `var(--color-icon-gray-disabled)` | none | n/a |
 | Small marker (`8px`) | selected | `var(--color-icon-brand-base)` | none | n/a |
-| Small marker (`8px`) | not-selected | transparent (outline-only) | `var(--color-border-disabled)` | n/a |
-| Small marker (`8px`) | disabled selected | `var(--color-icon-disabled)` | `var(--color-icon-disabled)` | n/a |
-| Small marker (`8px`) | disabled not-selected | `var(--color-background-gray-light)` | `var(--color-icon-disabled)` | n/a |
+| Small marker (`8px`) | not-selected | transparent (outline-only) | `var(--color-border-gray-disabled)` | n/a |
+| Small marker (`8px`) | disabled selected | `var(--color-icon-gray-disabled)` | `var(--color-icon-gray-disabled)` | n/a |
+| Small marker (`8px`) | disabled not-selected | `var(--color-background-gray-light)` | `var(--color-icon-gray-disabled)` | n/a |
 | Large marker (`16px`) | default | `var(--color-icon-brand-base)` | none | value label `var(--color-text-brand-base)` |
 | Large marker (`16px`) | hover | `var(--color-icon-brand-strong)` | none | value label `var(--color-text-brand-base)` |
 | Large marker (`16px`) | press | `var(--color-icon-brand-stronger)` | none | value label `var(--color-text-brand-base)` |
 | Large marker (`16px`) | focus-visible | marker uses current interactive fill | outer ring `var(--color-border-brand-base)` | value label unchanged |
-| Large marker (`16px`) | disabled | `var(--color-icon-disabled)` | none | value label `var(--color-text-disabled)` |
-| Endpoint label (`SliderMinLabel`/`SliderMaxLabel`) | default | n/a | n/a | `var(--color-text-neutral)` |
+| Large marker (`16px`) | disabled | `var(--color-icon-gray-disabled)` | none | value label `var(--color-text-gray-disabled)` |
+| Endpoint label (`SliderMinLabel`/`SliderMaxLabel`) | default | n/a | n/a | `var(--color-text-gray-neutral)` |
 | Endpoint label (`SliderMinLabel`) | min-active | n/a | n/a | `var(--color-text-brand-base)` |
 | Endpoint label (`SliderMaxLabel`) | max-active | n/a | n/a | `var(--color-text-brand-base)` |
-| Value input (`32px`) | default | `var(--color-background-component)` | `var(--color-border-accessible)` | `var(--color-text-neutral)` |
-| Value input (`32px`) | disabled | `var(--color-background-gray-light)` | `var(--color-border-accessible)` | `var(--color-text-disabled)` |
+| Value input (`32px`) | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
+| Value input (`32px`) | disabled | `var(--color-background-gray-light)` | `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-disabled)` |
 ## States (Dark Theme)
 Dark theme uses the same structural state matrix and resolves all values through semantic tokens.
 
@@ -150,6 +161,17 @@ Dark theme uses the same structural state matrix and resolves all values through
 | `maxLabel` | No | `string` | — | Optional right label. |
 | `onValueChange` | No | `(value: number \| [number, number]) => void` | — | Fires on value updates. |
 | `onValueCommit` | No | `(value: number \| [number, number]) => void` | — | Fires on pointer/key commit. |
+| `className` | No | `string` | — | Extra class on `SliderRoot` (React + Angular lib). |
+| `id` | No | `string` | generated | Root id. |
+
+Framework selectors:
+- Angular: `ids-slider` (`lib/angular/ids/slider`)
+- React: `IdsSlider` (`lib/react/ids/slider`)
+
+Contract mirror: `component-contracts/ids/slider.contract.ts`
+
+### Spec Accurate Design story defaults
+- `mode="single"`, `min=0`, `max=100`, `defaultValue=50`, `minLabel="0"`, `maxLabel="100"`, `showStepper=false`, `showValueLabel=true`
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 1. `SliderRoot`
@@ -176,8 +198,8 @@ Dark theme uses the same structural state matrix and resolves all values through
 - `SliderTick` (small marker) uses `8px` visual dot style.
 - `SliderTick` not-selected state is outline-only (transparent fill + tokenized border).
 - Selected track segment and selected ticks use `var(--color-icon-brand-base)`.
-- Disabled rail/segment/ticks/thumbs use `var(--color-icon-disabled)`.
-- Value-under-thumb text maps to `var(--color-text-brand-base)` in enabled states and `var(--color-text-disabled)` when disabled.
+- Disabled rail/segment/ticks/thumbs use `var(--color-icon-gray-disabled)`.
+- Value-under-thumb text maps to `var(--color-text-brand-base)` in enabled states and `var(--color-text-gray-disabled)` when disabled.
 - Endpoint label color switches to `var(--color-text-brand-base)` when a thumb is exactly at that endpoint.
 - Range input mode uses two `32px` inputs and a centered separator slot (`"-"`).
 
@@ -224,4 +246,14 @@ Dark theme uses the same structural state matrix and resolves all values through
 | IDS slider parts (size/shape) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22459-38985&m=dev (`22459:38985`) |
 | IDS marker states | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22505-177044&m=dev (`22505:177044`) |
 | IDS slider section context | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42114-74026&m=dev (`42114:74026`) |
-| Live verification method | Figma MCP: `get_metadata`, `get_design_context`, `get_variable_defs` |
+| Live verification method | Figma MCP: `get_metadata`, `get_variable_defs` (2026-08-19) |
+| Runtime contract | `component-contracts/ids/slider.contract.ts` |
+| Angular reference | `lib/angular/ids/slider/` (`ids-slider`) |
+| React reference | `lib/react/ids/slider/` (`IdsSlider`) |
+| Angular Storybook | `storybook-angular/src/components/ids-slider/ids-slider.stories.js` (title `Spec Generated/IDS/Slider`) |
+
+### Implementation Notes
+- Value inputs compose IDS compact text-input: React `IdsTextBox` / Angular `ids-text-box` with `size="small"`, no suffix icon, no helper text, `inputType="number"`.
+- Range input separator is the literal `"-"` between the two compact fields.
+- `showStepper` and `showTicks` are OR’d; when either is true, snapping uses `stepperFrequency` (fallback `step`).
+- Unknown `mode` falls back to `single` (see Fallback/error rules).

@@ -1,0 +1,277 @@
+/* Ported from storybook/src/components/IdsTooltip.module.css */
+
+.ids-tooltip-host {
+  display: inline;
+  position: relative;
+  overflow: visible;
+}
+
+.ids-tooltip-host--block {
+  display: block;
+  width: 100%;
+}
+
+.ids-tooltip__trigger {
+  display: inline-flex;
+  max-width: 100%;
+  cursor: default;
+}
+
+.ids-tooltip-host--block .ids-tooltip__trigger {
+  display: flex;
+  width: 100%;
+}
+
+.ids-tooltip__popup {
+  position: fixed;
+  box-sizing: border-box;
+  background: transparent;
+  border: none;
+  box-shadow: none;
+  max-width: 264px;
+  overflow: visible;
+  z-index: 1070;
+}
+
+.ids-tooltip__popup--standard {
+  width: 240px;
+}
+
+.ids-tooltip__popup--closable {
+  width: 264px;
+}
+
+.ids-tooltip__popup--with-title .ids-tooltip__body,
+.ids-tooltip__popup--no-title .ids-tooltip__body {
+  min-height: 80px;
+}
+
+.ids-tooltip__panel {
+  position: relative;
+  z-index: 0;
+  box-sizing: border-box;
+  width: 100%;
+  background: var(--color-background-surface-secondary);
+  color: var(--color-text-gray-neutral);
+  border: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
+  border-radius: var(--tooltip-control-radius);
+  box-shadow: 1px 1px 3px rgba(37, 37, 37, 0.25);
+}
+
+.ids-tooltip__arrow {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.ids-tooltip__arrow-graphic {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 10px;
+  height: 6px;
+  line-height: 0;
+}
+
+.ids-tooltip__arrow-svg {
+  width: 10px;
+  height: 6px;
+  display: block;
+  flex-shrink: 0;
+  overflow: visible;
+}
+
+.ids-tooltip__arrow-fill {
+  fill: var(--color-background-surface-secondary);
+}
+
+.ids-tooltip__arrow-stroke {
+  fill: none;
+  stroke: var(--color-border-gray-neutral-base);
+  stroke-width: 1;
+  vector-effect: non-scaling-stroke;
+  stroke-linecap: butt;
+  stroke-linejoin: miter;
+}
+
+.ids-tooltip__arrow[data-side="top"] .ids-tooltip__arrow-svg {
+  transform: rotate(180deg);
+}
+
+.ids-tooltip__arrow[data-side="bottom"] .ids-tooltip__arrow-svg {
+  transform: rotate(0deg);
+}
+
+.ids-tooltip__arrow[data-side="left"] .ids-tooltip__arrow-graphic,
+.ids-tooltip__arrow[data-side="right"] .ids-tooltip__arrow-graphic {
+  width: 6px;
+  height: 10px;
+}
+
+.ids-tooltip__arrow[data-side="left"] .ids-tooltip__arrow-svg {
+  transform: rotate(90deg);
+}
+
+.ids-tooltip__arrow[data-side="right"] .ids-tooltip__arrow-svg {
+  transform: rotate(-90deg);
+}
+
+.ids-tooltip__arrow[data-side="bottom"] {
+  top: -4px !important;
+}
+
+.ids-tooltip__arrow[data-side="top"] {
+  bottom: -4px !important;
+}
+
+.ids-tooltip__arrow[data-side="top"][data-align="start"],
+.ids-tooltip__arrow[data-side="top"][data-align="center"],
+.ids-tooltip__arrow[data-side="top"][data-align="end"] {
+  bottom: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="right"] {
+  left: -4px !important;
+}
+
+.ids-tooltip__arrow[data-side="left"] {
+  right: -4px !important;
+}
+
+.ids-tooltip__arrow[data-side="bottom"][data-align="start"],
+.ids-tooltip__arrow[data-side="top"][data-align="start"] {
+  left: 8px !important;
+}
+
+.ids-tooltip__arrow[data-side="bottom"][data-align="start"] {
+  top: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="bottom"][data-align="center"],
+.ids-tooltip__arrow[data-side="top"][data-align="center"] {
+  left: calc(50% - 5px) !important;
+}
+
+.ids-tooltip__arrow[data-side="bottom"][data-align="center"] {
+  top: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="bottom"][data-align="end"],
+.ids-tooltip__arrow[data-side="top"][data-align="end"] {
+  left: calc(100% - 18px) !important;
+}
+
+.ids-tooltip__arrow[data-side="bottom"][data-align="end"] {
+  top: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="left"][data-align="start"],
+.ids-tooltip__arrow[data-side="right"][data-align="start"] {
+  top: 8px !important;
+}
+
+.ids-tooltip__arrow[data-side="left"][data-align="start"] {
+  right: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="right"][data-align="start"] {
+  left: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="left"][data-align="center"],
+.ids-tooltip__arrow[data-side="right"][data-align="center"] {
+  top: calc(50% - 5px) !important;
+}
+
+.ids-tooltip__arrow[data-side="left"][data-align="center"] {
+  right: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="right"][data-align="center"] {
+  left: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="left"][data-align="end"],
+.ids-tooltip__arrow[data-side="right"][data-align="end"] {
+  top: auto !important;
+  bottom: 8px !important;
+}
+
+.ids-tooltip__arrow[data-side="left"][data-align="end"] {
+  right: -5px !important;
+}
+
+.ids-tooltip__arrow[data-side="right"][data-align="end"] {
+  left: -5px !important;
+}
+
+.ids-tooltip__content {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+  padding: var(--padding-padding-12);
+}
+
+.ids-tooltip__content--closable {
+  flex-direction: row;
+  align-items: flex-start;
+  gap: 0;
+}
+
+.ids-tooltip__content-column {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  gap: var(--spacing-space-4);
+  min-width: 0;
+  padding-right: var(--spacing-space-8);
+}
+
+.ids-tooltip__header {
+  display: flex;
+  align-items: center;
+  min-width: 0;
+}
+
+.ids-tooltip__title {
+  color: var(--color-text-gray-neutral-strong);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 500;
+}
+
+.ids-tooltip__body {
+  color: var(--color-text-gray-neutral);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+}
+
+.ids-tooltip__close {
+  box-sizing: border-box;
+  width: 12px;
+  height: 12px;
+  display: inline-flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  border: none;
+  background: transparent;
+  color: var(--color-text-gray-neutral-strong);
+  padding: 0;
+  cursor: pointer;
+}
+
+.ids-tooltip__close-icon {
+  display: inline-block;
+  flex-shrink: 0;
+}
+
+[data-theme="dark"] .ids-tooltip__close,
+.ids-theme-dark .ids-tooltip__close {
+  color: #4d4d4d;
+}

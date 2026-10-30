@@ -99,9 +99,13 @@ Inherit IDS **Interactions** — click navigates to `href`; keyboard Tab/Enter; 
 
 ## Composition & API (runtime)
 
+**Preferred pattern (new ports):** projected children — inherit IDS composition (`ids-anchor-menu` / header / item / active indicator). See [`components/ids/anchor-menu/design-spec.md`](../ids/anchor-menu/design-spec.md) **Composition & API**.
+
+Angular library: `lib/angular/ids/anchor-menu/`. Existing React Storybook (`SynapseAnchorMenu.stories.tsx`) remains the aggregate `items[]` convenience wrapper — do not change those stories.
+
 ### IDS inheritance resolution
 
-Codegen **MUST** resolve `items`, optional `title`, `sticky`, and `onItemClick` from IDS **Composition & API (runtime)**.
+Codegen **MUST** resolve composition slots and group props `title`, `sticky`, and `onItemClick` / `itemClick` from IDS **Composition & API (runtime)**. `items[]` remains legacy React-only.
 
 | Prop | Type | Notes |
 |---|---|---|
@@ -134,8 +138,8 @@ Generators **MUST** load and merge the IDS baseline contract from [`components/i
 
 1. `AnchorMenuRoot` (`nav`)
 2. optional `AnchorMenuHeader`
-3. `AnchorMenuList` (`ul`)
-4. repeated `AnchorMenuItem` (`li`) → `AnchorMenuLink` (`a`)
+3. repeated `AnchorMenuItem` (`AnchorMenuLink`)
+4. `AnchorActiveIndicator`
 
 ### Variant matrix
 
@@ -194,7 +198,9 @@ Programme additions:
 | Element matrix | `11955:229729` |
 | Main set | `11955:229780` |
 | Spec-accurate example | `11955:229709` |
-| Implementation | `storybook/src/components/AnchorMenu.tsx` |
+| Implementation | `storybook/src/components/AnchorMenu.tsx` (React, unchanged) |
+| Angular library | `lib/angular/ids/anchor-menu/` |
+| Programme wrapper | `storybook/src/components/SynapseAnchorMenu.tsx` |
 | Programme wrapper | `storybook/src/components/SynapseAnchorMenu.tsx` |
 | Spec contract | `storybook/src/spec-contracts/synapse-anchor-menu.contract.ts` |
 | Storybook | `storybook/src/components/SynapseAnchorMenu.stories.tsx` |

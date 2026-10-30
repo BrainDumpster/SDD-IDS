@@ -26,16 +26,16 @@
 - Loading indicator size: 32px × 32px
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- White background: `var(--color-background-white)` = #ffffff
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- White background: `var(--color-background-surface-white)` = #ffffff
 - Brand background: `var(--color-background-brand-base)` = #0076ce
-- White text: `var(--color-text-white)` = #ffffff
-- White border: `var(--color-border-white)` = #ffffff
+- White text: `var(--color-text-gray-white)` = #ffffff
+- White border: `var(--color-border-gray-white)` = #ffffff
 - Brand border: `var(--color-border-brand-base)` = #0076ce
 
 ### Icons
-- White icon: `var(--color-icon-white)` = #ffffff
+- White icon: `var(--color-icon-gray-white)` = #ffffff
 
 ### Static Colors
 - Static white: `var(--color-static-gray-white)` = #ffffff
@@ -57,12 +57,12 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| Splash Container | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-white)` (#ffffff) | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Logo Section | transparent | transparent | `var(--color-text-white)` (#ffffff) | `var(--color-icon-white)` (#ffffff) |
-| Application Name | transparent | transparent | `Header 1` (Roboto Regular 48px/58px) | `var(--color-icon-white)` (#ffffff) |
-| Loading Indicator | transparent | transparent | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-white)` (#ffffff) |
-| Version Info | transparent | transparent | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-white)` (#ffffff) |
-| Interactive Elements | `var(--color-background-white)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-icon-white)` (#ffffff) |
+| Splash Container | `var(--color-background-brand-base)` (#0076ce) | `var(--color-border-gray-white)` (#ffffff) | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Logo Section | transparent | transparent | `var(--color-text-gray-white)` (#ffffff) | `var(--color-icon-gray-white)` (#ffffff) |
+| Application Name | transparent | transparent | `Header 1` (Roboto Regular 48px/58px) | `var(--color-icon-gray-white)` (#ffffff) |
+| Loading Indicator | transparent | transparent | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-gray-white)` (#ffffff) |
+| Version Info | transparent | transparent | `Body 2` (Roboto Regular 14px/1.5) | `var(--color-icon-gray-white)` (#ffffff) |
+| Interactive Elements | `var(--color-background-surface-white)` (#ffffff) | `var(--color-border-brand-base)` (#0076ce) | `var(--color-background-brand-base)` (#0076ce) | `var(--color-icon-gray-white)` (#ffffff) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Splash container maintains brand colors

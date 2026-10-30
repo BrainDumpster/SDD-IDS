@@ -15,9 +15,9 @@
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   border-radius: var(--modal-control-radius);
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   box-shadow:
     var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
       var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),
@@ -30,13 +30,31 @@
   z-index: 1050;
   display: flex;
   flex-direction: column;
+  width: 640px;
   max-height: 85vh;
   outline: none;
 }
 
+/* Programme radius: class-bound so Synapse 16px cannot leak into IDS stories. */
+.popupIds {
+  border-radius: var(--corner-radius-radius-none, 0px);
+}
+
+.popupSynapse {
+  border-radius: var(--modal-control-radius, var(--corner-radius-radius-16));
+}
+
+/* Legacy sizes (IdsModal src `SIZE_CLASS`). */
 .sm { width: 480px; }
 .lg { width: 640px; }
 .xl { width: 800px; }
+
+/* Single-page / multi-page modal sizes (Dialog `scenario` + `dialogSize`): fixed design
+   height, capped by the popup's 85vh max-height; the body scrolls inside. */
+.x-small { width: 640px;  height: 328px; }
+.small   { width: 960px;  height: 497px; }
+.medium  { width: 1280px; height: 667px; }
+.large   { width: 1600px; height: 826px; }
 
 .headerLeft {
   display: flex;
@@ -79,7 +97,7 @@
   font-size: var(--font-size-header-5);
   font-weight: 400;
   line-height: var(--font-line-height-line-height-32);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   margin: 0;
 }
 
@@ -87,14 +105,16 @@
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: var(--scale-32);
-  height: var(--scale-32);
+  width: 16px;
+  height: 16px;
+  padding: 0;
+  margin: 0;
   border-radius: var(--corner-radius-radius-4);
   border: none;
   background: transparent;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
   cursor: pointer;
-  transition: background 100ms ease;
+  line-height: 0;
 }
 
 .close:focus-visible {
@@ -114,13 +134,28 @@
   padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-8);
   margin: 0;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
 }
 
 .descriptionNon-Alerting,
 .descriptionInformational {
   padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24) var(--padding-padding-24);
+}
+
+.descriptionModalPage {
+  padding-top: var(--padding-padding-8);
+  padding-bottom: var(--padding-padding-8);
+}
+
+.tabStrip {
+  padding: var(--padding-padding-8) var(--padding-padding-24, 24px);
+  flex-shrink: 0;
+}
+
+/* Show tab-row only; the Tabs panel is suppressed since swap content lives in the modal body. */
+.tabStrip [role="tabpanel"] {
+  display: none;
 }
 
 .descriptionWarning,
@@ -132,13 +167,17 @@
 
 .body {
   position: relative;
-  padding: 0 var(--padding-padding-24) var(--padding-padding-24);
   flex: 1 1 auto;
   min-height: 0;
+  padding: 0 var(--padding-padding-24) var(--padding-padding-24);
   overflow-y: auto;
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   line-height: var(--font-line-height-line-height-20);
+}
+
+.bodyModalPage {
+  padding-top: var(--padding-padding-16);
 }
 
 .bodyWarning,
@@ -165,10 +204,140 @@
 .footer {
   padding: var(--padding-padding-24);
   display: flex;
-  justify-content: flex-end;
+  justify-content: space-between;
   align-items: center;
-  gap: var(--padding-padding-12);
+  gap: var(--padding-padding-16);
   flex-shrink: 0;
+}
+
+.footerBordered {
+  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+}
+
+.footerActions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: var(--padding-padding-12);
+  margin-left: auto;
+}
+
+.footerCheckbox {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--spacing-space-8);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  color: var(--color-text-gray-neutral);
+}
+
+.footerModalPage {
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
+}
+
+/* ----- IDS chrome (Figma ModalDialog-Main `11349:116221`, Modal-Main `11348:63064`,
+   Modal-Element-Overlay `11348:63172`). This file also styles the Synapse modal
+   (`SynapseModal` re-exports IdsModal), so IDS-only values are scoped to
+   [data-design-system="ids"] and keyed on the popup's data-scenario / data-type / data-size. ----- */
+
+:global([data-design-system="ids"]) .backdrop {
+  background: var(--color-background-surface-overlay);
+}
+
+/* Dialog: fixed 640px; `size` applies to modal pages only. */
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"] {
+  width: 640px;
+}
+
+/* IdsModal dialog insets, matching the Dialog type classes. */
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="non-alerting"] .description,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="informational"] .description {
+  padding: var(--padding-padding-16) var(--padding-padding-24) var(--padding-padding-24);
+}
+
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="warning"] .body,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="major"] .body,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="critical"] .body,
+:global([data-design-system="ids"]) .popup[data-scenario="dialog"][data-type="destructive"] .body {
+  padding: var(--padding-padding-16) var(--padding-padding-24) 0;
+}
+
+/* Modal pages: width x minimum height, Shadow 4, 68px header (4px bottom on a 40px control
+   row), 16px content top, footer rule. */
+:global([data-design-system="ids"]) .popupPage[data-size="x-small"] { width: 640px;  height: 328px; }
+:global([data-design-system="ids"]) .popupPage[data-size="small"]   { width: 960px;  height: 497px; }
+:global([data-design-system="ids"]) .popupPage[data-size="medium"]  { width: 1280px; height: 667px; }
+:global([data-design-system="ids"]) .popupPage[data-size="large"]   { width: 1600px; height: 826px; }
+
+:global([data-design-system="ids"]) .popupPage {
+  max-width: calc(100vw - 48px);
+  box-shadow:
+    var(--shadow-shadow-4-drop-shadow-32-x, var(--shadow-drop-shadow-32-x))
+      var(--shadow-shadow-4-drop-shadow-32-y, var(--shadow-drop-shadow-32-y))
+      var(--shadow-shadow-4-drop-shadow-32-blur, var(--shadow-drop-shadow-32-blur))
+      var(--shadow-shadow-4-drop-shadow-32-spread, var(--shadow-drop-shadow-32-spread))
+      var(--shadow-drop-shadow-32-color),
+    var(--shadow-shadow-4-drop-shadow-16-x, var(--shadow-drop-shadow-16-x))
+      var(--shadow-shadow-4-drop-shadow-16-y, var(--shadow-drop-shadow-16-y))
+      var(--shadow-shadow-4-drop-shadow-16-blur, var(--shadow-drop-shadow-16-blur))
+      var(--shadow-shadow-4-drop-shadow-16-spread, var(--shadow-drop-shadow-16-spread))
+      var(--shadow-drop-shadow-16-color),
+    var(--shadow-shadow-4-drop-shadow-8-x, var(--shadow-drop-shadow-8-x))
+      var(--shadow-shadow-4-drop-shadow-8-y, var(--shadow-drop-shadow-8-y))
+      var(--shadow-shadow-4-drop-shadow-8-blur, var(--shadow-drop-shadow-8-blur))
+      var(--shadow-shadow-4-drop-shadow-8-spread, var(--shadow-drop-shadow-8-spread))
+      var(--shadow-drop-shadow-8-color),
+    var(--shadow-shadow-4-drop-shadow-4-x, var(--shadow-drop-shadow-4-x))
+      var(--shadow-shadow-4-drop-shadow-4-y, var(--shadow-drop-shadow-4-y))
+      var(--shadow-shadow-4-drop-shadow-4-blur, var(--shadow-drop-shadow-4-blur))
+      var(--shadow-shadow-4-drop-shadow-4-spread, var(--shadow-drop-shadow-4-spread))
+      var(--shadow-drop-shadow-4-color);
+}
+
+:global([data-design-system="ids"]) .popupPage .header {
+  box-sizing: border-box;
+  min-height: calc(var(--padding-padding-24) + var(--scale-40) + var(--padding-padding-4));
+  padding-bottom: var(--padding-padding-4);
+}
+
+:global([data-design-system="ids"]) .popupPage .body {
+  padding-top: var(--padding-padding-16);
+}
+
+:global([data-design-system="ids"]) .body {
+  /* Figma ScrollBar: token track and thumb so the bar follows the theme (the IDS dark
+     theme sets no color-scheme, so a native bar would stay light). */
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter);
+}
+
+:global([data-design-system="ids"]) .body::-webkit-scrollbar {
+  width: 14px;
+}
+
+:global([data-design-system="ids"]) .body::-webkit-scrollbar-track {
+  background: var(--color-background-gray-lighter);
+}
+
+:global([data-design-system="ids"]) .body::-webkit-scrollbar-thumb {
+  background: var(--color-background-gray-base);
+  background-clip: padding-box;
+  border: var(--border-width-border-2) solid transparent;
+  border-radius: var(--corner-radius-radius-8);
+}
+
+:global([data-design-system="ids"]) .contentScrollShadow {
+  /* Figma "gradient": laid over the bottom 19px of the content, right above the footer,
+     stopping short of the body's scroll bar, which sits on top of it. */
+  position: relative;
+  z-index: 1;
+  margin-top: -19px;
+  margin-right: var(--ids-modal-scrollbar-width, 0px);
+  pointer-events: none;
+}
+
+:global([data-design-system="ids"]) .popupPage .footerBordered {
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
 }
 
 /* ----- About pattern (Synapse) — shell inside Dialog ----- */
@@ -198,7 +367,7 @@
   flex: 1 1 auto;
   min-height: 0;
   max-height: 100%;
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
   box-shadow:
     var(--shadow-drop-shadow-2-x) var(--shadow-drop-shadow-2-y) var(--shadow-drop-shadow-2-blur)
       var(--shadow-drop-shadow-2-spread) var(--shadow-drop-shadow-2-color),

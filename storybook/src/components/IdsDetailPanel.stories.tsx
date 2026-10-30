@@ -1,10 +1,15 @@
 import type { Meta, StoryObj } from "@storybook/react";
 import { useState } from "react";
-import { IdsDetailPanel, type IdsDetailPanelAttachMode } from "./IdsDetailPanel";
+import {
+  IdsDetailPanel,
+  IdsDetailPanelField,
+  IdsDetailPanelSection,
+  type IdsDetailPanelAttachMode,
+} from "./IdsDetailPanel";
 import "../../../components/ids-theme.css";
 
 const meta: Meta<typeof IdsDetailPanel> = {
-  title: "Spec Generated/IDS/Detail Panel",
+  title: "Components/IDS/Detail Panel",
   component: IdsDetailPanel,
   parameters: {
     layout: "fullscreen",
@@ -25,39 +30,54 @@ const meta: Meta<typeof IdsDetailPanel> = {
 export default meta;
 type Story = StoryObj<typeof IdsDetailPanel>;
 
+/** Figma "Detail Panel Template": section headers with label / value rows, ruled apart. */
 function ExampleContent() {
   return (
-    <div style={{ display: "grid", gap: 12 }}>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-neutral-strong)", fontWeight: 500 }}>
-        Section Header
-      </div>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-neutral)" }}>
-        Label: Single line content
-      </div>
-      <div style={{ fontSize: "var(--font-size-body-2)", lineHeight: "var(--font-line-height-line-height-20)", color: "var(--color-text-neutral)" }}>
-        Status: Warning
-      </div>
-      <div style={{ height: 600, border: "1px dashed var(--color-border-accessible)", padding: 12, boxSizing: "border-box" }}>
-        Overflow sample content area
-      </div>
-    </div>
+    <>
+      <IdsDetailPanelSection title="Section Header">
+        <IdsDetailPanelField label="Label:">Single line content</IdsDetailPanelField>
+        <IdsDetailPanelField label="Label:">
+          Multiple line content that wraps onto the next line when it is longer than the panel width
+        </IdsDetailPanelField>
+        <IdsDetailPanelField label="Label:">Single line content</IdsDetailPanelField>
+      </IdsDetailPanelSection>
+      <IdsDetailPanelSection title="Section Header">
+        <IdsDetailPanelField label="Label:">Single line content</IdsDetailPanelField>
+        <IdsDetailPanelField label="Status:">Warning</IdsDetailPanelField>
+      </IdsDetailPanelSection>
+    </>
   );
 }
 
-function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPanelAttachMode; initialExpanded: boolean }) {
+function PanelFrame({
+  attachMode,
+  initialExpanded,
+  detachable = false,
+}: {
+  attachMode: IdsDetailPanelAttachMode;
+  initialExpanded: boolean;
+  detachable?: boolean;
+}) {
   const [expanded, setExpanded] = useState(initialExpanded);
   const frameHeight = attachMode === "datagrid" ? 792 : 768;
 
   return (
-    <div style={{ height: "100vh", background: "var(--color-background-surface-1)", padding: 16, boxSizing: "border-box" }}>
-      <div style={{ marginBottom: 12, fontSize: 14, color: "var(--color-text-neutral-strong)" }}>
+    <div style={{ height: "100vh", background: "var(--color-background-surface-primary)", padding: 16, boxSizing: "border-box" }}>
+      <div style={{ marginBottom: 12, fontSize: 14, color: "var(--color-text-gray-neutral-strong)" }}>
         Attach mode: <strong>{attachMode}</strong> | State: <strong>{expanded ? "expanded" : "collapsed"}</strong>
       </div>
-      <div style={{ display: "flex", height: frameHeight, border: "1px solid var(--color-border-accessible)", background: "var(--color-background-component)" }}>
+      <div style={{ display: "flex", height: frameHeight, border: "1px solid var(--color-border-gray-neutral-base)", background: "var(--color-background-surface-component)" }}>
         <main style={{ flex: 1, minWidth: 0, padding: 16, boxSizing: "border-box", overflow: "auto" }}>
           <h3 style={{ marginTop: 0 }}>Host content</h3>
-          <p>Panel is attached to this host region and toggles between 398px and 40px widths.</p>
-          <div style={{ height: 900, border: "1px dashed var(--color-border-accessible)", padding: 12 }}>
+          <p>
+            {attachMode === "datagrid"
+              ? "Datagrid panels size to their content between 240px and 480px and collapse to a 40px rail."
+              : "Page panels are 384px wide (the guideline maximum) and collapse to a 40px rail."}
+            {detachable
+              ? " Use the pop-out control to float the panel; drag its header to move it and its corner to resize it (up to 480 × 1280)."
+              : null}
+          </p>
+          <div style={{ height: 900, border: "1px dashed var(--color-border-gray-neutral-base)", padding: 12 }}>
             Scrollable host content
           </div>
         </main>
@@ -67,6 +87,7 @@ function PanelFrame({ attachMode, initialExpanded }: { attachMode: IdsDetailPane
             isExpanded={expanded}
             onExpandedChange={setExpanded}
             title="Details"
+            detachable={detachable}
             body={<ExampleContent />}
           />
         </div>
@@ -79,20 +100,25 @@ export const DatagridAttachedManual: Story = {
   render: () => <PanelFrame attachMode="datagrid" initialExpanded={true} />,
 };
 
+export const DatagridPopOut: Story = {
+  name: "Datagrid Pop-out",
+  render: () => <PanelFrame attachMode="datagrid" initialExpanded={true} detachable />,
+};
+
 export const PageAttachedManual: Story = {
   render: () => <PanelFrame attachMode="page" initialExpanded={true} />,
 };
 
 export const CollapsedStates: Story = {
   render: () => (
-    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, height: "100vh", padding: 16, boxSizing: "border-box", background: "var(--color-background-surface-1)" }}>
-      <div style={{ border: "1px solid var(--color-border-accessible)", background: "var(--color-background-component)", display: "flex" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, height: "100vh", padding: 16, boxSizing: "border-box", background: "var(--color-background-surface-primary)" }}>
+      <div style={{ border: "1px solid var(--color-border-gray-neutral-base)", background: "var(--color-background-surface-component)", display: "flex" }}>
         <div style={{ flex: 1, padding: 12 }}>Datagrid host</div>
         <div style={{ margin: "-1px -1px -1px 0", flexShrink: 0, display: "flex" }}>
             <IdsDetailPanel attachMode="datagrid" isExpanded={false} body={<ExampleContent />} />
           </div>
       </div>
-      <div style={{ border: "1px solid var(--color-border-accessible)", background: "var(--color-background-component)", display: "flex" }}>
+      <div style={{ border: "1px solid var(--color-border-gray-neutral-base)", background: "var(--color-background-surface-component)", display: "flex" }}>
         <div style={{ flex: 1, padding: 12 }}>Page host</div>
         <div style={{ margin: "-1px -1px -1px 0", flexShrink: 0, display: "flex" }}>
             <IdsDetailPanel attachMode="page" isExpanded={false} body={<ExampleContent />} />

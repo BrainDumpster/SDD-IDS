@@ -31,7 +31,7 @@ function ActionButton({
     <button type="button" className={styles.actionButton} onClick={onClick} aria-label={label}>
       <Icon
         shapeName={iconShape}
-        color="var(--color-icon-neutral)"
+        color="var(--color-icon-gray-neutral-base)"
         style={{ width: 16, height: 16 }}
       />
     </button>

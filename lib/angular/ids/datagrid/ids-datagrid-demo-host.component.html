@@ -1,0 +1,154 @@
+<ids-datagrid
+  #grid
+  [rowSelection]="rowSelection"
+  [selectionMode]="selectionMode"
+  [showSingleSelectionRadio]="showSingleSelectionRadio"
+  [withDetailPanel]="withDetailPanel"
+  [pageSize]="pageSize"
+  [readOnly]="readOnly"
+  [rowVerticalIndicator]="rowVerticalIndicator"
+  [headerColorAndBorder]="headerColorAndBorder"
+  [columnResizeEnabled]="columnResizeEnabled"
+>
+  <ids-datagrid-column
+    field="name"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="200"
+    [minWidth]="90"
+    [filterActive]="nameFilterActive"
+  >
+    <ids-datagrid-column-title>Name</ids-datagrid-column-title>
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-search-field
+        ariaLabel="Search name column"
+        [query]="nameQuery"
+        (queryChange)="nameQuery = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="type"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="140"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="typeFilterActive"
+  >
+    <ids-datagrid-column-title>Type</ids-datagrid-column-title>
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-multiselect
+        groupLabel="Type"
+        [options]="typeOptions"
+        [selectedValues]="selectedTypes"
+        (selectedValuesChange)="selectedTypes = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="status"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="120"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="statusFilterActive"
+  >
+    <ids-datagrid-column-title>Status</ids-datagrid-column-title>
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-multiselect
+        groupLabel="Status"
+        [options]="statusOptions"
+        [selectedValues]="selectedStatuses"
+        (selectedValuesChange)="selectedStatuses = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="owner"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="120"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="ownerFilterActive"
+  >
+    <ids-datagrid-column-title>Owner</ids-datagrid-column-title>
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-single-select
+        ariaLabel="Filter owner column"
+        [options]="ownerOptions"
+        [selectedValue]="selectedOwner"
+        (selectedValueChange)="selectedOwner = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="region"
+    [sortable]="false"
+    [filterable]="true"
+    [width]="100"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="regionFilterActive"
+  >
+    <ids-datagrid-column-title>Region</ids-datagrid-column-title>
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-single-select
+        ariaLabel="Filter region column"
+        [options]="regionOptions"
+        [selectedValue]="selectedRegion"
+        (selectedValueChange)="selectedRegion = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-body>
+    @for (row of filteredRows; track row.id) {
+      <ids-datagrid-row [rowId]="row.id">
+        <ids-datagrid-cell field="name" [value]="row.values.name" />
+        <ids-datagrid-cell field="type" [value]="row.values.type" />
+        <ids-datagrid-cell field="status" [value]="row.values.status" />
+        <ids-datagrid-cell field="owner" [value]="row.values.owner" />
+        <ids-datagrid-cell field="region" [value]="row.values.region" />
+      </ids-datagrid-row>
+    }
+  </ids-datagrid-body>
+
+  <ids-datagrid-footer />
+
+  @if (withDetailPanel) {
+    <ids-datagrid-detail-panel>
+      <ids-detail-panel
+        attachMode="datagrid"
+        [expanded]="grid.detailPanelOpen"
+        (expandedChange)="grid.onDetailPanelExpandedChange($event)"
+      >
+        <ids-detail-panel-content>
+          <ids-detail-panel-header>
+            <ids-detail-panel-title>{{ grid.detailTitle }}</ids-detail-panel-title>
+          </ids-detail-panel-header>
+          <ids-detail-panel-body>
+            <div class="detailBody">
+              @if (grid.activeRow; as row) {
+                @for (column of grid.visibleColumns; track column.field) {
+                  <p><b>{{ column.title }}:</b> {{ row.cells.get(column.field) }}</p>
+                }
+              } @else {
+                <p>Select a row to view details.</p>
+              }
+            </div>
+          </ids-detail-panel-body>
+        </ids-detail-panel-content>
+        <ids-detail-panel-collapsed-rail>
+          <ids-detail-panel-toggle-button />
+        </ids-detail-panel-collapsed-rail>
+      </ids-detail-panel>
+    </ids-datagrid-detail-panel>
+  }
+</ids-datagrid>

@@ -41,7 +41,7 @@ Synapse **Tab** shares the IDS **Tab** family name and high-level tablist semant
 | Close hover | — | Close hit area **`var(--color-background-n-tabs-x-hover)`** (`47803:1731`, `50431:32236`) |
 | Leading icon | Optional badge/icon in IDS API | **Synapse `Tab Icon`** slot — **`16×16`** optional (`52922:70467`: Workspace, Favorite, In Progress) |
 | Add tab | Row add affordance | **`Add Tab`** fixed **`36px`** width; `shape-plus` **`12×12`** (`47806:527`) |
-| Overflow trigger | `More` label + menu | **`Tab-Single` `Type=Overflow`** — label `More` + **`chev-down` `12×12`**; selected overflow uses **`brand-light`** fill (`50736:251582`) |
+| Overflow trigger | `More` label + menu | **`Tab-Single` `Type=Overflow`** — label `More` + caret **`arrow-tri-down-solid` `10×10`** (inherits IDS `TAB_OVERFLOW_MORE_ICON_*` in shared `Tabs.tsx`; Figma layer `47806:460` is named `chev-down`); selected overflow uses **`brand-light`** fill (`50736:251582`) |
 | Variant axes | `style`, `transparent`, `primary`/`secondary` | **`State`** × **`Type`**: `Tab` \| `Overflow` \| `Add Tab` × `Default` \| `Hover` \| `Selected` |
 | Host background | `transparent` \| `white` | **Component** background on group + tabs |
 
@@ -128,7 +128,7 @@ Deterministic slot order (Synapse Nav Tab):
 | Property | Value |
 |---|---|
 | Label | Runtime `moreLabel` (default **`"More"`**) |
-| Chevron | `chev-down` **`12×12`** |
+| Chevron | `arrow-tri-down-solid` **`10×10`** (`TAB_OVERFLOW_MORE_ICON_*` / `SYNAPSE_TAB_OVERFLOW_MORE_ICON_*`) |
 | Gap label → chevron | `var(--spacing-space-8)` |
 | Selected overflow | Same fill/text as selected tab (`brand-light` / `brand-strong`) |
 
@@ -159,7 +159,7 @@ Deterministic slot order (Synapse Nav Tab):
 
 ### Icons
 - `var(--color-icon-neutral)` — close default (`Color/Icon/Neutral` on `47804:188`)
-- Close / add / chevron slugs: `shape-x`, `shape-plus`, `chev-down`
+- Close / add / overflow caret slugs: `shape-x`, `shape-plus`, `arrow-tri-down-solid` (overflow `10×10`)
 
 ### Spacing
 - `var(--spacing-space-8)` — icon/label/close gaps
@@ -211,7 +211,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Tab select:** click or keyboard activates one tab; emits `onActiveItemChange` / `onTabSelect({ id, label })`.
 - **Close tab:** `Close Tab` click removes tab from list; does not activate tab navigation on close button (`event.stopPropagation()`).
 - **Add tab:** `Add Tab` appends a new tab; host supplies default label/content via `onAddTab()`.
-- **Overflow:** when row width cannot fit all tabs, trailing tabs move to overflow collection; **`More`** trigger stays in row before **`Add Tab`** (`47835:4949`). Selecting hidden tab from menu activates it; overflow trigger label may reflect selection per IDS overflow rules.
+- **Overflow:** when row width cannot fit all tabs, trailing tabs move to overflow collection; **`More`** trigger stays in row before **`Add Tab`** (`47835:4949`). Selecting hidden tab from menu activates it; overflow trigger label becomes selected tab name; **active tab omitted from menu** (inherit IDS `computeTabOverflowMenuItems` in `component-contracts/ids/tab.contract.ts`).
 - **Truncation:** at `max-width: 250px`, label ellipsizes; show tooltip with full label on hover/focus when truncated (`50454:81963`).
 - **Keyboard:** `ArrowLeft` / `ArrowRight`, `Home` / `End`, `Enter` / `Space` — inherit IDS tablist pattern.
 - **No autosave** on tab switch (inherit IDS).
@@ -272,7 +272,7 @@ Inherit IDS tab API from [`components/ids/tab/design-spec.md`](../ids/tab/design
 | type | state | icon | close | width |
 |---|---|---|---|---|
 | Tab | default \| hover \| selected | optional | optional | 80–250px |
-| Overflow | default \| hover \| selected | chev-down | — | content-driven |
+| Overflow | default \| hover \| selected | arrow-tri-down-solid | — | content-driven |
 | Add Tab | default \| hover | plus | — | 36px fixed |
 
 ### Per-slot style contract
@@ -286,6 +286,7 @@ Inherit IDS tab API from [`components/ids/tab/design-spec.md`](../ids/tab/design
 - Exactly one tab active.
 - Close removes item; if closed tab was active, activate neighbor per host policy (default: previous tab).
 - Overflow menu uses [`dropdown-combo-box`](../dropdown-combo-box/design-spec.md) detached menu styling.
+- Overflow slot + menu rules: `component-contracts/ids/tab.contract.ts` (`computeTabOverflowVisibleCount`, `computeTabOverflowMenuItems`).
 - Add tab appends item and may auto-select new tab (product-defined; document in host).
 
 ### Accessibility contract
@@ -298,7 +299,7 @@ See **Interactions → Accessibility**.
 |---|---|
 | `shape-x` | Close tab |
 | `shape-plus` | Add tab |
-| `chev-down` | Overflow |
+| `arrow-tri-down-solid` | Overflow caret (`10×10`) |
 | `grid-square-9` | Sample workspace icon |
 | `star-fav` | Sample favorite icon |
 | In-progress slug | Per `52922:70466` |
@@ -318,7 +319,8 @@ See **Interactions → Accessibility**.
 - [x] Selected = `brand-light` fill + `brand-strong` text (not IDS indicator)
 - [x] Close hover = `n-tabs-x-hover`
 - [x] Nav group bottom border `neutral-light`
-- [x] Overflow `More` + `chev-down`; selected overflow `brand-light`
+- [x] Overflow `More` + `arrow-tri-down-solid` `10×10`; selected overflow `brand-light`
+- [x] Active overflow-selected tab omitted from More menu (IDS baseline on `Tabs.tsx`)
 - [x] Add tab **36px** + `shape-plus`
 - [x] Optional `16×16` tab icon
 - [x] Ellipsis + tooltip at max width

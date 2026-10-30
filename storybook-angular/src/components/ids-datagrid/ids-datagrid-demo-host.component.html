@@ -1,0 +1,121 @@
+<ids-datagrid
+  [rowSelection]="rowSelection"
+  [selectionMode]="selectionMode"
+  [showSingleSelectionRadio]="showSingleSelectionRadio"
+  [withDetailPanel]="withDetailPanel"
+  [pageSize]="pageSize"
+  [readOnly]="readOnly"
+  [rowVerticalIndicator]="rowVerticalIndicator"
+  [headerColorAndBorder]="headerColorAndBorder"
+  [columnResizeEnabled]="columnResizeEnabled"
+>
+  <ids-datagrid-column
+    field="name"
+    title="Name"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="200"
+    [minWidth]="90"
+    [filterActive]="nameFilterActive"
+  >
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-search-field
+        ariaLabel="Search name column"
+        [query]="nameQuery"
+        (queryChange)="nameQuery = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="type"
+    title="Type"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="140"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="typeFilterActive"
+  >
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-multiselect
+        groupLabel="Type"
+        [options]="typeOptions"
+        [selectedValues]="selectedTypes"
+        (selectedValuesChange)="selectedTypes = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="status"
+    title="Status"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="120"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="statusFilterActive"
+  >
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-multiselect
+        groupLabel="Status"
+        [options]="statusOptions"
+        [selectedValues]="selectedStatuses"
+        (selectedValuesChange)="selectedStatuses = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="owner"
+    title="Owner"
+    [sortable]="true"
+    [filterable]="true"
+    [width]="120"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="ownerFilterActive"
+  >
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-single-select
+        ariaLabel="Filter owner column"
+        [options]="ownerOptions"
+        [selectedValue]="selectedOwner"
+        (selectedValueChange)="selectedOwner = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  <ids-datagrid-column
+    field="region"
+    title="Region"
+    [sortable]="false"
+    [filterable]="true"
+    [width]="100"
+    [minWidth]="90"
+    [columnHideable]="true"
+    [filterActive]="regionFilterActive"
+  >
+    <ids-datagrid-filter>
+      <ids-datagrid-filter-single-select
+        ariaLabel="Filter region column"
+        [options]="regionOptions"
+        [selectedValue]="selectedRegion"
+        (selectedValueChange)="selectedRegion = $event"
+      />
+    </ids-datagrid-filter>
+  </ids-datagrid-column>
+
+  @for (row of filteredRows; track row.id) {
+    <ids-datagrid-row [rowId]="row.id">
+      <ids-datagrid-cell field="name" [value]="row.values.name" />
+      <ids-datagrid-cell field="type" [value]="row.values.type" />
+      <ids-datagrid-cell field="status" [value]="row.values.status" />
+      <ids-datagrid-cell field="owner" [value]="row.values.owner" />
+      <ids-datagrid-cell field="region" [value]="row.values.region" />
+    </ids-datagrid-row>
+  }
+
+  <ids-datagrid-footer />
+</ids-datagrid>

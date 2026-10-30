@@ -85,7 +85,7 @@ const specAccurateArgs: ComponentProps<typeof SynapseAppShell> = {
 };
 
 const meta: Meta<typeof SynapseAppShell> = {
-  title: "Spec Generated/Synapse/App Shell",
+  title: "Components/Synapse/App Shell",
   component: SynapseAppShell,
   parameters: {
     layout: "fullscreen",

@@ -1,0 +1,191 @@
+/* ============================================================
+   Slider — IDS Design System
+   ============================================================ */
+
+.slider {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  min-width: 200px;
+}
+
+.slider__labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+}
+
+.slider__label--active {
+  color: var(--color-text-brand-base, #0076ce);
+  font-weight: 500;
+}
+
+.slider__rail-container {
+  position: relative;
+  width: 100%;
+  height: 24px;
+  display: flex;
+  align-items: center;
+  overflow: visible;
+}
+
+.slider__rail {
+  position: relative;
+  width: 100%;
+  min-width: 200px;
+  height: 4px;
+  background: var(--color-border-accessible, #757575);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.slider--disabled .slider__rail {
+  background: var(--color-icon-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.slider__progress {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  background: var(--color-icon-brand-base, #0076ce);
+  border-radius: 2px;
+}
+
+.slider--disabled .slider__progress {
+  background: var(--color-icon-disabled, #757575);
+}
+
+.slider__range {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  background: var(--color-icon-brand-base, #0076ce);
+  border-radius: 2px;
+}
+
+.slider--disabled .slider__range {
+  background: var(--color-icon-disabled, #757575);
+}
+
+.slider__ticks {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.slider__tick {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #ffffff;
+  border: 2px solid #000000;
+}
+
+.slider__tick--selected {
+  background: var(--color-icon-brand-base, #0076ce);
+  border-color: var(--color-icon-brand-base, #0076ce);
+}
+
+.slider--disabled .slider__tick--selected {
+  background: var(--color-icon-disabled, #757575);
+  border-color: var(--color-icon-disabled, #757575);
+}
+
+.slider__thumb {
+  position: absolute;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 16px;
+  height: 16px;
+  background: var(--color-icon-brand-base, #0076ce);
+  border-radius: 50%;
+  cursor: grab;
+  transition: background-color 0.15s ease;
+}
+
+.slider__thumb:hover:not(.slider__thumb--disabled) {
+  background: var(--color-icon-brand-strong, #0062ab);
+}
+
+.slider__thumb:active:not(.slider__thumb--disabled) {
+  background: var(--color-icon-brand-stronger, #003a65);
+  cursor: grabbing;
+}
+
+.slider__thumb:focus-visible {
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base, #0076ce);
+  outline-offset: 3px;
+}
+
+.slider__thumb--disabled {
+  background: var(--color-icon-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.slider__value-label {
+  position: absolute;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-brand-base, #0076ce);
+  white-space: nowrap;
+}
+
+.slider--disabled .slider__value-label {
+  color: var(--color-text-disabled, #757575);
+}
+
+.slider__inputs {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.slider__value-input {
+  width: 80px;
+  height: 32px;
+  padding: 0 16px;
+  border: var(--border-width-border-1, 1px) solid var(--color-border-accessible, #757575);
+  background: var(--color-background-component, #ffffff);
+  border-radius: 2px;
+  font-family: inherit;
+  font-size: var(--font-size-body-2, 14px);
+  line-height: var(--font-line-height-line-height-20, 20px);
+  color: var(--color-text-neutral, #4d4d4d);
+  appearance: textfield;
+}
+
+.slider__value-input::-webkit-outer-spin-button,
+.slider__value-input::-webkit-inner-spin-button {
+  opacity: 1;
+}
+
+.slider__value-input::-moz-number-spin-box {
+  opacity: 1;
+}
+
+.slider__value-input:disabled {
+  background: var(--color-background-gray-light, #eaeaea);
+  color: var(--color-text-disabled, #757575);
+  cursor: not-allowed;
+}
+
+.slider__input-separator {
+  font-size: var(--font-size-body-2, 14px);
+  color: var(--color-text-neutral, #4d4d4d);
+}

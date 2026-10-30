@@ -16,10 +16,17 @@ node_modules/
 storybook/storybook-static/
 storybook-angular/storybook-static/
 apps/design-spec-collab/storybook-static/
+apps/design-spec-collab/storybook-static.building/
+apps/design-spec-collab/backend/**/storybook-static/
+storybook-angular/compiled/
+storybook-angular/.angular/cache/
 .angular/
 **/.angular/
 .cache/
 **/.cache/
+
+# Figma MCP token dumps (assembled into compact-export, then ids-theme.css)
+storage/figma-exports/
 
 # Temporary workspace artifacts
 .tmp_*
@@ -28,3 +35,25 @@ apps/design-spec-collab/storybook-static/
 data/design-spec-intake/sessions/*
 !data/design-spec-intake/sessions/.gitkeep
 
+# Design-spec collab / portal runtime data (jobs, sessions, PR Storybook caches)
+apps/design-spec-collab/data/review_sessions/
+apps/design-spec-collab/data/jobs/
+apps/design-spec-collab/data/sessions/
+apps/design-spec-collab/data/collab_sessions/
+apps/design-spec-collab/data/storybook_pr_builds/
+apps/design-spec-portal/data/jobs/
+apps/design-spec-portal/*.json
+
+# design-sync (claude.ai/design import) — build artifacts + machine state.
+# The DURABLE set IS committed: .design-sync/{config*.json,NOTES*.md,conventions*.md,previews/,overrides/}
+.ds-sync/
+ds-bundle/
+ds-bundle-synapse/
+.design-sync/sb-reference/
+.design-sync/sb-reference-synapse/
+.design-sync/learnings/
+.design-sync/.cache/
+.design-sync/node_modules
+.design-sync/types/
+.design-sync/*.log
+.design-sync/*-theme-bundle.css

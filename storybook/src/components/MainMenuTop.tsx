@@ -78,7 +78,7 @@ function NavItemLabel({
               color={
                 isSelected
                   ? "var(--color-icon-brand-strong)"
-                  : "var(--color-icon-neutral-strong)"
+                  : "var(--color-icon-gray-neutral-strong)"
               }
             />
           </span>
@@ -105,7 +105,7 @@ function NavItemLabel({
             color={
               isSelected
                 ? "var(--color-icon-brand-strong)"
-                : "var(--color-icon-neutral-strong)"
+                : "var(--color-icon-gray-neutral-strong)"
             }
           />
         </span>

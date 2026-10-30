@@ -1,0 +1,87 @@
+<span
+  #triggerRef
+  class="ids-tooltip__trigger"
+  tabindex="0"
+  [attr.aria-describedby]="triggerDescribedBy"
+  (mouseenter)="onTriggerPointerEnter()"
+  (mouseleave)="onTriggerPointerLeave()"
+  (focusin)="onTriggerFocusIn()"
+  (focusout)="onTriggerFocusOut($event)"
+>
+  <ng-content />
+</span>
+
+@if (isOpen) {
+  <div
+    #popupRef
+    [id]="tooltipId"
+    [class]="popupClass"
+    role="tooltip"
+    [style.top.px]="popupTop"
+    [style.left.px]="popupLeft"
+    [style.visibility]="positioned ? 'visible' : 'hidden'"
+    (mouseenter)="onPopupPointerEnter()"
+    (mouseleave)="onPopupPointerLeave()"
+    (keydown)="onPopupKeydown($event)"
+  >
+    <div
+      class="ids-tooltip__arrow"
+      [attr.data-side]="side"
+      [attr.data-align]="resolvedArrowAlign"
+      aria-hidden="true"
+    >
+      <span class="ids-tooltip__arrow-graphic">
+        <svg class="ids-tooltip__arrow-svg" viewBox="0 0 10 6">
+          <path
+            class="ids-tooltip__arrow-fill"
+            d="M0.5 5.5L5 0.5L9.5 5.5L9.5 6.5L0.5 6.5Z"
+          />
+          <path class="ids-tooltip__arrow-stroke" d="M0.5 5.5L5 0.5L9.5 5.5" />
+        </svg>
+      </span>
+    </div>
+
+    <div class="ids-tooltip__panel">
+      <div [class]="contentClass">
+        @if (closable) {
+          <div class="ids-tooltip__content-column">
+            <ng-container *ngTemplateOutlet="panelCopyTpl" />
+          </div>
+          <button
+            type="button"
+            class="ids-tooltip__close"
+            aria-label="Close tooltip"
+            (click)="onCloseClick()"
+          >
+            <ids-icon
+              [shapeName]="closeIconShapeName"
+              [size]="12"
+              className="ids-tooltip__close-icon"
+            />
+          </button>
+        } @else {
+          <ng-container *ngTemplateOutlet="panelCopyTpl" />
+        }
+      </div>
+    </div>
+  </div>
+}
+
+<ng-template #panelCopyTpl>
+  @if (showTitleInPanel) {
+    <div class="ids-tooltip__header">
+      @if (hasTitleSlot) {
+        <ng-content select="ids-tooltip-title" />
+      } @else if (title) {
+        <div class="ids-tooltip__title">{{ title }}</div>
+      }
+    </div>
+  }
+  <div class="ids-tooltip__body-slot">
+    @if (hasBodySlot) {
+      <ng-content select="ids-tooltip-body" />
+    } @else {
+      <div class="ids-tooltip__body">{{ content }}</div>
+    }
+  </div>
+</ng-template>

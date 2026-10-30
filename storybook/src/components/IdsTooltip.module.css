@@ -1,10 +1,14 @@
+/* inline-flex so the trigger box hugs the slotted object (badge, button) —
+   a plain inline box follows the line box and would offset the tooltip's 6px
+   gap and arrow from the text metrics instead of the object's edge. */
 .trigger {
-  display: inline;
+  display: inline-flex;
   cursor: default;
 }
 
 .triggerBlock {
   display: block;
+  min-width: 0;
   width: 100%;
   cursor: default;
 }
@@ -25,9 +29,9 @@
   z-index: 0;
   box-sizing: border-box;
   width: 100%;
-  background: var(--color-background-surface-2);
-  color: var(--color-text-neutral);
-  border: var(--border-width-border-default) solid var(--color-border-accessible);
+  background: var(--color-background-surface-secondary);
+  color: var(--color-text-gray-neutral);
+  border: var(--border-width-border-default) solid var(--color-border-gray-neutral-base);
   border-radius: var(--tooltip-control-radius);
   box-shadow: 1px 1px 3px rgba(37, 37, 37, 0.25);
 }
@@ -60,12 +64,12 @@
 }
 
 .arrowFill {
-  fill: var(--color-background-surface-2);
+  fill: var(--color-background-surface-secondary);
 }
 
 .arrowStroke {
   fill: none;
-  stroke: var(--color-border-accessible);
+  stroke: var(--color-border-gray-neutral-base);
   stroke-width: 1;
   vector-effect: non-scaling-stroke;
   stroke-linecap: butt;
@@ -116,70 +120,36 @@
   right: -4px !important;
 }
 
+/* Arrow cross-axis: centered on the trigger object. Floating UI's arrow
+   middleware writes the measured offset inline; these non-!important rules are
+   the fallback before it does. `arrowAlign` shifts the popup, the arrow always
+   tracks the trigger center. */
+.arrow[data-side="bottom"],
+.arrow[data-side="top"] {
+  left: calc(50% - 5px);
+}
+
+.arrow[data-side="left"],
+.arrow[data-side="right"] {
+  top: calc(50% - 5px);
+}
+
 .arrow[data-side="bottom"][data-align="start"],
-.arrow[data-side="top"][data-align="start"] {
-  left: 8px !important;
-}
-
-.arrow[data-side="bottom"][data-align="start"] {
-  top: -5px !important;
-}
-
 .arrow[data-side="bottom"][data-align="center"],
-.arrow[data-side="top"][data-align="center"] {
-  left: calc(50% - 5px) !important;
-}
-
-.arrow[data-side="bottom"][data-align="center"] {
-  top: -5px !important;
-}
-
-.arrow[data-side="bottom"][data-align="end"],
-.arrow[data-side="top"][data-align="end"] {
-  left: calc(100% - 18px) !important;
-}
-
 .arrow[data-side="bottom"][data-align="end"] {
   top: -5px !important;
 }
 
 .arrow[data-side="left"][data-align="start"],
-.arrow[data-side="right"][data-align="start"] {
-  top: 8px !important;
-}
-
-.arrow[data-side="left"][data-align="start"] {
-  right: -5px !important;
-}
-
-.arrow[data-side="right"][data-align="start"] {
-  left: -5px !important;
-}
-
 .arrow[data-side="left"][data-align="center"],
-.arrow[data-side="right"][data-align="center"] {
-  top: calc(50% - 5px) !important;
-}
-
-.arrow[data-side="left"][data-align="center"] {
-  right: -5px !important;
-}
-
-.arrow[data-side="right"][data-align="center"] {
-  left: -5px !important;
-}
-
-.arrow[data-side="left"][data-align="end"],
-.arrow[data-side="right"][data-align="end"] {
-  top: calc(100% - 18px) !important;
-}
-
 .arrow[data-side="left"][data-align="end"] {
   right: -5px !important;
 }
 
+.arrow[data-side="right"][data-align="start"],
+.arrow[data-side="right"][data-align="center"],
 .arrow[data-side="right"][data-align="end"] {
-  left: -3px !important;
+  left: -5px !important;
 }
 
 .popupStandard {
@@ -190,10 +160,11 @@
   width: 264px;
 }
 
-.popupWithTitle .body,
-.popupNoTitle .body {
-  min-height: 80px;
+.popup.popupHug {
+  width: auto;
+  min-width: 0;
 }
+
 
 .content {
   display: flex;
@@ -214,24 +185,26 @@
   flex-direction: column;
   gap: var(--spacing-space-4);
   min-width: 0;
-  padding-right: var(--spacing-space-8);
+  /* 4px spacing reserve between content (title/body) and close button. */
+  padding-right: var(--spacing-space-4);
 }
 
 .header {
   display: flex;
   align-items: center;
   min-width: 0;
+  min-height: var(--font-line-height-line-height-20);
 }
 
 .title {
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 500;
 }
 
 .body {
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
@@ -247,7 +220,7 @@
   justify-content: center;
   border: none;
   background: transparent;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   padding: 0;
   cursor: pointer;
 }
@@ -255,6 +228,13 @@
 .closeIcon {
   display: inline-block;
   flex-shrink: 0;
+}
+
+.closeButton.closeButton {
+  min-height: var(--sizing-size-20);
+  min-width: var(--sizing-size-20);
+  padding: var(--padding-padding-4);
+  box-sizing: border-box;
 }
 
 :global([data-theme="dark"]) .close,

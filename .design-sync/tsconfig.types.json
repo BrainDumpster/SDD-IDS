@@ -1,0 +1,38 @@
+{
+  "//": "design-sync: emits real .d.ts for lib/react so lib/dts.mjs can extract props.",
+  "//2": "Covers BOTH lib/react/ids and lib/react/synapse: root package.json has a single",
+  "//3": "`types` pointer, and both syncs (config.json = IDS, config.synapse.json = Synapse)",
+  "//4": "read it. Re-run after changing component props:",
+  "//5": "  ./storybook/node_modules/.bin/tsc -p .design-sync/tsconfig.types.json",
+  "//6": "tsc exits 2 with ~18 non-fatal errors (asset imports, import.meta.env/glob) but EMITS.",
+  "compilerOptions": {
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    "skipLibCheck": true,
+    "noEmitOnError": false,
+    "strict": false,
+    "jsx": "react-jsx",
+    "module": "esnext",
+    "target": "es2020",
+    "moduleResolution": "bundler",
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "outDir": "types",
+    "rootDir": "../lib/react",
+    "baseUrl": "..",
+    "paths": {
+      "@ids/react/*": ["lib/react/ids/*"],
+      "@ids/react": ["lib/react/ids"],
+      "@synapse/react/*": ["lib/react/synapse/*"],
+      "@synapse/react": ["lib/react/synapse"]
+    }
+  },
+  "include": [
+    "../lib/react/ids/**/*.ts",
+    "../lib/react/ids/**/*.tsx",
+    "../lib/react/synapse/**/*.ts",
+    "../lib/react/synapse/**/*.tsx",
+    "../lib/react/shared/**/*.ts",
+    "../lib/react/shared/**/*.tsx"
+  ]
+}

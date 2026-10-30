@@ -49,7 +49,7 @@ export const MiddleActive: Story = {{
 export const WithPageContent: Story = {{
   render: () => (
     <div style={{{{ display: "flex", gap: 32, padding: 24 }}}}>
-      <div style={{{{ flex: 1, color: "var(--color-text-neutral-strong)" }}}}>
+      <div style={{{{ flex: 1, color: "var(--color-text-gray-neutral-strong)" }}}}>
         <h2 id="overview" style={{{{ marginBottom: 120 }}}}>Overview</h2>
         <h2 id="installation" style={{{{ marginBottom: 120 }}}}>Installation</h2>
         <h2 id="usage" style={{{{ marginBottom: 120 }}}}>Usage</h2>

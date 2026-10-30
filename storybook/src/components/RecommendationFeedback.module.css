@@ -16,7 +16,7 @@
   font-size: var(--font-size-body-1);
   line-height: var(--font-line-height-line-height-24);
   font-weight: 400;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   word-break: break-word;
 }
 
@@ -40,7 +40,7 @@
 }
 
 .actionButton:hover {
-  background: var(--color-background-surface-1);
+  background: var(--color-background-surface-primary);
 }
 
 .actionButton:focus {
@@ -57,6 +57,6 @@
   font-size: var(--font-size-body-3);
   line-height: var(--font-line-height-line-height-18);
   font-weight: 400;
-  color: var(--color-text-disabled);
+  color: var(--color-text-gray-disabled);
   white-space: nowrap;
 }

@@ -1,0 +1,35 @@
+<h3 class="ids-accordion__header">
+  <button
+    type="button"
+    class="ids-accordion__trigger"
+    [class.ids-accordion__trigger--left]="accordion.chevronPosition === 'left'"
+    [class.ids-accordion__trigger--right]="accordion.chevronPosition === 'right'"
+    [class.ids-accordion__trigger--open]="item.isOpen()"
+    [class.ids-accordion__trigger--disabled]="item.disabled"
+    [id]="accordion.triggerId(item.value)"
+    [attr.aria-expanded]="item.isOpen()"
+    [attr.aria-controls]="accordion.panelId(item.value)"
+    [attr.data-panel-open]="item.isOpen() ? 'true' : null"
+    [disabled]="item.disabled"
+    [tabIndex]="accordion.triggerTabIndex(item)"
+    (click)="onClick()"
+    (keydown)="onKeydown($event)"
+    (focus)="onFocus()"
+  >
+    @if (accordion.chevronPosition === "left") {
+      <span
+        class="ids-accordion__icon"
+        [style.mask-image]="iconMask()"
+        aria-hidden="true"
+      ></span>
+    }
+    <span class="ids-accordion__title"><ng-content /></span>
+    @if (accordion.chevronPosition === "right") {
+      <span
+        class="ids-accordion__icon"
+        [style.mask-image]="iconMask()"
+        aria-hidden="true"
+      ></span>
+    }
+  </button>
+</h3>

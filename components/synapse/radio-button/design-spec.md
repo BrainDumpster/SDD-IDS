@@ -77,11 +77,14 @@ Inherit IDS **Interactions** and **Accessibility** from [`components/ids/radio-b
 
 ### IDS inheritance resolution
 
-Codegen **MUST** resolve aggregate `RadioButton` props and per-option fields from IDS **Composition & API (runtime)** (`name`, `options`, `value`, `defaultValue`, `onChange`, `disabled`, `orientation`, per-option `error`, `helperText`, `simulatedState` for docs only).
+Codegen **MUST** resolve the **group + projected item** composition API from IDS **Composition & API (runtime)** in [`components/ids/radio-button/design-spec.md`](../ids/radio-button/design-spec.md):
 
-### Synapse-only runtime flags
+- **Group** (`RadioButtonGroup` / `groupRoot`): `name`, `value` / `defaultValue`, `valueChange`, `orientation`, group-level `disabled`
+- **Item** (`ids-radio-button` / single option row): `value`, `label`, `disabled`, `error`, `helperText`, etc.
 
-None. Programme typography is applied via `components/synapse-theme.css` (`--radio-label-font-weight`).
+Synapse adds **no** group- or item-level props beyond IDS. Programme typography is applied via `components/synapse-theme.css` (`--radio-label-font-weight`).
+
+**Legacy aggregate (React only):** `RadioButton` with `options[]` in `storybook/src/components/RadioButton.tsx` remains a convenience wrapper for Synapse React Storybook; composition is canonical for new ports (see IDS **Legacy aggregate**).
 
 ### Storybook defaults
 

@@ -1,6 +1,11 @@
+/**
+ * Spec Generated stories — thin wrapper over `lib/react/ids/anchor-menu`.
+ * Canonical Lib Generated stories: `lib-generated/AnchorMenu.stories.tsx`
+ * Spec: components/ids/anchor-menu/design-spec.md
+ */
 import "../../../components/ids-theme.css";
 import type { Meta, StoryObj } from "@storybook/react";
-import { IdsAnchorMenu } from "./IdsAnchorMenu";
+import { IdsAnchorMenu } from "../../../lib/react/ids/anchor-menu";
 
 /** Figma `AnchorMenu-Example` (`11955:229709`) — first section selected. */
 const specAccurateItems = [
@@ -13,7 +18,7 @@ const specAccurateItems = [
 ] as const;
 
 const meta: Meta<typeof IdsAnchorMenu> = {
-  title: "Spec Generated/IDS/Anchor Menu",
+  title: "Components/IDS/Anchor Menu",
   component: IdsAnchorMenu,
   parameters: { layout: "padded" },
 };
@@ -40,18 +45,35 @@ export const MiddleActive: Story = {
 export const WithPageContent: Story = {
   render: () => (
     <div style={{ display: "flex", gap: 32, padding: 24 }}>
-      <div style={{ flex: 1, color: "var(--color-text-neutral-strong)" }}>
+      <div style={{ flex: 1, color: "var(--color-text-gray-neutral-strong)" }}>
         {specAccurateItems.map((item) => (
-          <h2
+          <section
             key={item.href}
             id={item.href.replace("#", "")}
-            style={{ marginBottom: 120 }}
+            style={{ minHeight: 500, paddingBottom: 120 }}
           >
-            {item.label}
-          </h2>
+            <h2 style={{ marginBottom: 24 }}>{item.label}</h2>
+            <p>Sample content for {item.label} section.</p>
+          </section>
         ))}
       </div>
-      <IdsAnchorMenu items={[...specAccurateItems]} />
+      <div style={{ position: "sticky", top: 24, alignSelf: "flex-start" }}>
+        <IdsAnchorMenu items={[...specAccurateItems]} />
+      </div>
     </div>
   ),
+};
+
+export const LongLabels: Story = {
+  name: "Long Labels",
+  args: {
+    items: [
+      { label: "Overview", href: "#overview" },
+      { label: "Types and classifications of anchor menu patterns", href: "#types" },
+      { label: "A deliberately extremely long anchor menu section title that overflows the two-line clamp and shows an ellipsis on the third line", href: "#anatomy", active: true },
+      { label: "Usage Rules", href: "#usage-rules" },
+      { label: "States and Colors", href: "#states-and-colors" },
+      { label: "Redlines", href: "#redlines" },
+    ],
+  },
 };

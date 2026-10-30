@@ -1,0 +1,50 @@
+/**
+ * IDS Icon styles — reusable across `lib/react/ids/*`.
+ * Selectors: ids-icon
+ */
+
+/* Shared box; mask fill lives on --mask only so img/inline do not paint a square. */
+.ids-icon {
+  display: inline-block;
+  box-sizing: border-box;
+  flex-shrink: 0;
+  vertical-align: middle;
+}
+
+/* variant="mask" (default): tint via background-color + CSS mask. */
+.ids-icon--mask {
+  background-color: currentColor;
+  -webkit-mask-repeat: no-repeat;
+  -webkit-mask-position: center;
+  -webkit-mask-size: contain;
+  mask-repeat: no-repeat;
+  mask-position: center;
+  mask-size: contain;
+}
+
+/* variant="img": full-color asset; never paint currentColor behind the glyph. */
+.ids-icon--img {
+  background-color: transparent;
+  object-fit: contain;
+}
+
+.ids-icon--missing {
+  background-color: transparent;
+  outline: 1px dashed currentColor;
+  opacity: 0.4;
+}
+
+/* variant="inline": real <svg> in DOM (two-tone glyphs). */
+.ids-icon--inline {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
+  background-color: transparent;
+}
+
+.ids-icon--inline svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}

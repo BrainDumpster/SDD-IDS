@@ -23,27 +23,27 @@
 - Minimum width: 40px
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
 - Gray neutral light: `var(--color-background-gray-neutral-light)` = #eaeaea
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
 - Brand strong text: `var(--color-text-brand-strong)` = #0062ab
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
-- White border: `var(--color-border-white)` = #ffffff
-- Transparent neutral: `var(--color-border-transparent-neutral)` = #ffffff00
+- White border: `var(--color-border-gray-white)` = #ffffff
+- Transparent neutral: `var(--color-border-gray-neutral-transparent-base)` = #ffffff00
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
+- Neutral icon: `var(--color-icon-gray-neutral-base)` = #4d4d4d
+- Neutral strong icon: `var(--color-icon-gray-neutral-strong)` = #252525
 - Brand strong icon: `var(--color-icon-brand-strong)` = #0062ab
-- White icon: `var(--color-icon-white)` = #ffffff
+- White icon: `var(--color-icon-gray-white)` = #ffffff
 
 ### Background Colors
-- Brand lighter: `var(--color-background-brand-lighter)` = #ebf4fb
-- Masthead brand: `var(--color-background-masthead-brand-base)` = #0076ce
+- Brand lighter: `var(--color-background-brand-lighter-slate)` = #ebf4fb
+- Masthead brand: `var(--color-background-masthead-base)` = #0076ce
 
 ### UI Palettes
 - Dell Blue 600: `UI Palettes/Dell Blue/dell-blue-600` = #0076CE

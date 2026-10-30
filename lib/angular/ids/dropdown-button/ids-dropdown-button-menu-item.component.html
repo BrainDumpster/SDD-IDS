@@ -1,0 +1,12 @@
+<button
+  #itemButton
+  type="button"
+  class="ids-dropdown-button__menu-item"
+  role="menuitem"
+  [disabled]="disabled"
+  [attr.aria-disabled]="disabled ? 'true' : null"
+  (click)="onClick()"
+  (keydown)="onKeydown($event)"
+>
+  <span class="ids-dropdown-button__menu-item-label">{{ label }}</span>
+</button>

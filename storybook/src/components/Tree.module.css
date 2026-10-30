@@ -25,7 +25,7 @@
   background: transparent;
   font-size: var(--font-size-body-2);
   font-family: inherit;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   cursor: pointer;
   outline: none;
   border-radius: var(--corner-radius-radius-2);
@@ -43,7 +43,7 @@
 
 .chevron {
   flex-shrink: 0;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   transition: transform 150ms ease;
 }
 
@@ -59,7 +59,7 @@
   padding-left: calc(var(--padding-padding-8) + 18px);
   font-size: var(--font-size-body-2);
   font-family: inherit;
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   list-style: none;
   border-radius: var(--corner-radius-radius-2);
   cursor: default;
@@ -73,7 +73,7 @@
   flex-shrink: 0;
   display: flex;
   align-items: center;
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
 }
 
 .label {

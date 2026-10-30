@@ -1,0 +1,87 @@
+import type { Meta, StoryObj } from "@storybook/react";
+import "../tokens.css";
+import Login from "./Login";
+
+/**
+ * Joe-Generated Login — uses only:
+ * - storybook/src/components/dap/joe-generated/Login/Login.tsx
+ * - storybook/src/components/dap/joe-generated/Login/Login.css (imported by Login.tsx)
+ * - storybook/src/components/dap/joe-generated/tokens.css
+ * Spec MDX: components/DAP/joe-generated/Login/login.mdx
+ */
+const meta: Meta<typeof Login> = {
+  title: "Spec Generated/DAP/Joe-Generated/Login",
+  component: Login,
+  parameters: {
+    layout: "centered",
+    docs: {
+      description: {
+        component:
+          "Joe-generated DAP Login. Implementation: `storybook/src/components/dap/joe-generated/Login/Login.tsx` + `Login.css`. Tokens: `storybook/src/components/dap/joe-generated/tokens.css`. Spec MDX: `components/DAP/joe-generated/Login/login.mdx`.",
+      },
+    },
+  },
+  argTypes: {
+    variant: {
+      control: "select",
+      options: [
+        "default",
+        "with-social",
+        "with-registration",
+        "minimal",
+        "branded",
+      ],
+    },
+    showSocialLogin: { control: "boolean" },
+    showRegistration: { control: "boolean" },
+    onSubmit: { action: "onSubmit" },
+    onForgotPassword: { action: "onForgotPassword" },
+  },
+  args: {
+    variant: "default",
+    showSocialLogin: false,
+    showRegistration: false,
+  },
+};
+
+export default meta;
+type Story = StoryObj<typeof Login>;
+
+export const Default: Story = {
+  args: {
+    variant: "default",
+  },
+};
+
+export const WithSocial: Story = {
+  args: {
+    variant: "with-social",
+    showSocialLogin: true,
+  },
+};
+
+export const WithRegistration: Story = {
+  args: {
+    variant: "with-registration",
+    showRegistration: true,
+  },
+};
+
+export const WithSocialAndRegistration: Story = {
+  args: {
+    showSocialLogin: true,
+    showRegistration: true,
+  },
+};
+
+export const Minimal: Story = {
+  args: {
+    variant: "minimal",
+  },
+};
+
+export const Branded: Story = {
+  args: {
+    variant: "branded",
+  },
+};

@@ -1,1 +1,2 @@
-export { DropdownMenu as SynapseDropdownMenu } from "./DropdownMenu";
+/** @deprecated Import `SynapseDropdownMenu` from `./SynapseDropdown` (composition API). */
+export { IdsDropdownMenu as SynapseDropdownMenu } from "./IdsDropdown";

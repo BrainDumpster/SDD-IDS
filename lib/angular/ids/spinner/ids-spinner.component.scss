@@ -1,0 +1,164 @@
+/**
+ * IDS Spinner styles — derived from components/ids/spinner/design-spec.md
+ * Theme: components/ids-theme.css
+ * Ported from lib/react/ids/spinner/IdsSpinner.module.css
+ *
+ * Geometry: outer 20/40/72 · inner progress 10/30/62 · stroke 2px · arc 120deg
+ * Motion: 900ms linear infinite; prefers-reduced-motion ≥1800ms
+ */
+
+.ids-spinner {
+  display: inline-flex;
+  align-items: center;
+  box-sizing: border-box;
+}
+
+.ids-spinner--layout-inline {
+  flex-direction: row;
+  gap: 8px;
+}
+
+.ids-spinner--layout-stack {
+  flex-direction: column;
+  justify-content: center;
+  gap: 8px;
+}
+
+.ids-spinner--layout-sr-only {
+  flex-direction: row;
+}
+
+.ids-spinner-visual {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  box-sizing: border-box;
+  border-radius: 50%;
+  width: var(--ids-spinner-size);
+  height: var(--ids-spinner-size);
+}
+
+.ids-spinner-track {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  background: var(--color-background-surface-secondary);
+}
+
+.ids-spinner-arc {
+  position: relative;
+  z-index: 1;
+  display: block;
+  width: var(--ids-spinner-progress-size);
+  height: var(--ids-spinner-progress-size);
+  border-radius: 50%;
+  background: conic-gradient(
+    var(--color-border-brand-base) 0deg 120deg,
+    transparent 120deg 360deg
+  );
+  -webkit-mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 2px)
+  );
+  mask: radial-gradient(
+    farthest-side,
+    transparent calc(100% - 2px),
+    #000 calc(100% - 2px)
+  );
+  animation: ids-spinner-rotate 900ms linear infinite;
+}
+
+.ids-spinner--sm {
+  --ids-spinner-size: 20px;
+  --ids-spinner-progress-size: 10px;
+}
+
+.ids-spinner--md {
+  --ids-spinner-size: 40px;
+  --ids-spinner-progress-size: 30px;
+}
+
+.ids-spinner--lg {
+  --ids-spinner-size: 72px;
+  --ids-spinner-progress-size: 62px;
+}
+
+.ids-spinner-label {
+  font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-spinner-label--below {
+  text-align: center;
+}
+
+.ids-spinner-label--inline {
+  white-space: nowrap;
+}
+
+.ids-spinner-sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.ids-spinner:focus {
+  outline: none;
+}
+
+.ids-spinner:focus-visible {
+  outline: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.ids-spinner[tabindex]:not([tabindex="-1"]) {
+  min-width: 44px;
+  min-height: 44px;
+  justify-content: center;
+}
+
+.ids-spinner-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.ids-spinner-backdrop {
+  position: absolute;
+  inset: 0;
+  background: var(--color-background-surface-overlay);
+}
+
+.ids-spinner-overlay .ids-spinner {
+  position: relative;
+  z-index: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .ids-spinner-arc {
+    animation-duration: 1800ms;
+  }
+}
+
+@keyframes ids-spinner-rotate {
+  to {
+    transform: rotate(360deg);
+  }
+}

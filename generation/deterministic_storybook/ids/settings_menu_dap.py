@@ -47,7 +47,7 @@ export const Default: Story = {{
     return (
       <div
         style={{{{
-          background: "var(--color-background-surface-1)",
+          background: "var(--color-background-surface-primary)",
           padding: 24,
           minHeight: 400,
         }}}}
@@ -65,7 +65,7 @@ export const Default: Story = {{
 
 export const ForcedStateDemo: Story = {{
   render: () => (
-    <div style={{{{ background: "var(--color-background-surface-1)", padding: 24 }}}}>
+    <div style={{{{ background: "var(--color-background-surface-primary)", padding: 24 }}}}>
       <{component_name}
         title="Settings"
         interactive={{false}}

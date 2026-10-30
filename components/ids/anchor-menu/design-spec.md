@@ -3,82 +3,96 @@
 ## Metadata
 - Component: Anchor Menu
 - Category: Navigation
+- Design System: IDS
+- Status: active
 - Figma: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54486&m=dev
-- Node ID: 11067-54486
+- Node ID: `11067:54486`
+- File key: `VZJ48bbVYrIynw8DdSukWw`
+- Element state matrix: `11955:229729` (`AnchorMenu-Element-Section`)
+- Main component set: `11955:229780` (`AnchorMenu-Main`, `# of Sections` 3–16)
+- Spec-accurate example: `11955:229709` (`AnchorMenu-Example`; Header layer hidden)
+- Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
+- Verified at: 2026-08-18
+- Storybook examples requested: yes (Angular **Spec Generated/IDS/Anchor Menu**; do not modify existing React stories)
+
 ## Anatomy
-- Anchor menu container
-- Anchor navigation links
-- Active section indicator
-- Progress indicator (optional)
-- Focus ring for keyboard navigation
-- Sticky positioning
-- Scroll spy functionality
+- **groupRoot** (`AnchorMenuRoot` / `ids-anchor-menu`): `nav` landmark wrapping header, items, and active indicator.
+- **header** (`AnchorMenuHeader` / `ids-anchor-menu-header`): optional section heading (Figma Header layer on `11955:229709`; hidden in spec-accurate example).
+- **item** (`AnchorMenuItem` / `ids-anchor-menu-item`): one section row (`AnchorMenu-Element-Section`).
+- **link**: focusable control inside the item (`a` when `href` is present).
+- **activeIndicator** (`AnchorActiveIndicator` / `ids-anchor-active-indicator`): 4px brand left bar aligned to the active item (`get_design_context` Selected `border-l-4` on `11955:229728`).
+- Default left rail: 1.2px `var(--color-border-gray-neutral-base)` on each unselected item (`11955:229730`).
+- Focus ring: 2px brand ring **inside** the item, 4px in from each side, flush top/bottom (`11955:230551`, `11955:230577`).
+
 ## Layout & Measurements
 - Standard height: Auto (based on content)
 - Header text line box height: `24px` (`Body 1` rhythm)
 - Header container vertical padding: `12px` top and `12px` bottom (no horizontal padding)
-- Item height: 40px
+- Header long text: grows to the rail's max width, wraps to a 2nd line, then truncates line 3+ with a `…` ellipsis and reveals the full heading on hover (same `nativeTooltip` behaviour as item labels). The 2-line `-webkit-line-clamp` sits on an **inner label** span (no padding); the `12px` block padding stays on the header wrapper so the clamped 3rd line cannot bleed into the padding under `overflow: hidden`. The `IdsTooltip` trigger wraps the **inner label** (not the padded wrapper) so the tooltip lines up with the heading text rather than sitting above it in the top padding.
+- Item height: 40px minimum (1 line); 64px when clamped to 2 lines
 - Item width: hug content (`fit-content`)
+- Long text: wrap up to 2 lines, then `…` ellipsis; a tooltip is shown on hover/focus only for labels that are truncated. Tooltip mode is selectable (`nativeTooltip` prop, boolean, default `false`): when `false`, `IdsTooltip` is anchored to the label text (inline trigger, beside the text edge) so it never overlaps other menu items; when `true`, the browser `title` attribute is used. The `IdsTooltip` side auto-flips from the menu's viewport position — `side="right"` when the menu is in the left half of the viewport, `side="left"` when it is in the right half — so a right-hand-rail menu opens tooltips toward the page instead of off-screen (`IdsTooltip` has no built-in collision detection).
 - Section-item padding: `8px` top/bottom and `24px` left/right
-- Item border radius: 0 (square); focus ring radius: `6px` outer / `4px` inner
-- Focus ring: `2px` brand border hugging the item, inset `-4px` top/bottom and `-6px` left/right (total item + ring height `48px`)
-- Minimum width: 200px
-- Maximum width: 300px
+- Item border radius: 0 (square); focus ring radius: `4px` (`var(--corner-radius-radius-4)`)
+- Focus ring: `2px` (`var(--border-width-border-2)`) brand border **inside** the item — `inset: 0 var(--padding-padding-4)` (4px from the left rail and the right edge, flush top/bottom). Applies to Unselected-Focus and Selected-Focus; on Selected-Focus the 4px active indicator stays visible to the left of the ring.
+- Minimum width: 200px (soft floor via `min(200px, 100%)` — shrinks below 200px only when the container is narrower)
+- Maximum width: 300px (`min(300px, 100%)`)
 - Item spacing: 0 (adjacent)
 - Progress indicator height: 2px
+- Scrollbar (sticky list, when it overflows): **IDS small scrollbar** — native scrollbar recoloured: 8px (`var(--sizing-size-8)`) track `var(--color-background-gray-neutral-light)` with `var(--corner-radius-radius-2)`; 6px thumb `var(--color-border-gray-neutral-base)` with `var(--corner-radius-radius-8)`; 8px carets at top and bottom (2px block padding). Source: Figma Storybook-Test `6191:59167` (AnchorMenu-Main `6191:59227`), confirmed by Mona and Reut. WebKit/Blink only — Firefox shows its own scrollbar.
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0672cb
-- Surface background: `var(--color-background-surface-1)` = #f4f4f4
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
+- Brand base: `var(--color-background-controls-base)` = #0672cb
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong text: `var(--color-text-gray-neutral-strong)` (header)
 - Brand strong text: `var(--color-text-brand-strong)` = #055fa9
-- Accessible border: `var(--color-border-accessible)` = #757575
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0672cb
 
-### UI Palettes
-- Dell Blue 500: `UI Palettes/Dell Blue/dell-blue-500` = #0076CE
-- Gray 900: `UI Palettes/Gray/gray-900` = #252525
 ### Typography
-- Display 1/Default: Roboto Light 72px/88px (large anchor titles)
-- Header 5: Roboto Regular 24px/32px (anchor section headers)
-- Body 1: Roboto Regular 16px/24px (anchor menu items)
-- Anchor menu header label uses Body 1 (regular, no all-caps transform) with `var(--color-text-neutral-strong)`.
+- Body 1: Roboto Regular 16px/24px — header label and item labels (`get_variable_defs` `Body 1` on `11955:229729`)
+- Anchor menu header label uses Body 1 (regular, no all-caps transform) with `var(--color-text-gray-neutral-strong)`.
 
-### Token gaps and notes
-- All colors use semantic CSS custom properties for theme consistency
-- Typography scales are defined via font tokens with proper hierarchy
-- Focus states use brand colors for visual consistency
-- Active states use brand colors for clear indication
-- Dark theme adaptation through semantic tokens
-- Anchor menu should be responsive and accessible
+### Spacing / radius
+- `var(--padding-padding-8)`, `var(--padding-padding-12)`, `var(--padding-padding-24)`
+- `var(--scale-40)`
+- `var(--border-width-border-2)` (focus ring)
+- `var(--corner-radius-radius-4)` (focus ring only)
+
 ## States (Light Theme)
 | Element | Background | Border | Text |
 |---|---|---|---|
-| Menu Container | transparent | `var(--color-border-accessible)` (#757575) | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-accessible)` | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-neutral)` (#4d4d4d) |
-| Anchor Item (Focus) | transparent | `var(--color-border-brand-base)` (#0672cb) | `var(--color-text-brand-strong)` (#055fa9) |
+| Menu Container | transparent | `var(--color-border-gray-neutral-base)` (#757575) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Default) | transparent | left border `1.2px` `var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Hover) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Focus) | transparent | left border `1.2px` `var(--color-border-gray-neutral-base)` + 2px `var(--color-border-brand-base)` ring inside the item (`inset: 0 4px`) | `var(--color-text-gray-neutral)` (#4d4d4d) |
+| Anchor Item (Active + Focus) | transparent | left border `4px` `var(--color-border-brand-base)` + 2px ring inside the item (`inset: 0 4px`) | `var(--color-text-brand-strong)` (#055fa9) |
 | Anchor Item (Active) | transparent | left border `4px` `var(--color-border-brand-base)` | `var(--color-text-brand-strong)` (#055fa9) |
-| Progress Indicator | `var(--color-background-controls-brand-base)` (#0672cb) | transparent | transparent |
+| Anchor Item (Active + Hover) | transparent | left border `4px` `var(--color-border-brand-strong)` (#055fa9) | `var(--color-text-brand-strong)` (#055fa9) |
+| Progress Indicator | `var(--color-background-controls-base)` (#0672cb) | transparent | transparent |
 ## States (Dark Theme)
-- Uses semantic tokens that automatically adapt to dark theme
-- Surface tokens: `var(--color-background-surface-1)` (#111619)
-- Text and border colors remain consistent via semantic variables
-- Active item uses brand colors for clear indication
-- Progress indicator maintains visibility
+
+Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
+
+- `components/ids-theme.css`
+- `components/<program>-theme.css` when a program overlays IDS (for example `components/dap-theme.css`)
+
+Duplicate the full state matrix in this section only when a dark row genuinely uses different `var(--...)` references than the corresponding light row.
+
+*(When Light and Dark tables would list identical `var(--...)` cells, keep the matrix under **States (Light Theme)** only and use this pointer section instead of a second table.)*
+
 ## Interactions
 - Click anchor items to scroll to respective sections
 - Hover provides visual feedback with text color changes
 - Focus ring uses brand color for keyboard navigation
 - Active item shows persistent selection state
 - Progress indicator shows scroll position
-- Keyboard navigation: Arrow keys, Enter, Tab
+- Keyboard navigation: Tab to focus, ArrowUp/ArrowDown to move between items, Enter/Space to activate
 - Smooth scrolling to sections
 - Scroll spy updates active item based on scroll position
 ### Accessibility
-- Focus ring: 2px brand color border
-- Keyboard navigation: Arrow keys, Enter, Tab
+- Focus ring: 2px brand color border inside the item
+- Keyboard navigation: Tab to focus, ArrowUp/ArrowDown to move between items, Enter/Space to activate
 - Screen reader support: Proper ARIA attributes for navigation
 - High contrast: Meets WCAG AA standards with provided colors
 - Semantic HTML: Use nav element with proper landmarks
@@ -87,42 +101,101 @@
 
 ### Behavior & guidelines
 - Use anchor menu for long-form content navigation
-- Position menu near relevant content
-- Provide clear section labels
-- Use smooth scrolling for better UX
-- Test with screen readers for proper navigation announcement
-- Consider responsive behavior for mobile devices
-- Use consistent styling across the application
-- Provide visual feedback for all interactions
-- Match section-element typography and spacing from node `11955:229729`: header uses Body 1 (regular, no text transform) with vertical-only `12px` padding and item rows use `Body 1` (`16/24`) with `8/24` padding and left-border state transitions (`1.2px` default, `4px` hover/active).
+- Match section-element typography and spacing from node `11955:229729`: header uses Body 1 (regular, no text transform) with vertical-only `12px` padding and item rows use `Body 1` (`16/24`) with `8/24` padding and left-border state transitions (`1.2px` default, `4px` hover/active)
+
 ## Composition & API (runtime)
-- `items: Array<{ label: string; href: string; active?: boolean }>` (required)
-- `title?: string` (optional section heading, default `"On this page"`)
-- `header?: boolean` (show/hide the heading, default `true`)
-- `sticky?: boolean` (default `true` for long-page usage)
-- `onItemClick?: (href: string) => void`
+Canonical machine-readable mirror: `component-contracts/ids/anchor-menu.contract.ts`.
+
+**Preferred pattern:** projected children — not an `items[]` prop.
+
+```
+AnchorMenu [title?, sticky?]
+  AnchorMenuHeader [title?]            ← optional
+  AnchorMenuItem [label, href, active?]
+  AnchorMenuItem …
+  AnchorActiveIndicator
+```
+
+Angular selectors (`lib/angular/ids/anchor-menu/`): `ids-anchor-menu` → `ids-anchor-menu-header` → `ids-anchor-menu-item` → `ids-anchor-active-indicator`. Import `IDS_ANCHOR_MENU_IMPORTS`.
+
+### Group (`AnchorMenu` / `groupRoot`)
+| Prop | Required | Behavior |
+|---|---|---|
+| `title` | No | `aria-label` on `nav` and header fallback. Default `"On this page"`. |
+| `sticky` | No | When true (default), root uses sticky positioning. |
+| `onItemClick(href)` / `itemClick` | No | Emits the activated item `href`. |
+
+### Header (`AnchorMenuHeader`)
+| Prop | Required | Behavior |
+|---|---|---|
+| `title` | No | Visible heading. Falls back to group `title`. Omit this child to hide the header (spec-accurate Figma example). |
+
+### Item (`AnchorMenuItem`)
+| Prop | Required | Behavior |
+|---|---|---|
+| `label` | Yes | Visible Body 1 label. |
+| `href` | Yes | Navigation target. Empty/missing disables navigation. |
+| `active` | No | When true, marks the initial selected item (single active). |
+
+### Active indicator (`AnchorActiveIndicator`)
+No props. Positions a `4px` `var(--color-border-brand-base)` bar at the active item’s offset. Project once after the items.
+
+### Spec Accurate Design story defaults
+Figma `11955:229709` (`AnchorMenu-Example`):
+- Header omitted (Header layer `11955:229710` hidden)
+- Items: Overview (`#overview`, active), Types, Anatomy, Usage Rules, States and Colors, Redlines
+- `sticky`: `true`
+- `title`: `"On this page"` (aria-label only when header is omitted)
+
+### Legacy aggregate (React Storybook only)
+`items: Array<{ label: string; href: string; active?: boolean }>` plus `header?` / `title?` on `storybook/src/components/AnchorMenu.tsx` is a **convenience wrapper**. Do not change those existing React stories. New framework ports must use composition.
+
 ### Variants
-- **Default**: Standard vertical anchor menu
-- **Horizontal**: Horizontal orientation for top navigation
-- **With Progress**: Anchor menu with scroll progress indicator
-- **Sticky**: Menu that stays visible on scroll
-- **Compact**: Reduced size for space-constrained interfaces
-- **With Icons**: Anchor items with icons
-- **Multi-level**: Anchor menu with nested sections
-- **Auto-hide**: Menu that hides/shows based on scroll
+- **Default**: vertical section list (`AnchorMenu-Main` `# of Sections`)
+- **With header**: optional `AnchorMenuHeader` child
+- **Sticky**: `sticky` default `true`
+
 ## Codegen Contract (Framework-Agnostic Blueprint)
-- Deterministic slot order:
-  1. `AnchorMenuRoot`
-  2. `AnchorMenuHeader?`
-  3. repeated `AnchorMenuItem`
-  4. `AnchorActiveIndicator`
-- Behavior contract:
-  - active item is token-highlighted and left-indicator aligned
-  - click navigates to corresponding anchor section
-  - keyboard navigation supports Tab/Enter on items
-- Fallback/error rules:
-  - unknown/missing `href` disables navigation for that item
-  - empty items array renders empty state without crash
+### Deterministic structure
+1. `AnchorMenuRoot` (`ids-anchor-menu`)
+2. `AnchorMenuHeader?` (`ids-anchor-menu-header`)
+3. repeated `AnchorMenuItem` (`ids-anchor-menu-item`)
+4. `AnchorActiveIndicator` (`ids-anchor-active-indicator`)
+
+### Variant matrix
+- `itemState`: `default | hover | active | focus-visible`
+- `withHeader`: header child present | omitted
+- `sticky`: `true | false`
+- `href`: navigable | missing/empty (disabled navigation)
+
+### Per-slot style contract
+- Root: `min-width: min(200px, 100%)`; `max-width: min(300px, 100%)`; `width: fit-content`; background transparent. The `min(…, 100%)` keeps the 200–300px band on normal layouts but lets the menu shrink with a narrower container instead of overflowing.
+- Header: Body 1; `padding: var(--padding-padding-12) 0`; `var(--color-text-gray-neutral-strong)`; no text-transform.
+- Item link: min-height `var(--scale-40)`; `padding: var(--padding-padding-8) var(--padding-padding-24)`; `width: fit-content` (hugs label, wraps within root max-width); Body 1; square corners.
+- Default rail: `border-left: 1.2px solid var(--color-border-gray-neutral-base)`.
+- Hover/active rail: `4px` `var(--color-border-brand-base)` overlay **centered on** the `1.2px` default rail (no layout shift). Hover label stays `var(--color-text-gray-neutral)`; active label `var(--color-text-brand-strong)`.
+- Focus-visible: `2px` `var(--color-border-brand-base)` ring, `var(--corner-radius-radius-4)`, `inset: 0 var(--padding-padding-4)` (inside the item).
+- No hardcoded colors in implementation; measurements `1.2px` / `4px` / `200px` / `300px` are Figma/spec literals (no token).
+
+### Behavior contract
+- Active item is token-highlighted and left-indicator aligned.
+- Click navigates to the corresponding hash/URL; `#` hashes smooth-scroll and update `aria-current`.
+- Keyboard: Tab through items; Arrow Up/Down moves focus; Enter activates.
+- Scroll spy selects the hash target whose top has crossed the viewport top.
+
+### Accessibility contract
+- Root: `nav` + `aria-label`.
+- Active link: `aria-current="page"`.
+- Empty `href`: `aria-disabled="true"`; not in arrow-key loop.
+
+### Asset resolution + bundling contract
+No image or icon assets.
+
+### Fallback/error rules
+- Unknown/missing `href` disables navigation for that item.
+- Empty item list renders `nav` without crash (header optional).
+- Multiple `active` items: first marked item wins for initial selection.
+
 ### Validation checklist
 - [ ] Implement anchor navigation functionality
 - [ ] Add proper focus management
@@ -134,9 +207,32 @@
 - [ ] Test dark theme compatibility
 - [ ] Verify screen reader announcements
 - [ ] Test responsive behavior
+## Implementation Notes
+
+### Updates (2026-10-15, Figma `11955:229729`)
+1. **Focus ring inside the item** — 2px `var(--color-border-brand-base)`, radius 4px, `inset: 0 var(--padding-padding-4)` (4px from each side, flush top/bottom) for Unselected-Focus `11955:230551` and Selected-Focus `11955:230577`. The ring never overlaps the left rail or the 4px active indicator. Implemented in `lib/react/ids/anchor-menu/IdsAnchorMenu.module.css` and `lib/angular/ids/anchor-menu/ids-anchor-menu.component.scss`.
+2. **Sticky list scrollport** — the scrolling list only pads the left edge (5px, pulled back with a negative margin) so the 4px active indicator is not clipped; no top/bottom bleed is needed now that the ring is inside.
+3. **IDS small scrollbar** — the sticky list's scrollbar follows the small scrollbar (Figma Storybook-Test `6191:59167`, confirmed by Mona and Reut): 8px track `var(--color-background-gray-neutral-light)` radius 2px, 6px thumb `var(--color-border-gray-neutral-base)` radius 8px, 8px carets top/bottom. Same rules are in the Angular stylesheet on `.ids-anchor-menu__list`.
+4. **Other states re-verified** — Unselected (1.2px gray rail, neutral text), Unselected-Hover (4px brand-base bar, neutral text), Selected (4px brand-base bar, brand-strong text), Selected-Hover (4px brand-strong bar) match the implementation.
+
+- Last updated: 2026-08-30
+- `AnchorMenu.module.css`: `max-width: 300px` on root; labels wrap to 2 lines via `-webkit-line-clamp` and `line-clamp`; `IdsTooltip` only renders for labels where `scrollHeight > clientHeight`.
+- Focus ring uses `var(--border-width-border-2)` with `inset: 0 var(--padding-padding-4)` (inside the item).
+- `AnchorMenu.tsx`: keeps `active` text `var(--color-text-brand-strong)` on hover (`active:hover`); supports `Tab` to focus, `ArrowUp`/`ArrowDown` to move focus, `Enter` to follow link, `Space` to trigger click.
+- `IdsAnchorMenu.stories.tsx`: `WithPageContent` uses real `<section>` content, sticky Anchor Menu, and body-level scrolling for `scrollIntoView` behavior.
+
 ## Source Mapping
-- Figma component: Anchor Menu (11067-54486)
-- Variable collection: UI Palettes, Typography tokens
-- Semantic mapping: CSS custom properties with `var(--)` prefix
-- Design source: Figma URL above
-- Component map entry: data/component-figma-map.json → component "Anchor Menu" (category "Navigation"; node "11067-54486")
+- Figma component: Anchor Menu (`11067:54486`)
+- Element matrix: `11955:229729`
+- Spec-accurate example: `11955:229709`
+- Contract: `component-contracts/ids/anchor-menu.contract.ts`
+- Angular library: `lib/angular/ids/anchor-menu/`
+- Angular Storybook (new): `storybook-angular/src/components/ids-anchor-menu/`
+- React reference (unchanged): `storybook/src/components/AnchorMenu.tsx`, `storybook/src/components/IdsAnchorMenu.stories.tsx`
+- Component map entry: `data/component-figma-map.json` → component "Anchor Menu" (category "Navigation"; node "11067-54486")
+- Last live verification: Figma MCP 2026-10-15 (`get_metadata`, `get_design_context`, `get_variable_defs` on `11955:229729` and its six state variants)
+
+### Implementation notes
+- Group styles live in `ids-anchor-menu.component.scss` (`ViewEncapsulation.None`) covering all slots.
+- Item gap is `0`. Hover/active `4px` rail is an overlay **centered on** the `1.2px` track so padding does not shift.
+- Framework selectors: `ids-anchor-menu`, `ids-anchor-menu-header`, `ids-anchor-menu-item`, `ids-anchor-active-indicator`.

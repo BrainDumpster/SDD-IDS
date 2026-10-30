@@ -1,0 +1,15 @@
+<button
+  type="button"
+  class="ids-masthead-action-icon-button"
+  [attr.aria-label]="ariaLabel"
+  [attr.aria-expanded]="ariaExpanded ?? null"
+>
+  <span class="ids-masthead-action-icon-button__glyph" aria-hidden="true">
+    <ng-content />
+  </span>
+  @if (showBadge) {
+    <span class="ids-masthead-action-icon-button__badge" aria-hidden="true">
+      <ids-badge [value]="badgeLabel" [type]="badgeType" />
+    </span>
+  }
+</button>

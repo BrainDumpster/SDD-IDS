@@ -5,8 +5,8 @@
 Synapse **Dropdown Single Select** is an **ids-fork** of the IDS **Dropdown: Single-select** family. Anatomy, state token bindings, option rows, keyboard model, and runtime API **inherit IDS** unless listed in **Synapse programme deltas** below.
 
 - **IDS source of truth:** [`components/ids/dropdown-single-select/design-spec.md`](../ids/dropdown-single-select/design-spec.md)
-- **Shared implementation:** `storybook/src/components/DropdownMenu.tsx`, `IdsDropdownTriggerShell.tsx`
-- **Synapse wrapper:** `storybook/src/components/SynapseDropdownMenu.tsx`, `SynapseDropdownTriggerShell.tsx`
+- **Shared implementation:** `storybook/src/components/DropdownMenu.tsx`, `IdsDropdownTriggerShell.tsx`, `IdsDropdown.tsx`
+- **Synapse wrapper:** `storybook/src/components/SynapseDropdown.tsx` (compound API), `SynapseDropdownTriggerShell.tsx`
 - **Theme CSS:** `components/synapse-theme.css` (overrides `--dropdown-control-radius`, `--dropdown-menu-radius`)
 
 ## Metadata
@@ -35,6 +35,7 @@ Synapse **Dropdown Single Select** is an **ids-fork** of the IDS **Dropdown: Sin
 | Focus outer ring radius | `var(--dropdown-focus-ring-radius)` → `var(--corner-radius-radius-4)` | **Same** (inherit IDS) |
 | Detached / standalone menu radius | `var(--dropdown-menu-radius)` → `0` (square) | **same alias** → **`var(--corner-radius-radius-4)`** (**4px**) |
 | Field-attached popup | bottom corners square (IDS) | **bottom corners** `0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)`; field when open: top corners only |
+| Popup above trigger (flip) | full border + top-only popup radius | **Same**; Synapse `--dropdown-menu-radius` → 4px |
 | Field / option colors, spacing, typography | IDS contract | **Same** (inherit IDS) |
 | Runtime API | IDS contract | **Same** (inherit IDS) |
 
@@ -50,7 +51,8 @@ Synapse-specific layout (alias-driven; resolved in theme CSS):
 
 - Field corner radius: **`var(--dropdown-control-radius)`** → `var(--corner-radius-radius-4)` in Synapse theme
 - Detached menu corner radius: **`var(--dropdown-menu-radius)`** → `var(--corner-radius-radius-4)` in Synapse theme
-- **Field-attached menu popup** (Figma `Rounded Corners=True`, node `52737:60513`): popup uses **`border-radius: 0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)`**; trigger field when open uses **top corners only** (`border-bottom-*-radius: 0`) so the pair reads as one 4px shell
+- **Field-attached menu popup** (Figma `Rounded Corners=True`, node `52737:60513`): popup uses **`border-radius: 0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)`** when below; **top corners only** when above-flip; trigger field squares opposite edge when open
+- **Popup placement & width:** inherit IDS runtime contract (field width measurement, min 186px, right-align + above-flip)
 
 ## Tokens
 
@@ -88,6 +90,8 @@ Inherit IDS **Accessibility** — combobox/listbox roles, `aria-expanded`, keybo
 
 Codegen **MUST** resolve props and events from IDS **Composition & API (runtime)** in [`components/ids/dropdown-single-select/design-spec.md`](../ids/dropdown-single-select/design-spec.md).
 
+**Storybook:** `SynapseDropdown` compound API — `SynapseDropdownSingleSelect.stories.tsx`, `synapse-dropdown.developer-usage.ts`.
+
 ### Synapse-only runtime flags
 
 None. Programme chrome is applied exclusively via `components/synapse-theme.css` dropdown layout aliases.
@@ -123,7 +127,7 @@ Inherit IDS: `size` (`small | large`) × field state (default | hover | focus | 
 |---|---|---|
 | Trigger shell | `border-radius` | `var(--dropdown-control-radius)` |
 | Focus ring | `border-radius` | `var(--dropdown-focus-ring-radius)` |
-| `.popup` (attached) | `border-radius` | `0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)` |
+| `.popup` (attached) | `border-radius` | `0 0 var(--dropdown-menu-radius) var(--dropdown-menu-radius)` below; top-only when above |
 | `.popupStandalone` | `border-radius` | `var(--dropdown-menu-radius)` |
 | Open trigger `[data-popup-open]` | bottom radii | `0` |
 | Option rows / caret / labels | per IDS | Inherit IDS |
@@ -159,6 +163,8 @@ Programme additions:
 - [x] Composition/API resolves via IDS baseline
 - [x] Attached popup radius documented (`52737:60513`)
 - [x] Storybook `Spec Generated/Synapse/Dropdown/Single Select` loads `components/synapse-theme.css`
+- [x] Composition Storybook uses `SynapseDropdown` compound API
+- [x] Popup width + above-flip inherit IDS with Synapse radius aliases
 - [x] Registry: `data/programme-inheritance-registry.json` → `synapse` / `dropdown-single-select`
 
 ## Source Mapping
@@ -172,7 +178,8 @@ Programme additions:
 | Field states matrix | `11099:58099` |
 | Rounded menu evidence | `52737:60513` |
 | Theme overrides | `components/synapse-theme.css` |
-| Implementation | `SynapseDropdownMenu.tsx`, `SynapseDropdownTriggerShell.tsx` |
+| Implementation | `SynapseDropdown.tsx`, `SynapseDropdownTriggerShell.tsx`, `DropdownMenu.tsx` |
+| Developer usage | `storybook/src/components/synapse-dropdown.developer-usage.ts` |
 | Spec contract | `storybook/src/spec-contracts/synapse-dropdown-single-select.contract.ts` |
 | Storybook | `storybook/src/components/SynapseDropdownSingleSelect.stories.tsx` |
-| Verification | IDS baseline + theme alias contract; matrix nodes referenced in map |
+| Verification | IDS baseline + theme alias contract; composition parity 2026-06-30 |

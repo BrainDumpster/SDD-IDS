@@ -1,0 +1,51 @@
+@if (resolvedMode === "overlay") {
+  <div
+    class="ids-spinner-overlay"
+    data-ids="ids-spinner-overlay"
+    data-mode="overlay"
+  >
+    <div
+      class="ids-spinner-backdrop"
+      data-ids="ids-spinner-backdrop"
+      aria-hidden="true"
+    ></div>
+    <ng-container *ngTemplateOutlet="spinnerRoot"></ng-container>
+  </div>
+} @else {
+  <ng-container *ngTemplateOutlet="spinnerRoot"></ng-container>
+}
+
+<ng-template #spinnerRoot>
+  <div
+    [class]="rootClassName"
+    data-ids="ids-spinner"
+    [attr.data-size]="resolvedSize"
+    [attr.data-mode]="resolvedMode"
+    [attr.data-label-visibility]="resolvedLabelVisibility"
+    role="status"
+    [attr.aria-live]="resolvedAriaLive"
+    [attr.tabindex]="tabIndex == null ? null : tabIndex"
+  >
+    <span
+      class="ids-spinner-visual"
+      data-ids="ids-spinner-visual"
+      aria-hidden="true"
+    >
+      <span class="ids-spinner-track" data-ids="ids-spinner-track"></span>
+      <span class="ids-spinner-arc" data-ids="ids-spinner-arc"></span>
+    </span>
+    @if (showSrOnly) {
+      <span class="ids-spinner-sr-only" data-ids="ids-spinner-label">{{
+        resolvedLabel
+      }}</span>
+    } @else {
+      <span
+        class="ids-spinner-label"
+        [class.ids-spinner-label--inline]="showVisibleInline"
+        [class.ids-spinner-label--below]="showVisibleBelow"
+        data-ids="ids-spinner-label"
+        >{{ resolvedLabel }}</span
+      >
+    }
+  </div>
+</ng-template>

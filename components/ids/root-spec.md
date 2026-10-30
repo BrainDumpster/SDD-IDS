@@ -37,82 +37,81 @@ Semantic and primitive tables below are auto-synced from the centralized **IDS V
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-background-component` | `#ffffff` | `#111619` |
-| `--color-background-surface-1` | `#f4f4f4` | `#111619` |
+| `--color-background-surface-component` | `#ffffff` | `#111619` |
+| `--color-background-surface-primary` | `#f4f4f4` | `#111619` |
 | `--color-background-brand-base` | `#0672cb` | `#509cda` |
 | `--color-background-brand-strong` | `#055fa9` | `#97c4e9` |
-| `--color-background-brand-lighter` | `#ebf4fb` | `#1e262c` |
-| `--color-background-controls-brand-base` | `#0672cb` | `#0672cb` |
-| `--color-background-controls-brand-strong` | `#055fa9` | `#055fa9` |
-| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#022541` |
+| `--color-background-brand-lighter-slate` | `#ebf4fb` | `#1e262c` |
+| `--color-background-controls-base` | `#0672cb` | `#0672cb` |
+| `--color-background-controls-strong` | `#055fa9` | `#055fa9` |
+| `--color-background-controls-lighter` | `#ebf4fb` | `#022541` |
 | `--color-background-gray-light` | `#eaeaea` | `#393939` |
 | `--color-background-gray-base` | `#757575` | `#9e9e9e` |
 | `--color-background-gray-neutral-light` | `#eaeaea` | `#34414c` |
 | `--color-background-gray-neutral-dark` | `#616161` | `#8898a5` |
-| `--color-background-masthead-brand-base` | `#0672cb` | `#1e262c` |
-| `--color-background-masthead-brand-strong` | `#055fa9` | `#34414c` |
-| `--color-background-masthead-brand-stronger` | `#044b86` | `#455666` |
+| `--color-background-masthead-base` | `#0672cb` | `#1e262c` |
+| `--color-background-masthead-strong` | `#055fa9` | `#34414c` |
+| `--color-background-masthead-stronger` | `#044b86` | `#455666` |
 
 ### Core Border Tokens
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-border-accessible` | `#757575` | `#8898a5` |
+| `--color-border-gray-neutral-base` | `#757575` | `#8898a5` |
 | `--color-border-brand-base` | `#0672cb` | `#509cda` |
-| `--color-border-brand-dark` | `#055fa9` | `#97c4e9` |
-| `--color-border-neutral` | `#4d4d4d` | `#8898a5` |
-| `--color-border-strong` | `#252525` | `#b8c1c9` |
-| `--color-border-disabled` | `#757575` | `#9e9e9e` |
-| `--color-border-light` | `#c5c5c5` | `#34414c` |
-| `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#509cda` |
-| `--color-border-transparent-neutral` | `rgba(255,255,255,0.00)` | `#8898a5` |
+| `--color-border-brand-strong` | `#055fa9` | `#97c4e9` |
+| `--color-border-gray-neutral-strong` | `#252525` | `#b8c1c9` |
+| `--color-border-gray-disabled` | `#757575` | `#9e9e9e` |
+| `--color-border-gray-neutral-light` | `#c5c5c5` | `#34414c` |
+| `--color-border-brand-transparent-brand` | `rgba(255,255,255,0.00)` | `#509cda` |
+| `--color-border-gray-neutral-transparent-base` | `rgba(255,255,255,0.00)` | `#8898a5` |
 
 ### Core Text Tokens
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-text-white` | `#ffffff` | `#ffffff` |
-| `--color-text-black` | `#252525` | `#252525` |
-| `--color-text-neutral` | `#4d4d4d` | `#b8c1c9` |
-| `--color-text-neutral-strong` | `#252525` | `#e6e9ec` |
+| `--color-text-gray-white` | `#ffffff` | `#ffffff` |
+| `--color-text-gray-black` | `#252525` | `#252525` |
+| `--color-text-gray-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-text-gray-neutral-strong` | `#252525` | `#e6e9ec` |
 | `--color-text-brand-strong` | `#055fa9` | `#97c4e9` |
-| `--color-text-disabled` | `#757575` | `#c5c5c5` |
+| `--color-text-gray-disabled` | `#757575` | `#c5c5c5` |
 
 ### Core Icon Tokens
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-icon-white` | `#ffffff` | `#ffffff` |
-| `--color-icon-inverse` | `#ffffff` | mode-specific |
-| `--color-icon-neutral` | `#4d4d4d` | mode-specific |
+| `--color-icon-gray-white` | `#ffffff` | `#ffffff` |
+| `--color-icon-gray-inverse` | `#ffffff` | mode-specific |
+| `--color-icon-gray-neutral-base` | `#4d4d4d` | mode-specific |
 | `--color-icon-brand-base` | `#0672cb` | `#509cda` |
 | `--color-icon-brand-strong` | `#055fa9` | `#97c4e9` |
-| `--color-icon-disabled` | `#757575` | `#c5c5c5` |
-| `--color-icon-alerting-info` | `#005ece` | mode-specific |
-| `--color-icon-alerting-major` | `#ed6400` | mode-specific |
-| `--color-icon-alerting-minor` | `#ffc700` | mode-specific |
-| `--color-icon-alerting-critical` | `#af0000` | mode-specific |
+| `--color-icon-gray-disabled` | `#757575` | `#c5c5c5` |
+| `--color-icon-alerting-info-base` | `#005ece` | mode-specific |
+| `--color-icon-alerting-major-base` | `#ed6400` | mode-specific |
+| `--color-icon-alerting-minor-base` | `#ffc700` | mode-specific |
+| `--color-icon-alerting-critical-base` | `#af0000` | mode-specific |
 
 ### Alerting Semantic Tokens (Common IDS)
 
 | Token | Light | Dark |
 |---|---|---|
-| `--color-background-alerting-critical` | `#af0000` | mode-specific |
+| `--color-background-alerting-critical-base` | `#af0000` | mode-specific |
 | `--color-background-alerting-critical-strong` | mode-specific | `#910000` |
 | `--color-background-alerting-critical-stronger` | mode-specific | `#730000` |
-| `--color-background-alerting-minor` | `#ffc700` | mode-specific |
-| `--color-background-alerting-success` | `#1b8500` | mode-specific |
-| `--color-border-alerting-transparent-critical` | `#af000000` | `#dd9494` |
-| `--color-border-alerting-critical-white` | `#af0000` | mode-specific |
-| `--color-border-alerting-major-white` | `#ed6400` | mode-specific |
-| `--color-border-alerting-minor-transparent` | `#9c622e` | mode-specific |
-| `--color-border-alerting-info-white` | `#005ece` | mode-specific |
-| `--color-text-black` | `#252525` | `#252525` |
+| `--color-background-alerting-minor-base` | `#ffc700` | mode-specific |
+| `--color-background-alerting-success-base` | `#1b8500` | mode-specific |
+| `--color-border-alerting-critical-transparent-base` | `#af000000` | `#dd9494` |
+| `--color-border-alerting-critical-base-white` | `#af0000` | mode-specific |
+| `--color-border-alerting-major-base-white` | `#ed6400` | mode-specific |
+| `--color-border-alerting-minor-base` | `#9c622e` | mode-specific |
+| `--color-border-alerting-info-base-white` | `#005ece` | mode-specific |
+| `--color-text-gray-black` | `#252525` | `#252525` |
 
 <!-- ds:section id=primitive-static -->
 ### Primitive palette (Figma — `Primitive` collection, COLOR)
 
-> Auto-synced from Figma `GET /v1/files/0bHk3XhrjFhowgFkz9yLr4/variables/local` (canonical source: [IDS Variables Library](https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library)). Token column uses `codeSyntax.WEB` when present, otherwise a CSS name derived from the Figma variable path.
+> Auto-synced from Figma `GET /v1/files/r0Ex6TumqcR3HINamsfXCV/variables/local` (canonical source: [IDS Variables Library](https://www.figma.com/design/r0Ex6TumqcR3HINamsfXCV/IDS-Variables-Library)). Token column uses `codeSyntax.WEB` when present, otherwise a CSS name derived from the Figma variable path.
 
 #### Single-mode (same value in all modes)
 
@@ -220,97 +219,150 @@ Semantic and primitive tables below are auto-synced from the centralized **IDS V
 | `--white` | `#ffffff` |
 
 <!-- ds:section id=tokens-color -->
-### Tokens collection — COLOR (Figma — `Tokens`)
+### Color Modes collection — COLOR (Figma — `Color Modes`)
 
-> Semantic color tokens from the IDS file. One row per variable; values resolved after alias chains.
+> Semantic color tokens from IDS Variables Library (`Color Modes`, Light/Dark). Token column uses `codeSyntax.WEB`. Values resolved after alias chains.
 
 | Token | Light | Dark |
 |---|---|---|
 | `--annotation` | `#e8178a` | `#f174b9` |
-| `--color-annotation` | `#e8178a` | `#f389c3` |
-| `--color-background-alerting-critical` | `#af0000` | `#c74c4c` |
+| `--color-background-alerting-critical-base` | `#af0000` | `#c74c4c` |
 | `--color-background-alerting-critical-light` | `#f3d9d9` | `#f3d9d9` |
+| `--color-background-alerting-critical-lighter` | `#f9ebeb` | `#380000` |
 | `--color-background-alerting-critical-strong` | `#910000` | `#af0000` |
 | `--color-background-alerting-critical-stronger` | `#730000` | `#910000` |
-| `--color-background-alerting-info` | `#005ece` | `#4c8edd` |
+| `--color-background-alerting-info-base` | `#005ece` | `#4c8edd` |
 | `--color-background-alerting-info-light` | `#d9e7f8` | `#d9e7f8` |
+| `--color-background-alerting-info-lighter` | `#ebf2fb` | `#001e42` |
 | `--color-background-alerting-info-strong` | `#004eab` | `#005ece` |
 | `--color-background-alerting-info-stronger` | `#003e88` | `#004eab` |
-| `--color-background-alerting-major` | `#ed6400` | `#ed6400` |
+| `--color-background-alerting-major-base` | `#ed6400` | `#ed6400` |
+| `--color-background-alerting-major-base-alt` | `#ed6400` | `#f2934c` |
 | `--color-background-alerting-major-light` | `#fce8d9` | `#fce8d9` |
+| `--color-background-alerting-major-lighter` | `#fef3eb` | `#4c2000` |
 | `--color-background-alerting-major-strong` | `#ed6400` | `#c55300` |
 | `--color-background-alerting-major-stronger` | `#9c4200` | `#9c4200` |
-| `--color-background-alerting-minor` | `#ffc700` | `#ffc700` |
+| `--color-background-alerting-minor-base` | `#ffc700` | `#ffc700` |
+| `--color-background-alerting-minor-base-alt` | `#ffc700` | `#ffd84c` |
 | `--color-background-alerting-minor-light` | `#fff7d9` | `#fff7d9` |
+| `--color-background-alerting-minor-lighter` | `#fffbeb` | `#6d4028` |
 | `--color-background-alerting-minor-strong` | `#e5a51a` | `#e5a51a` |
 | `--color-background-alerting-minor-stronger` | `#c48429` | `#c48429` |
-| `--color-background-alerting-success` | `#1b8500` | `#5faa4c` |
+| `--color-background-alerting-success-base` | `#1b8500` | `#5faa4c` |
 | `--color-background-alerting-success-light` | `#ddedd9` | `#ddedd9` |
+| `--color-background-alerting-success-lighter` | `#edf5eb` | `#092b00` |
 | `--color-background-alerting-success-strong` | `#166e00` | `#1b8500` |
 | `--color-background-alerting-success-stronger` | `#125800` | `#166e00` |
-| `--color-background-black` | `#252525` | `#252525` |
 | `--color-background-brand-base` | `#0672cb` | `#509cda` |
-| `--color-background-brand-light` | `—` | `—` |
-| `--color-background-brand-lighter` | `—` | `—` |
+| `--color-background-brand-light-slate` | `#daeaf7` | `#34414c` |
+| `--color-background-brand-lighter-slate` | `#ebf4fb` | `#1e262c` |
 | `--color-background-brand-strong` | `#055fa9` | `#97c4e9` |
 | `--color-background-brand-stronger` | `#044b86` | `#daeaf7` |
-| `--color-background-component` | `—` | `—` |
-| `--color-background-component-light` | `#f4f4f4` | `#1e262c` |
-| `--color-background-controls-brand-base` | `#0672cb` | `#0672cb` |
-| `--color-background-controls-brand-light` | `#daeaf7` | `#033864` |
-| `--color-background-controls-brand-lighter` | `#ebf4fb` | `#022541` |
-| `--color-background-controls-brand-strong` | `#055fa9` | `#055fa9` |
-| `--color-background-controls-brand-stronger` | `#044b86` | `#044b86` |
+| `--color-background-controls-base` | `#0672cb` | `#0672cb` |
+| `--color-background-controls-light` | `#daeaf7` | `#033864` |
+| `--color-background-controls-lighter` | `#ebf4fb` | `#022541` |
+| `--color-background-controls-strong` | `#055fa9` | `#055fa9` |
+| `--color-background-controls-stronger` | `#044b86` | `#044b86` |
 | `--color-background-gray-base` | `#757575` | `#9e9e9e` |
 | `--color-background-gray-light` | `#eaeaea` | `#393939` |
 | `--color-background-gray-lighter` | `#f4f4f4` | `#393939` |
-| `--color-background-gray-neutral-alt` | `#eaeaea` | `#1e262c` |
-| `--color-background-gray-neutral-dark` | `#616161` | `#8898a5` |
-| `--color-background-gray-neutral-darker` | `#252525` | `#b8c1c9` |
+| `--color-background-gray-neutral-base` | `#757575` | `#8898a5` |
 | `--color-background-gray-neutral-light` | `#eaeaea` | `#34414c` |
+| `--color-background-gray-neutral-light-alt` | `#eaeaea` | `#1e262c` |
 | `--color-background-gray-neutral-lighter` | `#f4f4f4` | `#1e262c` |
+| `--color-background-gray-neutral-strong` | `#4d4d4d` | `#566c7f` |
+| `--color-background-gray-neutral-stronger` | `#252525` | `#b8c1c9` |
 | `--color-background-gray-strong` | `#616161` | `#ffffff` |
 | `--color-background-gray-stronger` | `#252525` | `#ffffff` |
-| `--color-background-masthead-brand-base` | `#0672cb` | `#1e262c` |
-| `--color-background-masthead-brand-strong` | `#055fa9` | `#34414c` |
-| `--color-background-masthead-brand-stronger` | `#044b86` | `#455666` |
-| `--color-background-overlay` | `rgba(37,37,37,0.65)` | `rgba(17,22,25,0.75)` |
-| `--color-background-surface-1` | `#f4f4f4` | `#111619` |
-| `--color-background-surface-2` | `#ffffff` | `#1e262c` |
-| `--color-background-white` | `#ffffff` | `#ffffff` |
-| `--color-border-accessible` | `—` | `—` |
+| `--color-background-masthead-base` | `#0672cb` | `#1e262c` |
+| `--color-background-masthead-strong` | `#055fa9` | `#34414c` |
+| `--color-background-masthead-stronger` | `#044b86` | `#455666` |
+| `--color-background-secondary-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-background-secondary-berry-light` | `#f1d9e7` | `#6a0040` |
+| `--color-background-secondary-berry-lighter` | `#f7ebf2` | `#34001f` |
+| `--color-background-secondary-berry-strong` | `#860051` | `#d894bd` |
+| `--color-background-secondary-berry-stronger` | `#6a0040` | `#f1d9e7` |
+| `--color-background-secondary-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-background-secondary-teal-base-alt` | `#00819e` | `#00819e` |
+| `--color-background-secondary-teal-light` | `#d9ecf0` | `#005568` |
+| `--color-background-secondary-teal-lighter` | `#ebf5f7` | `#002933` |
+| `--color-background-secondary-teal-strong` | `#006b83` | `#94cad6` |
+| `--color-background-secondary-teal-stronger` | `#005568` | `#d9ecf0` |
+| `--color-background-secondary-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-background-secondary-violet-base-strong` | `#7c01b7` | `#c894e1` |
+| `--color-background-secondary-violet-light` | `#ebd9f4` | `#520179` |
+| `--color-background-secondary-violet-lighter` | `#f5ebf9` | `#28003b` |
+| `--color-background-secondary-violet-strong` | `#670198` | `#c894e1` |
+| `--color-background-secondary-violet-stronger` | `#520179` | `#ebd9f4` |
+| `--color-background-surface-black` | `#252525` | `#252525` |
+| `--color-background-surface-component` | `#ffffff` | `#111619` |
+| `--color-background-surface-component-light` | `#f4f4f4` | `#1e262c` |
+| `--color-background-surface-overlay` | `rgba(37,37,37,0.65)` | `rgba(17,22,25,0.75)` |
+| `--color-background-surface-primary` | `#f4f4f4` | `#111619` |
+| `--color-background-surface-secondary` | `#ffffff` | `#1e262c` |
+| `--color-background-surface-white` | `#ffffff` | `#ffffff` |
 | `--color-border-alerting-critical-base` | `#af0000` | `#dd9494` |
-| `--color-border-alerting-critical-transparent` | `#af0000` | `rgba(221,148,148,0.00)` |
-| `--color-border-alerting-critical-white` | `#af0000` | `#ffffff` |
+| `--color-border-alerting-critical-base-transparent` | `#af0000` | `rgba(221,148,148,0.00)` |
+| `--color-border-alerting-critical-base-white` | `#af0000` | `#ffffff` |
+| `--color-border-alerting-critical-light` | `#dd9494` | `#c74c4c` |
+| `--color-border-alerting-critical-lighter` | `#f3d9d9` | `#c74c4c` |
+| `--color-border-alerting-critical-transparent-base` | `rgba(175,0,0,0.00)` | `#dd9494` |
 | `--color-border-alerting-info-base` | `#005ece` | `#94bbea` |
-| `--color-border-alerting-info-transparent` | `#005ece` | `rgba(148,187,234,0.00)` |
-| `--color-border-alerting-info-white` | `#005ece` | `#ffffff` |
+| `--color-border-alerting-info-base-transparent` | `#005ece` | `rgba(148,187,234,0.00)` |
+| `--color-border-alerting-info-base-white` | `#005ece` | `#ffffff` |
+| `--color-border-alerting-info-light` | `#94bbea` | `#4c8edd` |
+| `--color-border-alerting-info-transparent-base` | `rgba(0,94,206,0.00)` | `#94bbea` |
 | `--color-border-alerting-major-base` | `#ed6400` | `#f7be94` |
-| `--color-border-alerting-major-transparent` | `#ed6400` | `rgba(247,190,148,0.00)` |
-| `--color-border-alerting-major-white` | `#ed6400` | `#ffffff` |
-| `--color-border-alerting-minor-dark` | `#9c622e` | `#9c622e` |
-| `--color-border-alerting-minor-transparent` | `#9c622e` | `rgba(255,255,255,0.00)` |
-| `--color-border-alerting-minor-white` | `#9c622e` | `#ffffff` |
+| `--color-border-alerting-major-base-transparent` | `#ed6400` | `rgba(247,190,148,0.00)` |
+| `--color-border-alerting-major-base-white` | `#ed6400` | `#ffffff` |
+| `--color-border-alerting-major-light` | `#f7be94` | `#f2934c` |
+| `--color-border-alerting-major-transparent-base` | `rgba(237,100,0,0.00)` | `#f7be94` |
+| `--color-border-alerting-minor-base` | `#e5a51a` | `#ffc700` |
+| `--color-border-alerting-minor-strong` | `#9c622e` | `#9c622e` |
+| `--color-border-alerting-minor-strong-transparent` | `#9c622e` | `rgba(255,255,255,0.00)` |
+| `--color-border-alerting-minor-strong-white` | `#9c622e` | `#ffffff` |
+| `--color-border-alerting-minor-transparent-white` | `rgba(255,199,0,0.00)` | `#ffffff` |
 | `--color-border-alerting-success-base` | `#1b8500` | `#9fcc94` |
-| `--color-border-alerting-success-transparent` | `#1b8500` | `rgba(159,204,148,0.00)` |
-| `--color-border-alerting-success-white` | `#1b8500` | `#ffffff` |
-| `--color-border-alerting-transparent-critical` | `rgba(175,0,0,0.00)` | `#dd9494` |
-| `--color-border-alerting-transparent-info` | `rgba(0,94,206,0.00)` | `#94bbea` |
-| `--color-border-alerting-transparent-major` | `rgba(237,100,0,0.00)` | `#f7be94` |
-| `--color-border-alerting-transparent-success` | `rgba(27,133,0,0.00)` | `#9fcc94` |
-| `--color-border-alerting-transparent-white` | `rgba(255,199,0,0.00)` | `#ffffff` |
-| `--color-border-black` | `#252525` | `#252525` |
+| `--color-border-alerting-success-base-transparent` | `#1b8500` | `rgba(159,204,148,0.00)` |
+| `--color-border-alerting-success-base-white` | `#1b8500` | `#ffffff` |
+| `--color-border-alerting-success-light` | `#9fcc94` | `#5faa4c` |
+| `--color-border-alerting-success-transparent-base` | `rgba(27,133,0,0.00)` | `#9fcc94` |
 | `--color-border-brand-base` | `#0672cb` | `#509cda` |
-| `--color-border-brand-dark` | `#055fa9` | `#97c4e9` |
-| `--color-border-brand-neutral` | `#0672cb` | `#8898a5` |
-| `--color-border-disabled` | `#757575` | `#9e9e9e` |
-| `--color-border-light` | `#c5c5c5` | `#34414c` |
-| `--color-border-lighter` | `#eaeaea` | `#1e262c` |
-| `--color-border-neutral` | `#4d4d4d` | `#8898a5` |
-| `--color-border-strong` | `#252525` | `#b8c1c9` |
-| `--color-border-transparent-brand` | `rgba(255,255,255,0.00)` | `#509cda` |
-| `--color-border-transparent-neutral` | `rgba(255,255,255,0.00)` | `#8898a5` |
-| `--color-border-white` | `#ffffff` | `#ffffff` |
+| `--color-border-brand-base-neutral` | `#0672cb` | `#8898a5` |
+| `--color-border-brand-light` | `#97c4e9` | `#509cda` |
+| `--color-border-brand-strong` | `#055fa9` | `#97c4e9` |
+| `--color-border-brand-transparent-brand` | `rgba(255,255,255,0.00)` | `#509cda` |
+| `--color-border-gray-black` | `#252525` | `#252525` |
+| `--color-border-gray-disabled` | `#757575` | `#9e9e9e` |
+| `--color-border-gray-neutral-base` | `#757575` | `#8898a5` |
+| `--color-border-gray-neutral-inverse` | `#ffffff` | `#1e262c` |
+| `--color-border-gray-neutral-light` | `#c5c5c5` | `#34414c` |
+| `--color-border-gray-neutral-light-base` | `#c5c5c5` | `#566c7f` |
+| `--color-border-gray-neutral-lighter` | `#eaeaea` | `#1e262c` |
+| `--color-border-gray-neutral-strong` | `#4d4d4d` | `#8898a5` |
+| `--color-border-gray-neutral-stronger` | `#252525` | `#b8c1c9` |
+| `--color-border-gray-neutral-transparent-base` | `rgba(255,255,255,0.00)` | `#8898a5` |
+| `--color-border-gray-white` | `#ffffff` | `#ffffff` |
+| `--color-border-secondary-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-border-secondary-berry-light` | `#bd4c90` | `#6a0040` |
+| `--color-border-secondary-berry-lighter` | `#d894bd` | `#bd4c90` |
+| `--color-border-secondary-berry-strong` | `#4f0030` | `#f1d9e7` |
+| `--color-border-secondary-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-border-secondary-teal-light` | `#4ca7bb` | `#005568` |
+| `--color-border-secondary-teal-lighter` | `#94cad6` | `#4ca7bb` |
+| `--color-border-secondary-teal-strong` | `#003f4d` | `#d9ecf0` |
+| `--color-border-secondary-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-border-secondary-violet-base-strong` | `#7c01b7` | `#c894e1` |
+| `--color-border-secondary-violet-light` | `#c894e1` | `#a34dcd` |
+| `--color-border-secondary-violet-strong` | `#670198` | `#c894e1` |
+| `--color-data-vis-categorial-category-1` | `#044b86` | `#97c4e9` |
+| `--color-data-vis-categorial-category-2` | `#97c4e9` | `#055fa9` |
+| `--color-data-vis-categorial-category-3` | `#a10061` | `#bd4c90` |
+| `--color-data-vis-categorial-category-4` | `#00819e` | `#4ca7bb` |
+| `--color-data-vis-categorial-category-5` | `#670198` | `#c894e1` |
+| `--color-data-vis-categorial-category-6` | `#5faa4c` | `#1b8500` |
+| `--color-data-vis-categorial-category-7` | `#c55300` | `#f7be94` |
+| `--color-data-vis-categorial-category-8` | `#c894e1` | `#670198` |
 | `--color-gradient-overflow-horizontal-end` | `rgba(244,244,244,0.00)` | `rgba(17,22,25,0.00)` |
 | `--color-gradient-overflow-horizontal-inverse-end` | `rgba(255,255,255,0.00)` | `rgba(17,22,25,0.00)` |
 | `--color-gradient-overflow-horizontal-inverse-start` | `#ffffff` | `#111619` |
@@ -321,30 +373,39 @@ Semantic and primitive tables below are auto-synced from the centralized **IDS V
 | `--color-gradient-overflow-vertical---scrollbar-start` | `rgba(117,117,117,0.60)` | `#111619` |
 | `--color-gradient-overflow-vertical-end` | `rgba(255,255,255,0.00)` | `rgba(17,22,25,0.40)` |
 | `--color-gradient-overflow-vertical-start` | `rgba(182,182,182,0.40)` | `#111619` |
-| `--color-icon-accessible` | `#757575` | `#8898a5` |
-| `--color-icon-alerting-critical` | `#af0000` | `#c74c4c` |
-| `--color-icon-alerting-info` | `#005ece` | `#4c8edd` |
-| `--color-icon-alerting-info-2` | `#005ece` | `#005ece` |
-| `--color-icon-alerting-major` | `#ed6400` | `#ed6400` |
-| `--color-icon-alerting-minor` | `#ffc700` | `#ffc700` |
-| `--color-icon-alerting-minor-2` | `#6d4028` | `#ffc700` |
-| `--color-icon-alerting-minor-3` | `#c48429` | `#ffc700` |
-| `--color-icon-alerting-minor-4` | `#6d4028` | `#6d4028` |
-| `--color-icon-alerting-success` | `#1b8500` | `#5faa4c` |
-| `--color-icon-alerting-success-2` | `#1b8500` | `#1b8500` |
-| `--color-icon-black` | `#252525` | `#252525` |
+| `--color-icon-alerting-critical-base` | `#af0000` | `#c74c4c` |
+| `--color-icon-alerting-critical-strong` | `#910000` | `#dd9494` |
+| `--color-icon-alerting-info-base` | `#005ece` | `#4c8edd` |
+| `--color-icon-alerting-info-base-alt` | `#005ece` | `#005ece` |
+| `--color-icon-alerting-major-base` | `#ed6400` | `#ed6400` |
+| `--color-icon-alerting-major-base-strong` | `#c55300` | `#f7be94` |
+| `--color-icon-alerting-major-strong` | `#9c4200` | `#f2934c` |
+| `--color-icon-alerting-minor-base` | `#ffc700` | `#ffc700` |
+| `--color-icon-alerting-minor-strong` | `#c48429` | `#ffc700` |
+| `--color-icon-alerting-minor-stronger` | `#6d4028` | `#ffc700` |
+| `--color-icon-alerting-minor-stronger-alt` | `#6d4028` | `#6d4028` |
+| `--color-icon-alerting-success-base` | `#1b8500` | `#5faa4c` |
+| `--color-icon-alerting-success-base-alt` | `#1b8500` | `#1b8500` |
 | `--color-icon-brand-base` | `#0672cb` | `#509cda` |
 | `--color-icon-brand-strong` | `#055fa9` | `#97c4e9` |
 | `--color-icon-brand-stronger` | `#044b86` | `#daeaf7` |
-| `--color-icon-disabled` | `#757575` | `#9e9e9e` |
-| `--color-icon-inverse` | `#ffffff` | `#252525` |
-| `--color-icon-neutral` | `#4d4d4d` | `#8898a5` |
-| `--color-icon-neutral-light` | `#616161` | `#b8c1c9` |
-| `--color-icon-neutral-strong` | `#252525` | `#b8c1c9` |
-| `--color-icon-secondary-berry` | `#a10061` | `#bd4c90` |
-| `--color-icon-secondary-teal` | `#00819e` | `#4ca7bb` |
-| `--color-icon-secondary-violet` | `#7c01b7` | `#a34dcd` |
-| `--color-icon-white` | `#ffffff` | `#ffffff` |
+| `--color-icon-gray-black` | `#252525` | `#252525` |
+| `--color-icon-gray-disabled` | `#757575` | `#9e9e9e` |
+| `--color-icon-gray-inverse` | `#ffffff` | `#252525` |
+| `--color-icon-gray-neutral-accessible` | `#757575` | `#8898a5` |
+| `--color-icon-gray-neutral-base` | `#4d4d4d` | `#8898a5` |
+| `--color-icon-gray-neutral-light` | `#616161` | `#b8c1c9` |
+| `--color-icon-gray-neutral-strong` | `#252525` | `#b8c1c9` |
+| `--color-icon-gray-white` | `#ffffff` | `#ffffff` |
+| `--color-icon-secondary-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-icon-secondary-berry-strong` | `#6a0040` | `#d894bd` |
+| `--color-icon-secondary-berry-stronger` | `#4f0030` | `#f1d9e7` |
+| `--color-icon-secondary-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-icon-secondary-teal-strong` | `#005568` | `#94cad6` |
+| `--color-icon-secondary-teal-stronger` | `#003f4d` | `#d9ecf0` |
+| `--color-icon-secondary-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-icon-secondary-violet-strong` | `#670198` | `#c894e1` |
+| `--color-icon-secondary-violet-stronger` | `#3d005a` | `#ebd9f4` |
 | `--color-static-brand-100` | `#ebf4fb` | `#ebf4fb` |
 | `--color-static-brand-200` | `#daeaf7` | `#daeaf7` |
 | `--color-static-brand-300` | `#97c4e9` | `#97c4e9` |
@@ -364,21 +425,38 @@ Semantic and primitive tables below are auto-synced from the centralized **IDS V
 | `--color-static-gray-800` | `#393939` | `#393939` |
 | `--color-static-gray-900` | `#252525` | `#252525` |
 | `--color-static-gray-white` | `#ffffff` | `#ffffff` |
-| `--color-text-black` | `#252525` | `#252525` |
+| `--color-text-alerting-critical-base` | `#af0000` | `#dd9494` |
+| `--color-text-alerting-critical-strong` | `#910000` | `#dd9494` |
+| `--color-text-alerting-info-base` | `#004eab` | `#94bbea` |
+| `--color-text-alerting-info-strong` | `#002e65` | `#d9e7f8` |
+| `--color-text-alerting-major-strong` | `#9c4200` | `#f2934c` |
+| `--color-text-alerting-major-stronger` | `#743100` | `#fce8d9` |
+| `--color-text-alerting-minor-strong` | `#6d4028` | `#ffc700` |
+| `--color-text-alerting-minor-strong-alt` | `#6d4028` | `#6d4028` |
+| `--color-text-alerting-success-base` | `#166e00` | `#9fcc94` |
+| `--color-text-alerting-success-strong` | `#0d4100` | `#ddedd9` |
 | `--color-text-brand-base` | `#0672cb` | `#509cda` |
 | `--color-text-brand-strong` | `#055fa9` | `#97c4e9` |
-| `--color-text-critical` | `#af0000` | `#dd9494` |
-| `--color-text-disabled` | `#757575` | `#9e9e9e` |
-| `--color-text-inverse` | `#ffffff` | `#252525` |
-| `--color-text-link-brand-base` | `—` | `—` |
+| `--color-text-gray-black` | `#252525` | `#252525` |
+| `--color-text-gray-disabled` | `#757575` | `#9e9e9e` |
+| `--color-text-gray-inverse` | `#ffffff` | `#252525` |
+| `--color-text-gray-neutral` | `#4d4d4d` | `#b8c1c9` |
+| `--color-text-gray-neutral-strong` | `#252525` | `#e6e9ec` |
+| `--color-text-gray-white` | `#ffffff` | `#ffffff` |
+| `--color-text-link-brand-base` | `#055fa9` | `#509cda` |
 | `--color-text-link-brand-light` | `#daeaf7` | `#daeaf7` |
 | `--color-text-link-brand-lighter` | `#ebf4fb` | `#ebf4fb` |
-| `--color-text-link-brand-strong` | `—` | `—` |
-| `--color-text-link-brand-stronger` | `—` | `—` |
-| `--color-text-neutral` | `#4d4d4d` | `#b8c1c9` |
-| `--color-text-neutral-strong` | `#252525` | `#e6e9ec` |
-| `--color-text-warning` | `#6d4028` | `#6d4028` |
-| `--color-text-white` | `#ffffff` | `#ffffff` |
+| `--color-text-link-brand-strong` | `#044b86` | `#97c4e9` |
+| `--color-text-link-brand-stronger` | `#033864` | `#daeaf7` |
+| `--color-text-secondary-berry-base` | `#a10061` | `#bd4c90` |
+| `--color-text-secondary-berry-strong` | `#6a0040` | `#d894bd` |
+| `--color-text-secondary-berry-stronger` | `#34001f` | `#f1d9e7` |
+| `--color-text-secondary-teal-base` | `#00819e` | `#4ca7bb` |
+| `--color-text-secondary-teal-strong` | `#005568` | `#94cad6` |
+| `--color-text-secondary-teal-stronger` | `#002933` | `#d9ecf0` |
+| `--color-text-secondary-violet-base` | `#7c01b7` | `#a34dcd` |
+| `--color-text-secondary-violet-strong` | `#520179` | `#c894e1` |
+| `--color-text-secondary-violet-stronger` | `#28003b` | `#ebd9f4` |
 | `--shadow-drop-shadow-16-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
 | `--shadow-drop-shadow-2-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
 | `--shadow-drop-shadow-32-color` | `rgba(37,37,37,0.08)` | `rgba(17,22,25,0.08)` |
@@ -390,26 +468,6 @@ Semantic and primitive tables below are auto-synced from the centralized **IDS V
 
 | Token | Value |
 |---|---|
-| `--shadow-drop-shadow-16-blur` | `16` |
-| `--shadow-drop-shadow-16-spread` | `0` |
-| `--shadow-drop-shadow-16-x` | `0` |
-| `--shadow-drop-shadow-16-y` | `16` |
-| `--shadow-drop-shadow-2-blur` | `2` |
-| `--shadow-drop-shadow-2-spread` | `0` |
-| `--shadow-drop-shadow-2-x` | `0` |
-| `--shadow-drop-shadow-2-y` | `2` |
-| `--shadow-drop-shadow-32-blur` | `32` |
-| `--shadow-drop-shadow-32-spread` | `0` |
-| `--shadow-drop-shadow-32-x` | `0` |
-| `--shadow-drop-shadow-32-y` | `32` |
-| `--shadow-drop-shadow-4-blur` | `4` |
-| `--shadow-drop-shadow-4-spread` | `0` |
-| `--shadow-drop-shadow-4-x` | `0` |
-| `--shadow-drop-shadow-4-y` | `4` |
-| `--shadow-drop-shadow-8-blur` | `8` |
-| `--shadow-drop-shadow-8-spread` | `0` |
-| `--shadow-drop-shadow-8-x` | `0` |
-| `--shadow-drop-shadow-8-y` | `8` |
 
 <!-- ds:section id=density-primitive -->
 ### Density Primitive (Figma — `Density Primitive`, FLOAT)
@@ -423,6 +481,64 @@ Semantic and primitive tables below are auto-synced from the centralized **IDS V
 
 | Figma variable name | Value |
 |---|---|
+| Opacity/0% | `0` |
+| Opacity/10% | `10` |
+| Opacity/100% | `100` |
+| Opacity/20% | `20` |
+| Opacity/30% | `30` |
+| Opacity/40% | `40` |
+| Opacity/50% | `50` |
+| Opacity/60% | `60` |
+| Opacity/70% | `70` |
+| Opacity/80% | `80` |
+| Opacity/90% | `90` |
+| Scale/-1 | `-1` |
+| Scale/0 | `0` |
+| Scale/1 | `1` |
+| Scale/10 | `10` |
+| Scale/112 | `112` |
+| Scale/12 | `12` |
+| Scale/120 | `120` |
+| Scale/128 | `128` |
+| Scale/14 | `14` |
+| Scale/144 | `144` |
+| Scale/16 | `16` |
+| Scale/18 | `18` |
+| Scale/2 | `2` |
+| Scale/20 | `20` |
+| Scale/20 | `20` |
+| Scale/22 | `22` |
+| Scale/24 | `24` |
+| Scale/256 | `256` |
+| Scale/26 | `26` |
+| Scale/28 | `28` |
+| Scale/32 | `32` |
+| Scale/34 | `34` |
+| Scale/36 | `36` |
+| Scale/4 | `4` |
+| Scale/40 | `40` |
+| Scale/44 | `44` |
+| Scale/48 | `48` |
+| Scale/512 | `512` |
+| Scale/52 | `52` |
+| Scale/56 | `56` |
+| Scale/58 | `58` |
+| Scale/6 | `6` |
+| Scale/60 | `60` |
+| Scale/64 | `64` |
+| Scale/72 | `72` |
+| Scale/8 | `8` |
+| Scale/80 | `80` |
+| Scale/88 | `88` |
+| Scale/96 | `96` |
+| UI Icon Spacing/icon-14 | `14` |
+| UI Icon Spacing/icon-16 | `16` |
+| UI Icon Spacing/icon-18 | `18` |
+| UI Icon Spacing/icon-22 | `22` |
+| UI Icon Spacing/icon-24 | `24` |
+| UI Icon Spacing/icon-28 | `28` |
+| UI Icon Spacing/icon-32 | `32` |
+| UI Icon Spacing/icon-48 | `48` |
 
 <!-- ds:section id=typography -->
 ## Typography Scale

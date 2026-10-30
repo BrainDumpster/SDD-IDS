@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true
+  },
+  "include": ["../src/**/*.ts", "../src/**/*.js", "./preview.js"],
+  "exclude": ["../src/**/*.spec.ts"]
+}

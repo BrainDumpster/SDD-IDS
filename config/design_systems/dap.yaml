@@ -28,6 +28,8 @@ qdrant_collection: dap_design_knowledge
 framework_layer: ""
 root_spec_path: components/DAP/root-spec.md
 generated_storybook_dir: storybook-generated/dap
+generated_angular_storybook_dir: storybook-angular/src/generated/dap
+angular_storybook_dir: storybook-angular
 strict_storybook_gate: false
 
 breakpoints:

@@ -79,7 +79,7 @@ const fullIconsWithBadgesSlot = (
 );
 
 const meta: Meta<typeof SynapseMasthead> = {
-  title: "Spec Generated/Synapse/Masthead",
+  title: "Components/Synapse/Masthead",
   component: SynapseMasthead,
   parameters: {
     layout: "fullscreen",

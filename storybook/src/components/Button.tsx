@@ -1,39 +1,57 @@
 import { Button as BaseButton } from "@base-ui-components/react/button";
 import { forwardRef, useMemo, type ComponentProps, type ReactNode } from "react";
+import {
+  BUTTON_SPEC_ACCURATE_DEFAULTS,
+  type ButtonSize,
+  type ButtonVariantExtended,
+} from "@component-contracts/ids/button.contract";
+import { splitButtonChildren } from "./buttonChildren";
 import { Icon } from "./Icon";
 import styles from "./Button.module.css";
-
-type Variant = "primary" | "secondary" | "tertiary" | "ghost" | "danger" | "destructive";
-type Size = "sm" | "md" | "lg";
+import { IDS_ICON_URL_BY_SHAPE } from "../../../lib/react/ids/shared/idsAssetRegistry.generated";
 
 interface ButtonProps extends ComponentProps<"button"> {
   /** Programme chrome (`synapse`: ::after focus ring; radius from theme aliases). */
   programme?: "ids" | "synapse";
-  variant?: Variant;
-  size?: Size;
+  variant?: ButtonVariantExtended;
+  size?: ButtonSize;
   loading?: boolean;
-  /** Leading 16×16 icon (Figma: Icon=Yes, Icon Only=No). */
+  /**
+   * Leading icon node — prefer composition: `<Button><Icon … />Label</Button>`.
+   * @deprecated Use a leading `<Icon />` child instead.
+   */
   icon?: ReactNode;
-  /** Canonical icon slug from `assets/icons/<slug>.svg`. */
+  /**
+   * Canonical icon slug shorthand — prefer composition with `<Icon shapeName="…" />`.
+   * @deprecated Use a leading `<Icon />` child instead.
+   */
   iconSlug?: string;
-  /** Rendering mode for `iconSlug` path; default keeps IDS tintable behavior. */
+  /** Rendering mode for `iconSlug` shorthand only. */
   iconVariant?: "mask" | "img";
-  /** Icon only — use with `icon` and an accessible `aria-label` (Figma: Icon Only=Yes; Large/Medium in set). */
+  /**
+   * Icon only — square control (sm 24×24 / md 32×32 / lg 40×40);
+   * glyph 12 / 14 / 16 (Ghost Neutral lg = 14). Requires accessible `aria-label`.
+   */
   iconOnly?: boolean;
 }
 
 const iconUrlBySlug: Record<string, string> = (() => {
-  const modules = import.meta.glob<string>("../../../assets/icons/*.svg", {
-    eager: true,
-    query: "?url",
-    import: "default",
-  });
   const out: Record<string, string> = {};
-  for (const path of Object.keys(modules)) {
-    const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
-    if (file && modules[path] != null) out[file] = modules[path] as string;
+  try {
+    const modules = import.meta.glob<string>("../../../assets/icons/*.svg", {
+      eager: true,
+      query: "?url",
+      import: "default",
+    });
+    for (const path of Object.keys(modules)) {
+      const file = path.replace(/^.*\/([^/]+)\.svg$/, "$1");
+      if (file && modules[path] != null) out[file] = modules[path] as string;
+    }
+  } catch {
+    // Non-Vite bundler (esbuild): `import.meta.glob` is not a function. Fall through.
   }
-  return out;
+  // Vite populates `out` (unchanged behaviour); esbuild falls back to the generated registry.
+  return Object.keys(out).length > 0 ? out : IDS_ICON_URL_BY_SHAPE;
 })();
 
 function resolveIconUrl(iconSlug: string): string | undefined {
@@ -44,9 +62,9 @@ function resolveIconUrl(iconSlug: string): string | undefined {
 export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button(
   {
     programme = "ids",
-    variant = "primary",
-    size = "lg",
-    loading = false,
+    variant = BUTTON_SPEC_ACCURATE_DEFAULTS.variant,
+    size = BUTTON_SPEC_ACCURATE_DEFAULTS.size,
+    loading = BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
     icon,
     iconSlug,
     iconVariant = "mask",
@@ -58,13 +76,20 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   },
   forwardedRef,
 ) {
-  const variantClass = variant === "destructive" ? "danger" : variant;
+  const variantClass =
+    variant === "destructive" || variant === "danger"
+      ? "danger"
+      : variant === "ghost" || variant === "ghostNeutral"
+        ? "ghost-neutral"
+        : variant;
   const isDestructive = variant === "destructive" || variant === "danger";
+  const isGhostNeutral = variant === "ghost" || variant === "ghostNeutral";
+  const { leadingIcon: composedIcon, label } = splitButtonChildren(children);
   const iconUrl = iconSlug ? resolveIconUrl(iconSlug) : undefined;
   const slugIconNode =
     iconSlug && iconUrl ? <Icon shapeName={iconSlug} variant={iconVariant} /> : undefined;
-  const resolvedIcon = isDestructive ? undefined : (icon ?? slugIconNode);
-  const resolvedIconOnly = isDestructive ? false : iconOnly;
+  const resolvedIcon = isDestructive ? undefined : (icon ?? composedIcon ?? slugIconNode);
+  const resolvedIconOnly = isDestructive ? false : isGhostNeutral ? true : iconOnly;
   const hasIcon = Boolean(resolvedIcon);
   const showIconWithLabel = hasIcon && !loading;
   const resolvedClassName = useMemo(
@@ -91,7 +116,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...rest}
     >
       {loading && <span className={styles.spinner} aria-hidden="true" />}
-      {iconOnly ? (
+      {resolvedIconOnly ? (
         hasIcon && (
           <span
             className={[styles.iconSlot, loading ? styles.visuallyHidden : ""].filter(Boolean).join(" ")}
@@ -107,7 +132,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
               {resolvedIcon}
             </span>
           )}
-          <span className={loading ? styles.labelHidden : ""}>{children}</span>
+          <span className={loading ? styles.labelHidden : styles.label}>{label}</span>
         </>
       )}
     </BaseButton>

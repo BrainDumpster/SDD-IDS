@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type ComponentProps, type ReactNode, type RefObject } from "react";
 import { Button } from "./Button";
-import { IdsModal } from "./IdsModal";
+import { IdsModalShell } from "./IdsModalShell";
 import { DropdownMenu } from "./DropdownMenu";
 import { Icon } from "./Icon";
 import { IdsDropdownTriggerShell } from "./IdsDropdownTriggerShell";
@@ -899,13 +899,13 @@ export function IdsWhatsNew({
           <h2 id={titleId} className={styles.title}>
             {title}
           </h2>
-          <IdsModal.Close
+          <IdsModalShell.Close
             className={styles.closeButton}
             aria-label="Close"
             onClick={() => setOpen(false)}
           >
             <Icon shapeName="shape-x" variant="img" style={{ width: 16, height: 16 }} />
-          </IdsModal.Close>
+          </IdsModalShell.Close>
         </div>
         {(summaryContent ?? descriptionProp) ? (
           <p className={styles.description}>{summaryContent ?? descriptionProp}</p>
@@ -955,13 +955,13 @@ export function IdsWhatsNew({
           <h2 id={carouselTitleId} className={styles.title}>
             {activeSection.title}
           </h2>
-          <IdsModal.Close
+          <IdsModalShell.Close
             className={styles.closeButton}
             aria-label="Close image preview"
             onClick={closeCarousel}
           >
             <Icon shapeName="shape-x" variant="img" style={{ width: 16, height: 16 }} />
-          </IdsModal.Close>
+          </IdsModalShell.Close>
         </header>
 
         <div className={styles.carouselBody}>
@@ -988,13 +988,13 @@ export function IdsWhatsNew({
           <h2 id={singlePreviewTitleId} className={styles.title}>
             {activeSection.title}
           </h2>
-          <IdsModal.Close
+          <IdsModalShell.Close
             className={styles.closeButton}
             aria-label="Close expanded image preview"
             onClick={closeSinglePreview}
           >
             <Icon shapeName="shape-x" variant="img" style={{ width: 16, height: 16 }} />
-          </IdsModal.Close>
+          </IdsModalShell.Close>
         </header>
 
         <div className={styles.carouselBody}>
@@ -1011,7 +1011,7 @@ export function IdsWhatsNew({
 
   return (
     <>
-      <IdsModal
+      <IdsModalShell
         open={open}
         onOpenChange={setOpen}
         layer="main"
@@ -1019,9 +1019,9 @@ export function IdsWhatsNew({
         popupRef={dialogPopupRef}
       >
         {mainPanel}
-      </IdsModal>
+      </IdsModalShell>
 
-      <IdsModal
+      <IdsModalShell
         open={carouselOpen}
         onOpenChange={(next) => {
           if (!next) closeCarousel();
@@ -1030,9 +1030,9 @@ export function IdsWhatsNew({
         labelledBy={carouselTitleId}
       >
         {carouselPanel}
-      </IdsModal>
+      </IdsModalShell>
 
-      <IdsModal
+      <IdsModalShell
         open={singlePreviewLayerOpen}
         onOpenChange={(next) => {
           if (!next) closeSinglePreview();
@@ -1041,7 +1041,7 @@ export function IdsWhatsNew({
         labelledBy={singlePreviewTitleId}
       >
         {singlePreviewPanel}
-      </IdsModal>
+      </IdsModalShell>
     </>
   );
 }

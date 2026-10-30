@@ -18,7 +18,7 @@ import {
 const synapseModalButton = { programme: "synapse" as const, size: "lg" as const };
 
 const meta: Meta<typeof SynapseWizard> = {
-  title: "Spec Generated/Synapse/Wizard",
+  title: "Components/Synapse/Wizard",
   component: SynapseWizard,
   parameters: {
     layout: "fullscreen",

@@ -1,0 +1,421 @@
+/**
+ * IDS Button — React implementation generated from design-spec.
+ *
+ * Path: `lib/react/ids/button`
+ * Source: `components/ids/button/design-spec.md`
+ * Theme: `components/ids-theme.css`
+ *
+ * Content projection only:
+ *   IdsButton
+ *     IdsButtonLeadingIcon?  — project <IdsIcon /> (or any icon node)
+ *     IdsButtonLabel?        — project any label content
+ *
+ * Selectors: ids-button, ids-button-leading-icon, ids-button-label
+ * No @base-ui-components dependency.
+ */
+
+import React, {
+  Children,
+  forwardRef,
+  isValidElement,
+  useState,
+  type ButtonHTMLAttributes,
+  type FocusEvent,
+  type KeyboardEvent,
+  type MouseEvent,
+  type ReactElement,
+  type ReactNode,
+} from "react";
+import styles from "./IdsButton.module.css";
+
+export type IdsButtonVariant =
+  | "primary"
+  | "secondary"
+  | "tertiary"
+  | "destructive"
+  | "ghostNeutral"
+  /** @deprecated Alias of `ghostNeutral`. */
+  | "ghost";
+export type IdsButtonSize = "small" | "medium" | "large";
+export type IdsButtonDataState =
+  | "default"
+  | "hover"
+  | "press"
+  | "focus-visible"
+  | "disabled";
+
+export interface IdsButtonProps
+  extends Omit<ButtonHTMLAttributes<HTMLButtonElement>, "type" | "children"> {
+  /**
+   * Projected parts only: `IdsButtonLeadingIcon` and/or `IdsButtonLabel`.
+   */
+  children?: ReactNode;
+  variant?: IdsButtonVariant;
+  size?: IdsButtonSize;
+  iconOnly?: boolean;
+  /**
+   * Figma `Show Icon` — when false, hide a projected leading icon (default true when icon projected).
+   */
+  showIcon?: boolean;
+  disabled?: boolean;
+  loading?: boolean;
+  type?: "button" | "submit" | "reset";
+  /**
+   * Accessible name. **Required** when `iconOnly` is true (or when `variant` is
+   * `ghostNeutral` / `ghost`, which force icon-only). Native `aria-label` is also accepted.
+   */
+  ariaLabel?: string;
+  /** Demo/testing visual override only — does not replace interaction logic. */
+  dataState?: IdsButtonDataState;
+  onPressStart?: (event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => void;
+  onPressEnd?: (event: MouseEvent<HTMLButtonElement> | KeyboardEvent<HTMLButtonElement>) => void;
+}
+
+function cx(...parts: Array<string | false | null | undefined>): string {
+  return parts.filter(Boolean).join(" ");
+}
+
+function resolveVariant(v: unknown): IdsButtonVariant {
+  if (v === "ghost" || v === "ghostNeutral" || v === "ghost-neutral") {
+    return "ghostNeutral";
+  }
+  if (v === "secondary" || v === "tertiary" || v === "destructive") {
+    return v;
+  }
+  return "primary";
+}
+
+function resolveSize(s: unknown): IdsButtonSize {
+  if (s === "small" || s === "medium") return s;
+  return "large";
+}
+
+function iconGlyphSize(size: IdsButtonSize, iconOnly: boolean): number {
+  if (!iconOnly) return 16;
+  if (size === "small") return 12;
+  if (size === "medium") return 14;
+  return 16;
+}
+
+const sizeClass: Record<IdsButtonSize, string> = {
+  small: styles["ids-button--small"],
+  medium: styles["ids-button--medium"],
+  large: styles["ids-button--large"],
+};
+
+const variantClass: Record<IdsButtonVariant, string> = {
+  primary: styles["ids-button--primary"],
+  secondary: styles["ids-button--secondary"],
+  tertiary: styles["ids-button--tertiary"],
+  destructive: styles["ids-button--destructive"],
+  ghostNeutral: styles["ids-button--ghost-neutral"],
+  ghost: styles["ids-button--ghost-neutral"],
+};
+
+/* -------------------------------------------------------------------------- */
+/* IdsButtonLeadingIcon — project IdsIcon (or any icon node)                  */
+/* -------------------------------------------------------------------------- */
+
+export interface IdsButtonLeadingIconProps {
+  /** Projected icon, typically `<IdsIcon shape="…" size={16} />`. */
+  children?: ReactNode;
+  className?: string;
+  hidden?: boolean;
+}
+
+export function IdsButtonLeadingIcon({
+  children,
+  className,
+  hidden,
+}: IdsButtonLeadingIconProps) {
+  if (children == null || children === false) return null;
+
+  return (
+    <span
+      className={cx(
+        styles["ids-button-leading-icon"],
+        hidden && styles["ids-button-leading-icon--hidden"],
+        className,
+      )}
+      data-ids="ids-button-leading-icon"
+      aria-hidden="true"
+    >
+      {children}
+    </span>
+  );
+}
+IdsButtonLeadingIcon.displayName = "IdsButtonLeadingIcon";
+
+/* -------------------------------------------------------------------------- */
+/* IdsButtonLabel — projected label content                                   */
+/* -------------------------------------------------------------------------- */
+
+export interface IdsButtonLabelProps {
+  children?: ReactNode;
+  className?: string;
+  hidden?: boolean;
+}
+
+export function IdsButtonLabel({ children, className, hidden }: IdsButtonLabelProps) {
+  if (children == null || children === false) return null;
+  return (
+    <span
+      className={cx(
+        styles["ids-button-label"],
+        hidden && styles["ids-button-label--hidden"],
+        className,
+      )}
+      data-ids="ids-button-label"
+    >
+      {children}
+    </span>
+  );
+}
+IdsButtonLabel.displayName = "IdsButtonLabel";
+
+function isLeadingIconElement(child: ReactElement): boolean {
+  return (
+    child.type === IdsButtonLeadingIcon ||
+    (typeof child.type === "function" &&
+      (child.type as { displayName?: string }).displayName === "IdsButtonLeadingIcon")
+  );
+}
+
+function isLabelElement(child: ReactElement): boolean {
+  return (
+    child.type === IdsButtonLabel ||
+    (typeof child.type === "function" &&
+      (child.type as { displayName?: string }).displayName === "IdsButtonLabel")
+  );
+}
+
+function partitionProjectedChildren(children: ReactNode): {
+  projectedIcon: ReactElement<IdsButtonLeadingIconProps> | null;
+  projectedLabel: ReactElement<IdsButtonLabelProps> | null;
+} {
+  let projectedIcon: ReactElement<IdsButtonLeadingIconProps> | null = null;
+  let projectedLabel: ReactElement<IdsButtonLabelProps> | null = null;
+
+  Children.forEach(children, (child) => {
+    if (!isValidElement(child)) return;
+    if (isLeadingIconElement(child)) {
+      projectedIcon = child as ReactElement<IdsButtonLeadingIconProps>;
+      return;
+    }
+    if (isLabelElement(child)) {
+      projectedLabel = child as ReactElement<IdsButtonLabelProps>;
+    }
+  });
+
+  return { projectedIcon, projectedLabel };
+}
+
+/* -------------------------------------------------------------------------- */
+/* IdsButton                                                                  */
+/* -------------------------------------------------------------------------- */
+
+export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function IdsButton(
+  {
+    children,
+    variant: variantProp,
+    size: sizeProp,
+    iconOnly = false,
+    showIcon = true,
+    disabled = false,
+    loading = false,
+    type = "button",
+    ariaLabel,
+    dataState,
+    className,
+    onClick,
+    onFocus,
+    onBlur,
+    onKeyDown,
+    onKeyUp,
+    onMouseDown,
+    onMouseUp,
+    onMouseLeave,
+    onPressStart,
+    onPressEnd,
+    ...rest
+  },
+  ref,
+) {
+  const variant = resolveVariant(variantProp);
+  const size = resolveSize(sizeProp);
+  const isDestructive = variant === "destructive";
+  const isGhostNeutral = variant === "ghostNeutral" || variant === "ghost";
+  /** Spec Accurate: destructive never shows a leading icon / icon-only chrome. */
+  /** Ghost Neutral is icon-only only (Figma Icon Button Type=Ghost). */
+  const resolvedIconOnly = isDestructive ? false : isGhostNeutral ? true : iconOnly;
+  const resolvedSize: IdsButtonSize = size;
+  const isDisabled = Boolean(disabled || loading || dataState === "disabled");
+  const [isPressed, setIsPressed] = useState(false);
+  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly, variant);
+  const restAriaLabel =
+    typeof (rest as { "aria-label"?: unknown })["aria-label"] === "string"
+      ? ((rest as { "aria-label"?: string })["aria-label"] ?? "").trim()
+      : "";
+  const resolvedAriaLabel = (ariaLabel ?? "").trim() || restAriaLabel || undefined;
+
+  const { projectedIcon, projectedLabel } = partitionProjectedChildren(children);
+
+  const iconSlot =
+    !isDestructive && showIcon && projectedIcon
+      ? loading
+        ? React.cloneElement(projectedIcon, { hidden: true })
+        : projectedIcon
+      : null;
+
+  const labelSlot =
+    projectedLabel && loading
+      ? React.cloneElement(projectedLabel, { hidden: true })
+      : projectedLabel;
+
+  const hasIcon = iconSlot != null;
+  const hasLabel = labelSlot != null;
+
+  if (resolvedIconOnly) {
+    if (!resolvedAriaLabel) {
+      throw new Error("IdsButton: `ariaLabel` is required when `iconOnly` is true.");
+    }
+    if (!hasIcon) {
+      throw new Error(
+        "IdsButton: project `IdsButtonLeadingIcon` when `iconOnly` is true.",
+      );
+    }
+  } else if (!hasLabel) {
+    throw new Error(
+      "IdsButton: project `IdsButtonLabel` (required unless `iconOnly` is true).",
+    );
+  }
+
+  // Propagate glyph size hint to IdsIcon children when size prop is unset/16.
+  const sizedIconSlot =
+    iconSlot &&
+    React.isValidElement(iconSlot) &&
+    iconSlot.props.children != null
+      ? React.cloneElement(iconSlot, {
+          children: Children.map(iconSlot.props.children, (child) => {
+            if (!isValidElement(child)) return child;
+            const childProps = child.props as { size?: number };
+            if (childProps.size != null && childProps.size !== 16) return child;
+            return React.cloneElement(child as ReactElement<{ size?: number }>, {
+              size: glyphPx,
+            });
+          }),
+        })
+      : iconSlot;
+
+  const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
+    if (isDisabled) {
+      event.preventDefault();
+      return;
+    }
+    onClick?.(event);
+  };
+
+  const handleKeyDown = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (isDisabled) {
+      event.preventDefault();
+      return;
+    }
+    if (event.key === " " || event.key === "Enter") {
+      setIsPressed(true);
+      onPressStart?.(event);
+    }
+    onKeyDown?.(event);
+  };
+
+  const handleKeyUp = (event: KeyboardEvent<HTMLButtonElement>) => {
+    if (event.key === " " || event.key === "Enter") {
+      setIsPressed(false);
+      onPressEnd?.(event);
+    }
+    onKeyUp?.(event);
+  };
+
+  const handleMouseDown = (event: MouseEvent<HTMLButtonElement>) => {
+    if (!isDisabled) {
+      setIsPressed(true);
+      onPressStart?.(event);
+    }
+    onMouseDown?.(event);
+  };
+
+  const handleMouseUp = (event: MouseEvent<HTMLButtonElement>) => {
+    setIsPressed(false);
+    onPressEnd?.(event);
+    onMouseUp?.(event);
+  };
+
+  const handleMouseLeave = (event: MouseEvent<HTMLButtonElement>) => {
+    setIsPressed(false);
+    onPressEnd?.(event);
+    onMouseLeave?.(event);
+  };
+
+  const handleFocus = (event: FocusEvent<HTMLButtonElement>) => {
+    onFocus?.(event);
+  };
+
+  const handleBlur = (event: FocusEvent<HTMLButtonElement>) => {
+    setIsPressed(false);
+    onBlur?.(event);
+  };
+
+  return (
+    <button
+      {...rest}
+      ref={ref}
+      type={type}
+      disabled={isDisabled}
+      aria-label={resolvedAriaLabel}
+      aria-disabled={isDisabled || undefined}
+      aria-busy={loading || undefined}
+      data-ids="ids-button"
+      data-variant={variant}
+      data-size={resolvedSize}
+      data-state={isPressed ? "press" : dataState && dataState !== "default" ? dataState : undefined}
+      data-icon-only={resolvedIconOnly ? "true" : undefined}
+      data-loading={loading ? "true" : undefined}
+      className={cx(
+        styles["ids-button"],
+        variantClass[variant],
+        sizeClass[resolvedSize],
+        resolvedIconOnly && styles["ids-button--icon-only"],
+        loading && styles["ids-button--loading"],
+        isDisabled && styles["ids-button--disabled"],
+        className,
+      )}
+      onClick={handleClick}
+      onFocus={handleFocus}
+      onBlur={handleBlur}
+      onKeyDown={handleKeyDown}
+      onKeyUp={handleKeyUp}
+      onMouseDown={handleMouseDown}
+      onMouseUp={handleMouseUp}
+      onMouseLeave={handleMouseLeave}
+    >
+      {loading ? <span className={styles["ids-button-spinner"]} aria-hidden="true" /> : null}
+
+      {resolvedIconOnly ? (
+        hasIcon ? sizedIconSlot : null
+      ) : (
+        <>
+          {hasIcon ? sizedIconSlot : null}
+          {hasLabel ? labelSlot : null}
+        </>
+      )}
+    </button>
+  );
+});
+
+IdsButton.displayName = "IdsButton";
+
+export const IdsButtonCompound = Object.assign(IdsButton, {
+  LeadingIcon: IdsButtonLeadingIcon,
+  Label: IdsButtonLabel,
+});
+
+export default IdsButtonCompound;

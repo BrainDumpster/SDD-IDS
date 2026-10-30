@@ -1,0 +1,87 @@
+<!--
+  Host element (`ids-card`) is the Card root (React parity — no display:contents).
+  #cardRoot is the host via ElementRef in the component class.
+-->
+<div
+  class="ids-card-header"
+  data-card-header
+  data-ids="ids-card-header"
+  [attr.data-has-overflow-menu]="showMenu ? 'true' : 'false'"
+  [hidden]="!hasHeader"
+>
+  <div class="ids-card-header-row">
+    <div class="ids-card-title-cluster">
+      <ng-content select="[idsCardHeader]" />
+      @if (!hasProjectedHeader) {
+        @if (hasSecondaryTitle) {
+          <div class="ids-card-title-row">
+            @if (hasTitle) {
+              <h3 [id]="titleId" class="ids-card-title-inline">{{ title }}</h3>
+              <span class="ids-card-title-divider" aria-hidden="true">|</span>
+            }
+            <div [id]="secondaryId">
+              <ng-content select="ids-card-secondary-title" />
+              @if (!hasProjectedSecondaryTitle && secondaryTitle) {
+                <span
+                  class="ids-card-secondary-title"
+                  data-ids="ids-card-secondary-title"
+                >
+                  {{ secondaryTitle }}
+                </span>
+              }
+            </div>
+          </div>
+        } @else if (hasTitle) {
+          <h3 [id]="titleId" class="ids-card-title">{{ title }}</h3>
+        }
+      }
+    </div>
+
+    <div class="ids-card-header-trailing" [hidden]="!hasTrailing">
+      @if (headerMeta) {
+        <span class="ids-card-header-meta">{{ headerMeta }}</span>
+      }
+      <ng-content select="[idsCardAdditionalFilter]" />
+      @if (showMenu) {
+        <ids-card-header-menu
+          [options]="menuOptions!"
+          [cardRoot]="cardRootEl"
+          [triggerAriaLabel]="menuAriaLabel"
+          (optionSelected)="onOptionSelected($event)"
+        />
+      }
+    </div>
+  </div>
+</div>
+
+<div
+  [class]="bodyClass"
+  [attr.data-card-show-divider]="effectiveShowDivider ? 'true' : 'false'"
+  data-ids="ids-card-body"
+>
+  <ng-content />
+</div>
+
+<div
+  class="ids-card-footer"
+  data-card-footer
+  data-ids="ids-card-footer"
+  [hidden]="!hasFooter"
+>
+  @if (actions != null && actions.length > 0) {
+    @for (action of actions; track action.id ?? $index) {
+      <ids-button
+        type="button"
+        variant="tertiary"
+        size="sm"
+        class="ids-card-footer-action"
+        data-ids="ids-card-action"
+        (clicked)="onActionClicked(action)"
+      >
+        {{ action.label }}
+      </ids-button>
+    }
+  } @else {
+    <ng-content select="[idsCardFooter]" />
+  }
+</div>

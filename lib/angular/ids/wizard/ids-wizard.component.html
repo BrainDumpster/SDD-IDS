@@ -1,0 +1,103 @@
+@if (resolvedMode === "modal") {
+  <div class="ids-wizard-overlay">
+    <ng-container *ngTemplateOutlet="shell" />
+  </div>
+} @else {
+  <ng-container *ngTemplateOutlet="shell" />
+}
+
+<ng-template #shell>
+  <section
+    [id]="rootId"
+    [class]="wizardClass"
+    [attr.role]="resolvedMode === 'modal' ? 'dialog' : 'region'"
+    [attr.aria-modal]="resolvedMode === 'modal' ? 'true' : null"
+    [attr.aria-labelledby]="titleId"
+  >
+    @if (hasCompoundSlots) {
+      <ng-content />
+    } @else {
+      <ids-wizard-header>
+        <ids-wizard-header-title>{{ title }}</ids-wizard-header-title>
+        @if (showClose) {
+          <ids-wizard-close-action />
+        }
+      </ids-wizard-header>
+
+      <ids-wizard-body>
+        <ids-wizard-steps-pane>
+          @for (group of display; track group.top.node.id) {
+            <div>
+              <ids-wizard-step-item
+                [active]="isGroupActive(group)"
+                [status]="groupLeafStatus(group)"
+                [hasChildren]="group.children.length > 0"
+                (click)="onGroupSelect(group)"
+              >
+                @if (group.children.length > 0) {
+                  <ids-icon
+                    className="ids-wizard-step-expand-icon"
+                    shapeName="chev-up-thick"
+                    [size]="12"
+                  />
+                }
+                <ids-wizard-step-label>{{ group.top.node.label }}</ids-wizard-step-label>
+                <ids-wizard-step-status-indicator
+                  [status]="groupLeafStatus(group)"
+                  [shape]="groupIcon(group)"
+                  align="end"
+                />
+              </ids-wizard-step-item>
+
+              @if (group.children.length > 0) {
+                <ids-wizard-substep-list>
+                  @for (child of group.children; track child.node.id) {
+                    <ids-wizard-substep-item
+                      [active]="isChildActive(child)"
+                      [status]="child.node.status ?? 'none'"
+                      (click)="goToLeaf(child)"
+                    >
+                      <ids-wizard-step-label>{{ child.node.label }}</ids-wizard-step-label>
+                      <ids-wizard-step-status-indicator
+                        [status]="child.node.status ?? 'none'"
+                        [shape]="childIcon(child)"
+                        align="after-label"
+                      />
+                    </ids-wizard-substep-item>
+                  }
+                </ids-wizard-substep-list>
+              }
+            </div>
+          }
+        </ids-wizard-steps-pane>
+
+        <ids-wizard-content-pane>
+          <ids-wizard-page-title>{{ pageTitle }}</ids-wizard-page-title>
+          <ids-wizard-page-content>
+            @if (isTemplateRef(pageContent)) {
+              <ng-container *ngTemplateOutlet="pageContent" />
+            } @else if (pageContent) {
+              {{ pageContent }}
+            } @else {
+              <p class="ids-wizard-page-content-fallback">
+                No page content is defined for this step.
+              </p>
+            }
+          </ids-wizard-page-content>
+          <ids-wizard-footer>
+            <ids-wizard-progress-label />
+            <ids-wizard-footer-actions>
+              @if (showCancel) {
+                <ids-wizard-cancel-button />
+              }
+              @if (showPrevious) {
+                <ids-wizard-previous-button />
+              }
+              <ids-wizard-primary-button />
+            </ids-wizard-footer-actions>
+          </ids-wizard-footer>
+        </ids-wizard-content-pane>
+      </ids-wizard-body>
+    }
+  </section>
+</ng-template>

@@ -11,7 +11,7 @@ import { IdsDapSidePanel as DAPSidePanel } from "../../../../storybook/src/compo
 /* Gate coverage tokens: default hover */
 
 const meta: Meta<typeof DAPSidePanel> = {
-  title: "Spec Generated/DAP/Side Panel",
+  title: "Components/DAP/Side Panel",
   component: DAPSidePanel,
   parameters: { layout: "fullscreen" },
 };

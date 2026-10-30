@@ -5,6 +5,16 @@
   gap: var(--spacing-space-4);
 }
 
+/* Determinate/Inline never shrinks below 80px. */
+.root[data-type="inline"] {
+  min-width: 80px;
+}
+
+/* Indeterminate track never shrinks below 80px. */
+.root[data-type="indeterminate"] .track {
+  min-width: 80px;
+}
+
 .labeledBlock {
   display: flex;
   flex-direction: column;
@@ -16,20 +26,28 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  gap: var(--padding-padding-8);
+  /* Min gap between label and percentage. */
+  gap: var(--spacing-space-16);
 }
 
+/* Label truncates with ellipsis so the meta row keeps its 16px min gap;
+   the full label is shown in a tooltip on hover/focus. */
 .label {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
   font-size: var(--font-size-body-2);
-  font-weight: 400;
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .value {
+  flex-shrink: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
 }
 
 .inlineRow {
@@ -41,7 +59,7 @@
 
 .inlineRow .track {
   flex: 1 1 0;
-  min-width: 0;
+  min-width: 36px;
 }
 
 .inlineValue {
@@ -49,7 +67,7 @@
   width: 36px;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral-strong);
+  color: var(--color-text-gray-neutral-strong);
   text-align: left;
 }
 
@@ -81,7 +99,7 @@
   inset: 0;
   z-index: 0;
   box-sizing: border-box;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   border-radius: var(--progress-bar-control-radius);
   background: var(--color-background-gray-light);
   clip-path: inset(0 0 0 var(--progress-clip, 0%));
@@ -113,17 +131,17 @@
 }
 
 .completed-success .indicator {
-  background: var(--color-background-alerting-success);
+  background: var(--color-background-alerting-success-base);
   border-color: var(--color-border-alerting-success-base);
 }
 
 .completed-warning .indicator {
-  background: var(--color-background-alerting-minor);
-  border-color: var(--color-border-alerting-minor-transparent);
+  background: var(--color-background-alerting-minor-base);
+  border-color: var(--color-border-alerting-minor-base);
 }
 
 .failed-error .indicator {
-  background: var(--color-background-alerting-critical);
+  background: var(--color-background-alerting-critical-base);
   border-color: var(--color-border-alerting-critical-base);
 }
 
@@ -141,7 +159,7 @@
 }
 
 .root[data-value-full="true"].completed-warning .indicator {
-  border-right-color: var(--color-border-alerting-minor-transparent);
+  border-right-color: var(--color-border-alerting-minor-base);
 }
 
 .root[data-value-full="true"].failed-error .indicator {
@@ -157,7 +175,7 @@
   margin: 0;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   text-align: left;
 }
 

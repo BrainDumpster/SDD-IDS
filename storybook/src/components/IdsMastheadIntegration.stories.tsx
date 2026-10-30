@@ -67,9 +67,9 @@ const codePanelStyle: React.CSSProperties = {
   fontSize: 12,
   lineHeight: 1.5,
   fontFamily: 'ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace',
-  background: "var(--color-background-component)",
-  color: "var(--color-text-neutral-strong)",
-  borderBottom: "1px solid var(--color-border-accessible)",
+  background: "var(--color-background-surface-component)",
+  color: "var(--color-text-gray-neutral-strong)",
+  borderBottom: "1px solid var(--color-border-gray-neutral-base)",
   overflow: "auto",
   maxHeight: "38vh",
   whiteSpace: "pre",
@@ -82,7 +82,7 @@ const headerActionsWrapperStyle: React.CSSProperties = {
 };
 
 const meta: Meta<typeof IdsMasthead> = {
-  title: "Spec Generated/IDS/Masthead",
+  title: "Components/IDS/Masthead",
   component: IdsMasthead,
   parameters: {
     layout: "fullscreen",
@@ -217,7 +217,7 @@ export const ComposedIconsSlot: Story = {
                     height: 32,
                     marginRight: 8,
                     padding: "0 8px",
-                    border: "1px solid var(--color-border-accessible)",
+                    border: "1px solid var(--color-border-gray-neutral-base)",
                     borderRadius: 4,
                     fontSize: 14,
                   }}
@@ -267,8 +267,8 @@ export const ComposedIconsSlot: Story = {
                 top: 56,
                 right: 120,
                 zIndex: 20,
-                background: "var(--color-background-component)",
-                border: "1px solid var(--color-border-accessible)",
+                background: "var(--color-background-surface-component)",
+                border: "1px solid var(--color-border-gray-neutral-base)",
                 borderRadius: 4,
                 padding: 8,
                 fontSize: 14,
@@ -291,8 +291,8 @@ export const ComposedIconsSlot: Story = {
               zIndex: 10,
               padding: "6px 10px",
               fontSize: 12,
-              background: "var(--color-background-component)",
-              border: "1px solid var(--color-border-accessible)",
+              background: "var(--color-background-surface-component)",
+              border: "1px solid var(--color-border-gray-neutral-base)",
               borderRadius: 4,
               pointerEvents: "none",
             }}

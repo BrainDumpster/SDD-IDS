@@ -51,7 +51,7 @@ const specAccurateArgs: ToastStoryArgs = {
 };
 
 const meta: Meta<ToastStoryArgs> = {
-  title: "Spec Generated/Synapse/Toast",
+  title: "Components/Synapse/Toast",
   args: specAccurateArgs,
   parameters: {
     layout: "centered",

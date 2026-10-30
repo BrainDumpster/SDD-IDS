@@ -1,0 +1,67 @@
+@if (isWithLabel) {
+  <div
+    class="ids-progress-bar-labeled-block"
+    data-ids="ids-progress-bar-labeled-block"
+  >
+    <div class="ids-progress-bar-meta" data-ids="ids-progress-bar-meta">
+      @if (label) {
+        <span class="ids-progress-bar-label" data-ids="ids-progress-bar-label">{{
+          label
+        }}</span>
+      }
+      @if (showPercentage) {
+        <span class="ids-progress-bar-value" data-ids="ids-progress-bar-value">{{
+          percentLabel
+        }}</span>
+      }
+    </div>
+    <ng-container *ngTemplateOutlet="track"></ng-container>
+  </div>
+} @else if (isInline) {
+  <div
+    class="ids-progress-bar-inline-row"
+    data-ids="ids-progress-bar-track-row"
+  >
+    <ng-container *ngTemplateOutlet="track"></ng-container>
+    @if (showPercentage) {
+      <span
+        class="ids-progress-bar-inline-value"
+        data-ids="ids-progress-bar-inline-value"
+        >{{ percentLabel }}</span
+      >
+    }
+  </div>
+} @else {
+  <ng-container *ngTemplateOutlet="track"></ng-container>
+}
+
+@if (showHelperRow) {
+  <div class="ids-progress-bar-helper" data-ids="ids-progress-bar-helper">
+    @if (showHelperIcon) {
+      <ids-icon
+        class="ids-progress-bar-helper-icon"
+        [shape]="helperIconSlug || ''"
+        variant="img"
+        [size]="16"
+      ></ids-icon>
+    }
+    <p class="ids-progress-bar-helper-text" data-ids="ids-progress-bar-helper-text">
+      {{ helperText }}
+    </p>
+  </div>
+}
+
+<ng-template #track>
+  <div class="ids-progress-bar-track" data-ids="ids-progress-bar-track">
+    <div
+      class="ids-progress-bar-track-bg"
+      data-ids="ids-progress-bar-track-bg"
+      aria-hidden="true"
+    ></div>
+    <div
+      class="ids-progress-bar-indicator"
+      data-ids="ids-progress-bar-indicator"
+      [style.width]="indicatorWidth"
+    ></div>
+  </div>
+</ng-template>

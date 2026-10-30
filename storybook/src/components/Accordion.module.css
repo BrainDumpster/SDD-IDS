@@ -1,15 +1,15 @@
 .root {
   width: 100%;
-  border: var(--border-width-border-1) solid var(--color-border-accessible);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   overflow: hidden;
 }
 
 .rootForm {
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .item {
-  border-bottom: var(--border-width-border-1) solid var(--color-border-accessible);
+  border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
 }
 .item:last-child {
   border-bottom: none;
@@ -27,8 +27,8 @@
   font-size: var(--font-size-body-2);
   font-weight: 500;
   font-family: inherit;
-  color: var(--color-text-neutral-strong);
-  background: var(--color-background-component);
+  color: var(--color-text-gray-neutral-strong);
+  background: var(--color-background-surface-component);
   border: none;
   cursor: pointer;
   outline: none;
@@ -46,16 +46,26 @@
 }
 
 .trigger:hover:not([data-disabled]) {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
 }
 
 .trigger:hover:not([data-disabled]) .icon {
-  color: var(--color-border-strong);
+  color: var(--color-border-gray-neutral-strong);
 }
 
+/* Focus (IDS Design Library .Accordion-Element-Left State=Focus): tinted header,
+   1px neutral border (inset shadow, no layout shift), double ring — 2px separator +
+   4px brand outer ring — radius-4. z-index keeps the ring above sibling panels. */
 .trigger:focus-visible {
-  outline: var(--border-width-border-2) solid var(--color-border-brand-base);
-  outline-offset: -2px;
+  outline: none;
+  position: relative;
+  z-index: 1;
+  border-radius: var(--corner-radius-radius-4);
+  background-color: var(--color-background-brand-lighter-slate);
+  box-shadow:
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
 .trigger[data-disabled] {
@@ -68,14 +78,14 @@
   height: 16px;
   transition: transform 150ms ease;
   flex-shrink: 0;
-  color: var(--color-icon-neutral);
+  color: var(--color-icon-gray-neutral-base);
 }
 
 .trigger.open,
 .trigger[data-state="open"],
 .item[data-state="open"] .trigger,
 .item[data-open] .trigger {
-  background: var(--color-background-brand-lighter);
+  background: var(--color-background-brand-lighter-slate);
   box-shadow: inset 4px 0 0 var(--color-border-brand-base);
 }
 
@@ -83,14 +93,35 @@
 .trigger[data-state="open"] .icon,
 .item[data-state="open"] .trigger .icon,
 .item[data-open] .trigger .icon {
-  color: var(--color-border-strong);
+  color: var(--color-border-gray-neutral-strong);
 }
 
 .trigger.open:hover:not([data-disabled]),
 .trigger[data-state="open"]:hover:not([data-disabled]),
 .item[data-state="open"] .trigger:hover:not([data-disabled]),
 .item[data-open] .trigger:hover:not([data-disabled]) {
-  background: var(--color-background-brand-light);
+  background: var(--color-background-brand-lighter-slate);
+}
+
+/* Expanded + focused: keep the 4px left rail (first inset shadow) behind the
+   focused header's own 1px border and the outer double ring. */
+.trigger.open:focus-visible,
+.trigger[data-state="open"]:focus-visible,
+.item[data-state="open"] .trigger:focus-visible,
+.item[data-open] .trigger:focus-visible {
+  box-shadow:
+    inset 4px 0 0 var(--color-border-brand-base),
+    inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-neutral-base),
+    0 0 0 var(--scale-2) var(--color-background-surface-component),
+    0 0 0 var(--scale-4) var(--color-border-brand-base);
+}
+
+.trigger:focus-visible .icon,
+.trigger.open:focus-visible .icon,
+.trigger[data-state="open"]:focus-visible .icon,
+.item[data-state="open"] .trigger:focus-visible .icon,
+.item[data-open] .trigger:focus-visible .icon {
+  color: var(--color-icon-gray-neutral-strong);
 }
 
 .open .icon {
@@ -119,20 +150,20 @@
 .content {
   padding: var(--padding-padding-12) var(--padding-padding-16);
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .meta {
   padding: 0 var(--padding-padding-16) var(--padding-padding-12);
   font-size: var(--font-size-body-2);
-  color: var(--color-text-neutral);
+  color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }
 
 .formSlot {
   padding: 0 var(--padding-padding-16) var(--padding-padding-12);
-  background: var(--color-background-component);
+  background: var(--color-background-surface-component);
 }

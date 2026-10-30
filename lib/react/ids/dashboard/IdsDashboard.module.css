@@ -1,0 +1,114 @@
+/**
+ * IDS Dashboard styles — from components/ids/dashboard/design-spec.md
+ * Theme: components/ids-theme.css
+ * Selectors: IdsDashboard, IdsDashboardGrid, IdsDashboardItem
+ *   (`data-ids` + CSS class, Ids camelCase)
+ * Root: Dashboard compound alias; DOM selector `IdsDashboard`
+ *   (not DashboardRoot / IdsDashboardRoot / Base UI data-slot)
+ */
+
+.IdsDashboard {
+  display: flex;
+  flex-direction: column;
+  gap: var(--spacing-space-16);
+  box-sizing: border-box;
+  width: 100%;
+  max-width: 100%;
+  background: var(--color-background-surface-primary);
+  border: var(--border-width-border-default) solid
+    var(--color-border-gray-neutral-base);
+  border-radius: var(--corner-radius-radius-none, 0);
+  padding: var(--padding-padding-16) var(--padding-padding-24);
+  font-family: inherit;
+  /* Nested Card outer + body seams use light border (Dashboard-Element-Card). */
+  --card-border-color: var(--color-border-gray-neutral-light);
+}
+
+/*
+ * Responsive grid (IDS breakpoints: sm 576 / md 768 / lg 992):
+ * - < md: 1 column — all cards full width
+ * - md–lg: 2 columns — span-2/3 fill the row
+ * - ≥ lg: 3 columns — Card size span-1|2|3 as designed
+ * `--card-min-width` is a preferred floor at large viewports; overridable later.
+ */
+.IdsDashboardGrid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: var(--spacing-space-16);
+  align-items: stretch;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.IdsDashboardItem {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  max-width: 100%;
+  grid-column: 1 / -1;
+}
+
+.IdsDashboardItem > * {
+  flex: 1 1 auto;
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  min-width: 0;
+}
+
+@media (min-width: 768px) {
+  .IdsDashboardGrid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .IdsDashboardItem[data-card-size="span-1"] {
+    grid-column: span 1;
+  }
+
+  .IdsDashboardItem[data-card-size="span-2"],
+  .IdsDashboardItem[data-card-size="span-3"] {
+    grid-column: span 2;
+  }
+}
+
+@media (min-width: 992px) {
+  .IdsDashboardGrid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .IdsDashboardItem[data-card-size="span-1"] {
+    grid-column: span 1;
+  }
+
+  .IdsDashboardItem[data-card-size="span-2"] {
+    grid-column: span 2;
+  }
+
+  .IdsDashboardItem[data-card-size="span-3"] {
+    grid-column: span 3;
+  }
+}
+
+.IdsDashboardItem[data-dragging="true"] {
+  opacity: 0.55;
+}
+
+.IdsDashboardItem[data-drop-target="true"] {
+  outline: 2px dashed var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.IdsDashboard[data-enable-drag-and-drop="true"] .IdsDashboardItem {
+  cursor: grab;
+}
+
+.IdsDashboard[data-enable-drag-and-drop="true"]
+  .IdsDashboardItem[data-dragging="true"] {
+  cursor: grabbing;
+}
+
+@media (max-width: 575px) {
+  .IdsDashboard {
+    padding: var(--padding-padding-16);
+  }
+}

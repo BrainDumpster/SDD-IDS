@@ -6,7 +6,7 @@ const SYNAPSE_CARD_SPEC = "components/synapse/card/design-spec.md";
 const SYNAPSE_CARD_NODE = "50419:259141";
 
 const meta: Meta<typeof Card> = {
-  title: "Spec Generated/Synapse/Card",
+  title: "Components/Synapse/Card",
   component: Card,
   parameters: {
     layout: "centered",

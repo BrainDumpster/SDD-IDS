@@ -1,0 +1,10 @@
+@if (resolvedVariant === "img" && !missing) {
+  <img
+    class="ids-icon__img"
+    [src]="iconUrl"
+    [attr.alt]="title || ''"
+    [attr.width]="resolvedSize"
+    [attr.height]="resolvedSize"
+    (error)="onAssetError()"
+  />
+}

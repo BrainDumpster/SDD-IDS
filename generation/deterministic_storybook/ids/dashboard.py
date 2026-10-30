@@ -58,7 +58,7 @@ const meta: Meta<typeof {component_name}> = {{
         component: [
           `IDS Dashboard wrapper. Source: \\`${{DESIGN_SPEC_PATH}}\\`.`,
           "Holds a responsive grid of IDS Cards (1 → 2 → 3 columns by viewport).",
-          "Sets `--card-border-color: var(--color-border-light)` for nested Cards.",
+          "Sets `--card-border-color: var(--color-border-gray-neutral-light)` for nested Cards.",
           "Injects `showDivider` via `showDividerInCard` (default true).",
           "Page title and page-level actions are owned by the host layout (not Dashboard).",
           "Optional `enableDragAndDrop` (makes Cards draggable).",

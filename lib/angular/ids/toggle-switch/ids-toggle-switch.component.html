@@ -1,0 +1,32 @@
+<label class="ids-toggle-switch__root" [attr.for]="resolvedId">
+  <ng-content select="ids-toggle-switch-input"></ng-content>
+  @if (!hasInputSlot) {
+    <input
+      type="checkbox"
+      class="ids-toggle-switch__input"
+      [id]="resolvedId"
+      [attr.name]="resolvedName || null"
+      [attr.value]="resolvedValue || null"
+      [checked]="resolvedChecked"
+      [disabled]="resolvedDisabled"
+      [attr.aria-label]="ariaLabel || null"
+      [attr.aria-describedby]="describedBy || null"
+      (change)="onInputChange($event)"
+    />
+  }
+  <span class="ids-toggle-switch__switch">
+    <ng-content select="ids-toggle-switch-track"></ng-content>
+    @if (!hasTrackSlot) {
+      <span class="ids-toggle-switch__track" aria-hidden="true"></span>
+    }
+    <ng-content select="ids-toggle-switch-thumb"></ng-content>
+    @if (!hasThumbSlot) {
+      <span class="ids-toggle-switch__thumb" aria-hidden="true"></span>
+    }
+  </span>
+  <ng-content select="ids-toggle-switch-label"></ng-content>
+  @if (showFallbackLabel) {
+    <span class="ids-toggle-switch__label">{{ label }}</span>
+  }
+</label>
+<ng-content select="ids-toggle-switch-assistive-text"></ng-content>

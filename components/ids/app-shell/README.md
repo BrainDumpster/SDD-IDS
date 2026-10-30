@@ -17,6 +17,9 @@ Host apps supply a **page catalog** (`pages`) and **menu tree** (`menuItems`). M
 | `storybook/src/components/AppShell.tsx` | Composes Masthead, MainMenuLeft, page chrome, body slot, Footer |
 | `storybook/src/components/AppShell.module.css` | Shell geometry (`100vh`, scroll viewport, page header tokens) |
 | `storybook-generated/ids/src/components/AppShell.stories.tsx` | **Spec Generated/IDS/App Shell** |
+| `lib/react/ids/app-shell` | React library (Ids camelCase slots) |
+| `lib/angular/ids/app-shell` | Angular library (`ids-app-shell` + slot selectors) |
+| `storybook-angular/src/components/ids-app-shell-lib/` | **Spec Generated/IDS/App Shell/Angular Composition** |
 
 Import theme once at app root (or in Storybook):
 

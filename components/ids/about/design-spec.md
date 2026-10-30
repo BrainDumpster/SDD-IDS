@@ -31,27 +31,27 @@
 - Copyright / legal copy: **one paragraph**, `text-align: center`; Body 2 or Body 3 per variant band; long copy wraps to multiple **lines** but must not split into multiple block paragraphs
 ## Tokens
 ### Colors
-- White: `var(--color-text-white)` = #ffffff
-- Brand base: `var(--color-background-controls-brand-base)` = #0076ce
-- Component background: `var(--color-background-component)` = #ffffff
-- Neutral text: `var(--color-text-neutral)` = #4d4d4d
-- Neutral strong: `var(--color-text-neutral-strong)` = #252525
+- White: `var(--color-text-gray-white)` = #ffffff
+- Brand base: `var(--color-background-controls-base)` = #0076ce
+- Component background: `var(--color-background-surface-component)` = #ffffff
+- Neutral text: `var(--color-text-gray-neutral)` = #4d4d4d
+- Neutral strong: `var(--color-text-gray-neutral-strong)` = #252525
 - Brand strong text: `var(--color-text-brand-strong)` = #0062ab
 - Link brand text: `var(--color-text-link-brand-base)` = #0062ab
-- White text: `var(--color-text-white)` = #ffffff
-- Accessible border: `var(--color-border-accessible)` = #757575
+- White text: `var(--color-text-gray-white)` = #ffffff
+- Accessible border: `var(--color-border-gray-neutral-base)` = #757575
 - Brand border: `var(--color-border-brand-base)` = #0076ce
-- Light border: `var(--color-border-light)` = #c5c5c5
-- Transparent brand: `var(--color-border-transparent-brand)` = #ffffff00
+- Light border: `var(--color-border-gray-neutral-light)` = #c5c5c5
+- Transparent brand: `var(--color-border-brand-transparent-brand)` = #ffffff00
 
 ### Icons
 - Brand icon: `var(--color-icon-brand-base)` = #0076ce
-- Neutral icon: `var(--color-icon-neutral)` = #4d4d4d
-- Neutral strong icon: `var(--color-icon-neutral-strong)` = #252525
-- Success icon: `var(--color-icon-alerting-success)` = #1b8500
+- Neutral icon: `var(--color-icon-gray-neutral-base)` = #4d4d4d
+- Neutral strong icon: `var(--color-icon-gray-neutral-strong)` = #252525
+- Success icon: `var(--color-icon-alerting-success-base)` = #1b8500
 
 ### Background Colors
-- Brand lighter: `var(--color-background-controls-brand-lighter)` = #ebf4fb
+- Brand lighter: `var(--color-background-controls-lighter)` = #ebf4fb
 - Gray light: `var(--color-background-gray-light)` = #eaeaea
 - Gray base: `var(--color-background-gray-base)` = #757575
 
@@ -89,14 +89,14 @@
 ## States (Light Theme)
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
-| About Container | `var(--color-background-component)` (#ffffff) | `var(--color-border-light)` (#c5c5c5) | `var(--color-text-neutral-strong)` (#252525) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Header Section | `var(--color-background-component)` (#ffffff) | transparent | `Header 1` (Roboto Regular 48px/58px) | `var(--color-icon-brand-base)` (#0076ce) |
-| Content Section | `var(--color-background-component)` (#ffffff) | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Legal Section | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `Body 3` (Roboto Regular 12px/18px) | `var(--color-icon-neutral-strong)` (#252525) |
+| About Container | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-light)` (#c5c5c5) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Header Section | `var(--color-background-surface-component)` (#ffffff) | transparent | `Header 1` (Roboto Regular 48px/58px) | `var(--color-icon-brand-base)` (#0076ce) |
+| Content Section | `var(--color-background-surface-component)` (#ffffff) | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Legal Section | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `Body 3` (Roboto Regular 12px/18px) | `var(--color-icon-gray-neutral-strong)` (#252525) |
 | Link (Default) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
-| Link (Hover) | `var(--color-background-controls-brand-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
-| Close Button (Default) | transparent | transparent | `var(--color-icon-neutral)` (#4d4d4d) | `var(--color-icon-neutral)` (#4d4d4d) |
-| Close Button (Hover) | transparent | transparent | `var(--color-icon-neutral-strong)` (#252525) | `var(--color-icon-neutral-strong)` (#252525) |
+| Link (Hover) | `var(--color-background-controls-lighter)` (#ebf4fb) | transparent | `var(--color-text-brand-strong)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
+| Close Button (Default) | transparent | transparent | `var(--color-icon-gray-neutral-base)` (#4d4d4d) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
+| Close Button (Hover) | transparent | transparent | `var(--color-icon-gray-neutral-strong)` (#252525) | `var(--color-icon-gray-neutral-strong)` (#252525) |
 ## States (Dark Theme)
 - Uses semantic tokens that automatically adapt to dark theme
 - Text and border colors remain consistent via semantic variables

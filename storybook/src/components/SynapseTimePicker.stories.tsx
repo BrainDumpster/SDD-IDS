@@ -20,7 +20,7 @@ const specAccurateArgs = {
 };
 
 const meta: Meta<typeof SynapseTimePicker> = {
-  title: "Spec Generated/Synapse/Time Picker",
+  title: "Components/Synapse/Time Picker",
   component: SynapseTimePicker,
   parameters: {
     layout: "padded",
