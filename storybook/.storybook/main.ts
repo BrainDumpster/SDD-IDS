@@ -14,6 +14,26 @@ const repoRoot = path.resolve(storybookPackageRoot, "..");
 const reactRoot = path.join(storybookPackageRoot, "node_modules/react");
 const reactDomRoot = path.join(storybookPackageRoot, "node_modules/react-dom");
 
+/** Collab static/preview builds only need Spec Accurate Design under storybook-generated/. */
+const collabSpecOnly = Boolean(
+  (process.env.STORYBOOK_BASE_PATH || "").trim() ||
+    process.env.COLLAB_STORYBOOK_SPEC_ONLY === "1",
+);
+
+/** Incomplete joe-generated demos import missing tokens.css / components — never build them. */
+const excludeJoeGenerated = path.join(
+  storybookPackageRoot,
+  "src/components/**/joe-generated/**",
+);
+
+const generatedStories = path.join(
+  repoRoot,
+  "storybook-generated/*/src/**/*.stories.@(ts|tsx)",
+);
+const handStories = path.join(
+  storybookPackageRoot,
+  "src/**/*.stories.@(ts|tsx)",
+);
 /**
  * Canonical IDS React stories: `src/components/lib-generated/` → `Components/IDS/...`.
  * Legacy hand ports + overlapping `storybook-generated/ids` entries are omitted so
@@ -144,8 +164,19 @@ function warnOnNewSpecGeneratedStories(): Plugin {
 const config: StorybookConfig = {
   // Absolute paths keep Vite importer keys aligned with the story index (avoids
   // `importers[path] is not a function` for files under repo-root storybook-generated/).
-  stories: storyFiles,
-  addons: ["@storybook/addon-essentials"],
+  // Discover every programme under storybook-generated/<programme>/ (ids, dap, synapse,
+  // and new programmes from design-spec intake) — do not hardcode programme slugs.
+  // Collab static preview (STORYBOOK_BASE_PATH / COLLAB_STORYBOOK_SPEC_ONLY) only needs
+  // Spec Accurate Design stories — skip storybook/src hand stories that may not build.
+  // Always exclude joe-generated (broken imports: missing tokens.css / components).
+  stories: collabSpecOnly
+    ? [generatedStories]
+    : [handStories, generatedStories, `!${excludeJoeGenerated}`],
+  addons: [
+    "@storybook/addon-essentials",
+    // Local Scratchpad panel is registered in `.storybook/manager.tsx`
+    // (npm `storybook-addon-scratchpad` did not reliably appear as a tab in SB 8.6).
+  ],
   framework: {
     name: "@storybook/react-vite",
     options: {},
@@ -164,7 +195,10 @@ const config: StorybookConfig = {
     },
   },
   async viteFinal(config) {
+    // Collab Docker serves the static build under /storybook/ (STORYBOOK_BASE_PATH).
+    const basePath = (process.env.STORYBOOK_BASE_PATH || "").trim();
     return mergeConfig(config, {
+      ...(basePath ? { base: basePath.endsWith("/") ? basePath : `${basePath}/` } : {}),
       plugins: [warnOnNewSpecGeneratedStories()],
       // `lib/` lives outside the storybook package root; force automatic JSX
       // so components there do not need a classic `React` global.
@@ -174,6 +208,9 @@ const config: StorybookConfig = {
       resolve: {
         dedupe: ["react", "react-dom", "@base-ui-components/utils"],
         alias: {
+          // Bare `components/…-theme.css` imports from client-generated stories
+          // (common in Collab) resolve to the monorepo components/ tree.
+          components: path.join(repoRoot, "components"),
           "@component-contracts": path.join(repoRoot, "component-contracts"),
           // Public package scope used in Docs / Code Connect (maps to lib/react/ids/*)
           "@ids/react": path.join(repoRoot, "lib/react/ids"),

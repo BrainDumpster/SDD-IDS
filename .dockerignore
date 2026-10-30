@@ -1,0 +1,44 @@
+# Used when building: docker build -f apps/design-spec-collab/Dockerfile …
+# (context = monorepo root)
+
+.git
+**/.venv
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+**/.env
+**/.env.*
+!**/.env.example
+**/node_modules
+**/dist
+**/.turbo
+**/.next
+
+# App runtime data (not needed in image)
+apps/design-spec-collab/data
+apps/design-spec-portal/data
+apps/design-spec-portal/*.json
+
+# Heavy / unrelated (ingestion + config Python package needed for Figma REST packager)
+qdrant_storage
+storage
+*.qdrant
+docs
+!docs/design-spec-authoring-contract.md
+!docs/design-spec-collab-deploy.md
+embeddings
+vectorstore
+tests
+agent
+api
+mcp_tools
+tokens
+knowledge
+pipeline
+rag
+.claude
+**/*.md
+!components/**/*.md
+!apps/design-spec-collab/README.md
+!docs/design-spec-authoring-contract.md
+!docs/design-spec-collab-deploy.md

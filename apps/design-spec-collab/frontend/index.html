@@ -1,0 +1,957 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Design Spec Collab</title>
+    <link id="ds-theme-link" rel="stylesheet" href="/theme/ids-theme.css" />
+    <link rel="stylesheet" href="/assets/styles.css" />
+    <link rel="stylesheet" href="/assets/dropdown.css" />
+  </head>
+  <body data-theme="dark" class="ids-theme-dark">
+    <main class="wrap">
+      <header class="page-header">
+        <p class="eyebrow">Dual-agent collab POC</p>
+        <h1>Design Spec Collab</h1>
+        <p class="lede">
+          Server packs Figma evidence; run the <strong>Bridge command</strong> (or paste one session URL as fallback — not both).
+          Client never authenticates Figma.
+        </p>
+        <p id="agent-config" class="hint" aria-live="polite"></p>
+        <div id="header-auth-slot">
+          <details id="auth-actor-section" class="auth-actor-section">
+            <summary class="auth-actor-summary">
+              <span class="auth-actor-summary-label">Auth &amp; actor</span>
+              <span class="auth-actor-summary-hint" id="auth-actor-summary-hint">placeholder · optional</span>
+            </summary>
+            <div class="auth-actor-body">
+              <p id="auth-banner" class="auth-banner" aria-live="polite"></p>
+              <label class="actor-field">
+                Actor (auth placeholder)
+                <input
+                  id="portal-actor"
+                  name="portalActor"
+                  placeholder="e.g. your.name — used when AUTH_MODE=placeholder"
+                  autocomplete="username"
+                />
+              </label>
+            </div>
+          </details>
+        </div>
+      </header>
+
+      <!-- HOME -->
+      <section id="view-home" class="view" hidden>
+        <div class="layout-split home-layout-split" id="home-layout-split" style="--left-pct: 40%">
+          <div class="panel panel-left home-catalogue-panel" aria-label="Catalogue">
+            <div id="home-auth-slot" class="home-auth-slot"></div>
+
+            <div class="dashboard-hero card">
+              <div class="dashboard-hero-row">
+                <div>
+                  <h2>Programmes &amp; components</h2>
+                  <p class="hint">
+                    Select a programme and component to preview, download a bundle, or
+                    <strong>Update Spec</strong> (new PR). To revise an open Collab PR, use
+                    <strong>Review PRs</strong>. Or generate a new spec anytime.
+                  </p>
+                </div>
+                <div class="dashboard-hero-actions">
+                  <button
+                    type="button"
+                    id="toggle-home-preview"
+                    class="secondary layout-toggle"
+                    aria-pressed="true"
+                    aria-controls="home-preview-panel"
+                    title="Show or hide Storybook preview panel"
+                  >
+                    Hide preview
+                  </button>
+                  <a class="button secondary" href="#/review" id="btn-review-workspace">Review PRs</a>
+                  <a class="button primary" href="#/generate" id="btn-generate-spec">Generate Spec</a>
+                </div>
+              </div>
+              <p id="catalogue-status" class="hint" aria-live="polite">Loading catalogue…</p>
+            </div>
+
+            <div class="dashboard-grid">
+              <div class="card">
+                <label class="dd-field-label" for="catalogue-programme">Programme</label>
+                <select id="catalogue-programme" name="catalogueProgramme" aria-label="Programme">
+                  <option value="">Loading programmes…</option>
+                </select>
+              </div>
+              <div class="card">
+                <label class="dd-field-label" for="catalogue-component">Component</label>
+                <select
+                  id="catalogue-component"
+                  name="catalogueComponent"
+                  aria-label="Component"
+                  disabled
+                >
+                  <option value="">Select a programme first</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="dashboard-actions card">
+              <div id="selected-component-meta" class="hint">Select a programme and component to enable View design-spec or Download bundle.</div>
+              <div class="dashboard-action-buttons">
+                <button type="button" id="btn-view-spec" class="button secondary" disabled>
+                  View design-spec
+                </button>
+                <button type="button" id="btn-update-spec" class="button secondary" disabled>
+                  Update Spec
+                </button>
+                <a
+                  id="btn-download-bundle"
+                  class="button primary"
+                  href="#"
+                  download
+                  aria-disabled="true"
+                  tabindex="-1"
+                  >Download bundle</a
+                >
+              </div>
+            </div>
+            <div id="bundle-status" class="bundle-status" role="status" aria-live="polite" hidden></div>
+
+            <section
+              id="home-spec-panel"
+              class="card home-spec-panel hidden"
+              aria-label="Catalogue design-spec"
+              hidden
+            >
+              <div class="home-spec-header">
+                <div>
+                  <h3 id="home-spec-title">Design spec</h3>
+                  <p class="hint" id="home-spec-meta"></p>
+                </div>
+                <div class="home-spec-actions">
+                  <button type="button" id="home-spec-tab-preview" class="spec-tab active" role="tab">
+                    Spec
+                  </button>
+                  <button type="button" id="home-spec-tab-source" class="spec-tab" role="tab">
+                    Source
+                  </button>
+                  <button type="button" id="btn-home-spec-close" class="secondary">Close</button>
+                </div>
+              </div>
+              <div id="home-spec-rendered" class="spec-preview-rendered md-body"></div>
+              <pre id="home-spec-source" class="spec-preview-source hidden"></pre>
+            </section>
+          </div>
+
+          <div
+            class="layout-divider"
+            id="home-layout-divider"
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize catalogue and Storybook preview"
+            tabindex="0"
+          >
+            <span class="layout-divider-grip" aria-hidden="true"></span>
+          </div>
+
+          <aside
+            id="home-preview-panel"
+            class="panel panel-right home-preview-side"
+            aria-label="Storybook preview"
+          >
+            <section
+              id="home-storybook-preview"
+              class="card storybook-preview-panel storybook-split-panel"
+              data-theme="light"
+              data-sb-mode="canvas"
+              aria-label="Spec Accurate Design preview"
+            >
+              <div class="storybook-preview-header">
+                <div>
+                  <h2>Storybook preview</h2>
+                  <p class="hint" data-sb-meta></p>
+                </div>
+                <div class="storybook-preview-toolbar">
+                  <button type="button" class="secondary" data-sb-theme-toggle>Dark theme</button>
+                  <button
+                    type="button"
+                    class="secondary"
+                    data-sb-scratchpad-toggle
+                    aria-pressed="true"
+                    title="Switch to canvas-only preview (no addon panels)"
+                  >
+                    Canvas only
+                  </button>
+                  <a
+                    id="home-sb-open-manager"
+                    class="button secondary"
+                    data-sb-open-manager
+                    href="/storybook/index.html"
+                    target="_blank"
+                    rel="noopener"
+                    hidden
+                    >Open Storybook</a
+                  >
+                </div>
+              </div>
+              <p class="storybook-preview-empty hint" data-sb-empty>
+                Select a component to preview its generated Storybook story here.
+              </p>
+              <iframe
+                class="storybook-preview-iframe"
+                data-sb-iframe
+                title="Spec Accurate Design preview"
+                hidden
+              ></iframe>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <!-- GENERATE -->
+      <section id="view-generate" class="view" hidden>
+        <div class="view-toolbar">
+          <a class="button secondary" href="#/" id="back-generate">← Back</a>
+          <h2 class="view-title">Generate design-spec</h2>
+        </div>
+        <div class="layout-toolbar">
+          <button
+            type="button"
+            id="toggle-results"
+            class="secondary layout-toggle"
+            aria-pressed="true"
+            aria-controls="panel-right"
+            title="Show or hide the results panel"
+          >
+            Hide results
+          </button>
+        </div>
+        <div class="layout-split" id="layout-split" style="--left-pct: 60%">
+          <div class="panel panel-left" aria-label="Intake form">
+            <form id="intake-form" class="card" novalidate>
+              <fieldset class="programme-mode">
+                <legend>Programme / design system</legend>
+                <label class="row">
+                  <input type="radio" name="programmeMode" value="existing" checked />
+                  Select existing
+                </label>
+                <label class="row">
+                  <input type="radio" name="programmeMode" value="new" />
+                  Add new programme
+                </label>
+                <label id="programme-existing-wrap">
+                  Existing programme
+                  <select name="programmeExisting" id="programme"></select>
+                </label>
+                <label id="programme-new-wrap" class="hidden">
+                  New programme name
+                  <input
+                    name="programmeNew"
+                    id="programme-new"
+                    placeholder="e.g. my-programme"
+                    autocomplete="off"
+                    spellcheck="false"
+                  />
+                  <span class="hint">Lowercase letters, digits, hyphens. Starts with a letter.</span>
+                </label>
+              </fieldset>
+
+              <fieldset id="theme-foundation-block" class="hidden">
+                <legend>Theme + root-spec foundation</legend>
+                <p class="hint">
+                  If theme/root-spec already exist, they are left alone. Otherwise reuse or generate from Figma variables.
+                </p>
+                <label class="row">
+                  <input type="radio" name="themeFoundation" value="reuse" checked />
+                  Reuse existing programme
+                </label>
+                <label id="theme-reuse-wrap">
+                  Reuse from
+                  <select name="themeReuseProgramme" id="theme-reuse-programme"></select>
+                </label>
+                <label class="row">
+                  <input type="radio" name="themeFoundation" value="generateFromFigma" />
+                  Generate from Figma variables library
+                </label>
+                <label id="variables-library-wrap" class="hidden">
+                  Variables library URL
+                  <textarea
+                    name="variablesLibraryUrl"
+                    id="variables-library-url"
+                    rows="2"
+                    placeholder="https://www.figma.com/design/<fileKey>/…"
+                  ></textarea>
+                  <ul class="field-errors" id="variables-library-errors" hidden></ul>
+                </label>
+              </fieldset>
+
+              <label>
+                Component display name
+                <input name="componentDisplayName" required placeholder="e.g. Suggested Prompt" />
+              </label>
+
+              <fieldset id="inherits-block">
+                <legend>Inherits IDS component?</legend>
+                <label class="row"><input type="radio" name="inheritsIds" value="yes" /> yes → inheritance skill</label>
+                <label class="row"><input type="radio" name="inheritsIds" value="no" checked /> no → standalone</label>
+                <label class="row"><input type="radio" name="inheritsIds" value="unknown" /> unknown</label>
+                <label id="anatomy-wrap" class="hidden">
+                  Same Figma anatomy as an IDS component?
+                  <select name="sameAnatomyAsIds">
+                    <option value="">—</option>
+                    <option value="true">yes</option>
+                    <option value="false">no</option>
+                  </select>
+                </label>
+              </fieldset>
+
+              <label>
+                Category (optional)
+                <input name="category" placeholder="skip or e.g. Navigation" />
+              </label>
+
+              <label>
+                Main component URL(s)
+                <span class="req">required · one per line · must include node-id</span>
+                <textarea name="mainUrls" id="main-urls" rows="3" required
+                  placeholder="https://www.figma.com/design/.../...?node-id=1-2"></textarea>
+                <ul class="field-errors" id="main-urls-errors" hidden></ul>
+              </label>
+              <label>
+                Element URL(s) <span class="muted">optional</span>
+                <textarea name="elementUrls" id="element-urls" rows="2"></textarea>
+                <ul class="field-errors" id="element-urls-errors" hidden></ul>
+              </label>
+              <label>
+                State URL(s) <span class="muted">optional</span>
+                <textarea name="stateUrls" id="state-urls" rows="2"></textarea>
+                <ul class="field-errors" id="state-urls-errors" hidden></ul>
+              </label>
+
+              <label class="row">
+                <input type="checkbox" name="storybookExamples" />
+                Storybook Spec Accurate Design examples needed
+              </label>
+
+              <label>
+                Additional details <span class="muted">optional</span>
+                <textarea name="additionalNotes" id="additional-notes" rows="4" maxlength="2000"></textarea>
+                <ul class="field-errors" id="additional-notes-errors" hidden></ul>
+              </label>
+
+              <div id="progress" class="progress hidden" aria-live="polite" aria-busy="false">
+                <div class="progress-row">
+                  <span class="spinner" aria-hidden="true"></span>
+                  <span id="progress-label">Validating…</span>
+                </div>
+                <div class="progress-track" aria-hidden="true">
+                  <div class="progress-bar" id="progress-bar"></div>
+                </div>
+              </div>
+
+              <div class="actions form-actions-row">
+                <button type="submit" id="submit-btn">Preview task</button>
+                <button type="button" id="create-job" class="secondary" disabled>Start session</button>
+                <button type="button" id="cancel-job" class="danger" disabled>Cancel session</button>
+                <button type="button" id="reset-claim" class="secondary" disabled>Reset client claim</button>
+              </div>
+              <p id="session-busy-hint" class="session-busy-hint hint" hidden>
+                A session is in progress. Cancel it or wait until it finishes before previewing or starting another.
+              </p>
+            </form>
+
+            <section id="confirm" class="card hidden" aria-live="polite">
+              <h2>Confirm summary</h2>
+              <dl id="confirm-summary" class="summary"></dl>
+              <label class="row confirm-check">
+                <input type="checkbox" id="confirm-check" />
+                I confirm this summary (wizard step 9)
+              </label>
+              <p class="hint" id="confirm-blocked" hidden>
+                Resolve inheritsIds (yes/no) then Preview again.
+              </p>
+            </section>
+          </div>
+
+          <div
+            class="layout-divider"
+            id="layout-divider"
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize panels"
+            tabindex="0"
+          >
+            <span class="layout-divider-grip" aria-hidden="true"></span>
+          </div>
+
+          <div class="panel panel-right" id="panel-right" aria-label="Results and session">
+            <p id="results-placeholder" class="results-placeholder card">
+              Results appear here after <strong>Preview task</strong> or <strong>Start session</strong>.
+            </p>
+            <p id="error" class="error hidden" role="alert"></p>
+            <details id="result" class="card hidden result-details" aria-live="polite">
+              <summary class="result-details-summary">Routing preview</summary>
+              <pre id="result-json"></pre>
+            </details>
+            <section id="session-panel" class="card hidden" aria-live="polite">
+              <h2>Bridge Agent (recommended)</h2>
+              <p id="session-ready-banner" class="session-ready-banner hidden" role="status"></p>
+              <p class="hint">
+                Prefer <strong>Copy Bridge command</strong> and run it in a terminal.
+                Do <strong>not</strong> also paste the session URL into Devin — only one
+                client may claim the session (dual clients → <code>Invalid clientNonce</code>).
+                Session URL / client prompt is a fallback when Bridge is not used.
+                Keep the Bridge terminal open for revise + chat follow-ups.
+              </p>
+              <label class="field">
+                <span>Bridge command</span>
+                <textarea id="bridge-command" readonly rows="3" class="session-url-input bridge-command-input"></textarea>
+              </label>
+              <div class="actions">
+                <button type="button" id="copy-bridge-command" class="primary" disabled>Copy Bridge command</button>
+                <button type="button" id="copy-session-url" class="secondary" disabled>Copy session URL</button>
+                <button type="button" id="copy-client-prompt" class="secondary" disabled>Copy client prompt</button>
+                <button type="button" id="download-evidence" class="secondary hidden">Download evidence</button>
+                <a id="open-session" class="button secondary" href="#" target="_blank" rel="noopener" aria-disabled="true">Open</a>
+              </div>
+              <p id="bridge-status" class="hint bridge-status" hidden></p>
+              <input id="session-url" type="hidden" />
+              <div class="chat-followup">
+                <label class="field">
+                  <span>Follow-up to Bridge</span>
+                  <textarea id="chat-message" rows="2" maxlength="4000" placeholder="e.g. Use var(--radius-lg) on Container and update Slot geometry"></textarea>
+                </label>
+                <div class="actions">
+                  <button type="button" id="chat-send" class="secondary" disabled>Send follow-up</button>
+                </div>
+              </div>
+              <div class="transcript-block" id="generate-transcript-block">
+                <div class="transcript-toolbar">
+                  <h3>Transcript</h3>
+                  <button
+                    type="button"
+                    class="secondary"
+                    data-transcript-toggle
+                    aria-expanded="true"
+                  >
+                    Hide transcript
+                  </button>
+                </div>
+                <div data-transcript-panel>
+                  <ol id="collab-transcript" class="collab-transcript"></ol>
+                </div>
+              </div>
+            </section>
+            <section id="spec-preview-panel" class="card hidden" aria-live="polite">
+              <div class="spec-preview-header">
+                <h2>design-spec.md</h2>
+                <p id="spec-preview-meta" class="hint"></p>
+              </div>
+              <div class="spec-preview-tabs" role="tablist">
+                <button type="button" id="spec-tab-preview" class="spec-tab active" role="tab">Spec</button>
+                <button type="button" id="spec-tab-source" class="spec-tab" role="tab">Source</button>
+                <button type="button" id="spec-tab-storybook" class="spec-tab" role="tab">Storybook</button>
+              </div>
+              <div id="spec-preview-rendered" class="spec-preview-body markdown-body" role="tabpanel"></div>
+              <pre id="spec-preview-source" class="spec-preview-body spec-source hidden" role="tabpanel"></pre>
+              <div
+                id="job-storybook-preview"
+                class="storybook-preview-panel spec-preview-body hidden"
+                role="tabpanel"
+                data-theme="light"
+                data-sb-mode="canvas"
+                hidden
+              >
+                <div class="storybook-preview-header storybook-preview-header-compact">
+                  <p class="hint" data-sb-meta></p>
+                  <div class="storybook-preview-toolbar">
+                    <button type="button" class="secondary" data-sb-theme-toggle>Dark theme</button>
+                    <button
+                      type="button"
+                      class="secondary"
+                      data-sb-scratchpad-toggle
+                      aria-pressed="true"
+                      title="Switch to canvas-only preview (no addon panels)"
+                    >
+                      Canvas only
+                    </button>
+                    <a
+                      class="button secondary"
+                      data-sb-open-manager
+                      href="/storybook/index.html"
+                      target="_blank"
+                      rel="noopener"
+                      hidden
+                      >Open Storybook</a
+                    >
+                  </div>
+                </div>
+                <p class="storybook-preview-empty hint" data-sb-empty>
+                  No Spec Accurate Design story for this component.
+                </p>
+                <iframe
+                  class="storybook-preview-iframe"
+                  data-sb-iframe
+                  title="Spec Accurate Design preview"
+                  hidden
+                ></iframe>
+              </div>
+              <div class="actions spec-preview-actions">
+                <button type="button" id="copy-spec" class="secondary">Copy markdown</button>
+                <a id="open-spec-raw" class="button secondary" href="#" target="_blank" rel="noopener">Open raw .md</a>
+              </div>
+            </section>
+            <details id="job-panel" class="card hidden job-panel-details" aria-live="polite">
+              <summary class="job-panel-summary">
+                Session details <span id="job-meta" class="job-meta-inline"></span>
+              </summary>
+              <div id="branch-panel" class="branch-panel hidden">
+                <h3>Git branch</h3>
+                <p id="branch-name" class="branch-name"></p>
+                <p id="pr-link" class="hint"></p>
+                <pre id="checkout-hint" class="checkout-hint"></pre>
+                <div class="actions branch-actions">
+                  <button type="button" id="copy-checkout" class="secondary">Copy checkout commands</button>
+                  <a id="download-zip" class="button secondary hidden" href="#" download>Download zip</a>
+                </div>
+              </div>
+              <pre id="job-json" class="job-json-pre"></pre>
+            </details>
+            <section id="job-done" class="card job-done hidden" aria-live="polite" role="status">
+              <h2 id="job-done-title">Job complete</h2>
+              <p id="job-done-message" class="job-done-message"></p>
+              <ul id="job-done-details" class="job-done-details"></ul>
+              <div class="actions job-done-actions">
+                <a id="job-done-pr" class="button hidden" href="#" target="_blank" rel="noopener">Open pull request</a>
+                <a id="job-done-zip" class="button secondary hidden" href="#" download>Download artifacts zip</a>
+              </div>
+              <pre id="job-done-summary" class="job-done-summary hidden"></pre>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- UPDATE (catalogue → new update/ branch + PR) -->
+      <section id="view-update" class="view" hidden>
+        <div class="view-toolbar">
+          <a class="button secondary" href="#/" id="back-update">← Back</a>
+          <h2 class="view-title">Update design-spec</h2>
+        </div>
+        <div class="layout-split" style="--left-pct: 55%">
+          <div class="panel panel-left">
+            <form id="update-form" class="card" novalidate>
+              <div class="update-context">
+                <p><strong>Programme:</strong> <span id="upd-programme-label">—</span></p>
+                <p><strong>Component:</strong> <span id="upd-component-label">—</span></p>
+                <p class="hint"><strong>Mapped Figma:</strong> <span id="upd-mapped-figma">—</span></p>
+                <p class="hint"><strong>Node:</strong> <span id="upd-mapped-node">—</span></p>
+                <p class="hint">
+                  Publishes a <strong>new</strong> branch
+                  <code>update/{slug}-{session}</code> and PR (separate from Review revise).
+                  Programme theme / root-spec / yaml and inheritance registry stay unchanged.
+                </p>
+              </div>
+
+              <label>
+                Update prompt <span class="muted">required unless URLs provided</span>
+                <textarea
+                  id="upd-prompt"
+                  rows="5"
+                  maxlength="2000"
+                  placeholder="What should change? Scope follows your ask. Mention recheck/Figma/design if a fresh Figma pack is needed."
+                ></textarea>
+                <ul class="field-errors" id="upd-prompt-errors" hidden></ul>
+              </label>
+
+              <details class="upd-optional-urls">
+                <summary>Optional additional Figma URLs</summary>
+                <p class="hint">
+                  Default: reuse the catalogue map entry. Add URLs only when the map is incomplete
+                  or you want a fresh Figma pack + map update on the new PR.
+                </p>
+                <label>
+                  Additional Main URL(s)
+                  <textarea id="upd-main-urls" rows="2" placeholder="one URL per line with node-id"></textarea>
+                  <ul class="field-errors" id="upd-main-urls-errors" hidden></ul>
+                </label>
+                <label>
+                  Additional Element URL(s)
+                  <textarea id="upd-element-urls" rows="2"></textarea>
+                  <ul class="field-errors" id="upd-element-urls-errors" hidden></ul>
+                </label>
+                <label>
+                  Additional State URL(s)
+                  <textarea id="upd-state-urls" rows="2"></textarea>
+                  <ul class="field-errors" id="upd-state-urls-errors" hidden></ul>
+                </label>
+              </details>
+
+              <label class="row">
+                <input type="checkbox" id="upd-storybook" checked />
+                Update related Storybook examples (Spec Accurate Design)
+              </label>
+
+              <div id="upd-progress" class="progress hidden" aria-live="polite">
+                <div class="progress-row">
+                  <span class="spinner" aria-hidden="true"></span>
+                  <span id="upd-progress-label">Working…</span>
+                </div>
+                <div class="progress-track"><div class="progress-bar" id="upd-progress-bar"></div></div>
+              </div>
+
+              <div class="actions form-actions-row">
+                <button type="submit" id="upd-preview-btn">Preview update</button>
+                <button type="button" id="upd-start-btn" class="secondary" disabled>Start session</button>
+                <button type="button" id="upd-cancel-btn" class="danger" disabled>Cancel session</button>
+              </div>
+              <p id="upd-session-busy-hint" class="session-busy-hint hint" hidden>
+                A session is in progress. Cancel it or wait until it finishes before previewing or starting another.
+              </p>
+            </form>
+
+            <section id="upd-confirm" class="card hidden">
+              <h2>Confirm update</h2>
+              <dl id="upd-confirm-summary" class="summary"></dl>
+              <label class="row confirm-check">
+                <input type="checkbox" id="upd-confirm-check" />
+                I confirm this update summary (new PR on accept)
+              </label>
+            </section>
+          </div>
+          <div class="panel panel-right">
+            <p id="upd-error" class="error hidden" role="alert"></p>
+            <details id="upd-result" class="card hidden">
+              <summary>Update preview</summary>
+              <pre id="upd-result-json"></pre>
+            </details>
+            <section id="upd-session-panel" class="card hidden">
+              <h2>Session</h2>
+              <p id="upd-session-ready" class="session-ready-banner hidden"></p>
+              <p id="upd-bridge-status" class="hint" hidden></p>
+              <label>
+                Bridge command
+                <textarea id="upd-bridge-command" rows="3" readonly class="session-url-input"></textarea>
+              </label>
+              <div class="actions">
+                <button type="button" id="upd-copy-bridge" class="secondary" disabled>Copy Bridge command</button>
+                <input id="upd-session-url" readonly class="session-url-input" />
+                <button type="button" id="upd-copy-session" class="secondary" disabled>Copy URL</button>
+                <button type="button" id="upd-copy-prompt" class="secondary" disabled>Copy client prompt</button>
+              </div>
+              <label>
+                Follow-up chat
+                <textarea id="upd-chat-message" rows="2" placeholder="Optional follow-up after Bridge starts…"></textarea>
+              </label>
+              <div class="actions">
+                <button type="button" id="upd-chat-send" class="secondary" disabled>Send follow-up</button>
+              </div>
+              <ol id="upd-transcript" class="collab-transcript"></ol>
+            </section>
+            <section id="upd-job-done" class="card job-done hidden">
+              <h2>Update complete</h2>
+              <p id="upd-job-done-message"></p>
+              <div class="actions">
+                <a id="upd-job-done-pr" class="button hidden" href="#" target="_blank" rel="noopener">Open PR</a>
+                <a id="upd-job-done-zip" class="button secondary hidden" href="#" download>Download zip</a>
+              </div>
+            </section>
+            <section
+              id="upd-storybook-preview"
+              class="card storybook-preview-panel hidden"
+              hidden
+              aria-label="Spec Accurate Design preview"
+              data-theme="light"
+            >
+              <div class="storybook-preview-header">
+                <div>
+                  <h2>Storybook preview</h2>
+                  <p class="hint" data-sb-meta></p>
+                </div>
+                <button type="button" class="secondary" data-sb-theme-toggle>Dark theme</button>
+              </div>
+              <p class="storybook-preview-empty hint" data-sb-empty>
+                No Spec Accurate Design story for this component.
+              </p>
+              <iframe
+                class="storybook-preview-iframe"
+                data-sb-iframe
+                title="Spec Accurate Design preview"
+                hidden
+              ></iframe>
+            </section>
+          </div>
+        </div>
+      </section>
+
+      <!-- REVIEW WORKSPACE -->
+      <section id="view-review" class="view" hidden>
+        <div class="view-toolbar">
+          <a class="button secondary" href="#/" id="back-review">← Back</a>
+          <h2 class="view-title">Review workspace</h2>
+        </div>
+
+        <div class="review-hero card">
+          <div class="review-hero-copy">
+            <p class="eyebrow">Spec Accurate Design</p>
+            <h3>Review a Collab pull request</h3>
+            <p class="hint">
+              Pick a PR this app opened on GitHub. We import the design-spec and Storybook example,
+              rebuild the preview, and let you compare Spec ↔ Storybook side by side — no URL paste.
+            </p>
+          </div>
+          <div class="review-hero-filters">
+            <label class="review-filter">
+              State
+              <select id="review-pr-state">
+                <option value="open" selected>Open</option>
+                <option value="closed">Closed</option>
+                <option value="all">All</option>
+              </select>
+            </label>
+            <label class="review-filter">
+              Filter by component slug
+              <input
+                id="review-slug-filter"
+                type="search"
+                placeholder="e.g. toggle-switch"
+                autocomplete="off"
+              />
+            </label>
+            <button type="button" id="review-refresh-prs" class="secondary">Refresh list</button>
+          </div>
+        </div>
+
+        <div class="review-layout">
+          <aside class="card review-sidebar" aria-label="Pull request picker">
+            <div class="review-sidebar-head">
+              <h3>Collab PRs</h3>
+              <p class="hint" id="review-pr-status">Loading pull requests…</p>
+            </div>
+            <div id="review-pr-list" class="review-pr-list" role="listbox" aria-label="Collab pull requests"></div>
+            <p class="hint review-sidebar-foot">
+              Showing branches <code>collab/</code> and <code>update/</code> from the configured repo.
+            </p>
+          </aside>
+
+          <div class="review-main">
+            <div id="review-empty" class="card review-empty">
+              <h3>Select a pull request</h3>
+              <p class="hint">
+                Choose a PR on the left to load its design-spec and Spec Accurate Design story for visual review.
+              </p>
+            </div>
+
+            <div id="review-active" class="review-active hidden" hidden>
+              <div class="card review-selected-bar">
+                <div>
+                  <p class="eyebrow" id="review-selected-eyebrow">Pull request</p>
+                  <h3 id="review-selected-title">—</h3>
+                  <p class="hint" id="review-selected-meta"></p>
+                </div>
+                <div class="review-selected-actions">
+                  <a
+                    id="review-open-github"
+                    class="button secondary"
+                    href="#"
+                    target="_blank"
+                    rel="noopener"
+                    >Open on GitHub</a
+                  >
+                  <button type="button" id="review-import-btn" class="button primary">
+                    Load for review
+                  </button>
+                </div>
+              </div>
+
+              <p id="review-import-status" class="review-import-status hint" role="status" aria-live="polite"></p>
+
+              <section id="review-spec-panel" class="card review-spec-panel hidden" hidden>
+                <div class="spec-preview-tabs" role="tablist">
+                  <button type="button" id="review-tab-spec" class="spec-tab active" role="tab">
+                    Spec
+                  </button>
+                  <button type="button" id="review-tab-source" class="spec-tab" role="tab">
+                    Source
+                  </button>
+                  <button type="button" id="review-tab-storybook" class="spec-tab" role="tab">
+                    Storybook
+                  </button>
+                </div>
+                <p class="hint" id="review-spec-meta"></p>
+                <div id="review-spec-rendered" class="spec-preview-rendered md-body"></div>
+                <pre id="review-spec-source" class="spec-preview-source hidden"></pre>
+                <div
+                  id="review-storybook-preview"
+                  class="storybook-preview-panel spec-preview-body hidden"
+                  data-theme="light"
+                  data-sb-mode="canvas"
+                  hidden
+                >
+                  <div class="storybook-preview-header storybook-preview-header-compact">
+                    <p class="hint" data-sb-meta></p>
+                    <div class="storybook-preview-toolbar">
+                      <button type="button" class="secondary" data-sb-theme-toggle>Dark theme</button>
+                      <button
+                        type="button"
+                        class="secondary"
+                        data-sb-scratchpad-toggle
+                        aria-pressed="false"
+                      >
+                        Scratchpad
+                      </button>
+                      <a
+                        class="button secondary"
+                        data-sb-open-manager
+                        href="/storybook/index.html"
+                        target="_blank"
+                        rel="noopener"
+                        >Open Storybook</a
+                      >
+                    </div>
+                  </div>
+                  <p class="storybook-preview-empty hint" data-sb-empty>
+                    Load a PR to preview Spec Accurate Design.
+                  </p>
+                  <iframe
+                    class="storybook-preview-iframe"
+                    data-sb-iframe
+                    title="Review Storybook preview"
+                    hidden
+                  ></iframe>
+                </div>
+                <div class="actions spec-preview-actions">
+                  <button type="button" id="review-copy-spec" class="secondary">Copy markdown</button>
+                  <a
+                    id="review-open-raw"
+                    class="button secondary"
+                    href="#"
+                    target="_blank"
+                    rel="noopener"
+                    >Open raw .md</a
+                  >
+                </div>
+              </section>
+
+              <section id="review-revise-panel" class="card review-revise-panel hidden" hidden>
+                <h3>Revise on this PR</h3>
+                <p class="hint">
+                  Feedback is sent to the client agent the same way as Generate. Accepted
+                  changes commit to this PR’s branch — no new branch.
+                </p>
+                <label class="review-feedback-label" for="review-feedback">
+                  Reviewer feedback
+                  <textarea
+                    id="review-feedback"
+                    rows="6"
+                    placeholder="e.g. Slot geometry radius rows must cite Container node; fix Dark theme boilerplate; align Toggle Default Off with Figma…"
+                  ></textarea>
+                </label>
+                <label class="row review-storybook-check" for="review-revise-storybook">
+                  <input type="checkbox" id="review-revise-storybook" checked />
+                  <span>Include Storybook examples in the revise job</span>
+                </label>
+                <div class="actions">
+                  <button type="button" id="review-revise-btn" class="button primary">
+                    Revise on this PR
+                  </button>
+                </div>
+                <p id="review-revise-status" class="hint" role="status" aria-live="polite"></p>
+                <div id="review-revise-job" class="review-revise-job hidden" hidden>
+                  <p
+                    id="review-session-ready-banner"
+                    class="session-ready-banner hidden"
+                    role="status"
+                  ></p>
+                  <p class="hint" id="review-revise-job-meta"></p>
+                  <label>
+                    Bridge command
+                    <textarea id="review-bridge-cmd" rows="3" readonly></textarea>
+                  </label>
+                  <div class="actions">
+                    <button type="button" id="review-copy-bridge" class="secondary">
+                      Copy Bridge command
+                    </button>
+                    <a
+                      id="review-open-session"
+                      class="button secondary"
+                      href="#"
+                      target="_blank"
+                      rel="noopener"
+                      >Open session</a
+                    >
+                    <a
+                      id="review-download-zip"
+                      class="button secondary hidden"
+                      href="#"
+                      download
+                      hidden
+                      >Download artifacts zip</a
+                    >
+                  </div>
+                  <p id="review-bridge-status" class="hint bridge-status" hidden></p>
+                  <div class="transcript-block" id="review-transcript-block">
+                    <div class="transcript-toolbar">
+                      <h4 class="review-transcript-heading">Transcript</h4>
+                      <button
+                        type="button"
+                        class="secondary"
+                        data-transcript-toggle
+                        aria-expanded="true"
+                      >
+                        Hide transcript
+                      </button>
+                    </div>
+                    <div data-transcript-panel>
+                      <ol id="review-collab-transcript" class="collab-transcript"></ol>
+                    </div>
+                  </div>
+                </div>
+                <section
+                  id="review-revise-done"
+                  class="card job-done review-revise-done hidden"
+                  hidden
+                  aria-live="polite"
+                  role="status"
+                >
+                  <h3 id="review-revise-done-title">Revise complete</h3>
+                  <p id="review-revise-done-message" class="job-done-message"></p>
+                  <ul id="review-revise-done-details" class="job-done-details"></ul>
+                  <div class="actions job-done-actions">
+                    <a
+                      id="review-revise-done-pr"
+                      class="button hidden"
+                      href="#"
+                      target="_blank"
+                      rel="noopener"
+                      hidden
+                      >Open pull request</a
+                    >
+                    <a
+                      id="review-revise-done-zip"
+                      class="button secondary hidden"
+                      href="#"
+                      download
+                      hidden
+                      >Download artifacts zip</a
+                    >
+                    <button type="button" id="review-reimport-btn" class="secondary">
+                      Refresh PR preview
+                    </button>
+                  </div>
+                </section>
+              </section>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="/assets/clipboard.js?v=20260807b"></script>
+    <script src="/assets/dropdown.js?v=20260807b"></script>
+    <script src="/assets/transcript.js?v=20260807b"></script>
+    <script src="/assets/idle-session.js?v=20260807b"></script>
+    <script src="/assets/storybook-preview.js?v=20260807b"></script>
+    <script src="/assets/review.js?v=20260807b"></script>
+    <script src="/assets/dashboard.js?v=20260807b"></script>
+    <script src="/assets/app.js?v=20260807b"></script>
+  </body>
+</html>

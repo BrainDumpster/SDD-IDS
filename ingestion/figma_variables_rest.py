@@ -97,7 +97,16 @@ def _theme_from_mode_name(mode_name: str) -> Optional[FigmaColorTheme]:
 
 
 def _fetch_json(url: str, *, token: str, timeout_s: int) -> Dict[str, Any]:
-    r = requests.get(url, headers={"X-Figma-Token": token}, timeout=timeout_s)
+    import os
+
+    raw = (os.environ.get("FIGMA_SSL_VERIFY") or "true").strip().lower()
+    verify = raw not in {"0", "false", "no", "off"}
+    r = requests.get(
+        url,
+        headers={"X-Figma-Token": token},
+        timeout=timeout_s,
+        verify=verify,
+    )
     r.raise_for_status()
     return r.json()
 
