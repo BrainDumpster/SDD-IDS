@@ -28,7 +28,6 @@ Button that opens a menu of actions via composition slots.
 |-------|------|---------|
 | \`label\` | \`—\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
 | \`showLeadingIcon\` | \`—\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
-| \`iconOnly\` | \`—\` | \`DROPDOWN_BUTTON_SPEC_ACCURATE_DEF…\` |
 | \`ariaLabel\` | \`—\` | \`""\` |
 
 ## Events
@@ -94,7 +93,6 @@ export const DROPDOWN_BUTTON_SPEC_TEMPLATE = `
   <ids-dropdown-button-trigger
     [label]="label"
     [showLeadingIcon]="showLeadingIcon"
-    [iconOnly]="iconOnly"
     [ariaLabel]="ariaLabel"
   />
   <ids-dropdown-button-menu>
@@ -113,25 +111,6 @@ export const DROPDOWN_BUTTON_WITH_ICON_TEMPLATE = `
 >
   <ids-dropdown-button-trigger
     [label]="label"
-    [showLeadingIcon]="true"
-    [ariaLabel]="ariaLabel"
-  />
-  <ids-dropdown-button-menu>
-    <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
-    <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
-    <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
-  </ids-dropdown-button-menu>
-</ids-dropdown-button>`;
-
-export const DROPDOWN_BUTTON_ICON_ONLY_TEMPLATE = `
-<ids-dropdown-button
-  [buttonStyle]="buttonStyle"
-  [size]="size"
-  [disabled]="disabled"
-  (selectionChange)="selectionChange($event)"
->
-  <ids-dropdown-button-trigger
-    [iconOnly]="true"
     [showLeadingIcon]="true"
     [ariaLabel]="ariaLabel"
   />

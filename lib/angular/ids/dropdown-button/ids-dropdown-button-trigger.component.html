@@ -5,18 +5,17 @@
   [attr.data-style]="dropdown.buttonStyle"
   [attr.data-size]="dropdown.size"
   [attr.data-open]="dropdown.isOpen ? 'true' : null"
-  [attr.data-icon-only]="iconOnly ? 'true' : null"
   [attr.data-disabled]="dropdown.disabled ? 'true' : null"
   [disabled]="dropdown.disabled"
   aria-haspopup="menu"
   [attr.aria-expanded]="dropdown.isOpen"
   [attr.aria-controls]="dropdown.menuId"
-  [attr.aria-label]="iconOnly ? accessibleName : null"
+  [attr.aria-label]="ariaLabel ? accessibleName : null"
   (click)="onClick()"
   (keydown)="onKeydown($event)"
 >
   <span class="ids-dropdown-button__trigger-content">
-    @if (showIcon) {
+    @if (showLeadingIcon) {
       <ids-icon
         className="ids-dropdown-button__trigger-leading-icon"
         [shapeName]="leadingIconName"
@@ -25,9 +24,7 @@
       />
     }
 
-    @if (!iconOnly) {
-      <span class="ids-dropdown-button__trigger-label">{{ label }}</span>
-    }
+    <span class="ids-dropdown-button__trigger-label">{{ label }}</span>
 
     <ids-icon
       className="ids-dropdown-button__trigger-caret"

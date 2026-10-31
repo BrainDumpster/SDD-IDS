@@ -76,7 +76,6 @@ export interface IdsDropdownButtonProps {
   buttonStyle?: IdsDropdownButtonStyle | string;
   size?: IdsDropdownButtonSize | string;
   icon?: ReactNode;
-  iconOnly?: boolean;
   /** Accessible name when trigger content is non-textual. */
   ariaLabel?: string;
 }
@@ -288,12 +287,18 @@ export function IdsDropdownMenu({
 }: IdsDropdownMenuProps) {
   const isSubmenu = placement === "submenu";
 
+  // Portal into <html>: Storybook's zoom applies `transform: scale()` on the
+  // preview iframe's `body`, which makes body the containing block for fixed
+  // popups and double-scales floating-ui coordinates. documentElement keeps
+  // the popup viewport-anchored under zoom.
+  const portalContainer =
+    typeof document === "undefined" ? undefined : document.documentElement;
   return (
-    <Menu.Portal>
+    <Menu.Portal container={portalContainer}>
       <Menu.Positioner
         side={isSubmenu ? "right" : "bottom"}
         align="start"
-        sideOffset={isSubmenu ? 0 : 0}
+        sideOffset={isSubmenu ? 0 : 1}
         collisionPadding={8}
         collisionAvoidance={
           isSubmenu
@@ -399,7 +404,6 @@ function DefaultButtonTrigger({
   buttonStyle,
   size,
   icon,
-  iconOnly,
   disabled,
   ariaLabel,
 }: {
@@ -407,7 +411,6 @@ function DefaultButtonTrigger({
   buttonStyle: IdsButtonVariant;
   size: IdsButtonSize;
   icon?: ReactNode;
-  iconOnly: boolean;
   disabled: boolean;
   ariaLabel?: string;
 }) {
@@ -421,20 +424,18 @@ function DefaultButtonTrigger({
     </span>
   );
 
-  // Do not set IdsButton `iconOnly` — icon-only dropdown still shows leading icon + caret
-  // (design-spec). Label slot always carries the caret; text label is omitted when iconOnly.
   return (
-    <IdsDropdownTrigger disabled={disabled} ariaLabel={ariaLabel ?? (iconOnly ? label : undefined)}>
+    <IdsDropdownTrigger disabled={disabled} ariaLabel={ariaLabel}>
       <IdsButton
         variant={buttonStyle}
         size={size}
         disabled={disabled}
-        ariaLabel={ariaLabel ?? (iconOnly ? label || "Open menu" : undefined)}
+        ariaLabel={ariaLabel}
       >
         {icon ? <IdsButtonLeadingIcon>{icon}</IdsButtonLeadingIcon> : null}
         <IdsButtonLabel>
           <span className={styles.defaultTriggerContent} data-ids="ids-dropdown-trigger-content">
-            {!iconOnly && label ? <span data-ids="ids-dropdown-trigger-label">{label}</span> : null}
+            {label ? <span data-ids="ids-dropdown-trigger-label">{label}</span> : null}
             {caret}
           </span>
         </IdsButtonLabel>
@@ -462,7 +463,6 @@ export function IdsDropdownButton({
   buttonStyle: buttonStyleProp,
   size: sizeProp,
   icon,
-  iconOnly = false,
   ariaLabel,
 }: IdsDropdownButtonProps) {
   const autoId = useId();
@@ -474,13 +474,12 @@ export function IdsDropdownButton({
 
   const resolvedTrigger =
     trigger ??
-    (label != null || icon != null || iconOnly ? (
+    (label != null || icon != null ? (
       <DefaultButtonTrigger
         label={label}
         buttonStyle={buttonStyle}
         size={size}
         icon={icon}
-        iconOnly={iconOnly}
         disabled={disabled}
         ariaLabel={ariaLabel}
       />

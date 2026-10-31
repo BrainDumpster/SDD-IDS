@@ -47,7 +47,7 @@ function patchNgtoolsExclude(rules, excludePath) {
 
 /** @type {import("@storybook/angular").StorybookConfig} */
 const config = {
-  stories: [path.join(storybookPackageRoot, "src/**/*.stories.@(js|ts|mdx)")],
+  stories: ["../src/**/*.stories.@(js|ts|mdx)"],
   addons: ["@storybook/addon-docs", "@storybook/addon-a11y"],
   framework: {
     name: "@storybook/angular",
