@@ -39,7 +39,6 @@ export class IdsDropdownButtonTriggerComponent
 
   @Input() label = DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.label;
   @Input() showLeadingIcon = DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.showLeadingIcon;
-  @Input() iconOnly = DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly;
   @Input() ariaLabel = "";
 
   readonly leadingIconName = DROPDOWN_BUTTON_TRIGGER_ICON;
@@ -58,10 +57,6 @@ export class IdsDropdownButtonTriggerComponent
       return this.ariaLabel;
     }
     return this.label || DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.ariaLabel;
-  }
-
-  get showIcon(): boolean {
-    return this.iconOnly || this.showLeadingIcon;
   }
 
   focusTrigger(): void {

@@ -6,7 +6,6 @@ import { IdsDropdownButtonComponent } from "../../../compiled/lib/angular/ids/dr
 import { IDS_DROPDOWN_BUTTON_IMPORTS } from "../../../compiled/lib/angular/ids/dropdown-button/index.js";
 import {
   DROPDOWN_BUTTON_DOCS_DESCRIPTION,
-  DROPDOWN_BUTTON_ICON_ONLY_TEMPLATE,
   DROPDOWN_BUTTON_SOURCE_CODE,
   DROPDOWN_BUTTON_SPEC_TEMPLATE,
   DROPDOWN_BUTTON_STORY_SOURCE_CODE,
@@ -44,7 +43,6 @@ const meta = {
     disabled: { control: "boolean" },
     label: { control: "text" },
     showLeadingIcon: { control: "boolean" },
-    iconOnly: { control: "boolean" },
     ariaLabel: { control: "text" },
     openChange: { action: "openChange" },
     selectionChange: { action: "selectionChange" },
@@ -79,7 +77,6 @@ export const SpecAccurateDesign = {
     disabled: DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
     label: DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.label,
     showLeadingIcon: DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.showLeadingIcon,
-    iconOnly: DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly,
     ariaLabel: DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS.ariaLabel,
   },
 };
@@ -97,20 +94,6 @@ export const WithLeadingIcon = {
     disabled: false,
     label: "Settings",
     ariaLabel: "Settings menu",
-  },
-};
-
-/** @type {import("@storybook/angular").StoryObj<IdsDropdownButtonComponent>} */
-export const IconOnly = {
-  render: (args) => ({
-    props: args,
-    template: DROPDOWN_BUTTON_ICON_ONLY_TEMPLATE,
-  }),
-  args: {
-    buttonStyle: "secondary",
-    size: "medium",
-    disabled: false,
-    ariaLabel: "Dropdown actions",
   },
 };
 
@@ -200,7 +183,7 @@ export const OpenMenuExamples = {
   name: "Open menu examples",
   render: () => ({
     template: `
-      <div style="display:grid;grid-template-columns:repeat(3,minmax(220px,1fr));gap:48px;align-items:start;padding-bottom:280px;">
+      <div style="display:grid;grid-template-columns:repeat(2,minmax(220px,1fr));row-gap:170px;column-gap:48px;align-items:start;padding-bottom:280px;">
         <ids-dropdown-button buttonStyle="primary" size="large" [defaultOpen]="true">
           <ids-dropdown-button-trigger label="Button" />
           <ids-dropdown-button-menu>
@@ -240,23 +223,6 @@ export const OpenMenuExamples = {
           </ids-dropdown-button-menu>
         </ids-dropdown-button>
 
-        <ids-dropdown-button buttonStyle="secondary" size="medium" [defaultOpen]="true">
-          <ids-dropdown-button-trigger [iconOnly]="true" [showLeadingIcon]="true" ariaLabel="Secondary icon-only dropdown" />
-          <ids-dropdown-button-menu>
-            <ids-dropdown-button-menu-item value="option-1" label="Option with a longer label" />
-            <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
-            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
-          </ids-dropdown-button-menu>
-        </ids-dropdown-button>
-
-        <ids-dropdown-button buttonStyle="secondary" size="medium" [defaultOpen]="true">
-          <ids-dropdown-button-trigger [iconOnly]="true" [showLeadingIcon]="true" ariaLabel="Secondary icon-only dropdown with options" />
-          <ids-dropdown-button-menu>
-            <ids-dropdown-button-menu-item value="option-1" label="Option 1" />
-            <ids-dropdown-button-menu-item value="option-2" label="Option 2" />
-            <ids-dropdown-button-menu-item value="option-3" label="Option 3" />
-          </ids-dropdown-button-menu>
-        </ids-dropdown-button>
       </div>
     `,
   }),

@@ -2,15 +2,15 @@
 
 ## Metadata
 
-- **Version:** 1.1.0
-- **Description:** A button that triggers a dropdown menu when clicked. Supports multiple button styles (Primary, Secondary, Tertiary), sizes (Small, Medium, Large), and states (Default, Hover, Press, Focus, Disabled). Supports optional leading icon (settings-gear-detailed) and icon-only variant with both leading icon and dropdown caret. Used as a trigger for dropdown menus and action lists.
+- **Version:** 1.2.0
+- **Description:** A button that triggers a dropdown menu when clicked. Supports multiple button styles (Primary, Secondary, Tertiary), sizes (Small, Medium, Large), and states (Default, Hover, Press, Focus, Disabled). Supports optional leading icon (settings-gear-detailed) alongside the label and dropdown caret. Used as a trigger for dropdown menus and action lists.
 - **Status:** draft
 - **Created:** 2025-06-23
-- **Updated:** 2026-10-12
-- **Figma verification:** Figma MCP (get_design_context, get_metadata, get_variable_defs, get_screenshot)
-- **Verification date:** 2026-10-12
+- **Updated:** 2026-10-31
+- **Figma verification:** Figma MCP (get_metadata, get_variable_defs)
+- **Verification date:** 2026-10-31
 - **Figma file key:** 0bHk3XhrjFhowgFkz9yLr4
-- **Figma node IDs:** Main: 14737:165791, Examples: 41894:290670, Button instance: 9662:26341, Secondary press: 9662:26326, Tertiary hover/press/focus: 9662:26317 / 9662:26315 / 9662:26321, Icon-only (primary): 9662:26098, Icon-only (secondary): 9662:26087, Icon-only (tertiary): 9662:26076, With icon: 9662:26192, Dropdown menu: 14737:142851, Option hover (no radio): 29377:159478
+- **Figma node IDs:** Main: 14737:165791, Examples: 41894:290670, Button instance: 9662:26341, Secondary press: 9662:26326, Tertiary hover/press/focus: 9662:26317 / 9662:26315 / 9662:26321, With icon: 41894:290806, Dropdown menu: 14737:142851, Option hover (no radio): 29377:159478
 
 ## Anatomy
 
@@ -56,10 +56,10 @@ dropdown
 | Trigger Button | padding-x | `var(--padding-padding-16)` (16px) all sizes | 9662:26341 | Figma MCP get_variable_defs |
 | Trigger Button | padding-y | Small=`var(--padding-padding-2)` (2px), Medium=`var(--padding-padding-6)` (6px), Large=`var(--padding-padding-10)` (10px) | 9662:26308 / 9662:26341 / 9662:26374 | Figma MCP get_variable_defs |
 | Focus rings | dual drop-shadow | inner `var(--scale-2)` + `var(--color-border-gray-white)`; outer `var(--scale-4)` + `var(--color-border-brand-base)` | 9662:26343, 9662:26332, 9662:26321 | Figma MCP get_variable_defs (Focus Drop Shadow spreads) |
-| Leading Icon (optional) | size | 16px | 9662:26099 | Figma MCP get_design_context |
-| Leading Icon | gap to label/caret | `var(--spacing-space-8)` (8px) | 9662:26098 | Figma MCP get_design_context |
-| Dropdown Icon | size | 10px | 9662:26650 | Figma MCP get_design_context |
-| Dropdown Icon | gap from label | `var(--spacing-space-8)` (8px) | 9662:26341 | Figma MCP get_design_context |
+| Leading Icon (optional) | size | 16px | I41894:290806;14698:126600 | Figma MCP get_metadata |
+| Leading Icon | gap to label/caret | `var(--spacing-space-8)` (8px) | 41894:290806 | Figma MCP get_metadata (icon x16+w16 → label x40) |
+| Dropdown Icon | size | 10px | I41894:290806;14698:126602 | Figma MCP get_metadata |
+| Dropdown Icon | gap from label | `var(--spacing-space-8)` (8px) | 41894:290806 | Figma MCP get_metadata (label ends x82 → caret x90) |
 | Content Wrapper | display / align | flex / center | - | Runtime |
 | Dropdown Menu | border-radius | `var(--dropdown-menu-radius)` (IDS → 0; shared with combo-box detached popup) | 14737:142851 | Figma MCP get_design_context + shared `DropdownMenu.module.css` `.popupStandalone` |
 | Dropdown Menu | box-shadow | `var(--shadow-shadow-4)` | 14737:142851 | Figma MCP get_design_context |
@@ -71,7 +71,7 @@ dropdown
 - **Trigger Button width:** Auto (based on content), min-width varies by size
 - **Dropdown Menu width:** `min-width: 100%` of trigger (content-driven); Figma example ~269px is reference only.
 - **Dropdown Menu max-height:** Not specified in Figma (scrollable if needed).
-- **Gap between button and menu:** Menu opens below the trigger, left-aligned. Runtime uses portaled positioning (`sideOffset` content-driven); do not invent a fixed pixel gap beyond Figma composition examples (`41894:290670`).
+- **Gap between button and menu:** `1px` fixed gap below the trigger, left-aligned (implementation-verified; Figma examples show variable offsets, normalized to 1px). React `Menu.Positioner` `sideOffset=1`; Angular `.ids-dropdown-button-menu` `margin-top: 1px`.
 
 ## Tokens
 
@@ -153,7 +153,6 @@ dropdown
 
 - **Gap between leading icon and label:** 8px
 - **Gap between label and dropdown icon:** 8px
-- **Gap between leading icon and dropdown icon (icon-only):** 8px
 - **Gap between menu options:** 0px
 - **Menu padding:** `var(--padding-padding-1, 1px)` horizontal, 0px vertical
 
@@ -223,11 +222,13 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 ### Accessibility
 
 - **Keyboard navigation:**
-  - `Enter` or `Space`: Open/close dropdown menu
-  - `Escape`: Close dropdown menu
-  - `Arrow Down` / `Arrow Up`: Navigate menu options when menu is open
+  - `Enter` or `Space`: Open dropdown menu and focus first menu item
+  - `Escape`: Close menu (or current submenu level), focus returns to trigger/parent item
+  - `Arrow Down` / `Arrow Up`: Navigate menu options when menu is open (wraps around); on a closed trigger, `Arrow Down` opens + focuses first item, `Arrow Up` opens + focuses last item
+  - `Arrow Right` / `Enter` on a submenu item: Open submenu and focus its first item
+  - `Arrow Left` inside a submenu: Close submenu, return focus to its parent item
   - `Home` / `End`: Jump to first/last menu option
-  - `Tab`: Move focus to next focusable element (closes menu)
+  - `Tab`: Move focus to next focusable element (moves between menu items; closes menu when focus leaves)
   - `Shift+Tab`: Move focus to previous focusable element (closes menu)
 - **ARIA attributes:**
   - `aria-haspopup="true"`: Indicates button opens a menu
@@ -246,7 +247,6 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - **Menu positioning:** Menu appears below the trigger button, left-aligned
 - **Menu overflow:** If menu exceeds viewport height, it becomes scrollable
 - **Disabled state:** Button is non-interactive, no dropdown menu appears
-- **Icon-only variant:** When button has no text label, shows both the leading icon (gear) and dropdown icon (caret)
 - **Multiple dropdowns:** Only one dropdown menu can be open at a time per container
 - **Menu item selection:** Clicking a menu item closes the dropdown menu but does NOT change the dropdown button label. The button label is controlled by the `label` prop and remains unchanged on selection. The `onSelect` callback is triggered to notify of the selection.
 
@@ -267,7 +267,6 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 **Trigger content:**
 - `label-only` (default): label + dropdown caret
 - `with-leading-icon`: settings gear + label + dropdown caret
-- `icon-only`: settings gear + dropdown caret
 
 **State:**
 - `default` (default)
@@ -310,7 +309,6 @@ interface IdsDropdownButtonProps {
   buttonStyle?: 'primary' | 'secondary' | 'tertiary';
   size?: 'small' | 'medium' | 'large';
   icon?: React.ReactNode;
-  iconOnly?: boolean;
   ariaLabel?: string;
 }
 
@@ -333,7 +331,7 @@ interface IdsDropdownButtonItem {
 
 ```text
 ids-dropdown-button [buttonStyle?, size?, disabled?, open?, defaultOpen?]
-  ids-dropdown-trigger [label?, iconOnly?, showLeadingIcon?, ariaLabel?]
+  ids-dropdown-trigger [label?, showLeadingIcon?, ariaLabel?]
   ids-dropdown-button-menu
     ids-dropdown-button-menu-item [value, label, disabled?]
     ids-dropdown-button-menu-item …
@@ -344,7 +342,7 @@ Contract: `component-contracts/ids/dropdown-button.contract.ts`.
 
 **Spec Accurate Design story defaults:**
 - Root: `buttonStyle="primary"`, `size="medium"`, `disabled=false`
-- Trigger: `label="Dropdown Button"`, `showLeadingIcon=false`, `iconOnly=false`
+- Trigger: `label="Dropdown Button"`, `showLeadingIcon=false`
 - Menu items: `Option 1`, `Option 2`, `Option 3`
 
 ## Codegen Contract (Framework-Agnostic Blueprint)
@@ -378,7 +376,6 @@ IdsDropdownButton (`dropdown`)
 | buttonStyle | primary, secondary, tertiary | primary | `.dropdown-button--{style}` |
 | size | small, medium, large | medium | `.dropdown-button--{size}` |
 | showLeadingIcon | true, false | false | `.dropdown-button__trigger--with-icon` |
-| iconOnly | true, false | false | `.dropdown-button--icon-only` |
 | disabled | true, false | false | `.dropdown-button--disabled` |
 | open | true, false | false | `.dropdown-button--open` |
 
@@ -400,7 +397,7 @@ IdsDropdownButton (`dropdown`)
 **Leading Icon (optional):**
 - Size: 16px fixed
 - Color: `currentColor` (inherits from button text color)
-- Margin-right: 8px when label is present, 8px when label is absent (icon-only)
+- Margin-right: 8px
 - Icon name: `settings-gear-detailed`
 
 **Dropdown Icon:**
@@ -413,7 +410,7 @@ IdsDropdownButton (`dropdown`)
 - Border: `var(--border-width-border-default)` solid `var(--color-border-gray-neutral-base)` (full 4-sided; detached)
 - Border-radius: `var(--dropdown-menu-radius)` (shared with combo-box detached popup)
 - Box-shadow: shared combo-box menu shadow layers
-- Position: Absolute / portaled below trigger (root) or to the side (submenu)
+- Position: Absolute / portaled 1px below trigger (root) or to the side (submenu)
 - Z-index: Higher than trigger
 - **Style source:** `lib/react/ids/dropdown-shared/DropdownMenu.module.css` (`.popup` + `.popupStandalone` + `.item`)
 
@@ -435,9 +432,11 @@ IdsDropdownButton (`dropdown`)
 - Arrow Up on closed trigger opens the menu and focuses the last enabled item
 
 **Menu navigation:**
-- Arrow Down/Up moves focus between items
+- Arrow Down/Up moves focus between items (wraps at ends)
 - Home/End jumps to first/last item
-- Enter/Space on item selects it and closes menu
+- Enter/Space on item selects it and closes menu (items configured to stay open keep the menu open — e.g. multi-select rows)
+- Enter/Space/ArrowRight on a submenu item opens the submenu and focuses its first item
+- ArrowLeft inside a submenu closes it and returns focus to the parent item
 
 **Disabled state:**
 - Trigger button is non-interactive
@@ -456,7 +455,7 @@ IdsDropdownButton (`dropdown`)
 - Trigger button: `aria-haspopup="true"`, `aria-expanded={open}`, `aria-controls={menuId}`
 - Menu: `role="menu"`, `aria-labelledby={buttonId}`
 - Menu items: `role="menuitem"`, `aria-disabled={disabled}`
-- Icon-only trigger: accessible name via `aria-label`
+- Non-textual trigger (custom icon `trigger-slot`): accessible name via `aria-label`
 
 **Keyboard interaction:**
 - All interactions must work without mouse
@@ -489,8 +488,8 @@ IdsDropdownButton (`dropdown`)
 ### Fallback/error rules
 
 **Missing label:**
-- If `label` is empty and `iconOnly` is false, render the caret-only text slot as empty but preserve trigger sizing
-- If `iconOnly` is true, `ariaLabel` must provide the accessible name
+- If `label` is empty, render the caret-only text slot as empty but preserve trigger sizing
+- If the projected trigger content is non-textual (custom `trigger-slot`), `ariaLabel` must provide the accessible name
 
 **Empty items:**
 - If no projected `ids-dropdown-button-menu-item` children exist, menu opens as an empty popup container with no synthetic placeholder row
@@ -530,12 +529,12 @@ IdsDropdownButton (`dropdown`)
 - Node ID: `41894:290670`
 - Node name: Content (Dropdown Button examples)
 - Node type: FRAME
-- Documents: label-only / with-leading-icon / icon-only matrices + open-menu compositions (Primary Large ± icon, Secondary Small ± icon, Secondary icon-only Medium)
+- Documents: label-only / with-leading-icon matrices + open-menu compositions (Primary Large ± icon, Secondary Small ± icon). Residual icon-only open-menu examples still present in this frame (legacy content; icon-only is no longer a supported variant).
 - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41894-290670
 
 **Button Instance Node (Primary, Medium, Default):**
 - Node ID: `9662:26341`
-- Node name: Button Style=Primary, State=Default, Size=Medium, Icon only button=No, Low res=No, Show Icon=No
+- Node name: Button Style=Primary, State=Default, Size=Medium
 - Node type: SYMBOL
 - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26341
 
@@ -545,25 +544,22 @@ IdsDropdownButton (`dropdown`)
 - Primary focus / disabled: `9662:26343` / `9662:26335`
 - Small padding: `9662:26308` → `Padding/padding-2`
 
-**Icon-Only Variant Nodes:**
-- Primary icon-only: `9662:26098` - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26098
-- Secondary icon-only: `9662:26087` - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26087
-- Tertiary icon-only: `9662:26076` - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26076
-
-**With Icon Variant Node:**
-- With icon: `9662:26192` - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=9662-26192
+**With Icon Example Node:**
+- Node ID: `41894:290806`
+- Node name: Dropdown Button/Primary/Default/Large/Yes
+- Verified 2026-10-31 via Figma MCP `get_metadata` (gear 16×16 at x16, label "Button" at x40, caret 10×10 at x90)
 
 **Dropdown Icon Node:**
-- Node ID: `9662:26650`
+- Node ID: `I41894:290806;14698:126602`
 - Node name: arrow-drop-tri-caret
 - Node type: INSTANCE
-- Parent: 9662:26341
+- Parent: 41894:290806
 
 **Leading Icon Node:**
-- Node ID: `9662:26099`
+- Node ID: `I41894:290806;14698:126600`
 - Node name: settings-gear-detailed
 - Node type: INSTANCE
-- Parent: 9662:26098
+- Parent: 41894:290806
 
 **Dropdown Menu Node:**
 - Node ID: `14737:142851`
@@ -585,9 +581,9 @@ IdsDropdownButton (`dropdown`)
 
 **Verification Method:**
 - Method: Figma MCP
-- Tools: get_design_context, get_metadata, get_variable_defs, get_screenshot
-- Date: 2026-10-12
-- Session: Dropdown Button Figma delta sync (trigger states, geometry, examples frame)
+- Tools: get_metadata
+- Date: 2026-10-31
+- Session: Icon-only variant removal sync — main frame `14737:165791` now exposes only Button Style × State × Size; former icon-only (`9662:26098`, `9662:26087`, `9662:26076`) and with-icon (`9662:26192`) node IDs no longer resolve
 
 **Runtime contract path:**
 - `component-contracts/ids/dropdown-button.contract.ts`
@@ -606,6 +602,5 @@ IdsDropdownButton (`dropdown`)
 
 **Supplemental Node IDs (for reference):**
 - Button variants (all styles × sizes × states): Main frame `14737:165791` metadata
-- Icon-only variants: 9662:26098 (primary), 9662:26087 (secondary), 9662:26076 (tertiary)
-- With icon variant: 9662:26192
+- With icon example: 41894:290806 (Primary/Default/Large/Yes)
 - Examples open-menu instances under `41894:290670`

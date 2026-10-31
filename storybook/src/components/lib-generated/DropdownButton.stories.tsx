@@ -92,7 +92,6 @@ const meta: Meta<typeof IdsDropdownButton> = {
     label: "Dropdown Button",
     buttonStyle: "primary",
     size: "medium",
-    iconOnly: false,
     disabled: false,
     items: SPEC_ITEMS,
   },
@@ -102,7 +101,6 @@ const meta: Meta<typeof IdsDropdownButton> = {
       options: ["primary", "secondary", "tertiary"],
     },
     size: { control: "select", options: ["small", "medium", "large"] },
-    iconOnly: { control: "boolean" },
     disabled: { control: "boolean" },
     onOpenChange: { action: "onOpenChange" },
     onSelect: { action: "onSelect" },
@@ -123,71 +121,53 @@ export const SpecAccurateDesign: Story = {
   },
 };
 
-export const Secondary: Story = {
-  args: {
-    label: "Actions",
-    buttonStyle: "secondary",
-    items: SPEC_ITEMS,
-  },
+/** All button styles in one group (primary / secondary / tertiary). */
+export const Variants: Story = {
+  name: "Variants",
+  render: () => (
+    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+      <IdsDropdownButton label="Primary" buttonStyle="primary" items={SPEC_ITEMS} />
+      <IdsDropdownButton label="Secondary" buttonStyle="secondary" items={SPEC_ITEMS} />
+      <IdsDropdownButton label="Tertiary" buttonStyle="tertiary" items={SPEC_ITEMS} />
+    </div>
+  ),
 };
 
-export const TertiaryWithIcon: Story = {
-  args: {
-    label: "Settings",
-    buttonStyle: "tertiary",
-    icon: (
-      <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
-    ),
-    items: SPEC_ITEMS,
-  },
+/** All three sizes of the dropdown button. */
+export const Sizes: Story = {
+  name: "Sizes",
+  render: () => (
+    <div style={{ display: "flex", gap: 12, flexWrap: "wrap", alignItems: "center" }}>
+      <IdsDropdownButton label="Small" size="small" items={SPEC_ITEMS} />
+      <IdsDropdownButton label="Medium" size="medium" items={SPEC_ITEMS} />
+      <IdsDropdownButton label="Large" size="large" items={SPEC_ITEMS} />
+    </div>
+  ),
 };
 
-/** Figma examples: leading icon + label + caret (41894:290670). */
+/** All variants and sizes with a leading icon (settings-gear-detailed). */
 export const WithLeadingIcon: Story = {
   name: "With leading icon",
-  args: {
-    label: "Settings",
-    buttonStyle: "primary",
-    size: "large",
-    icon: (
-      <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
-    ),
-    items: SPEC_ITEMS,
-  },
-};
-
-/** Figma examples: gear + caret, no label (41894:290670). */
-export const IconOnly: Story = {
-  name: "Icon only",
-  args: {
-    label: "Actions",
-    buttonStyle: "secondary",
-    size: "medium",
-    iconOnly: true,
-    icon: (
-      <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
-    ),
-    ariaLabel: "Dropdown actions",
-    items: SPEC_ITEMS,
-  },
-};
-
-/** Style × size matrix (closed triggers). */
-export const StyleSizeMatrix: Story = {
-  name: "Style × size matrix",
   render: () => {
+    const gear = (
+      <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
+    );
     const styles = ["primary", "secondary", "tertiary"] as const;
-    const sizes = ["large", "medium", "small"] as const;
+    const sizes = ["small", "medium", "large"] as const;
     return (
-      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
-        {sizes.map((size) => (
-          <div key={size} style={{ display: "flex", gap: 16, alignItems: "center", flexWrap: "wrap" }}>
-            {styles.map((buttonStyle) => (
+      <div style={{ display: "grid", gap: 16 }}>
+        {styles.map((buttonStyle) => (
+          <div
+            key={buttonStyle}
+            style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
+          >
+            {sizes.map((size) => (
               <IdsDropdownButton
-                key={`${size}-${buttonStyle}`}
-                label="Button"
+                key={`${buttonStyle}-${size}`}
+                label="Settings"
                 buttonStyle={buttonStyle}
                 size={size}
+                icon={gear}
                 items={SPEC_ITEMS}
               />
             ))}
@@ -198,80 +178,86 @@ export const StyleSizeMatrix: Story = {
   },
 };
 
-/** Open-menu compositions from Figma examples frame 41894:290670. */
+/** Style × size matrix incl. disabled (closed triggers). */
+export const VariantSizeMatrix: Story = {
+  name: "Variant × Size Matrix",
+  render: () => {
+    const styles = ["primary", "secondary", "tertiary"] as const;
+    const sizes = ["small", "medium", "large"] as const;
+    return (
+      <div style={{ display: "grid", gap: 16 }}>
+        {styles.map((buttonStyle) => (
+          <div
+            key={buttonStyle}
+            style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}
+          >
+            {sizes.map((size) => (
+              <IdsDropdownButton
+                key={`${buttonStyle}-${size}`}
+                label={size}
+                buttonStyle={buttonStyle}
+                size={size}
+                items={SPEC_ITEMS}
+              />
+            ))}
+            <IdsDropdownButton
+              label="Disabled"
+              buttonStyle={buttonStyle}
+              disabled
+              items={SPEC_ITEMS}
+            />
+          </div>
+        ))}
+      </div>
+    );
+  },
+};
+
+/** Open-menu compositions: 3 sizes × 3 variants, label-only and with leading icon. */
 export const OpenMenuExamples: Story = {
   name: "Open menu examples",
   render: () => {
     const gear = (
       <IdsIcon shape="settings-gear-detailed" size={16} color="currentColor" />
     );
-    const longItems: IdsDropdownButtonItem[] = [
-      { id: "1", label: "Option with a longer label" },
-      { id: "2", label: "Option 2" },
-      { id: "3", label: "Option 3" },
-      { id: "4", label: "Option 4" },
-      { id: "5", label: "Option 5" },
-      { id: "6", label: "Option 6" },
-    ];
+    const styles = ["primary", "secondary", "tertiary"] as const;
+    const sizes = ["small", "medium", "large"] as const;
     return (
-      <div
-        style={{
-          display: "grid",
-          gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
-          gap: 48,
-          alignItems: "start",
-        }}
-      >
-        <IdsDropdownButton
-          label="Button"
-          buttonStyle="primary"
-          size="large"
-          defaultOpen
-          items={SPEC_ITEMS}
-        />
-        <IdsDropdownButton
-          label="Button"
-          buttonStyle="primary"
-          size="large"
-          icon={gear}
-          defaultOpen
-          items={longItems}
-        />
-        <IdsDropdownButton
-          label="Button"
-          buttonStyle="secondary"
-          size="small"
-          defaultOpen
-          items={longItems}
-        />
-        <IdsDropdownButton
-          label="Button"
-          buttonStyle="secondary"
-          size="small"
-          icon={gear}
-          defaultOpen
-          items={SPEC_ITEMS}
-        />
-        <IdsDropdownButton
-          label="Actions"
-          buttonStyle="secondary"
-          size="medium"
-          iconOnly
-          icon={gear}
-          ariaLabel="Secondary icon-only dropdown"
-          defaultOpen
-          items={longItems}
-        />
-        <IdsDropdownButton
-          label="Actions"
-          buttonStyle="secondary"
-          size="medium"
-          iconOnly
-          icon={gear}
-          ariaLabel="Secondary icon-only dropdown with options"
-          defaultOpen
-          items={SPEC_ITEMS}
-        />
+      <div style={{ display: "grid", gap: 170 }}>
+        {sizes.map((size) => (
+          <div
+            key={size}
+            style={{
+              display: "grid",
+              gridTemplateColumns: "repeat(3, minmax(220px, 1fr))",
+              rowGap: 170,
+              columnGap: 48,
+              alignItems: "start",
+            }}
+          >
+            {styles.map((buttonStyle) => (
+              <IdsDropdownButton
+                key={`${size}-${buttonStyle}`}
+                label="Button"
+                buttonStyle={buttonStyle}
+                size={size}
+                defaultOpen
+                items={SPEC_ITEMS}
+              />
+            ))}
+            {styles.map((buttonStyle) => (
+              <IdsDropdownButton
+                key={`${size}-${buttonStyle}-icon`}
+                label="Button"
+                buttonStyle={buttonStyle}
+                size={size}
+                icon={gear}
+                defaultOpen
+                items={SPEC_ITEMS}
+              />
+            ))}
+          </div>
+        ))}
       </div>
     );
   },
@@ -343,8 +329,8 @@ export const CompoundAnatomy: Story = {
 };
 
 /** trigger-slot can be a non-button host (icon / div). */
-export const IconTriggerSlot: Story = {
-  name: "Trigger slot (icon)",
+export const TriggerSlot: Story = {
+  name: "Trigger Slot",
   render: () => (
     <IdsDropdownButton>
       <IdsDropdownTrigger ariaLabel="Open menu">

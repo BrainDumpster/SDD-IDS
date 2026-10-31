@@ -32,7 +32,6 @@ Import from \`@ids/react/dropdown-button\`.
 | \`buttonStyle\` | \`IdsDropdownButtonStyle \\| string\` | — |
 | \`size\` | \`IdsDropdownButtonSize \\| string\` | — |
 | \`icon\` | \`ReactNode\` | — |
-| \`iconOnly\` | \`boolean\` | — |
 | \`ariaLabel\` | \`string\` | — |
 
 ### \`IdsDropdownTriggerProps\`
