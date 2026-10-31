@@ -27,15 +27,16 @@ Deterministic child structure (required order):
 3. repeated `StatusBarItem`
 4. `StatusBarItemIconSlot`
 5. `StatusBarItemValue`
-6. `StatusBarItemMeta` (`category` + `label`)
+6. `StatusBarItemMeta` (`category` + `label`) — category line is **large-only**; small and inventory render `label` only
 7. `StatusBarItemDivider` (separate element; not an item border)
-8. `StatusBarOverflowLayer` (optional — only when `total` exists; must sit above text/icons)
+8. `StatusBarOverflowLayer` (optional — shown when the content overflows, on any variant incl. inventory; must sit above text/icons)
 9. `StatusBarOverflowLeft` (optional)
 10. `StatusBarOverflowRight` (optional)
 
-Inventory-only nested anatomy (inside `StatusBarItemIconSlot`):
-- `InventoryMainIcon` (default icon `docs-bundle`)
-- optional `InventoryStatusBadge` (severity icon overlay)
+Inventory-only nested anatomy (inside `StatusBarItemIconSlot`; omitted entirely in the `showIcons={false}` "No Icon" variant, where items are value + label only):
+- `InventoryIconTile` — `40x40` circular tile: `var(--color-background-surface-component-light)` fill, `1px` `var(--color-border-gray-neutral-base)` border (idle) / `var(--color-border-brand-base-neutral)` (hover/press/selected)
+- `InventoryMainIcon` — `16x16` `docs-bundle` (default) centered in the tile, `var(--color-icon-gray-neutral-accessible)` (idle) → `var(--color-icon-brand-base)` (active)
+- optional `InventoryStatusBadge` (severity icon overlay, `16x16`, top-right, offset ~`-4px/-5px`); badge statuses limited to `critical | warning | in-progress`
 
 Composition nesting (deterministic):
 ```
@@ -54,7 +55,7 @@ StatusBar
       StatusBarItemValue
       StatusBarItemMeta
       StatusBarItemDivider        (right edge)
-    StatusBarOverflowLayer?       (total present + overflow)
+    StatusBarOverflowLayer?       (any variant, when content overflows)
       StatusBarOverflowLeft?
       StatusBarOverflowRight?
 ```
@@ -65,30 +66,37 @@ StatusBar
   - `Inventory Bar`: total bar height `78px`
 - Item paddings:
   - large status item: `16px 24px`
-  - small status item: `12.5px 24px` (right padding may appear as 32px in specific element snapshots; runtime contract keeps 24px base spacing)
+  - small status item: `12.5px 32px 12.5px 24px` (asymmetric per Figma: 24px leading, 32px trailing)
   - inventory item: `13px 24px`
 - Gaps:
   - icon-to-value gap: `8px`
   - status bar total-to-content gap: `24px` when total is present.
 - Icon sizes:
-  - large status icon: `32x32`
+  - large status icon: `24x24`
   - small status icon: `16x16`
   - overflow arrow icon: `16x16`
+- Content layout per variant:
+  - large: `icon | value | [category / label]` (meta is a two-line column)
+  - small: `icon | value | label` — all inline, no category
+  - inventory: `tile | [value / label]` — value stacked directly over label (one column beside the tile), no category
 - Typography sizing:
   - large numeric value uses `36px` with `44px` line-height (explicit fallback because `--font-size-heading-2` is not available in current token set)
   - numeric value text behavior: `white-space: nowrap`, `overflow: hidden`, `text-overflow: ellipsis`
-  - small numeric value uses `24px` with `32px` line-height
-  - label uses `18px/25px` in large variant and `16px/24px` in small variant
-  - category text uses `14px/20px`
+  - small **and inventory** numeric value use `24px` with `32px` line-height (header-5)
+  - label uses `18px/25px` in large variant, `16px/24px` in small variant, and `14px/20px` (body-2) in **inventory**
+  - category text uses `14px/20px` (large only)
+- Width: the bar hugs its content (`width: fit-content`, `max-width: 100%`) — it never leaves trailing whitespace; when the container is narrower than the content the strip scrolls and the overflow arrows appear.
 - Borders and separators:
   - container border: `1px` using `var(--color-border-gray-disabled)`
   - divider is a separate element (not a simple item border) to match design overlays.
   - divider geometry: `1px` width, `56px` height, dashed stroke using `var(--color-border-gray-disabled)`.
   - divider placement: vertically centered, rendered at slot edges as needed (including total item edges).
+  - on a hover/press/selected cell the dotted dividers touching it (its own and the previous item's trailing divider) are hidden, so the `1px` brand border reads as a clean rectangle.
 - Overflow layer:
   - overlay controls width: `64px` each side
   - must be above status items (`positioned layer over content`)
-  - layer frame follows content bounds using `inset: -1px` in implementation.
+  - layer sits inside the viewport border (`inset: 0`) so the arrows/fade never cover the container border.
+  - each arrow draws a `1px` `var(--color-border-gray-disabled)` divider on its content-facing edge, above the gradient fade.
   - gradient mask from `var(--color-gradient-overflow-horizontal-inverse-start)` to `var(--color-gradient-overflow-horizontal-inverse-end)`
   - left arrow icon: `chev-left-thick`
   - right arrow icon: `chev-right-thick`
@@ -132,19 +140,21 @@ MCP variable evidence confirms:
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | item | default | `var(--color-background-surface-component)` | right divider `var(--color-border-gray-disabled)` | value `var(--color-text-gray-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter-slate)` | same divider | text preserved |
-| item | press | `var(--color-background-brand-light-slate)` | same divider | text preserved |
-| item | selected | `var(--color-background-brand-light-slate)` | same divider | text preserved |
-| item | disabled | `var(--color-background-surface-component-light)` | same divider | `var(--color-text-gray-disabled)`, icons use accessible/disabled tone |
+| item | hover | `var(--color-background-brand-lighter-slate)` | `1px` `var(--color-border-brand-base-neutral)` cell border | label `var(--color-text-brand-base)` |
+| item | press | `var(--color-background-brand-light-slate)` | `1px` `var(--color-border-brand-base-neutral)` cell border | label `var(--color-text-brand-base)` |
+| item | selected | `var(--color-background-brand-lighter-slate)` | `1px` `var(--color-border-brand-base-neutral)` cell border | label `var(--color-text-gray-neutral-strong)`; top-right corner ribbon (`var(--color-background-brand-base)` triangle + `shape-check-thick` in `var(--color-icon-gray-white)`) |
+| inventory tile | hover / press / selected | `var(--color-background-surface-component-light)` | `1px` `var(--color-border-brand-base-neutral)` | `docs-bundle` `var(--color-icon-brand-base)` |
+| item | disabled | `var(--color-background-surface-component-light)` | dividers only | `var(--color-text-gray-disabled)`, icons use accessible/disabled tone |
 | overflow button | default | `var(--color-background-surface-component)` | side border `var(--color-border-gray-disabled)` | `var(--color-icon-brand-base)` |
 ## States (Dark Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
 | item | default | `var(--color-background-surface-component)` | right divider `var(--color-border-gray-disabled)` | value `var(--color-text-gray-neutral)`, label `var(--color-text-brand-base)` |
-| item | hover | `var(--color-background-brand-lighter-slate)` | same divider | semantic token resolution |
-| item | press | `var(--color-background-brand-light-slate)` | same divider | semantic token resolution |
-| item | selected | `var(--color-background-brand-light-slate)` | same divider | semantic token resolution |
-| item | disabled | `var(--color-background-surface-component-light)` | same divider | `var(--color-text-gray-disabled)` and accessible icons |
+| item | hover | `var(--color-background-brand-lighter-slate)` | `1px` `var(--color-border-brand-base-neutral)` cell border | semantic token resolution |
+| item | press | `var(--color-background-brand-light-slate)` | `1px` `var(--color-border-brand-base-neutral)` cell border | semantic token resolution |
+| item | selected | `var(--color-background-brand-lighter-slate)` | `1px` `var(--color-border-brand-base-neutral)` cell border | label `var(--color-text-gray-neutral-strong)`; corner ribbon (`var(--color-background-brand-base)` + `var(--color-icon-gray-white)` check) |
+| inventory tile | hover / press / selected | `var(--color-background-surface-component-light)` | `1px` `var(--color-border-brand-base-neutral)` | `docs-bundle` `var(--color-icon-brand-base)` |
+| item | disabled | `var(--color-background-surface-component-light)` | dividers only | `var(--color-text-gray-disabled)` and accessible icons |
 | overflow button | default | `var(--color-background-surface-component)` | side border `var(--color-border-gray-disabled)` | `var(--color-icon-brand-base)` |
 ## Interactions
 - Item interactions support `default | hover | press | selected | disabled`.
@@ -166,9 +176,11 @@ MCP variable evidence confirms:
   - `severity?: "critical" | "warning" | "success" | "in-progress" | "scheduled" | "canceling" | "canceled" | "skipped" | "unknown"`
   - `state?: "default" | "hover" | "press" | "selected" | "disabled"`
   - `iconShapeName?: string` (inventory mode user-defined; default `docs-bundle`)
-- `total?: number | string` (enables total cell and responsive overflow behavior)
+- `total?: number | string` (enables the total cell; optional for every variant)
 - `totalLabel?: string` (default `"Total"`)
 - `totalCategory?: string` (optional, e.g. `"Alerts"`)
+- `showIcons?: boolean` (default `true`; inventory-only — `false` renders the "No Icon" variant with no tile, just value + label)
+- `overflowState?: "auto" | "beginning" | "middle" | "end"` (overflow arrows appear on any variant — including inventory — whenever content overflows; `auto` derives from scroll position)
 ## Codegen Contract (Framework-Agnostic Blueprint)
 ### Deterministic structure
 Render order is locked to **Anatomy**. Framework roots map `StatusBar` (not `StatusBarRoot`) — React `IdsStatusBar`, same child slot names with the programme prefix.

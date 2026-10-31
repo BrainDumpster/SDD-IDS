@@ -7,7 +7,10 @@
 .ids-status-bar {
   display: flex;
   align-items: stretch;
-  width: 100%;
+  /* Hug the content (Figma) but never exceed the container; when the container
+     is narrower than the content the strip scrolls and the arrows appear. */
+  width: fit-content;
+  max-width: 100%;
   box-sizing: border-box;
   gap: 0;
 }
@@ -79,9 +82,57 @@
   padding: 13px var(--padding-padding-24);
 }
 
+/* Inventory item lays out as: tile | [value stacked over label]. Grid keeps
+   value and label in one column beside the tile without a wrapper element, so
+   the prop-driven and composed trees render identically. Dividers/ribbon are
+   absolute, so they stay out of the grid flow. */
+.ids-status-bar--inventory .ids-status-bar-item {
+  display: grid;
+  grid-template-columns: auto auto;
+  grid-template-rows: auto auto;
+  align-items: center;
+  align-content: center;
+  justify-content: start;
+  column-gap: var(--spacing-space-8);
+  row-gap: 0;
+}
+
+.ids-status-bar--inventory .ids-status-bar-item-icon-slot {
+  grid-row: 1 / 3;
+  grid-column: 1;
+}
+
+.ids-status-bar--inventory .ids-status-bar-item-value {
+  grid-column: 2;
+  grid-row: 1;
+}
+
+.ids-status-bar--inventory .ids-status-bar-item-meta {
+  grid-column: 2;
+  grid-row: 2;
+}
+
+/* Small and inventory items carry no category line (Figma): only value + label. */
+.ids-status-bar--status-small .ids-status-bar-item-category,
+.ids-status-bar--inventory .ids-status-bar-item-category {
+  display: none;
+}
+
+/* Inventory "No Icon" variant: drop the tile column, value + label stack alone. */
+.ids-status-bar--inventory.ids-status-bar--no-icons .ids-status-bar-item {
+  grid-template-columns: auto;
+  column-gap: 0;
+}
+
+.ids-status-bar--inventory.ids-status-bar--no-icons .ids-status-bar-item-value,
+.ids-status-bar--inventory.ids-status-bar--no-icons .ids-status-bar-item-meta {
+  grid-column: 1;
+}
+
 .ids-status-bar--status-small .ids-status-bar-item,
 .ids-status-bar--status-small .ids-status-bar-total-item {
-  padding: 12.5px var(--padding-padding-24);
+  /* Asymmetric per Figma: 24px leading, 32px trailing. */
+  padding: 12.5px var(--padding-padding-32) 12.5px var(--padding-padding-24);
 }
 
 .ids-status-bar-item-divider {
@@ -105,8 +156,9 @@
 
 .ids-status-bar-item-icon-slot {
   position: relative;
-  width: var(--scale-32);
-  height: var(--scale-32);
+  /* Large status icon is 24px (small = 16px, inventory tile = 40px below). */
+  width: var(--scale-24);
+  height: var(--scale-24);
   flex-shrink: 0;
   display: inline-flex;
   align-items: center;
@@ -118,18 +170,45 @@
   height: var(--scale-16);
 }
 
+/* Inventory icon tile: 40x40 circular tile holding a 16px glyph, with a
+   status badge overlaid top-right. Idle = accessible gray; active
+   (hover/press/selected) = brand. */
+.ids-status-bar--inventory .ids-status-bar-item-icon-slot {
+  width: var(--scale-40);
+  height: var(--scale-40);
+  border-radius: 50%;
+  background: var(--color-background-surface-component-light);
+  box-shadow: inset 0 0 0 var(--border-width-border-1)
+    var(--color-border-gray-neutral-base);
+}
+
+.ids-status-bar--inventory .ids-status-bar-item:hover:not([data-state="disabled"]):not([aria-disabled="true"]) .ids-status-bar-item-icon-slot,
+.ids-status-bar--inventory .ids-status-bar-item:active:not([data-state="disabled"]):not([aria-disabled="true"]) .ids-status-bar-item-icon-slot,
+.ids-status-bar--inventory .ids-status-bar-item[data-state="hover"] .ids-status-bar-item-icon-slot,
+.ids-status-bar--inventory .ids-status-bar-item[data-state="press"] .ids-status-bar-item-icon-slot,
+.ids-status-bar--inventory .ids-status-bar-item[data-state="selected"] .ids-status-bar-item-icon-slot {
+  box-shadow: inset 0 0 0 var(--border-width-border-1)
+    var(--color-border-brand-base-neutral);
+}
+
 .ids-status-bar-inventory-main-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 100%;
-  height: 100%;
+  color: var(--color-icon-gray-neutral-accessible);
+}
+
+.ids-status-bar--inventory .ids-status-bar-item:hover:not([data-state="disabled"]):not([aria-disabled="true"]) .ids-status-bar-inventory-main-icon,
+.ids-status-bar--inventory .ids-status-bar-item:active:not([data-state="disabled"]):not([aria-disabled="true"]) .ids-status-bar-inventory-main-icon,
+.ids-status-bar--inventory .ids-status-bar-item[data-state="hover"] .ids-status-bar-inventory-main-icon,
+.ids-status-bar--inventory .ids-status-bar-item[data-state="press"] .ids-status-bar-inventory-main-icon,
+.ids-status-bar--inventory .ids-status-bar-item[data-state="selected"] .ids-status-bar-inventory-main-icon {
   color: var(--color-icon-brand-base);
 }
 
 .ids-status-bar-inventory-status-badge {
   position: absolute;
-  right: -4px;
+  right: -5px;
   top: -5px;
   width: var(--scale-16);
   height: var(--scale-16);
@@ -146,13 +225,14 @@
   text-overflow: ellipsis;
 }
 
-.ids-status-bar--status-large .ids-status-bar-item-value,
-.ids-status-bar--inventory .ids-status-bar-item-value {
+.ids-status-bar--status-large .ids-status-bar-item-value {
   font-size: var(--scale-36);
   line-height: var(--font-line-height-line-height-44);
 }
 
-.ids-status-bar--status-small .ids-status-bar-item-value {
+/* Inventory value matches the small size (header-5, 24px), not the large one. */
+.ids-status-bar--status-small .ids-status-bar-item-value,
+.ids-status-bar--inventory .ids-status-bar-item-value {
   font-size: var(--scale-24);
   line-height: var(--font-line-height-line-height-32);
 }
@@ -174,10 +254,15 @@
   white-space: nowrap;
 }
 
-.ids-status-bar--status-large .ids-status-bar-item-label,
-.ids-status-bar--inventory .ids-status-bar-item-label {
+.ids-status-bar--status-large .ids-status-bar-item-label {
   font-size: var(--scale-18);
   line-height: var(--font-line-height-line-height-25);
+}
+
+/* Inventory label is body-2 (14px), not the large header-6 (18px). */
+.ids-status-bar--inventory .ids-status-bar-item-label {
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
 }
 
 .ids-status-bar--status-small .ids-status-bar-item-label {
@@ -191,9 +276,44 @@
 }
 
 .ids-status-bar-item:active:not([data-state="disabled"]):not([aria-disabled="true"]),
+.ids-status-bar-item[data-state="press"] {
+  background: var(--color-background-brand-light-slate);
+}
+
+/* Selected uses the lighter slate (same as hover), per Figma — not the press tone. */
+.ids-status-bar-item[data-state="selected"] {
+  background: var(--color-background-brand-lighter-slate);
+}
+
+/* Active cells (hover/press/selected) get a brand border on their left and right
+   edges only. The top/bottom are left to the bar's own gray border, which stays
+   continuous — the active cell's top/bottom border is hidden under it. z-index
+   lifts the side borders above the neighbouring cells so they read at the cell
+   boundary. Inventory items also get the brand ring on their icon tile. */
+.ids-status-bar-item:hover:not([data-state="disabled"]):not([aria-disabled="true"]),
+.ids-status-bar-item:active:not([data-state="disabled"]):not([aria-disabled="true"]),
+.ids-status-bar-item[data-state="hover"],
 .ids-status-bar-item[data-state="press"],
 .ids-status-bar-item[data-state="selected"] {
-  background: var(--color-background-brand-light-slate);
+  box-shadow:
+    calc(-1 * var(--border-width-border-1)) 0 0 0 var(--color-border-brand-base-neutral),
+    var(--border-width-border-1) 0 0 0 var(--color-border-brand-base-neutral);
+  z-index: 1;
+}
+
+/* Hide the dotted dividers touching an active cell (its own, and the previous
+   item's right divider) so the brand border reads as a clean rectangle, the way
+   Figma replaces the dividers with the border. */
+.ids-status-bar-item:hover:not([data-state="disabled"]):not([aria-disabled="true"]) .ids-status-bar-item-divider,
+.ids-status-bar-item:active:not([data-state="disabled"]):not([aria-disabled="true"]) .ids-status-bar-item-divider,
+.ids-status-bar-item[data-state="hover"] .ids-status-bar-item-divider,
+.ids-status-bar-item[data-state="press"] .ids-status-bar-item-divider,
+.ids-status-bar-item[data-state="selected"] .ids-status-bar-item-divider,
+.ids-status-bar-item:has(+ .ids-status-bar-item:hover:not([data-state="disabled"]):not([aria-disabled="true"])) .ids-status-bar-item-divider--right,
+.ids-status-bar-item:has(+ .ids-status-bar-item[data-state="hover"]) .ids-status-bar-item-divider--right,
+.ids-status-bar-item:has(+ .ids-status-bar-item[data-state="press"]) .ids-status-bar-item-divider--right,
+.ids-status-bar-item:has(+ .ids-status-bar-item[data-state="selected"]) .ids-status-bar-item-divider--right {
+  display: none;
 }
 
 .ids-status-bar-item--disabled,
@@ -217,9 +337,48 @@
   color: var(--color-icon-gray-neutral-accessible);
 }
 
+/* Selected item: label turns neutral-strong and a brand corner ribbon with a
+   white check sits in the top-right. */
+.ids-status-bar-item[data-state="selected"] .ids-status-bar-item-label {
+  color: var(--color-text-gray-neutral-strong);
+}
+
+.ids-status-bar-item-ribbon {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: var(--scale-40);
+  height: var(--scale-40);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* Brand triangle filling the top-right corner (hypotenuse from top-left to
+   bottom-right of the ribbon box). */
+.ids-status-bar-item-ribbon::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom left,
+    var(--color-background-brand-base) 0 50%,
+    transparent 50% 100%
+  );
+}
+
+.ids-status-bar-item-ribbon-check {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  display: inline-flex;
+  color: var(--color-icon-gray-white);
+  z-index: 1;
+}
+
 .ids-status-bar-overflow-layer {
   position: absolute;
-  inset: var(--scale--1);
+  /* Sit inside the viewport border so the arrows/fade never cover it. */
+  inset: 0;
   z-index: 3;
   pointer-events: none;
 }
@@ -239,7 +398,10 @@
   justify-content: center;
 }
 
-.ids-status-bar-overflow-button::after {
+/* Content fade spilling out from under the button. It is a ::before so the 1px
+   divider (::after) always paints on top of it, otherwise the fade's opaque end
+   hides the divider on the inner edge. */
+.ids-status-bar-overflow-button::before {
   content: "";
   position: absolute;
   top: 0;
@@ -248,12 +410,22 @@
   pointer-events: none;
 }
 
-.ids-status-bar-overflow-button--left {
-  left: 0;
-  border-right: var(--border-width-border-1) solid var(--color-border-gray-disabled);
+/* Inner divider line (Figma: 1px gray on the content-facing edge of each arrow). */
+.ids-status-bar-overflow-button::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: var(--border-width-border-1);
+  background: var(--color-border-gray-disabled);
+  pointer-events: none;
 }
 
-.ids-status-bar-overflow-button--left::after {
+.ids-status-bar-overflow-button--left {
+  left: 0;
+}
+
+.ids-status-bar-overflow-button--left::before {
   right: -48px;
   background: linear-gradient(
     to right,
@@ -262,18 +434,25 @@
   );
 }
 
-.ids-status-bar-overflow-button--right {
+.ids-status-bar-overflow-button--left::after {
   right: 0;
-  border-left: var(--border-width-border-1) solid var(--color-border-gray-disabled);
 }
 
-.ids-status-bar-overflow-button--right::after {
+.ids-status-bar-overflow-button--right {
+  right: 0;
+}
+
+.ids-status-bar-overflow-button--right::before {
   left: -48px;
   background: linear-gradient(
     to left,
     var(--color-gradient-overflow-horizontal-inverse-start) 35%,
     var(--color-gradient-overflow-horizontal-inverse-end) 100%
   );
+}
+
+.ids-status-bar-overflow-button--right::after {
+  left: 0;
 }
 
 .ids-status-bar-overflow-icon {
