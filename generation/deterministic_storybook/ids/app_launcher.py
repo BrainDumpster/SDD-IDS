@@ -21,12 +21,10 @@ def generate_ids_app_launcher_story(
     options = options or DeterministicStorybookOptions()
     component_name = prefixed_component_export_name("app-launcher", options.component_prefix)
     import_path = "../../../../storybook/src/components/AppLauncher"
-    icon_import_path = "../../../../storybook/src/components/Icon"
 
     theme_import = storybook_theme_import_line(options.design_system_slug)
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import {{ AppLauncher as {component_name} }} from "{import_path}";
-import {{ Icon }} from "{icon_import_path}";
 {theme_import}
 
 const products = [
@@ -92,22 +90,6 @@ export const NoIconTiles: Story = {{
         {{ id: "n2", name: "Very Long Product Name That Wraps To Three Lines", icon: null, href: "#" }},
         {{ id: "n3", name: "Product Name 3", icon: null, href: "#" }},
         {{ id: "n4", name: "Product Name 4", icon: null, href: "#" }},
-      ]}}
-      panelOnly
-    />
-  ),
-}};
-
-const optionLogo = <Icon shapeName="shield-encrypt-alt" variant="inline" />;
-
-export const OptionRowWithLogo: Story = {{
-  render: () => (
-    <{component_name}
-      products={{products}}
-      options={{[
-        {{ id: "l1", label: "Option with logo", icon: optionLogo }},
-        {{ id: "l2", label: "Another option with logo", icon: optionLogo }},
-        {{ id: "l3", label: "Option without logo" }},
       ]}}
       panelOnly
     />

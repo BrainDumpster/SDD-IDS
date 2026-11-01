@@ -55,7 +55,6 @@ Standalone tile for state matrix: \`ids-app-launcher-product-tile\`.
 |-------|-------|
 | \`label\` | required |
 | \`id?\` | stable key |
-| \`shape?\` / \`iconSlug?\` | optional leading 16px logo |
 
 \`\`\`ts
 .products=\${[
@@ -63,7 +62,7 @@ Standalone tile for state matrix: \`ids-app-launcher-product-tile\`.
   { id: "p2", name: "Apps", shape: "app-window" },
 ]}
 .options=\${[
-  { id: "o1", label: "Directory", shape: "active-directory-ldap" },
+  { id: "o1", label: "Directory" },
 ]}
 \`\`\`
 
@@ -100,7 +99,7 @@ export const APP_LAUNCHER_SOURCE_CODE = `<ids-app-launcher
     { id: "p4", name: "Cloud", shape: "appic-dp-cloud-blue" },
   ]}
   .options=\${[
-    { id: "o1", label: "Directory", shape: "active-directory-ldap" },
+    { id: "o1", label: "Directory" },
     { id: "o2", label: "Option" },
   ]}
 ></ids-app-launcher>`;
