@@ -136,7 +136,6 @@ Token: `var(--color-border-gray-neutral-base)`.
 | Block width | fills the `296px` surface content; `1px` left/right padding → option rows are **`294px`**, inset `1px` from the surface border on each side (symmetric — avoids the sub-pixel snapping a `295px` centered block would cause) |
 | Options list block padding | **`16px`** bottom (`var(--padding-padding-16)`); `1px` left/right |
 | Option row padding | `10px 24px 10px 16px` (top/bottom `10`, left `16`, right `24`) |
-| Option logo (optional) | leading logo inside the row, vertically centered with the label; **`16px`** fixed width, height auto (aspect ratio); **`8px`** gap to label (`var(--spacing-space-8)`) |
 | Option text overflow | single-line — truncates on the **first line** with an ellipsis (`text-overflow: ellipsis`; `white-space: nowrap`) |
 | Truncated-label tooltip | switchable via `useIdsOptionTooltip` (default `false`): `false` reveals the full text with the **native browser tooltip** (`title`); `true` uses the branded **`IdsTooltip`** (anchored to the label). Applies to any truncated option row, including products that overflowed the tile cap. |
 | Row contract | mirrors `Dropdown-SingleSelect-Elements-Options` (`337:180199`) — **re-implemented locally in App Launcher, not reusing `DropdownMenu`** |

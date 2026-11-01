@@ -89,7 +89,6 @@ const s = {
   optionsSeparator: styles["ids-app-launcher-options-region--separator"],
   optionsList: styles["ids-app-launcher-options-list"],
   optionRow: styles["ids-app-launcher-option-row"],
-  optionIcon: styles["ids-app-launcher-option-icon"],
   optionLabel: styles["ids-app-launcher-option-label"],
   optionLabelTrigger: styles["ids-app-launcher-option-label-trigger"],
   optionsFooter: styles["ids-app-launcher-options-footer"],
@@ -126,8 +125,6 @@ export interface IdsAppLauncherProduct {
 export interface IdsAppLauncherOption {
   id?: string;
   label: string;
-  /** Optional leading logo — `16px` wide, height auto, vertically centered with the label. */
-  icon?: ReactNode;
   onSelect?: () => void;
 }
 
@@ -1028,8 +1025,6 @@ export interface IdsAppLauncherOptionRowProps
   option?: IdsAppLauncherOption;
   label?: string;
   optionId?: string;
-  /** Optional leading logo — `16px` wide, height auto, vertically centered with the label. */
-  icon?: ReactNode;
   dataState?: IdsAppLauncherOptionDataState;
 }
 
@@ -1038,7 +1033,6 @@ export function IdsAppLauncherOptionRow({
   option,
   label,
   optionId,
-  icon,
   dataState,
   className,
   onClick,
@@ -1052,7 +1046,6 @@ export function IdsAppLauncherOptionRow({
 }: IdsAppLauncherOptionRowProps) {
   const root = useAppLauncher("IdsAppLauncherOptionRow", true);
   const resolvedLabel = label ?? option?.label ?? "";
-  const resolvedIcon = icon ?? option?.icon ?? null;
   // When the label is cut off by the ellipsis, expose the full text via a tooltip.
   // Default is the native browser tooltip (`title`); `useIdsOptionTooltip` on the
   // launcher switches to the styled IDS tooltip. Measured after layout.
@@ -1116,11 +1109,6 @@ export function IdsAppLauncherOptionRow({
     >
       {children ?? (
         <>
-          {resolvedIcon ? (
-            <span className={s.optionIcon} aria-hidden="true">
-              {resolvedIcon}
-            </span>
-          ) : null}
           {labelTruncated && useIdsTooltip ? (
             <IdsTooltip side="right" arrowAlign="start" hugContent>
               <TooltipTrigger display="block" className={s.optionLabelTrigger}>

@@ -15,8 +15,6 @@ export interface AppLauncherProduct {
 export interface AppLauncherOption {
   id?: string;
   label: string;
-  /** Optional leading logo — `16px` wide, height auto, vertically centered with the label. */
-  icon?: ReactNode;
   onSelect?: () => void;
 }
 
@@ -185,11 +183,6 @@ export function AppLauncherOptionsList({
                 className={styles.optionItem}
                 onClick={opt.onSelect}
               >
-                {opt.icon ? (
-                  <span className={styles.optionIcon} aria-hidden="true">
-                    {opt.icon}
-                  </span>
-                ) : null}
                 <OptionRowLabel label={opt.label} />
               </button>
             </li>
