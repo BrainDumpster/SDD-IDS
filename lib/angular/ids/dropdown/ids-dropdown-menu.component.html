@@ -82,26 +82,29 @@
             </span>
             <span>{{ selectAllLabel }}</span>
           </button>
-          <button
-            type="button"
+          <ids-button
+            variant="tertiary"
+            size="sm"
             class="clearAllButton"
             [disabled]="effectiveClearAllDisabled"
-            (click)="onClearAll($event)"
+            (clicked)="onClearAll($event)"
           >
             {{ resolvedClearAllLabel }}
-          </button>
+          </ids-button>
         </div>
       }
 
       @if (showSingleClearAllRow) {
-        <button
-          type="button"
-          class="clearAllAction"
-          [attr.data-align]="resolvedClearAllAlign"
-          (click)="onSingleClearAll($event)"
-        >
-          <span class="footerActionButton">{{ resolvedClearAllLabel }}</span>
-        </button>
+        <div class="clearAllActionRow" [attr.data-align]="resolvedClearAllAlign">
+          <ids-button
+            variant="tertiary"
+            size="sm"
+            class="clearAllAction"
+            (clicked)="onSingleClearAll($event)"
+          >
+            {{ resolvedClearAllLabel }}
+          </ids-button>
+        </div>
       }
 
       @if (showSelectedPanelVisible) {
@@ -205,9 +208,16 @@
       </div>
 
       @if (footerActionLabel) {
-        <button type="button" class="footerAction" (click)="onFooterAction()">
-          <span class="footerActionButton">{{ footerActionLabel }}</span>
-        </button>
+        <div class="footerActionRow">
+          <ids-button
+            variant="tertiary"
+            size="sm"
+            class="footerAction"
+            (clicked)="onFooterAction()"
+          >
+            {{ footerActionLabel }}
+          </ids-button>
+        </div>
       }
     </div>
   </div>

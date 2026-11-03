@@ -9,32 +9,32 @@
 >
   <div class="main">
     @if (showBadge && showSelectedTooltip) {
-      <!-- Badge + value text share one tooltip trigger. Hovering either opens
-           the tooltip anchored above the badge (side=top + arrowAlign=start),
-           listing the selected items as bullets. -->
-      <ids-tooltip side="top" arrowAlign="start" [hugContent]="true">
-        <ids-tooltip-trigger>
-          <span class="triggerContent">
+      <!-- The tooltip trigger wraps the badge only, so the IDS Tooltip's arrow
+           (which centres on its trigger) points up from the badge — not the
+           value text. The value text is a sibling in the same field row. -->
+      <span class="triggerContent">
+        <ids-tooltip side="top" arrowAlign="start" [hugContent]="true">
+          <ids-tooltip-trigger>
             <span class="badgeTrigger">
               <ids-badge [value]="selectedCount" [type]="badgeType" />
             </span>
-            <ng-content />
-          </span>
-        </ids-tooltip-trigger>
-        <ids-tooltip-panel>
-          <ids-tooltip-header>
-            <ids-tooltip-title>{{ selectedCount }} Items</ids-tooltip-title>
-          </ids-tooltip-header>
-          <ids-tooltip-body>
-            <ul class="selectedList">
-              @for (label of selectedLabels; track $index) {
-                <li>{{ label }}</li>
-              }
-            </ul>
-          </ids-tooltip-body>
-          <ids-tooltip-arrow />
-        </ids-tooltip-panel>
-      </ids-tooltip>
+          </ids-tooltip-trigger>
+          <ids-tooltip-panel>
+            <ids-tooltip-header>
+              <ids-tooltip-title>{{ selectedCount }} Items</ids-tooltip-title>
+            </ids-tooltip-header>
+            <ids-tooltip-body>
+              <ul class="selectedList">
+                @for (label of selectedLabels; track $index) {
+                  <li>{{ label }}</li>
+                }
+              </ul>
+            </ids-tooltip-body>
+            <ids-tooltip-arrow />
+          </ids-tooltip-panel>
+        </ids-tooltip>
+        <ng-content />
+      </span>
     } @else {
       <span class="triggerContent">
         @if (showBadge) {

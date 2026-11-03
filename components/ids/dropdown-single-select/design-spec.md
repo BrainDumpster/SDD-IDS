@@ -54,7 +54,7 @@
   - `var(--color-border-gray-neutral-base)` top border on section boundaries
   - first section header top border may be omitted.
 - Footer action button inner wrapper: `padding: var(--padding-padding-2) var(--padding-padding-16)`, `border-radius: var(--corner-radius-radius-2)`
-- Field focus: the field **border turns brand** (`var(--color-border-brand-base)`) with **no outer ring**, matching the IDS Text Box (see 2026-10-23 note). The field shell stays square (`radius-none`). (Option rows inside the menu keep their own inset focus ring.)
+- Field focus: an IDS focus ring (`::after`, `inset: -4px` → 2px visible offset, `1px` `var(--color-border-brand-base)`, `radius-4`) around the trigger shell — keyboard focus only, **not** the Text Box brand-border look (reverted 2026-11-04). The field shell stays square (`radius-none`). (Option rows inside the menu keep their own inset focus ring; the in-menu search field keeps the Text Box border-brand focus.)
 
 ### Slot geometry (Figma-verified)
 
@@ -116,7 +116,7 @@
 | Field container | default | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | hover | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-strong)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | show-dropdown | `var(--color-background-surface-component)` | `var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
-| Field container | focus-visible | `var(--color-background-surface-component)` | `var(--color-border-brand-base)` (border turns brand, no outer ring — matches Text Box) | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
+| Field container | focus-visible | `var(--color-background-surface-component)` | `::after` focus ring (`inset: -4px`, `1px` `var(--color-border-brand-base)`, `radius-4`), keyboard focus only | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
 | Field container | disabled | `var(--color-background-gray-lighter)` | `var(--color-border-gray-disabled)` | text `var(--color-text-gray-disabled)`, caret `var(--color-border-gray-disabled)` |
 | Field container | error | `var(--color-background-surface-component)` | `var(--color-border-alerting-critical-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)`, error icon `var(--color-icon-alerting-critical-base)`, error text `var(--color-text-alerting-critical-base)` |
 | Option row | default | `var(--color-background-surface-component)` | none | `var(--color-text-gray-neutral)` |
@@ -124,9 +124,9 @@
 | Option row | press/active | `var(--color-background-brand-light-slate)` | `outline: 1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 | Option row | selected (no radio) | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base-neutral)` | `var(--color-text-brand-strong)` |
 | Option row | selected (with radio) | `var(--color-background-surface-component)` | none | `var(--color-text-brand-strong)` |
-| Option row | focus-visible | `var(--color-background-surface-component)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`) | `var(--color-text-gray-neutral)` |
-| Option row | selected + focus-visible (no radio) | `var(--color-background-brand-lighter-slate)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`), `border-radius: var(--corner-radius-radius-4)` | `var(--color-text-brand-strong)` |
-| Option row | selected + focus-visible (with radio) | `var(--color-background-surface-component)` | `outline: 1px solid var(--color-border-brand-base)` inset (`outline-offset: -1px`), `border-radius: var(--corner-radius-radius-4)` | `var(--color-text-brand-strong)` |
+| Option row | focus-visible | row surface `var(--color-background-surface-component)`; ring fill `var(--color-background-brand-lighter-slate)` **inside** the `::after` | `::after` ring `inset: 1px 2px` (1px top/bottom, 2px left/right), fill `brand-lighter-slate`, `2px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `z-index: -1` | `var(--color-text-gray-neutral)` |
+| Option row | selected + focus-visible (no radio) | row `var(--color-background-brand-lighter-slate)` (Selected fill) + ring fill inside `::after` | `::after` ring `inset: 1px 2px`, fill `brand-lighter-slate`, `2px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `z-index: -1` | `var(--color-text-brand-strong)` |
+| Option row | selected + focus-visible (with radio) | row surface `var(--color-background-surface-component)`; ring fill `var(--color-background-brand-lighter-slate)` **inside** the `::after` | `::after` ring `inset: 1px 2px`, fill `brand-lighter-slate`, `2px solid var(--color-border-brand-base)`, `border-radius: var(--corner-radius-radius-4)`, `z-index: -1` | `var(--color-text-brand-strong)` |
 | Option row | disabled (no radio) | `var(--color-background-gray-lighter)` | `outline: 1px solid var(--color-border-gray-disabled)` | `var(--color-text-gray-disabled)` |
 | Option row | disabled (with radio) | `var(--color-background-surface-component)` | none | `var(--color-text-gray-disabled)` |
 | Section header | — | `var(--color-background-surface-component)` | `border-top: var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
@@ -228,7 +228,7 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Disabled option behavior differs by radio mode:
   - with radio: white background, no outline
   - without radio: `color-background-gray-lighter` background, `outline: 1px solid color-border-gray-disabled`
-- Field focus: the field border turns brand (`var(--color-border-brand-base)`), no outer ring — matches the IDS Text Box. Field element itself has no border-radius.
+- Field focus: an IDS `::after` focus ring (`inset: -4px` → 2px visible offset, `1px` `var(--color-border-brand-base)`, `radius-4`) around the trigger shell, keyboard focus only. Field element itself has no border-radius.
 - Option focus ring: inset `outline: 1px solid color-border-brand-base` with `outline-offset: -1px`.
 - When option row is focused, radio button must not render its own focus ring.
 - Font weight: `400` (regular) for all text elements (field value, option label, helper text, error message, section header, action label).
@@ -278,7 +278,11 @@ Dark theme must remain structurally identical to Light Theme with values resolve
 - Last live verification: 2026-06-19 (Figma MCP `get_variable_defs` on Container `12579:77895` + matrix `11099:58099`; field `radius-none` / 0px; focus ring `radius-4` on node `11099:58141`)
 
 ## Implementation Notes
-> Last updated: 2026-10-23.
+> Last updated: 2026-11-01.
+
+### 2026-11-01
+- **Option-row Focus = white row + blue fill INSIDE the ring** (Figma assembled popup 242-6657). For **Focus** / **Focus on Selected**, the row surface stays white and the light-blue slate (`var(--color-background-brand-lighter-slate)`) is the **fill of the focus ring** (the `::after`), not the whole row — so the 1px/4px margin around the ring is not blue. The ring `::after` carries both the fill and the `2px` brand border and is painted at `z-index: -1` (the `.item` gets `isolation: isolate`) so the fill sits above the row background but behind the label/control. The focus-visible rules set the row `background` back to white + `box-shadow: none` to override the keyboard-highlight fill that co-occurs with focus. Hover (full-row `brand-lighter-slate`), Press/active (`brand-light-slate` + `text-brand-strong`), Selected and Disabled are unchanged. Implementation: React `DropdownMenu.module.css` (shared + combo-box copy) and Angular `ids-dropdown-menu.component.scss`; storybook copies synced.
+- **Focus ring geometry** — `::after` with `inset: 1px 2px` (1px top/bottom, 2px left/right gap from the popup border), `2px solid var(--color-border-brand-base)`, `radius-4`, matching the row-vs-ring measurements in the assembled popup (node 242-6657).
 
 ### 2026-10-23
 - **Field + search focus turn the border brand (Text Box look), no outer ring** (design review). The trigger focus no longer draws an outer `::after` ring (`inset: -4px`, brand border, `radius-4`); the field border turns brand (`var(--color-border-brand-base)`) with no ring. The trigger is a `<button>`, which keeps `:focus` after a mouse click, so the field border is **keyboard-focus only** (`:focus-visible` / `data-focus-visible`) — a mouse click opens the menu without leaving a lingering brand border. The in-menu **search field** is a specialised Text Box and mirrors its states: default base border, hover `--color-border-gray-neutral-strong` (`:hover:not(:focus-within)`), and brand border on **any** focus (click or Tab) via `:focus-within` (disabled/error do not apply — it only shows inside an enabled, open menu). The error state keeps its critical border. Implementation: React `lib/react/ids/dropdown-shared/DropdownMenu.module.css` (`.triggerReset:focus-visible` sets `--trigger-border`, inherited into the shell's `.field`; `.searchField:focus-within`) + `IdsDropdownTriggerShell.module.css` (demo `data-focus`); Angular `ids-dropdown-menu.component.scss` + `ids-dropdown-trigger-shell.component.scss`. Applies to all dropdown fields (single, multi, combo box).

@@ -17,17 +17,26 @@
   min-width: 0;
 }
 
-/* Focus matches the IDS Text Box: the field border turns brand, with no outer
-   ring, whether the trigger was clicked or reached with Tab. Base UI Menu.Trigger
-   (`.triggerReset`) is the real focusable element; `--trigger-border` inherits
-   down into the trigger shell's `.field`, which keys its border off it. The
-   error state sets `--trigger-border` directly on `.field`, so it still wins. */
-/* Keyboard focus only — a mouse click opens the menu without leaving a lingering
-   brand border (a `<button>` keeps `:focus` after a click). */
+/* Base UI Menu.Trigger is the real focusable element; show the IDS focus ring
+   around the trigger shell (inset -4px → 2px visible offset) when keyboard focus
+   is active — not the Text Box brand-border look. `.triggerReset` has `all:
+   unset`, so the pseudo-element draws the ring. Keyboard focus only (a mouse
+   click opens the menu without a lingering ring, so `:focus` is not matched). */
 .triggerReset:focus-visible,
 .triggerReset[data-focus-visible] {
+  position: relative;
   outline: none;
-  --trigger-border: var(--color-border-brand-base);
+}
+
+.triggerReset:focus-visible::after,
+.triggerReset[data-focus-visible]::after {
+  content: "";
+  position: absolute;
+  /* -4px → 2px visible offset from the 1px field border (IDS standard). */
+  inset: -4px;
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  border-radius: var(--corner-radius-radius-4);
+  pointer-events: none;
 }
 
 .triggerMeasure {
@@ -244,39 +253,30 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
+  /* 8px side gutter so the Show Selected button's fill does not touch the panel
+     edge (the button trims its side padding to 8px — see the override below). */
   padding: 0 var(--padding-padding-8);
 }
 
+/* Show Selected toggle — the IdsButton (Tertiary, small) component. The button
+   brings its own fill/size/radius/focus ring; these rules add only the Dropdown
+   Button press delta (press → brand-base) and the trailing caret. */
 .showSelectedToggle {
-  all: unset;
+  flex-shrink: 0;
+}
+
+.showSelectedHeader .showSelectedToggle:active:not(:disabled) {
+  background: var(--color-background-brand-base);
+}
+
+.showSelectedToggleInner {
   display: inline-flex;
   align-items: center;
-  position: relative;
   gap: var(--spacing-space-8);
-  padding: var(--padding-padding-2) var(--padding-padding-8);
-  color: var(--color-text-brand-strong);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
-  flex-shrink: 0;
 }
 
 .showSelectedCaret {
   flex-shrink: 0;
-}
-
-.showSelectedToggle:focus-visible {
-  position: relative;
-  outline: none;
-}
-
-.showSelectedToggle:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
-  pointer-events: none;
 }
 
 .showSelectedTagsRoot {
@@ -383,9 +383,10 @@
   justify-content: space-between;
   width: 100%;
   box-sizing: border-box;
-  /* Symmetric 16px: Clear All (right) aligns with the option content right edge,
-     matching Select All (left). */
-  padding: var(--padding-padding-8) var(--padding-padding-16) var(--padding-padding-8) var(--padding-padding-16);
+  /* 8px right gutter so Clear All's fill does not touch the row edge (the button
+     trims its own side padding to 8px — see the override below). Select All keeps
+     the 16px left inset. */
+  padding: var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-8) var(--padding-padding-16);
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
   background: var(--color-background-surface-component);
 }
@@ -414,20 +415,8 @@
   cursor: pointer;
 }
 
-.clearAllButton {
-  all: unset;
-  display: inline-flex;
-  align-items: center;
-  color: var(--color-text-brand-strong);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
-}
-
-.clearAllButton:disabled {
-  color: var(--color-text-gray-disabled);
-  cursor: not-allowed;
-}
+/* Multi-select Clear All is the IdsButton (Tertiary, small) component; it brings
+   its own fill, size, radius and focus ring. No local styling needed. */
 
 /* Select All checkbox focus matches IDS Checkbox focus-visible:
    the control border becomes brand and a 1px brand outline sits 2px outside. */
@@ -466,6 +455,10 @@
 .item {
   appearance: none;
   -webkit-appearance: none;
+  position: relative;
+  /* New stacking context so the focus-ring ::after (z-index: -1) can paint its
+     blue fill above the row's own background but behind the label/control. */
+  isolation: isolate;
   display: flex;
   align-items: center;
   gap: var(--spacing-space-8);
@@ -567,9 +560,25 @@
 }
 
 .item[data-selection-mode="single"]:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: -1px;
+  /* Figma "Focus": the row surface stays white; the blue fill lives INSIDE the
+     ring (::after), so the 1px/4px margin around the ring is not blue. White is
+     restated to override the keyboard-highlight fill that co-occurs with focus. */
+  background: var(--color-background-surface-component);
+  box-shadow: none;
+}
+
+/* Focus ring + its blue fill, inset 1px top/bottom and 2px left/right per the
+   assembled popup (Figma 242-6657). z-index: -1 keeps the fill above the row
+   background but behind the label/control (see `.item` isolation). */
+.item[data-selection-mode="single"]:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 1px 2px;
+  background: var(--color-background-brand-lighter-slate);
+  border: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .item[data-selection-mode="single"]:focus-visible .radioOuter::after {
@@ -626,76 +635,44 @@
   background: var(--color-border-gray-neutral-base);
 }
 
-.footerAction {
-  all: unset;
+/* Footer action row — holds the IdsButton (Tertiary, small). The row carries the
+   top border and the 8px vertical gutter; the button provides its own 16px side
+   padding. */
+.footerActionRow {
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  /* 16px left inset so the label aligns with Select All / options / single Clear
-     All. The 8px lives on the row (not the inner span) so the focus ring hugs
-     the label — see `.footerAction .footerActionButton` below. */
-  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
+  padding: var(--padding-padding-8) var(--padding-padding-8);
   border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  color: var(--color-text-brand-strong);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
 }
 
-.footerActionButton {
-  display: inline-flex;
-  align-items: center;
-  position: relative;
-  padding: var(--padding-padding-2) var(--padding-padding-8);
-  border-radius: var(--corner-radius-radius-2);
-}
-
-.clearAllButton:focus-visible .footerActionButton,
-.footerAction:focus-visible .footerActionButton,
-.clearAllAction:focus-visible .footerActionButton {
-  outline: none;
-}
-
-.clearAllButton:focus-visible .footerActionButton::after,
-.footerAction:focus-visible .footerActionButton::after,
-.clearAllAction:focus-visible .footerActionButton::after {
-  content: "";
-  position: absolute;
-  inset: calc(-1 * (var(--button-focus-ring-offset, 3px) + var(--border-width-border-1)));
-  border: var(--border-width-border-1) solid var(--color-border-brand-base);
-  border-radius: var(--button-focus-ring-radius, var(--corner-radius-radius-4));
-  pointer-events: none;
-}
-
-/* Single-select Clear All: placed at the top of the menu with a bottom border
-   (instead of the footer's top border). Reuses `.footerActionButton` for the
-   inner label span, but with no inner padding so its keyboard focus ring hugs
-   the label exactly like the multi/combo Clear All (`.clearAllButton`) ring —
-   the label position is preserved by moving that 8px onto the row padding. */
-.clearAllAction {
-  all: unset;
+/* Single-select Clear All row — same as the footer row but at the top of the
+   menu with a bottom border. `data-align="right"` pushes the button right. */
+.clearAllActionRow {
   display: flex;
   align-items: center;
   box-sizing: border-box;
   width: 100%;
-  padding: var(--padding-padding-8) 0 var(--padding-padding-8) var(--padding-padding-16);
+  padding: var(--padding-padding-8) var(--padding-padding-8);
   border-bottom: var(--border-width-border-1) solid var(--color-border-gray-neutral-base);
-  color: var(--color-text-brand-strong);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  cursor: pointer;
 }
 
-.clearAllAction .footerActionButton,
-.footerAction .footerActionButton {
-  padding: 0;
-}
-
-/* Right-aligned single-select Clear All (clearAllAlign="right"). */
-.clearAllAction[data-align="right"] {
+.clearAllActionRow[data-align="right"] {
   justify-content: flex-end;
-  padding-right: var(--padding-padding-24);
+}
+
+/* .footerAction / .clearAllAction are the IdsButton (Tertiary, small) component;
+   it brings its own fill, size, radius and focus ring.
+   Dropdown-specific: trim the side padding one step (16 → 8) so the fill sits
+   inside the 8px row gutter and does not touch the dropdown edge, while the
+   label keeps its 16px gutter (8px row + 8px button). */
+.selectAllClearAllRow .clearAllButton,
+.footerActionRow .footerAction,
+.clearAllActionRow .clearAllAction,
+.showSelectedHeader .showSelectedToggle {
+  padding-left: var(--padding-padding-8);
+  padding-right: var(--padding-padding-8);
 }
 
 /* 16px = the control size (checkbox/radio), so it aligns left with the Select All
@@ -769,9 +746,21 @@
 .item[data-selection-mode="multi"][data-focus-visible] .checkboxOuter::after,
 .item[data-selection-mode="multi"][data-focus-visible],
 .item[data-selection-mode="multi"]:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: -1px;
+  /* Row surface stays white; the blue fill lives inside the ring (::after). */
+  background: var(--color-background-surface-component);
+  box-shadow: none;
+}
+
+.item[data-selection-mode="multi"][data-focus-visible]::after,
+.item[data-selection-mode="multi"]:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 1px 2px;
+  background: var(--color-background-brand-lighter-slate);
+  border: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .item[data-selection-mode="multi"]:not([data-selected]):not([data-indeterminate]):not([data-disabled]) {
@@ -800,6 +789,16 @@
     inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
 }
 
+/* Focus on a selected single-text row: the surface goes back to white so only
+   the focus ring (::after) shows behind it — no hover/selected blue + top/bottom
+   border. Mirrors the radio + multi focus-on-selected overrides; the pseudo-class
+   raises specificity above the selected rule above. */
+.item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected][data-focus-visible],
+.item[data-selection-mode="single"]:not(:has(.radioOuter))[data-selected]:focus-visible {
+  background: var(--color-background-surface-component);
+  box-shadow: none;
+}
+
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected] {
   background: var(--color-background-surface-component);
   color: var(--color-text-brand-strong);
@@ -811,14 +810,46 @@
    over the generic :focus-visible rule otherwise → selected row looks skipped). */
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected][data-focus-visible],
 .item[data-selection-mode="single"]:has(.radioOuter)[data-selected]:focus-visible {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: -1px;
+  /* Figma "Focus on Selected": row surface stays white, blue fill inside ring. */
+  background: var(--color-background-surface-component);
+  box-shadow: none;
+}
+
+.item[data-selection-mode="single"]:has(.radioOuter)[data-selected][data-focus-visible]::after,
+.item[data-selection-mode="single"]:has(.radioOuter)[data-selected]:focus-visible::after {
+  content: "";
+  position: absolute;
+  inset: 1px 2px;
+  background: var(--color-background-brand-lighter-slate);
+  border: var(--border-width-border-2, 2px) solid var(--color-border-brand-base);
   border-radius: var(--corner-radius-radius-4);
+  z-index: -1;
+  pointer-events: none;
 }
 
 .item[data-selection-mode="multi"][data-selected] {
   background: var(--color-background-surface-component);
   color: var(--color-text-gray-neutral);
+  box-shadow: none;
+}
+
+/* Figma "Hover on Selected, Type=Options" (multi): selected checkbox row fills
+   light-blue on hover/keyboard-highlight (plain Selected keeps the white surface
+   above, which outranks the generic :hover rule, so it is restated here). */
+.item[data-selection-mode="multi"][data-selected]:hover:not([data-disabled]),
+.item[data-selection-mode="multi"][data-selected][data-highlighted]:not([data-disabled]) {
+  background: var(--color-background-brand-lighter-slate);
+  color: var(--color-text-gray-neutral);
+  box-shadow:
+    inset 0 1px 0 0 var(--color-border-brand-base-neutral),
+    inset 0 -1px 0 0 var(--color-border-brand-base-neutral);
+}
+
+/* Figma "Focus on selected, Type=Options" (multi): row surface stays white; the
+   blue fill lives inside the ring (::after above). */
+.item[data-selection-mode="multi"][data-selected][data-focus-visible],
+.item[data-selection-mode="multi"][data-selected]:focus-visible {
+  background: var(--color-background-surface-component);
   box-shadow: none;
 }
 

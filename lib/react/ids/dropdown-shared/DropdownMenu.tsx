@@ -1,6 +1,7 @@
 import { Menu } from "../../shared/menu";
 import { ScrollArea } from "../../shared/scroll-area";
 import React, { useEffect, useMemo, useRef, useState, type ReactNode, type RefObject } from "react";
+import { IdsButton, IdsButtonLabel } from "../button";
 import { IdsIcon } from "../icon";
 import { IdsTag } from "../tag";
 import { IdsTooltip, TooltipBody, TooltipPanel, TooltipTrigger } from "../tooltip";
@@ -671,20 +672,25 @@ export function DropdownMenu({
         data-focus-section="showSelected"
       >
         <div className={styles.showSelectedHeader}>
-          <button
-            type="button"
+          <IdsButton
+            variant="tertiary"
+            size="small"
             className={styles.showSelectedToggle}
             aria-expanded={isShowSelectedExpanded}
             onClick={() => setShowSelectedExpanded(!isShowSelectedExpanded)}
           >
-            <span>{isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel}</span>
-            <IdsIcon
-              shape="arrow-drop-tri-caret"
-              className={styles.showSelectedCaret}
-              color="var(--color-icon-brand-base)"
-              size={10}
-            />
-          </button>
+            <IdsButtonLabel>
+              <span className={styles.showSelectedToggleInner}>
+                <span>{isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel}</span>
+                <IdsIcon
+                  shape="arrow-drop-tri-caret"
+                  className={styles.showSelectedCaret}
+                  color="var(--color-icon-brand-base)"
+                  size={10}
+                />
+              </span>
+            </IdsButtonLabel>
+          </IdsButton>
         </div>
         {isShowSelectedExpanded ? (
           <ScrollArea.Root className={styles.showSelectedTagsRoot}>
@@ -901,8 +907,9 @@ export function DropdownMenu({
                   </span>
                   <span>{selectAllLabel}</span>
                 </button>
-                <button
-                  type="button"
+                <IdsButton
+                  variant="tertiary"
+                  size="small"
                   className={styles.clearAllButton}
                   data-focus-row="selectAllClearAll"
                   onClick={(event) => {
@@ -922,32 +929,34 @@ export function DropdownMenu({
                   }}
                   disabled={effectiveClearAllDisabled}
                 >
-                  {clearAllLabel}
-                </button>
+                  <IdsButtonLabel>{clearAllLabel}</IdsButtonLabel>
+                </IdsButton>
               </div>
             ) : null}
             {/* Single-select Clear All (Reset to Default with radio options) —
                below the search row, like the multi-select Select All / Clear All row. */}
             {showSingleClearAllRow ? (
-              <button
-                type="button"
-                className={styles.clearAllAction}
-                data-align={resolvedClearAllAlign}
-                data-focus-section="singleClearAll"
-                onClick={(event) => {
-                  // The row hides once the selection is cleared, which would
-                  // drop focus to <body>. Park it on the popup, then move it
-                  // onto the first option once the change has rendered.
-                  getPopupElement()?.focus();
-                  onClearAllClick?.();
-                  scrollOptionsToTop(event);
-                  requestAnimationFrame(focusSelectedOption);
-                }}
-              >
-                <span className={styles.footerActionButton}>
-                  {singleRowResetsToDefault ? resetToDefaultLabel : clearAllLabel}
-                </span>
-              </button>
+              <div className={styles.clearAllActionRow} data-align={resolvedClearAllAlign}>
+                <IdsButton
+                  variant="tertiary"
+                  size="small"
+                  className={styles.clearAllAction}
+                  data-focus-section="singleClearAll"
+                  onClick={(event) => {
+                    // The row hides once the selection is cleared, which would
+                    // drop focus to <body>. Park it on the popup, then move it
+                    // onto the first option once the change has rendered.
+                    getPopupElement()?.focus();
+                    onClearAllClick?.();
+                    scrollOptionsToTop(event);
+                    requestAnimationFrame(focusSelectedOption);
+                  }}
+                >
+                  <IdsButtonLabel>
+                    {singleRowResetsToDefault ? resetToDefaultLabel : clearAllLabel}
+                  </IdsButtonLabel>
+                </IdsButton>
+              </div>
             ) : null}
             {showSelectedFirst ? null : showSelectedPanelNode}
             </div>
@@ -1040,14 +1049,17 @@ export function DropdownMenu({
               </ScrollArea.Scrollbar>
             </ScrollArea.Root>
             {footerActionLabel ? (
-              <button
-                type="button"
-                className={styles.footerAction}
-                data-focus-section="footer"
-                onClick={() => onFooterActionClick?.()}
-              >
-                <span className={styles.footerActionButton}>{footerActionLabel}</span>
-              </button>
+              <div className={styles.footerActionRow}>
+                <IdsButton
+                  variant="tertiary"
+                  size="small"
+                  className={styles.footerAction}
+                  data-focus-section="footer"
+                  onClick={() => onFooterActionClick?.()}
+                >
+                  <IdsButtonLabel>{footerActionLabel}</IdsButtonLabel>
+                </IdsButton>
+              </div>
             ) : null}
           </Menu.Popup>
         </Menu.Positioner>

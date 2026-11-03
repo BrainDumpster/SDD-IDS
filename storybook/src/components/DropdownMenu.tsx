@@ -3,6 +3,7 @@ import { ScrollArea } from "@base-ui-components/react/scroll-area";
 import { useCallback, useMemo, useRef, useState, type RefObject } from "react";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
+import { IdsButton } from "./IdsButton";
 import { Tag } from "./Tag";
 import { IdsTooltip } from "./IdsTooltip";
 import styles from "./DropdownMenu.module.css";
@@ -479,20 +480,23 @@ export function DropdownMenu({
         data-focus-section="showSelected"
       >
         <div className={styles.showSelectedHeader}>
-          <button
-            type="button"
+          <IdsButton
+            variant="tertiary"
+            size="sm"
             className={styles.showSelectedToggle}
             aria-expanded={isShowSelectedExpanded}
             onClick={() => setShowSelectedExpanded(!isShowSelectedExpanded)}
           >
-            <span>{isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel}</span>
-            <Icon
-              shapeName="arrow-drop-tri-caret"
-              className={styles.showSelectedCaret}
-              color="var(--color-icon-brand-base)"
-              style={{ width: 10, height: 10 }}
-            />
-          </button>
+            <span className={styles.showSelectedToggleInner}>
+              <span>{isShowSelectedExpanded ? hideSelectedLabel : showSelectedLabel}</span>
+              <Icon
+                shapeName="arrow-drop-tri-caret"
+                className={styles.showSelectedCaret}
+                color="var(--color-icon-brand-base)"
+                style={{ width: 10, height: 10 }}
+              />
+            </span>
+          </IdsButton>
         </div>
         {isShowSelectedExpanded ? (
           <ScrollArea.Root className={styles.showSelectedTagsRoot}>
@@ -701,8 +705,9 @@ export function DropdownMenu({
                   </span>
                   <span>{selectAllLabel}</span>
                 </button>
-                <button
-                  type="button"
+                <IdsButton
+                  variant="tertiary"
+                  size="sm"
                   className={styles.clearAllButton}
                   data-focus-row="selectAllClearAll"
                   onClick={() => {
@@ -712,24 +717,26 @@ export function DropdownMenu({
                   disabled={effectiveClearAllDisabled}
                 >
                   {clearAllLabel}
-                </button>
+                </IdsButton>
               </div>
             ) : null}
             {/* Single-select Clear All — below the search row, like the
                multi-select Select All / Clear All row. */}
             {showSingleClearAllRow ? (
-              <button
-                type="button"
-                className={styles.clearAllAction}
-                data-align={clearAllAlign}
-                data-focus-section="singleClearAll"
-                onClick={() => {
-                  onClearAllClick?.();
-                  scrollOptionsToTop();
-                }}
-              >
-                <span className={styles.footerActionButton}>{clearAllLabel}</span>
-              </button>
+              <div className={styles.clearAllActionRow} data-align={clearAllAlign}>
+                <IdsButton
+                  variant="tertiary"
+                  size="sm"
+                  className={styles.clearAllAction}
+                  data-focus-section="singleClearAll"
+                  onClick={() => {
+                    onClearAllClick?.();
+                    scrollOptionsToTop();
+                  }}
+                >
+                  {clearAllLabel}
+                </IdsButton>
+              </div>
             ) : null}
             {showSelectedFirst ? null : showSelectedPanelNode}
             </div>
@@ -820,14 +827,17 @@ export function DropdownMenu({
               </ScrollArea.Scrollbar>
             </ScrollArea.Root>
             {footerActionLabel ? (
-              <button
-                type="button"
-                className={styles.footerAction}
-                data-focus-section="footer"
-                onClick={() => onFooterActionClick?.()}
-              >
-                <span className={styles.footerActionButton}>{footerActionLabel}</span>
-              </button>
+              <div className={styles.footerActionRow}>
+                <IdsButton
+                  variant="tertiary"
+                  size="sm"
+                  className={styles.footerAction}
+                  data-focus-section="footer"
+                  onClick={() => onFooterActionClick?.()}
+                >
+                  {footerActionLabel}
+                </IdsButton>
+              </div>
             ) : null}
           </Menu.Popup>
         </Menu.Positioner>
