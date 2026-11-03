@@ -20,6 +20,7 @@ import React, {
   isValidElement,
   useId,
   useMemo,
+  useRef,
   useState,
   type CSSProperties,
   type ReactElement,
@@ -372,6 +373,16 @@ export function IdsDropdownMultiSelect({
   const effectiveClearAllDisabled =
     clearAllDisabled ?? selectedLabels.length === 0;
 
+  // The selected-summary tooltip is anchored on the badge (arrow points up from
+  // it). Its open state is controlled so the value text can open the same
+  // tooltip when the text is truncated, without becoming the tooltip's anchor.
+  const [selectedTooltipOpen, setSelectedTooltipOpen] = useState(false);
+  const fieldValueRef = useRef<HTMLSpanElement>(null);
+  const openTooltipIfTextTruncated = () => {
+    const el = fieldValueRef.current;
+    if (el && el.scrollWidth > el.clientWidth + 1) setSelectedTooltipOpen(true);
+  };
+
   const badgeGlyph =
     showSelectedBadge && hasSelection ? (
       <span className={styles.badgeTrigger}>
@@ -382,9 +393,10 @@ export function IdsDropdownMultiSelect({
       </span>
     ) : null;
 
-  // Badge + value text sit together as the field content. Hovering either one
-  // opens a single tooltip, anchored above the badge (side=top + arrowAlign=start),
-  // listing the selected items as bullets.
+  // Badge + value text sit together as the field content. The tooltip trigger
+  // wraps the badge only, so the IDS Tooltip's arrow (which centres on its
+  // trigger) points up from the badge — not the value text. The value text is a
+  // sibling in the same field row.
   const fieldContent = (
     <span className={styles.triggerContent}>
       {badgeGlyph}
@@ -394,15 +406,35 @@ export function IdsDropdownMultiSelect({
 
   const left =
     showSelectedTooltip && hasSelection ? (
-      <IdsTooltip side="top" arrowAlign="start" hugContent>
-        <TooltipTrigger display="block">{fieldContent}</TooltipTrigger>
-        <TooltipPanel>
-          <TooltipHeader>{`${selectedLabels.length} Items`}</TooltipHeader>
-          <TooltipBody>
-            <SelectedItemsList labels={selectedLabels} />
-          </TooltipBody>
-        </TooltipPanel>
-      </IdsTooltip>
+      <span className={styles.triggerContent}>
+        <IdsTooltip
+          side="top"
+          arrowAlign="start"
+          hugContent
+          open={selectedTooltipOpen}
+          onOpenChange={setSelectedTooltipOpen}
+        >
+          <TooltipTrigger display="inline">{badgeGlyph}</TooltipTrigger>
+          <TooltipPanel>
+            <TooltipHeader>{`${selectedLabels.length} Items`}</TooltipHeader>
+            <TooltipBody>
+              <SelectedItemsList labels={selectedLabels} />
+            </TooltipBody>
+          </TooltipPanel>
+        </IdsTooltip>
+        {/* Hovering/focusing the value text opens the same badge tooltip, but
+            only when the text is actually truncated. */}
+        <span
+          ref={fieldValueRef}
+          className={styles.valueText}
+          onMouseEnter={openTooltipIfTextTruncated}
+          onMouseLeave={() => setSelectedTooltipOpen(false)}
+          onFocus={openTooltipIfTextTruncated}
+          onBlur={() => setSelectedTooltipOpen(false)}
+        >
+          {selectedDisplay}
+        </span>
+      </span>
     ) : (
       fieldContent
     );
