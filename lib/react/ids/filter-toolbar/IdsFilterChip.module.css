@@ -1,0 +1,108 @@
+.IdsFilterChip {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: stretch;
+  box-sizing: border-box;
+  height: var(--sizing-size-28);
+  max-width: 100%;
+  width: fit-content;
+  border: var(--border-width-border-default) solid var(--color-border-brand-light);
+  border-radius: var(--corner-radius-radius-4);
+  background: var(--color-background-controls-lighter);
+  color: var(--color-text-brand-strong);
+  overflow: hidden;
+}
+
+.IdsFilterChip[data-disabled="true"] {
+  border-color: var(--color-border-gray-disabled);
+  background: var(--color-background-gray-light);
+  color: var(--color-text-gray-disabled);
+}
+
+.IdsFilterChipRemove,
+.IdsFilterChipExpand {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: 0 0 auto;
+  width: var(--sizing-size-28);
+  height: var(--sizing-size-28);
+  margin: 0;
+  padding: 0;
+  border: none;
+  border-radius: var(--corner-radius-radius-2);
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+}
+
+.IdsFilterChipRemove {
+  color: var(--color-icon-brand-strong);
+}
+
+.IdsFilterChipExpand {
+  color: var(--color-icon-brand-base);
+}
+
+.IdsFilterChip[data-disabled="true"] .IdsFilterChipRemove,
+.IdsFilterChip[data-disabled="true"] .IdsFilterChipExpand {
+  color: var(--color-icon-gray-disabled);
+  cursor: not-allowed;
+}
+
+.IdsFilterChipRemove:focus-visible,
+.IdsFilterChipExpand:focus-visible,
+.IdsFilterChipContent:focus-visible {
+  outline: var(--border-width-border-default) solid var(--color-border-brand-base);
+  outline-offset: 2px;
+}
+
+.IdsFilterChipDivider {
+  width: var(--border-width-border-default);
+  align-self: stretch;
+  background: var(--color-border-brand-light);
+  flex: 0 0 auto;
+}
+
+.IdsFilterChip[data-disabled="true"] .IdsFilterChipDivider {
+  background: var(--color-border-gray-disabled);
+}
+
+.IdsFilterChipContent {
+  display: inline-flex;
+  flex-direction: row;
+  align-items: center;
+  gap: var(--spacing-space-4);
+  min-width: 0;
+  padding: var(--padding-padding-4) var(--padding-padding-8);
+  margin: 0;
+  border: none;
+  background: transparent;
+  color: inherit;
+  cursor: pointer;
+  font-family: var(--typography-font-style-primary);
+  font-size: var(--font-size-body-2);
+  line-height: var(--font-line-height-line-height-20);
+  letter-spacing: 0;
+}
+
+.IdsFilterChip[data-disabled="true"] .IdsFilterChipContent {
+  cursor: not-allowed;
+}
+
+.IdsFilterChipCategory {
+  font-weight: 400;
+  white-space: nowrap;
+}
+
+.IdsFilterChipValue {
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.IdsFilterChipOverflowCount {
+  font-weight: 500;
+  white-space: nowrap;
+}
