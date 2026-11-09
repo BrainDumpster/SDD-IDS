@@ -97,19 +97,48 @@ const meta: Meta<IdsTextBoxProps> = {
 export default meta;
 type Story = StoryObj<IdsTextBoxProps>;
 
-const sampleWidth: React.CSSProperties = { width: 300, maxWidth: "100%" };
-
 export const SpecAccurateDesign: Story = {
   name: "Spec Accurate Design",
-  render: (args) => (
-    <div style={sampleWidth}>
-      <IdsTextBox {...args}>
-        <IdsHelper>
-          <IdsHelperText>Helper text</IdsHelperText>
-        </IdsHelper>
-      </IdsTextBox>
-    </div>
-  ),
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "The field fills its container. Drag the resize handle on the dashed box to change the " +
+          "width and watch the field clamp between 186px and 700px.",
+      },
+    },
+  },
+  render: (args) => {
+    const isError = args.state === "error" || args.invalid;
+    return (
+      <div
+        style={{
+          width: "60vw",
+          minWidth: 186 + 32,
+          maxWidth: 700 + 32,
+          boxSizing: "border-box",
+          resize: "horizontal",
+          overflow: "auto",
+          padding: 16,
+          border: "1px dashed var(--color-border-gray-neutral-base)",
+          display: "grid",
+          gap: 8,
+        }}
+      >
+        <IdsTextBox {...args}>
+          {isError ? (
+            <IdsError>
+              <IdsErrorText>Error message</IdsErrorText>
+            </IdsError>
+          ) : (
+            <IdsHelper>
+              <IdsHelperText>Helper text</IdsHelperText>
+            </IdsHelper>
+          )}
+        </IdsTextBox>
+      </div>
+    );
+  },
 };
 
 export const StateMatrix: Story = {
