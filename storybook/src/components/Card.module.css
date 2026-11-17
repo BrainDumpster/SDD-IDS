@@ -1,12 +1,10 @@
 /*
- * Runtime border model for Figma `8381:14245` (one continuous card):
- * - `CardRoot` owns the single outer border + square corners (radius-none).
- * - Header / footer are regions with no section borders.
- * - `CardBody` has `border-top` when `showDivider` (default). `border-bottom` only when
- *   a footer is present **and** `showDivider`. Without footer, the root’s outer border is
- *   the bottom edge — do not double it with body `border-bottom`.
- * - `showDivider={false}` forces body top/bottom borders to `none`.
- * Negative CSS `gap` is invalid; do not recreate Figma’s overlapping section frames in the DOM.
+ * Runtime border model for Figma `8381:14305` (one continuous card):
+ * - `CardRoot` owns no border — each section (header/body/footer) draws its
+ *   own 1px border aligned inside its box.
+ * - Sections stack with `spacing/space-minus-1` (-1px) overlap so touching
+ *   borders merge into single seams.
+ * - `showDivider={false}` removes the seam pair on both touching edges.
  */
 .card {
   display: flex;
@@ -23,8 +21,7 @@
   max-width: 100%;
   background: var(--color-background-surface-secondary);
   /* Default accessible; Dashboard sets `--card-border-color: var(--color-border-gray-neutral-light)`. */
-  border: var(--border-width-border-default, 1px) solid
-    var(--card-border-color, var(--color-border-gray-neutral-base));
+  border: none;
   border-radius: 0;
   font-family: inherit;
   overflow: hidden;
@@ -36,26 +33,34 @@
   box-sizing: border-box;
   width: 100%;
   background: transparent;
-  border: none;
+  border: var(--border-width-border-default, 1px) solid
+    var(--card-border-color, var(--color-border-gray-neutral-base));
   border-radius: 0;
   flex-shrink: 0;
 }
 
-/* Figma Card Title `8381:14246` — padding 12px 8px 12px 24px.
- * When kebab is shown, drop header padding-right: CardFilter trigger
- * `padding-right: 16px` is the end inset (Dashboard-Element-Card `14093:123117`).
+/* Figma `itemSpacing` = spacing/space-minus-1: adjacent sections overlap so
+   their touching 1px borders paint as a single seam line. */
+.body:not(:first-child),
+.footer:not(:first-child) {
+  margin-top: var(--spacing-space-minus-1, -1px);
+}
+
+/* Figma Card Title `8381:14246` — padding 12px 24px when no kebab.
+ * Right inset drops to padding-8 only when the overflow (kebab) button
+ * renders — the button's own padding supplies the visual inset.
  */
 .header {
   display: flex;
   align-items: center;
   gap: var(--spacing-space-8, 8px);
-  padding: var(--padding-padding-12, 12px) var(--padding-padding-8, 8px)
+  padding: var(--padding-padding-12, 12px) var(--padding-padding-24, 24px)
     var(--padding-padding-12, 12px) var(--padding-padding-24, 24px);
   min-height: 56px;
 }
 
 .header[data-has-overflow-menu="true"] {
-  padding-right: 0;
+  padding-right: var(--padding-padding-8, 8px);
 }
 
 .headerRow {
@@ -96,12 +101,15 @@
   display: block;
 }
 
+/* Figma title text frame is fixed `sizing/size-32`; the single-line box
+   uses the same 32px line-height so text centers vertically in the frame. */
 .title {
   font-size: var(--font-size-header-6, 18px);
   font-weight: 400;
   color: var(--color-text-gray-neutral-strong);
   margin: 0;
-  line-height: var(--font-line-height-line-height-25, 25px);
+  height: var(--sizing-size-32, 32px);
+  line-height: var(--sizing-size-32, 32px);
 }
 
 /* Figma Dashboard-Element-Card `14093:123118` — Title | Secondary inline (Body 1) */
@@ -109,7 +117,8 @@
   display: flex;
   flex-direction: row;
   flex-wrap: nowrap;
-  align-items: flex-start;
+  align-items: center;
+  height: var(--sizing-size-32, 32px);
   gap: var(--spacing-space-8, 8px);
   min-width: 0;
   flex: 1 1 auto;
@@ -203,21 +212,25 @@
   color: var(--color-text-gray-neutral-strong);
   min-height: 0;
   background: var(--color-background-surface-secondary);
-  border-top: var(--border-width-border-default, 1px) solid
-    var(--card-border-color, var(--color-border-gray-neutral-base));
-  border-bottom: none;
 }
 
-/* `showDivider={false}` — no body seams */
-.bodyNoDivider {
+/* `showDivider={false}` — a seam is two overlapping borders, so hiding it
+   takes both touching edges: body's own plus the neighbor's on the seam.
+   `:first/:last-child` guards keep the card's outer top/bottom edges intact. */
+.bodyNoDivider:not(:first-child) {
   border-top: none;
+}
+
+.bodyNoDivider:not(:last-child) {
   border-bottom: none;
 }
 
-/* Body‖footer seam only when footer is rendered and showDivider */
-.bodyWithFooter {
-  border-bottom: var(--border-width-border-default, 1px) solid
-    var(--card-border-color, var(--color-border-gray-neutral-base));
+.header:has(+ .bodyNoDivider) {
+  border-bottom: none;
+}
+
+.bodyNoDivider + .footer {
+  border-top: none;
 }
 
 /* Figma Card Footer `8381:14252` — padding 16px 24px */
@@ -228,36 +241,8 @@
   padding: var(--padding-padding-16, 16px) var(--padding-padding-24, 24px);
 }
 
-.footerAction {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: var(--spacing-space-8, 8px);
-  padding: var(--padding-padding-2, 2px) var(--padding-padding-16, 16px);
-  border: none;
-  border-radius: var(--corner-radius-radius-2, 2px);
-  background: transparent;
-  color: var(--color-text-brand-strong);
-  font-size: var(--font-size-body-2);
-  line-height: var(--font-line-height-line-height-20);
-  font-weight: 400;
-  cursor: pointer;
-  font-family: inherit;
-}
-
-.footerAction:hover:not(:disabled) {
-  text-decoration: underline;
-}
-
-.footerAction:focus-visible {
-  outline: 2px solid var(--color-border-brand-strong, #055fa9);
-  outline-offset: 2px;
-}
-
-.footerAction:disabled {
-  color: var(--color-text-gray-disabled, #757575);
-  cursor: not-allowed;
-}
+/* Footer actions are `IdsButton variant="tertiary" size="small"` — native
+   button chrome (states, focus ring) applies; no card-level overrides. */
 
 /* --- Content Type=Text (`15718:219736`) --- */
 .textContent {
