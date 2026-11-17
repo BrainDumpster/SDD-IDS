@@ -4,6 +4,15 @@
  * Tag: `ids-radio-button` (design-spec / Angular)
  * Must be projected inside `ids-radio-button-group`.
  * Visuals: `components/ids/radio-button/design-spec.md`
+ *
+ * Option label is a projected light-DOM `<label>` child (not a `label` prop).
+ * `value` remains a required string prop for selection:
+ *
+ * ```html
+ * <ids-radio-button value="email">
+ *   <label>Email</label>
+ * </ids-radio-button>
+ * ```
  */
 import { LitElement, html, nothing } from "lit";
 import { property, query, state } from "lit/decorators.js";
@@ -22,11 +31,10 @@ export class IdsRadioButton extends LitElement {
   @query(".ids-radio-input")
   private inputEl?: HTMLInputElement;
 
-  @property({ type: String })
-  value = "";
+  private childObserver?: MutationObserver;
 
   @property({ type: String })
-  label = "";
+  value = "";
 
   @property({ type: Boolean, reflect: true })
   disabled = false;
@@ -44,9 +52,33 @@ export class IdsRadioButton extends LitElement {
   @state()
   private selectionEpoch = 0;
 
+  @state()
+  private hasLabelProjection = false;
+
   override connectedCallback(): void {
     super.connectedCallback();
     this.setAttribute("data-ids", "ids-radio-button-host");
+    this.syncProjectedLabels();
+    this.childObserver = new MutationObserver(() => this.syncProjectedLabels());
+    this.childObserver.observe(this, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  }
+
+  override disconnectedCallback(): void {
+    this.childObserver?.disconnect();
+    this.childObserver = undefined;
+    super.disconnectedCallback();
+  }
+
+  protected override firstUpdated(): void {
+    this.syncProjectedLabels();
+  }
+
+  override updated(): void {
+    this.syncProjectedLabels();
   }
 
   private group(): IdsRadioButtonGroup | null {
@@ -60,6 +92,36 @@ export class IdsRadioButton extends LitElement {
 
   focusInput(): void {
     this.inputEl?.focus();
+  }
+
+  private projectedLabels(): HTMLLabelElement[] {
+    return Array.from(this.children).filter(
+      (child): child is HTMLLabelElement => child.tagName === "LABEL",
+    );
+  }
+
+  /**
+   * Route direct `<label>` children into the option-label named slot and wire
+   * `for` to the input id (authors write plain `<label>` without `slot=`).
+   */
+  private syncProjectedLabels(): void {
+    const group = this.group();
+    const optionId = group
+      ? group.optionId(this.value)
+      : `ids-radio-${this.value || "option"}`;
+    const labels = this.projectedLabels();
+    for (const label of labels) {
+      if (label.getAttribute("slot") !== "label") {
+        label.setAttribute("slot", "label");
+      }
+      label.setAttribute("for", optionId);
+      label.setAttribute("data-ids", "ids-radio-label");
+    }
+
+    const nextHasLabel = labels.length > 0;
+    if (nextHasLabel !== this.hasLabelProjection) {
+      this.hasLabelProjection = nextHasLabel;
+    }
   }
 
   private onSelect = (): void => {
@@ -76,6 +138,17 @@ export class IdsRadioButton extends LitElement {
     this.group()?.onItemFocus(this);
   };
 
+  /** Row is a div (projected `<label>` can't nest); clicks on the control toggle. */
+  private onRowClick = (event: MouseEvent): void => {
+    const group = this.group();
+    const isDisabled = group ? group.isItemDisabled(this) : this.disabled;
+    if (isDisabled) return;
+    const path = event.composedPath();
+    if (path.includes(this.inputEl as EventTarget)) return;
+    if (path.some((node) => node instanceof HTMLLabelElement)) return;
+    this.inputEl?.click();
+  };
+
   override render() {
     // Touch selectionEpoch so Lit re-renders when group notifies.
     void this.selectionEpoch;
@@ -83,6 +156,7 @@ export class IdsRadioButton extends LitElement {
     const group = this.group();
     const selected = group ? group.isSelected(this.value) : false;
     const isDisabled = group ? group.isItemDisabled(this) : this.disabled;
+    const hasError = Boolean(this.error || group?.error);
     const optionId = group
       ? group.optionId(this.value)
       : `ids-radio-${this.value || "option"}`;
@@ -101,13 +175,13 @@ export class IdsRadioButton extends LitElement {
         data-ids="ids-radio-button"
         data-checked=${selected ? "true" : "false"}
         data-disabled=${isDisabled ? "true" : "false"}
-        data-error=${this.error ? "true" : "false"}
+        data-error=${hasError ? "true" : "false"}
       >
-        <label
+        <div
           class="ids-radio-row"
           data-ids="ids-radio-row"
           data-disabled=${isDisabled ? "true" : "false"}
-          for=${optionId}
+          @click=${this.onRowClick}
         >
           <span
             class="ids-radio-control"
@@ -127,7 +201,7 @@ export class IdsRadioButton extends LitElement {
               .checked=${selected}
               ?disabled=${isDisabled}
               tabindex=${tabIndex}
-              aria-invalid=${this.error ? "true" : nothing}
+              aria-invalid=${hasError ? "true" : nothing}
               aria-describedby=${assistiveId || nothing}
               @change=${this.onSelect}
               @keydown=${this.onKeydown}
@@ -138,22 +212,27 @@ export class IdsRadioButton extends LitElement {
               data-ids="ids-radio-indicator"
             ></span>
           </span>
-          <span class="ids-radio-label" data-ids="ids-radio-label"
-            >${this.label}</span
+          <span
+            class=${this.hasLabelProjection
+              ? "ids-radio-label"
+              : "ids-radio-label ids-radio-label--hidden"}
+            data-ids="ids-radio-label-slot"
           >
-        </label>
+            <slot name="label"></slot>
+          </span>
+        </div>
         ${this.helperText
           ? html`
               <div
                 id=${assistiveId}
                 class=${classMap({
                   "ids-radio-assistive": true,
-                  "ids-radio-assistive--error": this.error && !isDisabled,
+                  "ids-radio-assistive--error": hasError && !isDisabled,
                   "ids-radio-assistive--disabled": isDisabled,
                 })}
                 data-ids="ids-radio-assistive"
               >
-                ${this.error && !isDisabled
+                ${hasError && !isDisabled
                   ? html`<span
                       class="ids-radio-error-icon"
                       aria-hidden="true"

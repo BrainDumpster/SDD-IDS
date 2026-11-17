@@ -1,0 +1,32 @@
+export { IdsDualListBox } from "./dual-list-box.element.js";
+export type {
+  DualListBoxItem,
+  DualListBoxPane,
+  DualListBoxTransferAction,
+  DualListBoxTransferDetail,
+  DualListBoxDragDropDetail,
+  DualListBoxItemsChangeDetail,
+  DualListBoxMetricsFormat,
+  DualListBoxDragSession,
+  DualListBoxDropIndicator,
+  TransferVisualState,
+} from "./dual-list-box.constants.js";
+export {
+  DRAG_HANDLE_ICON,
+  SELECTION_CHECK_ICON,
+  DRAG_DATA_TYPE,
+  DEFAULT_AVAILABLE_TITLE,
+  DEFAULT_SELECTED_TITLE,
+  DEFAULT_AVAILABLE_PLACEHOLDER,
+  DEFAULT_SELECTED_PLACEHOLDER,
+  DUAL_LIST_BOX_RUNTIME_DEFAULTS,
+  TRANSFER_BUTTONS,
+  itemFocusKey,
+  resolveMetricsFormat,
+  itemAccessibleName,
+  assertUniqueIds,
+  buildTransferLabels,
+  resolveTransferStates,
+  insertAt,
+  removeById,
+} from "./dual-list-box.constants.js";

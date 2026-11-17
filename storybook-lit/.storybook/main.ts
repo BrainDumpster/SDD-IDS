@@ -18,11 +18,28 @@ const config: StorybookConfig = {
   ],
   async viteFinal(config) {
     return mergeConfig(config, {
+      server: {
+        fs: {
+          allow: [root],
+        },
+        strictPort: true,
+      },
       resolve: {
         alias: {
-          "@ids/lit/ids-theme.css": join(root, "lib/lit/ids/styles/ids-theme.css"),
-          "@ids/lit": join(root, "lib/lit/ids/src"),
+          "@ids/core/ids-theme.css": join(root, "lib/lit/ids/styles/ids-theme.css"),
+          "@ids/core": join(root, "lib/lit/ids/src"),
         },
+      },
+      // Vite 6 + Storybook 8: hashed DocsRenderer chunks in sb-vite/deps go stale
+      // (404 for DocsRenderer-*-KO4JAI74.js while a different hash exists). Exclude
+      // docs packages from prebundling so the optimizer cannot serve dead hashes.
+      optimizeDeps: {
+        exclude: [
+          "@storybook/addon-docs",
+          "@storybook/addon-docs/blocks",
+          "@storybook/blocks",
+          "@storybook/addon-essentials",
+        ],
       },
     });
   },

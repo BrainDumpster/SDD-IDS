@@ -11,20 +11,30 @@ Binary or partial selection control with group composition and helper/error text
 
 | Input | Type | Default |
 |-------|------|---------|
-| \`label\` | \`string\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.l…\` |
-| \`showLabel\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.s…\` |
-| \`simulateFocusVisible\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.s…\` |
-| \`defaultChecked\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.c…\` |
-| \`disabled\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.d…\` |
-| \`error\` | \`—\` | \`CHECKBOX_SPEC_ACCURATE_DEFAULTS.e…\` |
+| \`label\` | \`string\` | required sample label |
+| \`showLabel\` | \`boolean\` | \`true\` |
+| \`simulateFocusVisible\` | \`boolean\` | \`false\` |
+| \`checked\` / \`defaultChecked\` | \`boolean\` | uncontrolled default \`false\` |
+| \`partial\` | \`boolean\` | \`false\` (ARIA \`mixed\`) |
+| \`disabled\` | \`boolean\` | \`false\` |
+| \`error\` | \`boolean\` | \`false\` |
+| \`helperText\` | \`string\` | — |
 | \`density\` | \`CheckboxDensity\` | \`"default"\` |
 
 ### \`ids-checkbox-group\`
 
 | Input | Type | Default |
 |-------|------|---------|
-| \`disabled\` | \`—\` | \`CHECKBOX_GROUP_SPEC_ACCURATE_DEFA…\` |
-| \`orientation\` | \`CheckboxGroupOrientation\` | \`CHECKBOX_GROUP_SPEC_ACCURATE_DEFA…\` |
+| \`label\` | \`string\` | — |
+| \`showLabel\` | \`boolean\` | \`true\` |
+| \`ariaLabel\` | \`string\` | — |
+| \`labelPosition\` | \`"left" \\| "top"\` | \`"left"\` |
+| \`required\` | \`boolean\` | \`false\` |
+| \`labelIcon\` | truthy | shows form-label info icon |
+| \`error\` / \`errorText\` | \`boolean\` / \`string\` | group validation |
+| \`orientation\` | \`"vertical" \\| "horizontal"\` | \`"vertical"\` |
+| \`disabled\` | \`boolean\` | cascades to children |
+| \`name\` | \`string\` | shared form name |
 
 ## Events
 
@@ -51,7 +61,7 @@ import { CHECKBOX_SPEC_ACCURATE_DEFAULTS } from "@component-contracts/ids/checkb
   standalone: true,
   imports: [...IDS_CHECKBOX_IMPORTS],
   template: \`
-    <ids-checkbox-group>
+    <ids-checkbox-group label="Notifications:" labelPosition="left">
       <ids-checkbox
         [label]="label"
         [checked]="checked"
@@ -69,12 +79,12 @@ bootstrapApplication(AppComponent, {
   providers: [provideZoneChangeDetection()],
 });`;
 
-export const CHECKBOX_STORY_SOURCE_CODE = `<ids-checkbox-group>
+export const CHECKBOX_STORY_SOURCE_CODE = `<ids-checkbox-group label="Options:">
   <ids-checkbox label="Accept terms and conditions" />
 </ids-checkbox-group>`;
 
 export const CHECKBOX_COMPOSITION_DEMO_TEMPLATE = `
-<ids-checkbox-group>
+<ids-checkbox-group label="Options:" labelPosition="left">
   <ids-checkbox
     [label]="label"
     [checked]="state.checked"
@@ -86,7 +96,11 @@ export const CHECKBOX_COMPOSITION_DEMO_TEMPLATE = `
   />
 </ids-checkbox-group>`;
 
-export const CHECKBOX_GROUP_DEMO_TEMPLATE = `<ids-checkbox-group>
+export const CHECKBOX_GROUP_DEMO_TEMPLATE = `<ids-checkbox-group
+  label="Notifications:"
+  labelPosition="left"
+  orientation="vertical"
+>
   <ids-checkbox label="Email notifications" helperText="Receive weekly summary updates." />
   <ids-checkbox label="SMS alerts" [checked]="true" />
   <ids-checkbox label="Push notifications" />

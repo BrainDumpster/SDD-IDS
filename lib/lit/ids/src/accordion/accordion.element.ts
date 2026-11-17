@@ -1,18 +1,32 @@
 /**
  * Accordion root — edf-core API (`multiplePanelOpen` / `idsMultiplePanelOpen`)
- * + design-spec `chevronPosition` and keyboard roving focus.
+ * + design-spec `chevronPosition`, sizing props, `defaultValue`, and keyboard
+ * focus contract (Home / End / Enter / Space).
  */
-import { LitElement, css, html } from "lit";
+import { LitElement, PropertyValues, css, html } from "lit";
 import { property } from "lit/decorators.js";
 import type { IdsAccordionPanel, ToggleContentEvent } from "./accordion-panel.element.js";
 
 export type AccordionChevronPosition = "left" | "right";
+
+/** Design-spec length: numbers are px, strings are any CSS length. */
+export type AccordionLength = number | string;
+
+/** Custom property read by the panel body to cap its height (see accordion.styles.ts). */
+const PANEL_MAX_HEIGHT_VAR = "--ids-accordion-panel-max-height";
+
+/** Converts a design-spec length to a CSS value. Returns `null` when unset. */
+export function toAccordionCssLength(value: AccordionLength | null | undefined): string | null {
+  if (value === null || value === undefined || value === "") return null;
+  return typeof value === "number" ? `${value}px` : value;
+}
 
 export class IdsAccordion extends LitElement {
   static override styles = css`
     :host {
       display: block;
       width: 100%;
+      min-width: 240px;
       box-sizing: border-box;
     }
   `;
@@ -46,7 +60,36 @@ export class IdsAccordion extends LitElement {
   @property({ type: String, reflect: true, attribute: "chevron-position" })
   chevronPosition: AccordionChevronPosition = "left";
 
+  /**
+   * Design-spec: root width. Default fluid (`100%`, bounded by `min-width: 240px`).
+   * Numbers are px; strings are any CSS length.
+   */
+  @property({ attribute: false })
+  width: AccordionLength | null = null;
+
+  /**
+   * Design-spec: root max-width. Default unset (fills the container).
+   * Numbers are px; strings are any CSS length.
+   */
+  @property({ attribute: false })
+  maxWidth: AccordionLength | null = null;
+
+  /**
+   * Design-spec: caps panel body height. Default unset (panel grows with content).
+   * When set, overflowing body content scrolls vertically. Numbers are px; strings are any CSS length.
+   */
+  @property({ attribute: false })
+  panelMaxHeight: AccordionLength | null = null;
+
+  /**
+   * Design-spec: `value`s of panels open on first render.
+   * Only the first match is opened when `multiple` is false.
+   */
+  @property({ attribute: false })
+  defaultValue: string[] = [];
+
   private panels: IdsAccordionPanel[] = [];
+  private defaultValueApplied = false;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -57,6 +100,31 @@ export class IdsAccordion extends LitElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.removeEventListener("onToggleContent", this.onToggleContent as EventListener);
+  }
+
+  override willUpdate(changed: PropertyValues<this>): void {
+    if (changed.has("width")) {
+      this.applyStyle("width", toAccordionCssLength(this.width));
+    }
+    if (changed.has("maxWidth")) {
+      this.applyStyle("maxWidth", toAccordionCssLength(this.maxWidth));
+    }
+    if (changed.has("panelMaxHeight")) {
+      const value = toAccordionCssLength(this.panelMaxHeight);
+      if (value === null) {
+        this.style.removeProperty(PANEL_MAX_HEIGHT_VAR);
+      } else {
+        this.style.setProperty(PANEL_MAX_HEIGHT_VAR, value);
+      }
+    }
+  }
+
+  private applyStyle(prop: "width" | "maxWidth", value: string | null): void {
+    if (value === null) {
+      this.style[prop] = "";
+    } else {
+      this.style[prop] = value;
+    }
   }
 
   private refreshPanels(): void {
@@ -91,7 +159,7 @@ export class IdsAccordion extends LitElement {
     );
   };
 
-  /** Keyboard contract from design-spec (Arrow / Home / End / Enter / Space). */
+  /** Keyboard contract from design-spec: Enter / Space toggle; Home / End move focus. */
   onTriggerKeydown(event: KeyboardEvent, panel: IdsAccordionPanel): void {
     this.refreshPanels();
     const enabled = this.panels.filter(
@@ -99,20 +167,9 @@ export class IdsAccordion extends LitElement {
     );
     if (!enabled.length) return;
 
-    const index = enabled.indexOf(panel);
-    if (index < 0) return;
-
-    let target = panel;
+    let target: IdsAccordionPanel;
 
     switch (event.key) {
-      case "ArrowDown":
-        event.preventDefault();
-        target = enabled[(index + 1) % enabled.length]!;
-        break;
-      case "ArrowUp":
-        event.preventDefault();
-        target = enabled[(index - 1 + enabled.length) % enabled.length]!;
-        break;
       case "Home":
         event.preventDefault();
         target = enabled[0]!;
@@ -140,8 +197,24 @@ export class IdsAccordion extends LitElement {
     (shadowBtn ?? trigger)?.focus();
   }
 
+  /** Opens the panels named in `defaultValue` (once, on first slot assignment). */
+  private applyDefaultValue(): void {
+    if (this.defaultValueApplied || !this.defaultValue.length) return;
+    this.defaultValueApplied = true;
+
+    let opened = false;
+    for (const panel of this.panels) {
+      const wanted = this.defaultValue.includes(panel.value);
+      if (!wanted) continue;
+      if (!this.multiplePanelOpen && !this.idsMultiplePanelOpen && opened) continue;
+      panel.active = true;
+      opened = true;
+    }
+  }
+
   private onSlotChange(): void {
     this.refreshPanels();
+    this.applyDefaultValue();
   }
 
   override render() {

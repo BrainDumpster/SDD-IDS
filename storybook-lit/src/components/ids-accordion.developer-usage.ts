@@ -1,77 +1,54 @@
 /**
- * Developer usage copy for IDS Lit Accordion (edf-core API + design-spec visuals).
+ * Developer usage for IDS Lit Accordion (edf-core API + design-spec visuals).
  */
 export const ACCORDION_DOCS_DESCRIPTION = `
 ## Overview
 
-Lit web components for IDS Accordion. Element tags and primary props/events match **edf-core**;
-visual tokens and keyboard behaviour follow \`components/ids/accordion/design-spec.md\`.
+Lit \`ids-accordion\` — a root with one \`ids-accordion-panel\` per section. Each panel
+holds an \`ids-accordion-title\` (header/trigger) and an \`ids-accordion-content\` (body).
+Visuals come from \`components/ids/accordion/design-spec.md\`.
 
-## Theme (required — global, not per-component)
+## Root props (\`ids-accordion\`)
 
-Load IDS tokens once at the app root, then set light/dark attributes:
+| Prop | Attribute | Type | Default |
+|------|-----------|------|---------|
+| \`multiplePanelOpen\` / \`multiple\` | \`multiple\` | \`boolean\` | \`false\` |
+| \`chevronPosition\` | \`chevron-position\` | \`left \\| right\` | \`left\` |
+| \`defaultValue\` | — (property) | \`string[]\` | \`[]\` |
+| \`width\` | — (property) | \`number \\| string\` | fluid \`100%\` (min \`240px\`) |
+| \`maxWidth\` | — (property) | \`number \\| string\` | unset |
+| \`panelMaxHeight\` | — (property) | \`number \\| string\` | unset (panel grows) |
 
-\`\`\`ts
-import "@ids/lit/ids-theme.css"; // → components/ids-theme.css
-import { applyIdsTheme } from "@ids/lit/theme";
+Numbers are treated as px; strings are any CSS length.
 
-applyIdsTheme({ theme: "light" }); // or "dark"
-// Sets data-design-system="ids" + data-theme on <html>/<body>
-\`\`\`
+## Panel props (\`ids-accordion-panel\`)
 
-## Assets (icons / fonts / images)
-
-All media resolves from the repo **\`assets/\`** folder (served as \`/assets\` in Storybook):
-
-| Kind | Path |
-|------|------|
-| Icons | \`assets/icons/<slug>.svg\` via \`idsIconUrl(slug)\` / \`<ids-icon shape="…">\` |
-| Images | \`assets/images/<file>\` via \`idsImageUrl(file)\` |
-| Fonts | \`assets/fonts/<file>\` via \`idsFontUrl(file)\` |
-
-Override public base when needed: \`window.__IDS_ASSETS_BASE__ = "/custom/assets"\`.
-
-Storybook: use the **Theme** toolbar (Light / Dark). Components stay reusable because
-styles only reference \`var(--…)\` — they never embed theme CSS in the shadow root.
-
-## Composition
-
-\`\`\`html
-<ids-accordion>
-  <ids-accordion-panel value="section1" active>
-    <ids-accordion-title>Title</ids-accordion-title>
-    <ids-accordion-content>Body</ids-accordion-content>
-  </ids-accordion-panel>
-</ids-accordion>
-\`\`\`
-
-## Props
-
-### \`ids-accordion\`
-
-| Prop | Type | Default |
-|------|------|---------|
-| \`multiplePanelOpen\` (\`idsMultiplePanelOpen\`) | \`boolean\` | \`false\` |
-| \`multiple\` | \`boolean\` | alias of \`multiplePanelOpen\` |
-| \`chevronPosition\` | \`"left" \\| "right"\` | \`"left"\` |
-
-### \`ids-accordion-panel\`
-
-| Prop | Type | Default |
-|------|------|---------|
-| \`active\` | \`boolean\` | \`false\` |
-| \`accordionPanelDisabled\` (\`idsAccordionPanelDisabled\`) | \`boolean\` | \`false\` |
-| \`value\` | \`string\` | optional stable id |
+| Prop | Attribute | Notes |
+|------|-----------|-------|
+| \`value\` | \`value\` | stable id — required for \`defaultValue\` and \`value-change\` |
+| \`active\` | \`active\` | open on render |
+| \`accordionPanelDisabled\` | \`accordionpaneldisabled\` | non-interactive |
 
 ## Events
 
-| Event | On | Payload |
-|-------|-----|---------|
-| \`onToggleContent\` | panel (bubbles) | \`{ panel }\` |
-| \`value-change\` | root | \`{ openValues: string[] }\` |
+| Event | Detail | When |
+|-------|--------|------|
+| \`value-change\` | \`{ openValues: string[] }\` | a panel opens or closes |
+
+## Keyboard
+
+\`Enter\` / \`Space\` toggle the focused header · \`Home\` / \`End\` move focus to the first / last enabled header.
+
+## Theme
+
+\`\`\`ts
+import "@ids/core/ids-theme.css";
+import { applyIdsTheme } from "@ids/core/theme";
+applyIdsTheme({ theme: "light" });
+\`\`\`
 `.trim();
 
-export const ACCORDION_SOURCE_CODE = `<ids-accordion chevron-position="left">
+export const ACCORDION_SOURCE_CODE = `<ids-accordion>
   <ids-accordion-panel value="section1" active>
     <ids-accordion-title>Network configuration</ids-accordion-title>
     <ids-accordion-content>
@@ -82,12 +59,6 @@ export const ACCORDION_SOURCE_CODE = `<ids-accordion chevron-position="left">
     <ids-accordion-title>Security controls</ids-accordion-title>
     <ids-accordion-content>
       Manage access rules, authentication options, and audit controls.
-    </ids-accordion-content>
-  </ids-accordion-panel>
-  <ids-accordion-panel value="section3" accordionPanelDisabled>
-    <ids-accordion-title>Integrations</ids-accordion-title>
-    <ids-accordion-content>
-      Connect external systems and event pipelines.
     </ids-accordion-content>
   </ids-accordion-panel>
 </ids-accordion>`;

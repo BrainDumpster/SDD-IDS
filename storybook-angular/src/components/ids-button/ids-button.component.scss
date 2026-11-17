@@ -7,6 +7,7 @@
   align-items: center;
   justify-content: center;
   gap: var(--spacing-space-8);
+  box-sizing: border-box;
   border: none;
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   border-radius: var(--button-control-radius);
@@ -19,18 +20,23 @@
   position: relative;
   white-space: nowrap;
   outline: none;
+  min-width: 56px;
+  max-width: 320px;
 }
 
+.small,
 .sm {
   min-height: var(--scale-24);
   padding: var(--padding-padding-2) var(--padding-padding-16);
 }
 
+.medium,
 .md {
   min-height: var(--scale-32);
   padding: var(--padding-padding-6) var(--padding-padding-16);
 }
 
+.large,
 .lg {
   min-height: var(--scale-40);
   padding: var(--padding-padding-10) var(--padding-padding-16);
@@ -42,6 +48,7 @@
   max-width: none;
 }
 
+.icon-only.small,
 .icon-only.sm {
   width: var(--sizing-size-24);
   height: var(--sizing-size-24);
@@ -49,6 +56,7 @@
   padding: var(--padding-padding-none);
 }
 
+.icon-only.medium,
 .icon-only.md {
   width: var(--sizing-size-32);
   height: var(--sizing-size-32);
@@ -56,6 +64,7 @@
   padding: var(--padding-padding-none);
 }
 
+.icon-only.large,
 .icon-only.lg {
   width: var(--sizing-size-40);
   height: var(--sizing-size-40);
@@ -73,25 +82,22 @@
   color: inherit;
 }
 
+.icon-only.small .icon-slot,
 .icon-only.sm .icon-slot {
   width: var(--ui-icon-spacing-icon-12);
   height: var(--ui-icon-spacing-icon-12);
 }
 
+.icon-only.medium .icon-slot,
 .icon-only.md .icon-slot {
   width: var(--ui-icon-spacing-icon-14);
   height: var(--ui-icon-spacing-icon-14);
 }
 
+.icon-only.large .icon-slot,
 .icon-only.lg .icon-slot {
   width: var(--ui-icon-spacing-icon-16);
   height: var(--ui-icon-spacing-icon-16);
-}
-
-.icon-only.lg.ghost .icon-slot,
-.icon-only.lg.ghost-neutral .icon-slot {
-  width: var(--ui-icon-spacing-icon-14);
-  height: var(--ui-icon-spacing-icon-14);
 }
 
 .icon-slot > * {
@@ -209,7 +215,7 @@
 
 .secondary:active:not(:disabled),
 .secondary.pressed:not(:disabled) {
-  background: var(--color-background-controls-light);
+  background: var(--color-background-controls-press, var(--color-background-controls-light));
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-strong);
 }
 
@@ -245,7 +251,7 @@
 
 .tertiary:active:not(:disabled),
 .tertiary.pressed:not(:disabled) {
-  background: var(--color-background-controls-light);
+  background: var(--color-background-controls-press, var(--color-background-controls-light));
   box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
 }
 
@@ -305,7 +311,7 @@
 .ghost-neutral:hover:not(:disabled) {
   background: color-mix(
     in srgb,
-    var(--color-background-gray-neutral-lighter) 10%,
+    var(--ui-palette-slate-600) 10%,
     transparent
   );
 }
@@ -316,7 +322,7 @@
 .ghost-neutral.pressed:not(:disabled) {
   background: color-mix(
     in srgb,
-    var(--color-background-gray-neutral-lighter) 20%,
+    var(--ui-palette-slate-600) 20%,
     transparent
   );
 }
@@ -332,7 +338,7 @@
 .ghost-neutral:focus-visible:not(:disabled) {
   background: color-mix(
     in srgb,
-    var(--color-background-gray-neutral-lighter) 10%,
+    var(--ui-palette-slate-600) 10%,
     transparent
   );
   box-shadow:

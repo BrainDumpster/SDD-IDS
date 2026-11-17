@@ -28,20 +28,20 @@ def _ids_state_harness_css(focus_outline_width: str) -> str:
           border-color: var(--color-border-brand-transparent-brand);
         }}
         .sbSimButton[data-sim-state="hover"][data-sim-variant="secondary"]:not(:disabled) {{
-          background: var(--color-background-controls-lighter);
+          background: var(--color-background-controls-light);
           border-color: var(--color-border-brand-base);
         }}
         .sbSimButton[data-sim-state="press"][data-sim-variant="secondary"]:not(:disabled) {{
-          background: var(--color-background-controls-light);
-          border-color: var(--color-border-brand-base);
+          background: var(--color-background-controls-press, var(--color-background-controls-light));
+          border-color: var(--color-border-brand-strong);
         }}
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled) {{
-          background: var(--color-background-controls-lighter);
-          border-color: var(--color-border-brand-base);
+          background: var(--color-background-controls-light);
+          border-color: transparent;
         }}
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {{
-          background: var(--color-background-controls-light);
-          border-color: var(--color-border-brand-base);
+          background: var(--color-background-controls-press, var(--color-background-controls-light));
+          border-color: transparent;
         }}
         .sbSimButton[data-sim-state="hover"][data-sim-variant="destructive"]:not(:disabled) {{
           background: var(--color-background-alerting-critical-strong);
@@ -74,10 +74,10 @@ def generate_ids_button_story(
         "var(--border-width-border-default)" if options.design_system_slug == "dap" else "var(--border-width-border-1)"
     )
     use_dap_sizes = options.design_system_slug == "dap" and options.apply_program_deltas
-    size_type = '"small" | "medium" | "large"' if use_dap_sizes else '"sm" | "md" | "lg"'
-    size_options_json = json.dumps(["small", "medium", "large"] if use_dap_sizes else ["sm", "md", "lg"])
-    # Spec API default: size large → implementation lg (sm/md/lg).
-    default_size = "medium" if use_dap_sizes else "lg"
+    # Design-spec API: small | medium | large (default large). DAP may default medium.
+    size_type = '"small" | "medium" | "large"'
+    size_options_json = json.dumps(["small", "medium", "large"])
+    default_size = "medium" if use_dap_sizes else "large"
     icon_slug = _DEMO_ICON_SLUG
 
     variants = [v for v in (contract.variants or ["primary", "secondary", "tertiary", "destructive"]) if v]
@@ -141,7 +141,7 @@ export const StateHarness: Story = {{
 """
     else:
         icon_only_block = f"""
-      {{(["md", "lg"] as const).map((size) => (
+      {{(["medium", "large"] as const).map((size) => (
         <motionless key={{size}} className="sbIconOnlyRow">
           {{({variants_array} as const).map((variant) => (
             <{component_name}
@@ -326,29 +326,29 @@ export const SizeExamples: Story = {{
   render: () => (
     <div style={{{{ display: "grid", gap: 12 }}}}>
       <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}}}>
-        <{component_name} variant="primary" size="{"small" if use_dap_sizes else "sm"}">Small</{component_name}>
-        <{component_name} variant="primary" size="{"medium" if use_dap_sizes else "md"}">Medium</{component_name}>
-        <{component_name} variant="primary" size="{"large" if use_dap_sizes else "lg"}">Large</{component_name}>
+        <{component_name} variant="primary" size="small">Small</{component_name}>
+        <{component_name} variant="primary" size="medium">Medium</{component_name}>
+        <{component_name} variant="primary" size="large">Large</{component_name}>
       </div>
       <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}}}>
-        <{component_name} variant="secondary" size="{"small" if use_dap_sizes else "sm"}">
+        <{component_name} variant="secondary" size="small">
           <DemoIcon />
           Small
         </{component_name}>
-        <{component_name} variant="secondary" size="{"medium" if use_dap_sizes else "md"}">
+        <{component_name} variant="secondary" size="medium">
           <DemoIcon />
           Medium
         </{component_name}>
-        <{component_name} variant="secondary" size="{"large" if use_dap_sizes else "lg"}">
+        <{component_name} variant="secondary" size="large">
           <DemoIcon />
           Large
         </{component_name}>
       </div>
       <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}}}>
-        <{component_name} variant="tertiary" size="{"medium" if use_dap_sizes else "md"}" iconOnly aria-label="Settings medium">
+        <{component_name} variant="tertiary" size="medium" iconOnly aria-label="Settings medium">
           <DemoIcon />
         </{component_name}>
-        <{component_name} variant="tertiary" size="{"large" if use_dap_sizes else "lg"}" iconOnly aria-label="Settings large">
+        <{component_name} variant="tertiary" size="large" iconOnly aria-label="Settings large">
           <DemoIcon />
         </{component_name}>
       </div>
@@ -397,9 +397,9 @@ export const Sizes: Story = {{
     <motionless>
       <ButtonStoryStyles />
       <motionless className="sbSizeRow">
-        <{component_name} variant="primary" size="{"small" if use_dap_sizes else "sm"}">Small</{component_name}>
-        <{component_name} variant="primary" size="{"medium" if use_dap_sizes else "md"}">Medium</{component_name}>
-        <{component_name} variant="primary" size="{"large" if use_dap_sizes else "lg"}">Large</{component_name}>
+        <{component_name} variant="primary" size="small">Small</{component_name}>
+        <{component_name} variant="primary" size="medium">Medium</{component_name}>
+        <{component_name} variant="primary" size="large">Large</{component_name}>
       </motionless>
     </motionless>
   ),

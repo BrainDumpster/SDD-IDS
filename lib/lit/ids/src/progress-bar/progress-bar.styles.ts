@@ -24,6 +24,21 @@ export const progressBarStyles = css`
     gap: var(--spacing-space-4);
   }
 
+  /* Determinate/regular (with-label) never shrinks below 200px. */
+  .ids-progress-bar[data-type="with-label"] {
+    min-width: 200px;
+  }
+
+  /* Determinate/Inline never shrinks below 80px. */
+  .ids-progress-bar[data-type="inline"] {
+    min-width: 80px;
+  }
+
+  /* Indeterminate track never shrinks below 80px. */
+  .ids-progress-bar[data-type="indeterminate"] .ids-progress-bar-track {
+    min-width: 80px;
+  }
+
   .ids-progress-bar-labeled-block {
     display: flex;
     flex-direction: column;
@@ -35,7 +50,8 @@ export const progressBarStyles = css`
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: var(--padding-padding-8);
+    /* Min gap between label and percentage. */
+    gap: var(--spacing-space-16);
   }
 
   .ids-progress-bar-label,
@@ -44,6 +60,20 @@ export const progressBarStyles = css`
     font-weight: 400;
     line-height: var(--font-line-height-line-height-20);
     color: var(--color-text-gray-neutral-strong);
+  }
+
+  /* Label truncates with ellipsis so the meta row keeps its 16px min gap;
+     the full label is shown in a tooltip on hover/focus. */
+  .ids-progress-bar-meta .ids-progress-bar-label {
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .ids-progress-bar-meta .ids-progress-bar-value {
+    flex-shrink: 0;
   }
 
   .ids-progress-bar-inline-row {
@@ -55,7 +85,7 @@ export const progressBarStyles = css`
 
   .ids-progress-bar-inline-row .ids-progress-bar-track {
     flex: 1 1 0;
-    min-width: 0;
+    min-width: 36px;
   }
 
   .ids-progress-bar-inline-value {
@@ -182,6 +212,8 @@ export const progressBarStyles = css`
     }
   }
 
+  /* Helper row: text wraps up to 2 lines with the container width;
+     the status icon stays aligned with the first text line. */
   .ids-progress-bar-helper {
     display: flex;
     align-items: flex-start;
@@ -198,5 +230,17 @@ export const progressBarStyles = css`
     height: 16px;
     min-width: 16px;
     min-height: 16px;
+    margin-top: 2px;
+  }
+
+  .ids-progress-bar-helper-text {
+    flex-shrink: 1;
+    min-width: 0;
+    max-width: 900px;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
   }
 `;

@@ -1,8 +1,14 @@
 .root {
+  box-sizing: border-box;
   width: 100%;
   display: flex;
   flex-direction: column;
   gap: var(--spacing-space-4);
+}
+
+/* Determinate/regular (with-label) never shrinks below 200px. */
+.root[data-type="with-label"] {
+  min-width: 200px;
 }
 
 /* Determinate/Inline never shrinks below 80px. */
@@ -33,7 +39,7 @@
 /* Label truncates with ellipsis so the meta row keeps its 16px min gap;
    the full label is shown in a tooltip on hover/focus. */
 .label {
-  display: block;
+  flex: 1 1 auto;
   min-width: 0;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -173,15 +179,24 @@
 
 .helperText {
   margin: 0;
+  flex-shrink: 1;
+  min-width: 0;
+  max-width: 900px;
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   color: var(--color-text-gray-neutral);
   text-align: left;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
+/* Helper row: text wraps up to 2 lines; status icon aligns with first line. */
 .helperRow {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: var(--padding-padding-8);
 }
 
@@ -189,6 +204,7 @@
   width: 16px;
   height: 16px;
   flex-shrink: 0;
+  margin-top: 2px;
 }
 
 @keyframes progress-indeterminate {

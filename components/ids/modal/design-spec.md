@@ -333,6 +333,7 @@ IdsModal
 - **Composed pattern:** `data/component-figma-map.json` -> `Whats New` → `components/ids/whats-new/design-spec.md` (hosts content in `IdsModal` / `scenario=single-page`)
 - **Reference implementation (React):** `storybook/src/components/IdsModal.tsx` (composable shell); `storybook/src/components/Dialog.tsx` (dialog prop API); `storybook/src/components/IdsWhatsNew.tsx` (What's New stack)
 - **Lib React implementation (no Base UI):** `lib/react/ids/modal/` (`IdsModal`, `IdsModalHeader`, `IdsModalTitle`, `IdsModalDescription`, `IdsModalContent`, `IdsModalFooter`, `IdsModalClose`; selectors `ids-modal-*`); stories: `storybook/src/components/lib-generated/Modal.stories.tsx`
+- **Lib Lit implementation:** `lib/lit/ids/src/modal/` (`ids-modal`, `ids-modal-header`, `ids-modal-title`, `ids-modal-description`, `ids-modal-tabs`, `ids-modal-content`, `ids-modal-footer`, `ids-modal-close`); stories: `storybook-lit/src/components/Modal.stories.ts`
 - **Figma nodes used:**
   - `43411:178475` (`Content`, usage board)
   - `11348:63064` (`Modal-Main`, component details)
@@ -349,4 +350,4 @@ IdsModal
   - `1-Solid / status-error-diamond-solid`
   - `1-Solid / info-circ-solid`
 - **Extraction method:** Figma MCP `get_design_context` + `get_variable_defs` + `get_metadata`
-- **Last live verification:** 2026-08-10 — header insets revalidated (`43390:21759` Dialog matrix → `padding-24` top / `padding-8` bottom; `33841:42077` Modal-Main header still `padding-4` bottom)
+- **Last live verification:** 2026-11-13 — Figma MCP `get_metadata`/`get_variable_defs`/`get_design_context` on Modal-Main `11348:63064` (size matrix + Shadow 4 tokens), Overlay `11348:63172` (`--color-background-surface-overlay`), ModalDialog-Main `11349:116221` / Non-Alerting `40191:26351` (640px dialog, header `padding-24`/`padding-8`, severity icons)

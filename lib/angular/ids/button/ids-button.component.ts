@@ -10,7 +10,9 @@ import {
 import { CommonModule } from "@angular/common";
 import {
   BUTTON_SPEC_ACCURATE_DEFAULTS,
+  resolveButtonSize,
   type ButtonSize,
+  type ButtonSizeInput,
   type ButtonVariant,
 } from "@component-contracts/ids/button.contract";
 import { IdsIconComponent } from "../icon/ids-icon.component";
@@ -27,7 +29,8 @@ export class IdsButtonComponent implements OnChanges {
   readonly leadingIcon = contentChild(IdsIconComponent);
 
   @Input() variant: ButtonVariant = BUTTON_SPEC_ACCURATE_DEFAULTS.variant;
-  @Input() size: ButtonSize = BUTTON_SPEC_ACCURATE_DEFAULTS.size;
+  /** Design-spec: `small` | `medium` | `large` (aliases `sm` | `md` | `lg` accepted). */
+  @Input() size: ButtonSizeInput = BUTTON_SPEC_ACCURATE_DEFAULTS.size;
   @Input() disabled = BUTTON_SPEC_ACCURATE_DEFAULTS.disabled;
   @Input() loading = BUTTON_SPEC_ACCURATE_DEFAULTS.loading;
   @Input() iconOnly: boolean = BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly;
@@ -63,9 +66,9 @@ export class IdsButtonComponent implements OnChanges {
     return this.iconOnly;
   }
 
-  /** Icon-only square: sm 24×24 / md 32×32 / lg 40×40; glyph 12 / 14 / 16. */
+  /** Canonical size class: `small` | `medium` | `large`. */
   get resolvedSize(): ButtonSize {
-    return this.size;
+    return resolveButtonSize(this.size);
   }
 
   onClick(event: MouseEvent): void {

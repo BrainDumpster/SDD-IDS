@@ -3,7 +3,7 @@ from pathlib import Path
 
 class MarkdownGenerator:
     """
-    Generates RAG-optimized Markdown files for the design system.
+    Generates Markdown files for the design system.
     """
     def __init__(self, output_base_path: str = "design-system-knowledge/tokens"):
         self.output_path = Path(output_base_path)
@@ -12,7 +12,7 @@ class MarkdownGenerator:
     def _generate_table(self, title: str, variables: list, mode_map: dict) -> str:
         """Helper to create an LLM-friendly markdown table."""
         md = f"# {title}\n\n"
-        md += "This document contains design tokens for LLM context and RAG systems.\n\n"
+        md += "This document contains design tokens for LLM context.\n\n"
         md += "| Token Name | Collection | Mode | Value | Description |\n"
         md += "| :--- | :--- | :--- | :--- | :--- |\n"
         

@@ -1,44 +1,362 @@
 {
-  "name": "@ids/lit",
+  "name": "@ids/core",
   "version": "0.1.0",
-  "private": true,
   "type": "module",
-  "description": "IDS Lit web components generated from design-spec.md",
+  "description": "IDS Lit web components — publishable design-system library",
+  "license": "UNLICENSED",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "sideEffects": [
+    "**/*.css",
+    "**/register.js",
+    "./dist/**/register.js"
+  ],
   "exports": {
-    ".": "./dist/index.js",
-    "./accordion": "./dist/accordion/index.js",
-    "./accordion/register": "./dist/accordion/register.js",
-    "./icon": "./dist/icon/index.js",
-    "./icon/register": "./dist/icon/register.js",
-    "./theme": "./dist/theme/index.js",
-    "./assets": "./dist/assets/index.js",
-    "./progress-bar": "./dist/progress-bar/index.js",
-    "./progress-bar/register": "./dist/progress-bar/register.js",
-    "./button": "./dist/button/index.js",
-    "./button/register": "./dist/button/register.js",
-    "./checkbox": "./dist/checkbox/index.js",
-    "./checkbox/register": "./dist/checkbox/register.js",
-    "./radio-button": "./dist/radio-button/index.js",
-    "./radio-button/register": "./dist/radio-button/register.js",
-    "./ids-theme.css": "./styles/ids-theme.css"
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js"
+    },
+    "./theme": {
+      "types": "./dist/theme/index.d.ts",
+      "import": "./dist/theme/index.js"
+    },
+    "./assets": {
+      "types": "./dist/assets/index.d.ts",
+      "import": "./dist/assets/index.js"
+    },
+    "./ids-theme.css": "./styles/ids-theme.min.css",
+    "./styles/ids-theme.css": "./styles/ids-theme.css",
+    "./styles/ids-theme.min.css": "./styles/ids-theme.min.css",
+    "./assets/icons/*": "./assets/icons/*",
+    "./accordion": {
+      "types": "./dist/accordion/index.d.ts",
+      "import": "./dist/accordion/index.js"
+    },
+    "./accordion/register": {
+      "types": "./dist/accordion/register.d.ts",
+      "import": "./dist/accordion/register.js"
+    },
+    "./icon": {
+      "types": "./dist/icon/index.d.ts",
+      "import": "./dist/icon/index.js"
+    },
+    "./icon/register": {
+      "types": "./dist/icon/register.d.ts",
+      "import": "./dist/icon/register.js"
+    },
+    "./progress-bar": {
+      "types": "./dist/progress-bar/index.d.ts",
+      "import": "./dist/progress-bar/index.js"
+    },
+    "./progress-bar/register": {
+      "types": "./dist/progress-bar/register.d.ts",
+      "import": "./dist/progress-bar/register.js"
+    },
+    "./button": {
+      "types": "./dist/button/index.d.ts",
+      "import": "./dist/button/index.js"
+    },
+    "./button/register": {
+      "types": "./dist/button/register.d.ts",
+      "import": "./dist/button/register.js"
+    },
+    "./badge": {
+      "types": "./dist/badge/index.d.ts",
+      "import": "./dist/badge/index.js"
+    },
+    "./badge/register": {
+      "types": "./dist/badge/register.d.ts",
+      "import": "./dist/badge/register.js"
+    },
+    "./link": {
+      "types": "./dist/link/index.d.ts",
+      "import": "./dist/link/index.js"
+    },
+    "./link/register": {
+      "types": "./dist/link/register.d.ts",
+      "import": "./dist/link/register.js"
+    },
+    "./breadcrumb": {
+      "types": "./dist/breadcrumb/index.d.ts",
+      "import": "./dist/breadcrumb/index.js"
+    },
+    "./breadcrumb/register": {
+      "types": "./dist/breadcrumb/register.d.ts",
+      "import": "./dist/breadcrumb/register.js"
+    },
+    "./anchor-menu": {
+      "types": "./dist/anchor-menu/index.d.ts",
+      "import": "./dist/anchor-menu/index.js"
+    },
+    "./anchor-menu/register": {
+      "types": "./dist/anchor-menu/register.d.ts",
+      "import": "./dist/anchor-menu/register.js"
+    },
+    "./tooltip": {
+      "types": "./dist/tooltip/index.d.ts",
+      "import": "./dist/tooltip/index.js"
+    },
+    "./tooltip/register": {
+      "types": "./dist/tooltip/register.d.ts",
+      "import": "./dist/tooltip/register.js"
+    },
+    "./checkbox": {
+      "types": "./dist/checkbox/index.d.ts",
+      "import": "./dist/checkbox/index.js"
+    },
+    "./checkbox/register": {
+      "types": "./dist/checkbox/register.d.ts",
+      "import": "./dist/checkbox/register.js"
+    },
+    "./radio-button": {
+      "types": "./dist/radio-button/index.d.ts",
+      "import": "./dist/radio-button/index.js"
+    },
+    "./radio-button/register": {
+      "types": "./dist/radio-button/register.d.ts",
+      "import": "./dist/radio-button/register.js"
+    },
+    "./card": {
+      "types": "./dist/card/index.d.ts",
+      "import": "./dist/card/index.js"
+    },
+    "./card/register": {
+      "types": "./dist/card/register.d.ts",
+      "import": "./dist/card/register.js"
+    },
+    "./date-picker": {
+      "types": "./dist/date-picker/index.d.ts",
+      "import": "./dist/date-picker/index.js"
+    },
+    "./date-picker/register": {
+      "types": "./dist/date-picker/register.d.ts",
+      "import": "./dist/date-picker/register.js"
+    },
+    "./time-picker": {
+      "types": "./dist/time-picker/index.d.ts",
+      "import": "./dist/time-picker/index.js"
+    },
+    "./time-picker/register": {
+      "types": "./dist/time-picker/register.d.ts",
+      "import": "./dist/time-picker/register.js"
+    },
+    "./dropdown-single-select": {
+      "types": "./dist/dropdown-single-select/index.d.ts",
+      "import": "./dist/dropdown-single-select/index.js"
+    },
+    "./dropdown-single-select/register": {
+      "types": "./dist/dropdown-single-select/register.d.ts",
+      "import": "./dist/dropdown-single-select/register.js"
+    },
+    "./dropdown-multiselect": {
+      "types": "./dist/dropdown-multiselect/index.d.ts",
+      "import": "./dist/dropdown-multiselect/index.js"
+    },
+    "./dropdown-multiselect/register": {
+      "types": "./dist/dropdown-multiselect/register.d.ts",
+      "import": "./dist/dropdown-multiselect/register.js"
+    },
+    "./dropdown-combo-box": {
+      "types": "./dist/dropdown-combo-box/index.d.ts",
+      "import": "./dist/dropdown-combo-box/index.js"
+    },
+    "./dropdown-combo-box/register": {
+      "types": "./dist/dropdown-combo-box/register.d.ts",
+      "import": "./dist/dropdown-combo-box/register.js"
+    },
+    "./tab": {
+      "types": "./dist/tab/index.d.ts",
+      "import": "./dist/tab/index.js"
+    },
+    "./tab/register": {
+      "types": "./dist/tab/register.d.ts",
+      "import": "./dist/tab/register.js"
+    },
+    "./toast": {
+      "types": "./dist/toast/index.d.ts",
+      "import": "./dist/toast/index.js"
+    },
+    "./toast/register": {
+      "types": "./dist/toast/register.d.ts",
+      "import": "./dist/toast/register.js"
+    },
+    "./slider": {
+      "types": "./dist/slider/index.d.ts",
+      "import": "./dist/slider/index.js"
+    },
+    "./slider/register": {
+      "types": "./dist/slider/register.d.ts",
+      "import": "./dist/slider/register.js"
+    },
+    "./segmented-button": {
+      "types": "./dist/segmented-button/index.d.ts",
+      "import": "./dist/segmented-button/index.js"
+    },
+    "./segmented-button/register": {
+      "types": "./dist/segmented-button/register.d.ts",
+      "import": "./dist/segmented-button/register.js"
+    },
+    "./toggle-switch": {
+      "types": "./dist/toggle-switch/index.d.ts",
+      "import": "./dist/toggle-switch/index.js"
+    },
+    "./toggle-switch/register": {
+      "types": "./dist/toggle-switch/register.d.ts",
+      "import": "./dist/toggle-switch/register.js"
+    },
+    "./control": {
+      "types": "./dist/control/index.d.ts",
+      "import": "./dist/control/index.js"
+    },
+    "./control/register": {
+      "types": "./dist/control/register.d.ts",
+      "import": "./dist/control/register.js"
+    },
+    "./text-box": {
+      "types": "./dist/text-box/index.d.ts",
+      "import": "./dist/text-box/index.js"
+    },
+    "./text-box/register": {
+      "types": "./dist/text-box/register.d.ts",
+      "import": "./dist/text-box/register.js"
+    },
+    "./app-launcher": {
+      "types": "./dist/app-launcher/index.d.ts",
+      "import": "./dist/app-launcher/index.js"
+    },
+    "./app-launcher/register": {
+      "types": "./dist/app-launcher/register.d.ts",
+      "import": "./dist/app-launcher/register.js"
+    },
+    "./masthead": {
+      "types": "./dist/masthead/index.d.ts",
+      "import": "./dist/masthead/index.js"
+    },
+    "./masthead/register": {
+      "types": "./dist/masthead/register.d.ts",
+      "import": "./dist/masthead/register.js"
+    },
+    "./datagrid": {
+      "types": "./dist/datagrid/index.d.ts",
+      "import": "./dist/datagrid/index.js"
+    },
+    "./datagrid/register": {
+      "types": "./dist/datagrid/register.d.ts",
+      "import": "./dist/datagrid/register.js"
+    },
+    "./footer": {
+      "types": "./dist/footer/index.d.ts",
+      "import": "./dist/footer/index.js"
+    },
+    "./footer/register": {
+      "types": "./dist/footer/register.d.ts",
+      "import": "./dist/footer/register.js"
+    },
+    "./detail-panel": {
+      "types": "./dist/detail-panel/index.d.ts",
+      "import": "./dist/detail-panel/index.js"
+    },
+    "./detail-panel/register": {
+      "types": "./dist/detail-panel/register.d.ts",
+      "import": "./dist/detail-panel/register.js"
+    },
+    "./modal": {
+      "types": "./dist/modal/index.d.ts",
+      "import": "./dist/modal/index.js"
+    },
+    "./modal/register": {
+      "types": "./dist/modal/register.d.ts",
+      "import": "./dist/modal/register.js"
+    },
+    "./pagination": {
+      "types": "./dist/pagination/index.d.ts",
+      "import": "./dist/pagination/index.js"
+    },
+    "./pagination/register": {
+      "types": "./dist/pagination/register.d.ts",
+      "import": "./dist/pagination/register.js"
+    },
+    "./main-menu-left": {
+      "types": "./dist/main-menu-left/index.d.ts",
+      "import": "./dist/main-menu-left/index.js"
+    },
+    "./main-menu-left/register": {
+      "types": "./dist/main-menu-left/register.d.ts",
+      "import": "./dist/main-menu-left/register.js"
+    },
+    "./main-menu-top": {
+      "types": "./dist/main-menu-top/index.d.ts",
+      "import": "./dist/main-menu-top/index.js"
+    },
+    "./main-menu-top/register": {
+      "types": "./dist/main-menu-top/register.d.ts",
+      "import": "./dist/main-menu-top/register.js"
+    },
+    "./tree": {
+      "types": "./dist/tree/index.d.ts",
+      "import": "./dist/tree/index.js"
+    },
+    "./tree/register": {
+      "types": "./dist/tree/register.d.ts",
+      "import": "./dist/tree/register.js"
+    },
+    "./wizard": {
+      "types": "./dist/wizard/index.d.ts",
+      "import": "./dist/wizard/index.js"
+    },
+    "./wizard/register": {
+      "types": "./dist/wizard/register.d.ts",
+      "import": "./dist/wizard/register.js"
+    },
+    "./dual-list-box": {
+      "types": "./dist/dual-list-box/index.d.ts",
+      "import": "./dist/dual-list-box/index.js"
+    },
+    "./dual-list-box/register": {
+      "types": "./dist/dual-list-box/register.d.ts",
+      "import": "./dist/dual-list-box/register.js"
+    },
+    "./app-shell": {
+      "types": "./dist/app-shell/index.d.ts",
+      "import": "./dist/app-shell/index.js"
+    },
+    "./app-shell/register": {
+      "types": "./dist/app-shell/register.d.ts",
+      "import": "./dist/app-shell/register.js"
+    }
   },
   "files": [
     "dist",
     "styles",
-    "src"
+    "assets",
+    "README.md",
+    "CHANGELOG.md"
   ],
   "scripts": {
-    "build": "rollup --config ./rollup.config.js",
+    "clean": "rm -rf dist",
+    "build:assets": "node ./scripts/prepare-package-assets.mjs",
+    "build:js": "rollup --config ./rollup.config.js",
+    "build": "npm run clean && npm run build:assets && npm run build:js",
     "build:watch": "rollup --watch --config ./rollup.config.js",
     "dev": "npm run build:watch",
-    "clean": "rm -rf dist",
-    "prepare": "npm run build"
+    "pack:check": "npm pack --dry-run",
+    "prepublishOnly": "npm run build"
+  },
+  "peerDependencies": {
+    "lit": "^3.2.0"
+  },
+  "peerDependenciesMeta": {
+    "lit": {
+      "optional": false
+    }
   },
   "dependencies": {
-    "lit": "^3.2.1"
+    "lit": "^3.2.0"
   },
   "devDependencies": {
     "@rollup/plugin-node-resolve": "^16.0.1",
+    "@rollup/plugin-terser": "^0.4.4",
     "@rollup/plugin-typescript": "^12.1.2",
     "rollup": "^4.40.0",
     "tslib": "^2.8.1",

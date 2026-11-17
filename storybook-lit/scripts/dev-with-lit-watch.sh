@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Start Rollup watch for @ids/lit, then Storybook. Ctrl+C stops both.
+# Start Rollup watch for @ids/core, then Storybook. Ctrl+C stops both.
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")" && pwd)"
@@ -20,4 +20,6 @@ trap cleanup EXIT INT TERM
 WATCH_PID=$!
 
 fuser -k 6008/tcp 2>/dev/null || true
+# Drop stale Vite optimize-deps hashes (DocsRenderer-*-XXXX.js 404s)
+rm -rf "$(cd "$ROOT/.." && pwd)/node_modules/.cache/storybook"
 exec npx storybook dev -p 6008 --ci

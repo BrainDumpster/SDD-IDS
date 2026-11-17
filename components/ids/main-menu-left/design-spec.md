@@ -14,7 +14,7 @@
 - Secondary element states: [11099:56237](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-56237&m=dev) — `.MainMenu-Left-Element-Secondary`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Last verified: 2026-10-15 (Figma revision of `11099:56244` Primary, `11099:56230` PrimaryIcon, `11099:56237` Secondary — all states incl. Default-Focus / Selected-Focus)
-- Reference implementation: `lib/react/ids/main-menu-left/`, `lib/angular/ids/main-menu-left/` (canonical); legacy copies `storybook/src/components/MainMenuLeft.tsx` + `MainMenuLeft.module.css` (shared with Synapse), `storybook-angular/src/components/ids-main-menu-left/`
+- Reference implementation: `lib/react/ids/main-menu-left/`, `lib/angular/ids/main-menu-left/`, `lib/lit/ids/src/main-menu-left/` (canonical); legacy copies `storybook/src/components/MainMenuLeft.tsx` + `MainMenuLeft.module.css` (shared with Synapse), `storybook-angular/src/components/ids-main-menu-left/`, `storybook-lit/src/components/MainMenuLeft.stories.ts`
 - Spec path constant (imports / tooling): `storybook/src/spec-contracts/ids-main-menu-left.contract.ts`
 - Generated Storybook: `storybook-generated/ids/src/components/MainMenuLeft.stories.tsx` (title **`Spec Generated/IDS/Main Menu Left`**, primary story **`Spec Accurate Design`**)
 - Implementation guide: [`components/ids/main-menu-left/README.md`](./README.md)
@@ -417,5 +417,7 @@ Icons via shared `Icon` + `assets/icons/<slug>.svg` (Figma slugs above).
 - React composition: `storybook/src/components/MainMenuLeft.tsx`, `MainMenuLeft.compose.tsx`
 - Composition codegen: `generation/spec_derived/main_menu_left_composition.py` (deterministic Item | Group emitter)
 - Angular composition: `storybook-angular/src/components/ids-main-menu-left/` (`IDS_MAIN_MENU_LEFT_IMPORTS`)
+- Lit (`items[]` adapter parity with React lib): `lib/lit/ids/src/main-menu-left/`; Storybook: `storybook-lit/src/components/MainMenuLeft.stories.ts`
+- **Evidence (repo session):** 2026-11-13 — Figma MCP `get_metadata` + `get_design_context` + `get_variable_defs` on Expanded `11099:56218`, Collapsed `11099:56206`, Primary `11099:56244`, PrimaryIcon `11099:56230`, Secondary `11099:56237` (Lit port)
 - **Evidence (repo session):** 2026-09-02 — Figma MCP `get_design_context` + `get_metadata` + pixel screenshot on secondary Default-Focus `12016:227537` (1px gap: gray@0, white@1, blue@2) and primary Default-Focus `12016:227840` (`left/right: -1px`)
 - **Evidence (repo session):** 2026-09-01 — Figma MCP `get_design_context` + `get_variable_defs` + `get_metadata` on secondary/primary focus variants (file `0bHk3XhrjFhowgFkz9yLr4`)

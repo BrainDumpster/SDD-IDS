@@ -119,8 +119,12 @@ def compose_design_spec_mdx(
     local_doc_by_section: Dict[str, List[str]] | None = None,
     conflict_notes_by_section: Dict[str, List[str]] | None = None,
     map_path: str = "data/component-figma-map.json",
+    slot_geometry_md: str | None = None,
 ) -> str:
     now = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+    if slot_geometry_md is None:
+        from scripts.design_spec_template import SLOT_GEOMETRY_BOILERPLATE
+        slot_geometry_md = SLOT_GEOMETRY_BOILERPLATE
     node_hyphen = node_id_display.replace(":", "-")
     docs = docs_by_section or {}
     local_docs = local_doc_by_section or {}
@@ -275,6 +279,8 @@ def compose_design_spec_mdx(
 
 {_section_marker("layout-measurements")}
 ## Layout & Measurements
+
+{slot_geometry_md}
 
 {layout}
 

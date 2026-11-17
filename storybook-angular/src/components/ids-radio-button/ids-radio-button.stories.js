@@ -9,6 +9,7 @@ import { IDS_RADIO_BUTTON_IMPORTS } from "../../../compiled/lib/angular/ids/radi
 import {
   RADIO_BUTTON_COMPOSITION_DEMO_TEMPLATE,
   RADIO_BUTTON_DOCS_DESCRIPTION,
+  RADIO_BUTTON_GROUP_DEMO_TEMPLATE,
   RADIO_BUTTON_SOURCE_CODE,
   RADIO_BUTTON_STORY_SOURCE_CODE,
 } from "./ids-radio-button.developer-usage.js";
@@ -40,7 +41,12 @@ const meta = {
   },
   argTypes: {
     orientation: { control: "select", options: ["vertical", "horizontal"] },
+    labelPosition: { control: "select", options: ["left", "top"] },
     disabled: { control: "boolean" },
+    required: { control: "boolean" },
+    error: { control: "boolean" },
+    label: { control: "text" },
+    errorText: { control: "text" },
     valueChange: { action: "valueChange" },
   },
 };
@@ -83,7 +89,72 @@ export const SpecAccurateDesign = {
     value: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.defaultValue,
     disabled: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
     orientation: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.orientation,
+    label: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.label,
+    showLabel: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.showLabel,
+    required: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.required,
+    labelPosition: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.labelPosition,
+    labelIcon: false,
+    error: RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.error,
+    errorText: undefined,
   },
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsRadioButtonGroupComponent>} */
+export const RadioButtonGroup = {
+  name: "Radio Button Group",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Composition: `ids-radio-button-group` wraps form label + projected `ids-radio-button` items (label position, orientation, required, error).",
+      },
+      source: {
+        type: "code",
+        language: "html",
+        code: RADIO_BUTTON_GROUP_DEMO_TEMPLATE,
+      },
+    },
+  },
+  render: () => ({
+    template: RADIO_BUTTON_GROUP_DEMO_TEMPLATE,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsRadioButtonGroupComponent>} */
+export const RadioButtonGroupError = {
+  name: "Radio Button Group Error",
+  render: () => ({
+    template: `
+      <ids-radio-button-group
+        name="ids-radio-group-error"
+        label="Notifications:"
+        [required]="true"
+        [labelIcon]="true"
+        [error]="true"
+        errorText="You must select an option to continue."
+        orientation="vertical"
+      >
+        <ids-radio-button value="email" label="Email"></ids-radio-button>
+        <ids-radio-button value="sms" label="SMS"></ids-radio-button>
+        <ids-radio-button value="push" label="Push notification"></ids-radio-button>
+      </ids-radio-button-group>
+    `,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj<IdsRadioButtonGroupComponent>} */
+export const LongLabel = {
+  name: "Long Label",
+  render: () => ({
+    template: `
+      <ids-radio-button-group name="ids-radio-long" defaultValue="long">
+        <ids-radio-button
+          value="long"
+          label="This is a deliberately long radio option label that keeps going until the row reaches its 900px maximum width including the radio control itself, at which point the text wraps onto a second line without ever truncating, while the radio stays aligned to the top on the first line."
+        ></ids-radio-button>
+      </ids-radio-button-group>
+    `,
+  }),
 };
 
 /** @type {import("@storybook/angular").StoryObj<IdsRadioButtonGroupComponent>} */

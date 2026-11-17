@@ -65,12 +65,11 @@ export function resolveNativeType(value: unknown): IdsButtonNativeType {
 export function iconGlyphSize(
   size: IdsButtonSize,
   iconOnly: boolean,
-  variant: IdsButtonVariant = "primary",
+  _variant: IdsButtonVariant = "primary",
 ): number {
   if (!iconOnly) return 16;
   if (size === "small") return 12;
   if (size === "medium") return 14;
-  /* Ghost Neutral Large → UI Icon Spacing/icon-14 (Figma Type=Ghost) */
-  if (variant === "ghostNeutral" || variant === "ghost") return 14;
+  /* Large (all types incl. Ghost Neutral) → UI Icon Spacing/icon-16 */
   return 16;
 }

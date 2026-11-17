@@ -5,14 +5,14 @@
   "type": "module",
   "scripts": {
     "dev": "bash ./scripts/dev-with-lit-watch.sh",
-    "dev:storybook": "fuser -k 6008/tcp 2>/dev/null || true; storybook dev -p 6008 --ci",
+    "dev:storybook": "fuser -k 6008/tcp 2>/dev/null || true; rm -rf node_modules/.cache/storybook && storybook dev -p 6008 --ci",
     "build": "npm run build --prefix ../lib/lit/ids && storybook build",
     "build:lit": "npm run build --prefix ../lib/lit/ids",
     "build:lit:watch": "npm run build:watch --prefix ../lib/lit/ids",
     "storybook": "npm run dev"
   },
   "dependencies": {
-    "@ids/lit": "file:../lib/lit/ids",
+    "@ids/core": "file:../lib/lit/ids",
     "lit": "^3.2.1"
   },
   "devDependencies": {

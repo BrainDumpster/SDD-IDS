@@ -1,15 +1,17 @@
 /**
  * IdsProgressBar — Lit web component.
  *
- * Tag: `ids-progress-bar` (edf-core)
- * Visuals / a11y: `components/ids/progress-bar/design-spec.md`
+ * Tag: `ids-progress-bar`
+ * Spec: `components/ids/progress-bar/design-spec.md`
+ * React API parity: `lib/react/ids/progress-bar`
  *
- * Supports:
- * - Design-spec API: `type` (layout), `thickness`, `state`, `value`, `label`,
- *   `helperText`, `showHelperText`
- * - edf-core props: `progressLabel`, `displayValue`, `displayValuePosition`,
- *   `message`, `shape`, `loop`, `size` (sm|md|lg), `disabled`, and edf `type`
- *   status values (`success`|`warning`|`danger`|`info`|`neutral`)
+ * Primary (design-spec) props: `value`, `label`, `helperText`, `showHelperText`,
+ * `type`, `thickness`, `state`.
+ *
+ * Optional edf-core aliases (do not replace the design-spec API):
+ * `progressLabel`, `displayValue`, `displayValuePosition`, `message`, `shape`,
+ * `loop`, `size` (sm|md|lg), `disabled`, and edf status `type` values
+ * (`success`|`warning`|`danger`|`info`|`neutral`).
  *
  * When `type` is a layout value (`inline`|`with-label`|`indeterminate`) it drives
  * layout; when it is an edf status value it drives `state` (layout defaults via
@@ -23,7 +25,6 @@ import "../icon/register.js";
 import {
   EDF_STATUS_TYPES,
   HELPER_ICON_BY_STATE,
-  HELPER_ICON_COLOR_BY_STATE,
   LAYOUT_TYPES,
   STATES,
   THICKNESSES,
@@ -65,13 +66,13 @@ export class IdsProgressBar extends LitElement {
   @property({ type: String, reflect: true })
   type: string = "inline";
 
-  /** Design-spec thickness (preferred over edf `size`). */
+  /** Design-spec thickness (preferred over edf `size`). Default `medium`. */
   @property({ type: String, reflect: true })
-  thickness: string = "";
+  thickness: string = "medium";
 
-  /** Design-spec completion state. */
+  /** Design-spec completion state. Default `in-progress`. */
   @property({ type: String, reflect: true })
-  state: string = "";
+  state: string = "in-progress";
 
   /** edf-core: indeterminate loop animation. */
   @property({ type: Boolean, reflect: true })
@@ -139,18 +140,12 @@ export class IdsProgressBar extends LitElement {
     return "";
   }
 
+  /** Design-spec / React: helper row only when `showHelperText` and helper copy are set. */
   private shouldShowHelper(helper: string): boolean {
-    if (!helper) return false;
-    if (this.showHelperText) return true;
-    // edf demos set message/helperText without showHelperText
-    if (this.message || this.helperText) return true;
-    return false;
+    return this.showHelperText && Boolean(helper);
   }
 
-  private resolveHelperIcon(state: IdsProgressBarState): {
-    slug: string;
-    color?: string;
-  } | null {
+  private resolveHelperIcon(state: IdsProgressBarState): string | null {
     if (this.shape) {
       const slug = this.shape
         .replace(/^dell-/, "")
@@ -164,13 +159,10 @@ export class IdsProgressBar extends LitElement {
             : slug.includes("critical") || slug.includes("status-critical")
               ? "status-critical-square-solid"
               : this.shape.replace(/^dell-/, "").replace(/-ko-(yellow|green|red)$/, "");
-      return { slug: mapped };
+      return mapped;
     }
     if (state === "in-progress") return null;
-    return {
-      slug: HELPER_ICON_BY_STATE[state],
-      color: HELPER_ICON_COLOR_BY_STATE[state],
-    };
+    return HELPER_ICON_BY_STATE[state];
   }
 
   private percentText(clamped: number, layout: IdsProgressBarLayoutType): string {
@@ -212,6 +204,8 @@ export class IdsProgressBar extends LitElement {
     const showPercentage = Boolean(percentLabel);
     const progressClip = isIndeterminate ? "0%" : `${clamped}%`;
     const valueFull = !isIndeterminate && clamped >= 100;
+    // Indeterminate + success/warning/error: helper text only, no track.
+    const hideTrack = isIndeterminate && state !== "in-progress";
     const helper = this.resolveHelperText();
     const showHelper = this.shouldShowHelper(helper);
     const helperIcon = showHelper ? this.resolveHelperIcon(state) : null;
@@ -250,6 +244,7 @@ export class IdsProgressBar extends LitElement {
                         class="ids-progress-bar-label"
                         data-ids="ids-progress-bar-label"
                         data-hook-ids="ids-progress-bar-label"
+                        title=${resolvedLabel}
                         >${resolvedLabel}</span
                       >`
                     : nothing}
@@ -282,23 +277,26 @@ export class IdsProgressBar extends LitElement {
                     : nothing}
                 </div>
               `
-            : this.renderTrack(clamped, isIndeterminate)}
+            : hideTrack
+              ? nothing
+              : this.renderTrack(clamped, isIndeterminate)}
         ${showHelper
           ? html`
               <div
                 class="ids-progress-bar-helper"
                 data-ids="ids-progress-bar-helper"
+                title=${helper}
               >
                 ${helperIcon
                   ? html`<ids-icon
-                      shape=${helperIcon.slug}
+                      shape=${helperIcon}
                       size="16"
                       variant="img"
-                      .color=${helperIcon.color}
                       data-hook-ids="ids-progress-bar-shape"
                     ></ids-icon>`
                   : nothing}
                 <span
+                  class="ids-progress-bar-helper-text"
                   data-hook-ids=${this.message
                     ? "ids-progress-bar-helper-message"
                     : "ids-progress-bar-helper-text"}

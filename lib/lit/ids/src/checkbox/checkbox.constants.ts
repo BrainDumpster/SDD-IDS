@@ -3,6 +3,7 @@
  */
 export type CheckboxDensity = "default" | "datagrid";
 export type CheckboxGroupOrientation = "vertical" | "horizontal";
+export type CheckboxGroupLabelPosition = "left" | "top";
 export type IdsCheckboxDataState =
   | "default"
   | "hover"

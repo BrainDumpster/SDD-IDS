@@ -21,12 +21,14 @@ Popover app switcher — product tiles in a 2-column grid, optional options/foot
 | Main component set | [`13231:123761`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-123761&m=dev) (`AppLauncher-Main`) |
 | Element states | [`13231:109521`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=13231-109521&m=dev) (`AppLauncher-Element`) |
 | Verification method | Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`) |
-| Last verified | 2026-07-28 (impl fixes verified live in Storybook; see **Implementation Notes**) |
+| Last verified | 2026-11-10 (Figma MCP + Lit lib port; see **Source Mapping**) |
 | Theme CSS | `components/ids-theme.css` |
 | Shared implementation | `storybook/src/components/AppLauncher.tsx` (`programme="ids"` default) |
 | Lib React (no Base UI) | `lib/react/ids/app-launcher/` (`IdsAppLauncher` = **`AppLauncher`** root — not `AppLauncherRoot`; anatomy slots `IdsAppLauncherTrigger` …) |
+| Lib Lit | `lib/lit/ids/src/app-launcher/` (`ids-app-launcher` + `ids-app-launcher-product-tile`) |
 | Storybook (lib) | `storybook/src/components/lib-generated/AppLauncher.stories.tsx` |
 | Storybook | `storybook-generated/ids/src/components/AppLauncher.stories.tsx` |
+| Storybook (Lit) | `storybook-lit/src/components/AppLauncher.stories.ts` |
 | Programme fork | `components/synapse/app-launcher/design-spec.md` (Synapse deltas) |
 
 ### Validated Figma nodes
@@ -386,7 +388,9 @@ _Updated 2026-07-29._
 | 4 products | `13231:123908` |
 | 8 products | `13231:123730` |
 | Lib React | `lib/react/ids/app-launcher/` (`IdsAppLauncher` = `AppLauncher`) |
+| Lib Lit | `lib/lit/ids/src/app-launcher/` (`ids-app-launcher`) |
 | Shared implementation | `storybook/src/components/AppLauncher.tsx` |
 | Storybook | `storybook-generated/ids/src/components/AppLauncher.stories.tsx` |
+| Storybook (Lit) | `storybook-lit/src/components/AppLauncher.stories.ts` |
 | Programme fork | `components/synapse/app-launcher/design-spec.md` |
-| Verification | Figma MCP — **2026-06-05** |
+| Verification | Figma MCP — **2026-11-10** (`42266:95081`, `13231:123908`, `13231:124200`, `13231:109520`) |

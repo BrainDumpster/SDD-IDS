@@ -12,7 +12,7 @@
 - Figma file key: `0bHk3XhrjFhowgFkz9yLr4`
 - Component-map entry: `data/component-figma-map.json` -> `Slider` (legacy exploration link exists in map; this spec is validated against IDS Design Library nodes above).
 - Validated nodes: `22459:40319`, `22459:39022`, `22459:38985`, `22505:177044`, `42114:74026`
-- Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`) 2026-08-19 (`22459:38985`, `22459:38992`, `22459:38998`).
+- Last live verification: Figma MCP (`get_metadata`, `get_variable_defs`, `get_design_context`) 2026-11-09 (`22459:38985`, `22459:38992`, `22459:38998`, `22505:177044`, `22459:40319`).
 ## Anatomy
 Deterministic slider slots:
 1. `SliderRoot`
@@ -54,6 +54,7 @@ Element-part references from Figma:
 | Small marker (`SliderTick`) | visual diameter | `8px` | `.Slider-Element-Parts` `22459:38985` (`Markers-small` `22459:38986`) |
 | Large marker (`SliderThumb`) | size | `16px` × `16px` | spec parts matrix `22459:38985`; fill `var(--color-icon-brand-base)` on `22459:38992` (`get_variable_defs`) |
 | Track (`SliderRail`) | thickness | `4px` | `.Slider-Element-Parts` `22459:38985`; selected fill `var(--color-icon-brand-base)` on `22459:38998` (`get_variable_defs`) |
+| Track (`SliderRail`) | unselected outline | closed 4-side `var(--color-border-gray-disabled)` via inset shadows (runtime closes L/R ends; Figma part `22459:39002` shows top/bottom only) | runtime parity across React/Angular/Lit |
 | Range selector | sample width | `68px` (two 16px thumbs + selected rail) | `22459:39004` / `22459:39013` |
 | Focus halo | footprint | `22px` × `22px` | marker states `22505:177044` |
 | Value input | height | `32px` | compact text-input; padding `var(--padding-padding-16)` |
@@ -167,6 +168,7 @@ Dark theme uses the same structural state matrix and resolves all values through
 Framework selectors:
 - Angular: `ids-slider` (`lib/angular/ids/slider`)
 - React: `IdsSlider` (`lib/react/ids/slider`)
+- Lit: `ids-slider` (`lib/lit/ids/src/slider`)
 
 Contract mirror: `component-contracts/ids/slider.contract.ts`
 
@@ -250,10 +252,14 @@ Contract mirror: `component-contracts/ids/slider.contract.ts`
 | Runtime contract | `component-contracts/ids/slider.contract.ts` |
 | Angular reference | `lib/angular/ids/slider/` (`ids-slider`) |
 | React reference | `lib/react/ids/slider/` (`IdsSlider`) |
+| Lit reference | `lib/lit/ids/src/slider/` (`ids-slider`) |
 | Angular Storybook | `storybook-angular/src/components/ids-slider/ids-slider.stories.js` (title `Spec Generated/IDS/Slider`) |
+| Lit Storybook | `storybook-lit/src/components/Slider.stories.ts` (title `Spec Generated/IDS/Slider`) |
+| Live verification (Lit port) | Figma MCP `create_session` + `get_metadata` + `get_variable_defs` + `get_design_context` on `22459:38985`, `22459:38992`, `22459:38998`, `22505:177044`, `22459:40319` (2026-11-09) |
 
 ### Implementation Notes
-- Value inputs compose IDS compact text-input: React `IdsTextBox` / Angular `ids-text-box` with `size="small"`, no suffix icon, no helper text, `inputType="number"`.
+- Value inputs compose IDS compact text-input: React `IdsTextBox` / Angular `ids-text-box` with `size="small"`, no suffix icon, no helper text, `inputType="number"`. Lit `ids-slider` uses a native `input[type=number]` styled to the same compact contract (`32px` height, `var(--padding-padding-16)`, surface/border/text tokens) until a Lit text-box exists.
 - Range input separator is the literal `"-"` between the two compact fields.
 - `showStepper` and `showTicks` are OR’d; when either is true, snapping uses `stepperFrequency` (fallback `step`).
 - Unknown `mode` falls back to `single` (see Fallback/error rules).
+- Lit events: `value-change` / `value-commit` (CustomEvent detail = `IdsSliderValue`) mirror React `onValueChange` / `onValueCommit`.

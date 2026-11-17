@@ -13,6 +13,10 @@ Compact numeric or status indicator for counts and severity cues.
 |-------|------|---------|
 | \`value\` | \`string \\| number\` | \`BADGE_SPEC_ACCURATE_DEFAULTS.value\` |
 | \`type\` | \`BadgeType\` | \`BADGE_SPEC_ACCURATE_DEFAULTS.type\` |
+| \`ariaLabel\` | \`string\` | — |
+
+Numeric values \`> 999\` display as \`1K\`; hover/focus reveals the full value via
+\`ids-tooltip\` (\`hugContent\`, \`side="top"\`) — React parity.
 
 ## Events
 

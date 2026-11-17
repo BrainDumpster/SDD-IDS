@@ -36,8 +36,8 @@ Lit \`ids-button\` — tag/props aligned with **edf-core**, visuals from
 ## Theme
 
 \`\`\`ts
-import "@ids/lit/ids-theme.css";
-import { applyIdsTheme } from "@ids/lit/theme";
+import "@ids/core/ids-theme.css";
+import { applyIdsTheme } from "@ids/core/theme";
 applyIdsTheme({ theme: "light" });
 \`\`\`
 `.trim();

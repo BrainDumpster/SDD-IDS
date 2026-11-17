@@ -219,4 +219,6 @@ Resolution rules:
 - Runtime contract: `component-contracts/ids/toast.contract.ts`.
 - Angular reference implementation: `lib/angular/ids/toast/`.
 - React reference implementation: `lib/react/ids/toast/`.
+- Lit reference implementation: `lib/lit/ids/src/toast/`.
+- Lit Storybook: `storybook-lit/src/components/Toast.stories.ts`.
 - Angular Storybook: `storybook-angular/src/components/ids-toast/` (does not replace existing React stories).

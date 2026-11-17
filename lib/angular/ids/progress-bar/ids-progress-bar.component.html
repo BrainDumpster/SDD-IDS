@@ -5,9 +5,12 @@
   >
     <div class="ids-progress-bar-meta" data-ids="ids-progress-bar-meta">
       @if (label) {
-        <span class="ids-progress-bar-label" data-ids="ids-progress-bar-label">{{
-          label
-        }}</span>
+        <span
+          class="ids-progress-bar-label"
+          data-ids="ids-progress-bar-label"
+          [attr.title]="label"
+          >{{ label }}</span
+        >
       }
       @if (showPercentage) {
         <span class="ids-progress-bar-value" data-ids="ids-progress-bar-value">{{
@@ -31,12 +34,16 @@
       >
     }
   </div>
-} @else {
+} @else if (!hideTrack) {
   <ng-container *ngTemplateOutlet="track"></ng-container>
 }
 
 @if (showHelperRow) {
-  <div class="ids-progress-bar-helper" data-ids="ids-progress-bar-helper">
+  <div
+    class="ids-progress-bar-helper"
+    data-ids="ids-progress-bar-helper"
+    [attr.title]="helperText"
+  >
     @if (showHelperIcon) {
       <ids-icon
         class="ids-progress-bar-helper-icon"

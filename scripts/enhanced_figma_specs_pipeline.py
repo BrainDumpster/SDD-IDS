@@ -12,9 +12,6 @@ from typing import List, Dict, Any, Optional
 from datetime import datetime
 
 from tokens.figma_spec_extractor import FigmaSpecExtractor, ComponentSpec, generate_all_specs
-from embeddings.embedding_service import EmbeddingService
-from vectorstore.qdrant_store import QdrantStore
-from storage.document_registry import DocumentRegistry
 from utils.file_hash import compute_hash
 
 
@@ -28,14 +25,11 @@ logger = logging.getLogger(__name__)
 
 class EnhancedSpecPipeline:
     """
-    Enhanced pipeline for generating and indexing Figma component specifications
+    Enhanced pipeline for generating Figma component specifications
     """
     
     def __init__(self):
         self.extractor = FigmaSpecExtractor()
-        self.embedder = EmbeddingService().get_embedder()
-        self.vector_store = QdrantStore(self.embedder)
-        self.registry = DocumentRegistry()
         
         # Configuration
         self.figma_map_file = "/home/muthu/projects/ids_design_knowledge/data/component-figma-map.json"
@@ -135,9 +129,6 @@ class EnhancedSpecPipeline:
                     # Save MDX file
                     await self._save_spec_mdx(spec)
                     
-                    # Index in vector store
-                    await self._index_spec(spec)
-                    
                     batch_results["specs_generated"].append(spec.name)
                     batch_results["processed"] += 1
                     
@@ -193,81 +184,6 @@ spec_version: 1.0
             f.write(full_content)
         
         logger.debug(f"💾 Saved spec: {file_path}")
-    
-    async def _index_spec(self, spec: ComponentSpec) -> None:
-        """Index specification in vector store for RAG"""
-        # Convert spec to searchable text
-        searchable_content = self._spec_to_searchable_text(spec)
-        
-        # Create document chunks
-        chunks = self._create_chunks(spec, searchable_content)
-        
-        # Add to vector store
-        if chunks:
-            self.vector_store.add_documents(chunks)
-            logger.debug(f"🔍 Indexed {len(chunks)} chunks for {spec.name}")
-    
-    def _spec_to_searchable_text(self, spec: ComponentSpec) -> str:
-        """Convert specification to searchable text"""
-        content_parts = [
-            f"Component: {spec.name}",
-            f"Category: {spec.category}",
-            f"Overview: {spec.usage_guidelines or ''}",
-        ]
-        
-        if spec.anatomy:
-            content_parts.append("Anatomy:")
-            for part in spec.anatomy:
-                content_parts.append(f"- {part['name']}: {part['type']}")
-        
-        if spec.width and spec.height:
-            content_parts.append(f"Dimensions: {spec.width}x{spec.height}px")
-        
-        if spec.padding:
-            content_parts.append(f"Padding: {spec.padding}")
-        
-        if spec.font_family:
-            content_parts.append(f"Font: {spec.font_family} {spec.font_size or ''}px")
-        
-        if spec.states:
-            content_parts.append("States:")
-            for state in spec.states:
-                content_parts.append(f"- {state['name']}: {state['type']}")
-        
-        if spec.design_tokens:
-            content_parts.append("Design Tokens:")
-            for token in spec.design_tokens:
-                content_parts.append(f"- {token['name']}: {token['value']}")
-        
-        return "\n".join(content_parts)
-    
-    def _create_chunks(self, spec: ComponentSpec, content: str) -> List[Dict[str, Any]]:
-        """Create document chunks for vector storage"""
-        chunks = []
-        
-        # Create metadata
-        metadata = {
-            "component": spec.name,
-            "category": spec.category,
-            "source": f"figma-spec-{spec.name.lower().replace(' ', '-')}",
-            "type": "figma_spec",
-            "figma_url": spec.figma_url,
-            "node_id": spec.node_id,
-            "generated_at": datetime.now().isoformat()
-        }
-        
-        # Split content into chunks (simple approach for now)
-        chunk_size = 1000
-        for i in range(0, len(content), chunk_size):
-            chunk_content = content[i:i + chunk_size]
-            
-            chunk = {
-                "page_content": chunk_content,
-                "metadata": metadata.copy()
-            }
-            chunks.append(chunk)
-        
-        return chunks
     
     def _generate_summary_report(self, results: Dict[str, Any]) -> None:
         """Generate a summary report of the pipeline execution"""
@@ -329,9 +245,7 @@ Generated: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}
             # Generate new spec
             spec = await self._generate_single_spec(mapping)
             
-            # Save and index
             await self._save_spec_mdx(spec)
-            await self._index_spec(spec)
             
             logger.info(f"✅ Successfully regenerated spec for {component_name}")
             return True

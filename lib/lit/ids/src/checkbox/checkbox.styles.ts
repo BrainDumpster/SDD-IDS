@@ -17,7 +17,9 @@ export const checkboxStyles = css`
 
   .ids-checkbox-row {
     display: inline-flex;
-    align-items: center;
+    /* Long labels wrap under a 900px cap; control top-aligns on the first line. */
+    align-items: flex-start;
+    max-width: 900px;
     gap: var(--spacing-space-8);
     cursor: pointer;
     font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -30,9 +32,11 @@ export const checkboxStyles = css`
     color: var(--color-text-gray-neutral);
   }
 
+  /* Datagrid density: center 16px control; keep control-label gap (space-8). */
   .ids-checkbox[data-density="datagrid"] .ids-checkbox-row {
     min-height: 0;
-    gap: 0;
+    gap: var(--spacing-space-8);
+    align-items: center;
   }
 
   .ids-checkbox[data-density="datagrid"] .ids-checkbox-control {
@@ -40,6 +44,7 @@ export const checkboxStyles = css`
     height: 16px;
     min-width: 16px;
     min-height: 16px;
+    margin-top: 0;
   }
 
   .ids-checkbox[data-disabled="true"] .ids-checkbox-row {
@@ -70,6 +75,8 @@ export const checkboxStyles = css`
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    /* Optically center 16px control on first 20px text line ((20-16)/2 = 2px). */
+    margin-top: 2px;
     transition:
       background-color 100ms ease,
       border-color 100ms ease;
@@ -93,6 +100,7 @@ export const checkboxStyles = css`
     border-color: var(--color-border-brand-transparent-brand);
   }
 
+  /* Spec: hover does not change checked fill — stays controls-base. */
   .ids-checkbox[data-checked="true"]
     .ids-checkbox-row:hover:not([data-disabled="true"])
     .ids-checkbox-control,
@@ -101,34 +109,42 @@ export const checkboxStyles = css`
     .ids-checkbox-row:active:not([data-disabled="true"])
     .ids-checkbox-control,
   .ids-checkbox[data-checked="true"][data-state="press"] .ids-checkbox-control {
-    background: var(--color-background-controls-strong);
+    background: var(--color-background-controls-base);
     border-color: var(--color-border-brand-transparent-brand);
   }
 
-  .ids-checkbox[data-indeterminate="true"] .ids-checkbox-control {
+  .ids-checkbox[data-partial="true"] .ids-checkbox-control {
     background: var(--color-background-surface-component);
     border-color: var(--color-border-brand-base);
   }
 
-  .ids-checkbox[data-indeterminate="true"]
+  .ids-checkbox[data-partial="true"]
     .ids-checkbox-row:hover:not([data-disabled="true"])
     .ids-checkbox-control,
-  .ids-checkbox[data-indeterminate="true"][data-state="hover"]
-    .ids-checkbox-control,
-  .ids-checkbox[data-indeterminate="true"]
+  .ids-checkbox[data-partial="true"][data-state="hover"] .ids-checkbox-control,
+  .ids-checkbox[data-partial="true"]
     .ids-checkbox-row:active:not([data-disabled="true"])
     .ids-checkbox-control,
-  .ids-checkbox[data-indeterminate="true"][data-state="press"]
-    .ids-checkbox-control {
+  .ids-checkbox[data-partial="true"][data-state="press"] .ids-checkbox-control {
     background: var(--color-background-surface-component);
     border-color: var(--color-border-gray-neutral-strong);
   }
 
-  .ids-checkbox-input:focus-visible + .ids-checkbox-control,
-  .ids-checkbox[data-state="focus-visible"] .ids-checkbox-control,
-  .ids-checkbox[data-simulate-focus="true"] .ids-checkbox-control {
-    outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-    outline-offset: 2px;
+  .ids-checkbox-control::after {
+    content: "";
+    position: absolute;
+    inset: calc((var(--border-width-border-1) + 3px) * -1);
+    border-radius: var(--corner-radius-radius-4);
+    border: var(--border-width-border-1) solid var(--color-border-brand-base);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 100ms ease;
+  }
+
+  .ids-checkbox-input:focus-visible + .ids-checkbox-control::after,
+  .ids-checkbox[data-state="focus-visible"] .ids-checkbox-control::after,
+  .ids-checkbox[data-simulate-focus="true"] .ids-checkbox-control::after {
+    opacity: 1;
   }
 
   .ids-checkbox[data-disabled="true"] .ids-checkbox-control {
@@ -141,15 +157,12 @@ export const checkboxStyles = css`
     border-color: transparent;
   }
 
-  .ids-checkbox[data-disabled="true"][data-indeterminate="true"]
-    .ids-checkbox-control {
+  .ids-checkbox[data-disabled="true"][data-partial="true"] .ids-checkbox-control {
     background: var(--color-background-gray-light);
     border-color: var(--color-border-gray-disabled);
   }
 
-  .ids-checkbox[data-error="true"]:not([data-checked="true"]):not(
-      [data-indeterminate="true"]
-    )
+  .ids-checkbox[data-error="true"]:not([data-checked="true"]):not([data-partial="true"])
     .ids-checkbox-control {
     border-color: var(--color-border-gray-neutral-strong);
   }
@@ -165,7 +178,7 @@ export const checkboxStyles = css`
   }
 
   .ids-checkbox[data-checked="true"] .ids-checkbox-indicator,
-  .ids-checkbox[data-indeterminate="true"] .ids-checkbox-indicator {
+  .ids-checkbox[data-partial="true"] .ids-checkbox-indicator {
     display: inline-flex;
   }
 
@@ -192,7 +205,7 @@ export const checkboxStyles = css`
     transform: translate(-50%, -50%);
   }
 
-  .ids-checkbox[data-indeterminate="true"] .ids-checkbox-indicator {
+  .ids-checkbox[data-partial="true"] .ids-checkbox-indicator {
     color: var(--color-icon-brand-base);
   }
 
@@ -200,19 +213,31 @@ export const checkboxStyles = css`
     color: var(--color-icon-gray-inverse);
   }
 
-  .ids-checkbox[data-disabled="true"][data-indeterminate="true"]
-    .ids-checkbox-indicator {
+  .ids-checkbox[data-disabled="true"][data-partial="true"] .ids-checkbox-indicator {
     color: var(--color-icon-gray-disabled);
   }
 
   .ids-checkbox-label {
     user-select: none;
+    min-width: 0;
+    overflow-wrap: break-word;
     font-family: inherit;
     font-weight: 400;
     font-size: var(--font-size-body-2);
     line-height: var(--font-line-height-line-height-20);
     letter-spacing: 0;
     color: inherit;
+  }
+
+  .ids-checkbox-label ::slotted(label) {
+    font: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    cursor: inherit;
+    user-select: none;
   }
 
   .ids-checkbox-label--hidden {
@@ -264,17 +289,110 @@ export const checkboxGroupStyles = css`
     display: inline-flex;
   }
 
-  .ids-checkbox-group {
-    display: flex;
+  .IdsCheckboxGroup {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: flex-start;
     gap: var(--spacing-space-16);
   }
 
-  .ids-checkbox-group--vertical {
+  .IdsCheckboxGroup[data-label-position="left"] {
+    flex-direction: row;
+    gap: var(--spacing-space-16);
+  }
+
+  .IdsCheckboxGroup[data-label-position="left"][data-orientation="horizontal"]:not(
+      [data-has-error-message="true"]
+    ) {
+    align-items: center;
+  }
+
+  .IdsCheckboxGroup[data-label-position="top"] {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .IdsCheckboxGroupLabel {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+    font-size: var(--font-size-body-2);
+    font-weight: 400;
+    line-height: var(--font-line-height-line-height-20);
+    letter-spacing: 0;
+    color: var(--color-text-gray-neutral-strong);
+    white-space: nowrap;
+    min-height: 20px;
+    padding: 10px 0;
+  }
+
+  .IdsCheckboxGroupLabelText {
+    display: inline;
+  }
+
+  .IdsCheckboxGroupLabelText ::slotted(*) {
+    font: inherit;
+    color: inherit;
+    white-space: inherit;
+  }
+
+  .IdsCheckboxGroupLabel[hidden] {
+    display: none;
+  }
+
+  .IdsCheckboxGroupLabelRequired {
+    margin-left: 2px;
+  }
+
+  .IdsCheckboxGroupLabelIcon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    margin-left: var(--spacing-space-8);
+  }
+
+  .IdsCheckboxGroupBody {
+    display: flex;
     flex-direction: column;
   }
 
-  .ids-checkbox-group--horizontal {
-    flex-direction: row;
+  .IdsCheckboxGroup[data-label-position="left"][data-has-error-message="true"]
+    .IdsCheckboxGroupBody,
+  .IdsCheckboxGroup[data-label-position="left"][data-orientation="vertical"]
+    .IdsCheckboxGroupBody {
+    padding: var(--spacing-space-10) 0;
+  }
+
+  .IdsCheckboxGroup[data-orientation="vertical"] .IdsCheckboxGroupBody {
+    gap: var(--spacing-space-16);
+  }
+
+  .IdsCheckboxGroup[data-orientation="horizontal"] .IdsCheckboxGroupBody {
     gap: var(--spacing-space-8);
+  }
+
+  .IdsCheckboxGroupItems {
+    display: flex;
+  }
+
+  .IdsCheckboxGroup[data-orientation="vertical"] .IdsCheckboxGroupItems {
+    flex-direction: column;
+    gap: var(--spacing-space-16);
+  }
+
+  .IdsCheckboxGroup[data-orientation="horizontal"] .IdsCheckboxGroupItems {
+    flex-direction: row;
+    gap: var(--spacing-space-16);
+    flex-wrap: wrap;
+  }
+
+  .IdsCheckboxGroupError {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-8);
+    font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+    font-size: var(--font-size-body-2);
+    line-height: var(--font-line-height-line-height-20);
+    color: var(--color-text-alerting-critical-base);
   }
 `;

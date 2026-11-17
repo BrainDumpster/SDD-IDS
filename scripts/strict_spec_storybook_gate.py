@@ -35,14 +35,9 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--all", action="store_true", help="Process all components")
     parser.add_argument("--framework", default="React", choices=["React", "Angular"])
     parser.add_argument(
-        "--spec-only",
-        action="store_true",
-        help="Disable RAG/retrieval context and run using layered specs/theme only",
-    )
-    parser.add_argument(
         "--deterministic-story",
         action="store_true",
-        help="Generate Storybook stories offline from spec contracts (no LLM)",
+        help="No-op: story generation is always offline from spec contracts (kept for compatibility)",
     )
     parser.add_argument(
         "--style-mode",
@@ -248,11 +243,7 @@ def main() -> int:
         return 2
     generated_root.mkdir(parents=True, exist_ok=True)
 
-    compiler = ComponentContextCompiler(config=cfg, enable_rag=not args.spec_only)
-    generator = None
-    if not args.deterministic_story:
-        from generation.component_generator import ComponentGenerator
-        generator = ComponentGenerator()
+    compiler = ComponentContextCompiler(config=cfg)
     validator = DesignValidator()
     style_mode = StyleMode(args.style_mode)
     spec_parser = SpecContractParser()
@@ -267,78 +258,69 @@ def main() -> int:
     for component in components:
         print(f"🔍 Processing {component}")
         context = compiler.compile(component, f"Generate {component} component + strict Storybook stories")
-        generated = {}
         storybook_text = ""
 
-        if args.deterministic_story:
-            # Offline story generation: derive from spec contract only.
-            contract = spec_parser.parse(context.get("spec", ""))
-            story_path = get_story_path(
-                component_slug=component,
-                generated_root=generated_root,
-                framework=args.framework,
-            )
-            if is_angular:
-                colocated = get_angular_colocated_story_path(angular_storybook_root, component)
-                if colocated is not None:
-                    story_path = colocated
+        # Offline story generation: derive from spec contract only.
+        contract = spec_parser.parse(context.get("spec", ""))
+        story_path = get_story_path(
+            component_slug=component,
+            generated_root=generated_root,
+            framework=args.framework,
+        )
+        if is_angular:
+            colocated = get_angular_colocated_story_path(angular_storybook_root, component)
+            if colocated is not None:
+                story_path = colocated
 
-            program_spec = (project_root / cfg.program_components_dir / component / "design-spec.md").resolve()
-            program_root_spec = (project_root / cfg.program_root_spec_path).resolve()
-            has_program_delta = has_component_delta_in_root_spec(program_root_spec, component)
-            is_program_core = design_system.lower() != "ids" and program_spec.exists()
-            component_prefix = cfg.display_name if is_program_core else "Ids"
-            story_title_system = "IDS" if design_system.lower() == "ids" else cfg.display_name
+        program_spec = (project_root / cfg.program_components_dir / component / "design-spec.md").resolve()
+        program_root_spec = (project_root / cfg.program_root_spec_path).resolve()
+        has_program_delta = has_component_delta_in_root_spec(program_root_spec, component)
+        is_program_core = design_system.lower() != "ids" and program_spec.exists()
+        component_prefix = cfg.display_name if is_program_core else "Ids"
+        story_title_system = "IDS" if design_system.lower() == "ids" else cfg.display_name
 
-            spec_body = context.get("spec", "")
-            det_options = DeterministicStorybookOptions(
-                title_prefix=f"Components/{story_title_system}",
-                include_state_harness=True,
-                component_prefix=component_prefix,
-                design_system_slug=design_system.lower(),
-                apply_program_deltas=has_program_delta,
-                framework=framework_key,
-                spec_text=spec_body,
-            )
+        spec_body = context.get("spec", "")
+        det_options = DeterministicStorybookOptions(
+            title_prefix=f"Components/{story_title_system}",
+            include_state_harness=True,
+            component_prefix=component_prefix,
+            design_system_slug=design_system.lower(),
+            apply_program_deltas=has_program_delta,
+            framework=framework_key,
+            spec_text=spec_body,
+        )
 
-            # Spec-derived Toast layout CSS: IDS layered spec → shared Toast.module.css (before story emission).
-            if (
-                design_system.lower() == "ids"
-                and component.lower() == "toast"
-                and spec_body.strip()
-            ):
-                from generation.spec_derived.toast import parse_toast_spec, render_toast_module_css
+        # Spec-derived Toast layout CSS: IDS layered spec → shared Toast.module.css (before story emission).
+        if (
+            design_system.lower() == "ids"
+            and component.lower() == "toast"
+            and spec_body.strip()
+        ):
+            from generation.spec_derived.toast import parse_toast_spec, render_toast_module_css
 
-                toast_css_path = (project_root / "storybook" / "src" / "components" / "Toast.module.css").resolve()
-                try:
-                    model = parse_toast_spec(spec_body)
-                    toast_css_path.write_text(render_toast_module_css(model), encoding="utf-8")
-                    print("✅ toast: Toast.module.css synced from IDS toast spec")
-                except Exception as exc:
-                    failures.append(f"{component}: spec-derived Toast.module.css failed ({exc})")
+            toast_css_path = (project_root / "storybook" / "src" / "components" / "Toast.module.css").resolve()
+            try:
+                model = parse_toast_spec(spec_body)
+                toast_css_path.write_text(render_toast_module_css(model), encoding="utf-8")
+                print("✅ toast: Toast.module.css synced from IDS toast spec")
+            except Exception as exc:
+                failures.append(f"{component}: spec-derived Toast.module.css failed ({exc})")
 
-            storybook_text = generate_story_for_component(
-                design_system=design_system,
-                component=component,
-                repo_root=project_root,
-                story_path=story_path,
-                contract=contract,
-                options=det_options,
-                framework=args.framework,
-            ) or ""
-            if not storybook_text:
-                failures.append(f"{component}: deterministic story generator not implemented yet")
-                continue
-            if design_system.lower() != "ids" and (has_program_delta or program_spec.exists()) and not context.get("spec", "").strip():
-                failures.append(f"{component}: expected layered program spec context but got empty compiled spec")
-                continue
-        else:
-            if generator is None:
-                failures.append(f"{component}: LLM generator unavailable")
-                continue
-            generated = generator.generate(context=context, framework=args.framework, style_mode=style_mode)
-            storybook_text = generated.get("storybook", "")
-
+        storybook_text = generate_story_for_component(
+            design_system=design_system,
+            component=component,
+            repo_root=project_root,
+            story_path=story_path,
+            contract=contract,
+            options=det_options,
+            framework=args.framework,
+        ) or ""
+        if not storybook_text:
+            failures.append(f"{component}: deterministic story generator not implemented yet")
+            continue
+        if design_system.lower() != "ids" and (has_program_delta or program_spec.exists()) and not context.get("spec", "").strip():
+            failures.append(f"{component}: expected layered program spec context but got empty compiled spec")
+            continue
         if not storybook_text.strip():
             failures.append(f"{component}: generator did not return STORYBOOK section")
             continue
@@ -365,15 +347,6 @@ def main() -> int:
             json.dumps({"component": component, "spec_hash": spec_hash}, indent=2),
             encoding="utf-8",
         )
-
-        # Persist generated component artifacts only in LLM generation mode
-        if not args.deterministic_story:
-            component_name = "".join(part.capitalize() for part in re.split(r"[^a-zA-Z0-9]+", component) if part)
-            component_dir = generated_root / "src/components"
-            component_dir.mkdir(parents=True, exist_ok=True)
-            (component_dir / f"{component_name}.generated.tsx").write_text(generated.get("component", ""), encoding="utf-8")
-            if generated.get("css"):
-                (component_dir / f"{component_name}.generated.module.css").write_text(generated.get("css", ""), encoding="utf-8")
 
         story_path = get_story_path(
             component_slug=component,
@@ -406,8 +379,8 @@ def main() -> int:
         if old_hash and old_hash != new_hash and cfg.strict_storybook_gate:
             failures.append(f"{component}: stale story hash detected ({old_hash} != {new_hash})")
 
-        css_for_gate = generated.get("css", "") if isinstance(generated, dict) else ""
-        if args.deterministic_story and component.lower() == "toast":
+        css_for_gate = ""
+        if component.lower() == "toast":
             toast_css = (project_root / "storybook" / "src" / "components" / "Toast.module.css").resolve()
             if toast_css.is_file():
                 css_for_gate = toast_css.read_text(encoding="utf-8")

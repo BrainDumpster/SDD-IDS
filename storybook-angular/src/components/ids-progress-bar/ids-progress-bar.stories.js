@@ -68,7 +68,7 @@ export const SpecAccurateDesign = {
     docs: {
       description: {
         story:
-          "Figma `11099:57210` — with-label, thin, 30%, helper. Frame max-width 300px.",
+          "Live Figma `11099:57210` — with-label, medium, 30%, helper. Frame width 100% (no max-width cap).",
       },
       source: {
         type: "code",
@@ -100,7 +100,7 @@ export const ThicknessReference = {
   name: "Thickness Reference",
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+      <div style="display: flex; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box;">
         <ids-progress-bar
           [value]="30"
           label="Thin"
@@ -132,7 +132,7 @@ export const States = {
   name: "States",
   render: () => ({
     template: `
-      <div style="display: flex; flex-direction: column; gap: 16px; max-width: 300px;">
+      <div style="display: flex; flex-direction: column; gap: 16px; width: 100%; box-sizing: border-box;">
         <ids-progress-bar
           [value]="35"
           label="In Progress"

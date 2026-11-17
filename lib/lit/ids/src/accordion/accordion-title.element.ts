@@ -2,7 +2,7 @@
  * AccordionTitle — edf-core `ids-accordion-title` + IDS header/trigger contract.
  * Chevron: shared `ids-icon` with slug `chev-down-thick` (assets/icons/).
  */
-import { LitElement, html, nothing } from "lit";
+import { LitElement, PropertyValues, html, nothing } from "lit";
 import { state } from "lit/decorators.js";
 import type { IdsAccordion } from "./accordion.element.js";
 import type { IdsAccordionPanel } from "./accordion-panel.element.js";
@@ -20,6 +20,8 @@ export class IdsAccordionTitle extends LitElement {
   private root: IdsAccordion | null = null;
   private triggerId = "";
   private panelRegionId = "";
+  private titleEl: HTMLElement | null = null;
+  private resizeObserver: ResizeObserver | null = null;
 
   override connectedCallback(): void {
     super.connectedCallback();
@@ -30,6 +32,46 @@ export class IdsAccordionTitle extends LitElement {
   override disconnectedCallback(): void {
     super.disconnectedCallback();
     this.panel?.removeEventListener("onToggleContent", this.onPanelToggle);
+    this.resizeObserver?.disconnect();
+    this.resizeObserver = null;
+  }
+
+  override firstUpdated(): void {
+    this.titleEl = this.renderRoot.querySelector<HTMLElement>(".accordion-title");
+    if (this.titleEl && typeof ResizeObserver !== "undefined") {
+      this.resizeObserver = new ResizeObserver(() => this.syncTruncationTooltip());
+      this.resizeObserver.observe(this.titleEl);
+    }
+  }
+
+  override updated(_changed: PropertyValues<this>): void {
+    this.syncTruncationTooltip();
+  }
+
+  /**
+   * Design-spec: the full title is exposed via a native `title` tooltip only while
+   * the 2-line clamp is actually truncating it (measured overflow).
+   */
+  private syncTruncationTooltip(): void {
+    const el = this.titleEl;
+    if (!el) return;
+    const truncated = el.scrollHeight > el.clientHeight + 1 || el.scrollWidth > el.clientWidth + 1;
+    const text = this.ownTitleText();
+    if (truncated && text) {
+      el.setAttribute("title", text);
+    } else {
+      el.removeAttribute("title");
+    }
+  }
+
+  /** Light-DOM text that feeds the title slot (excludes named slots such as `meta`). */
+  private ownTitleText(): string {
+    return Array.from(this.childNodes)
+      .filter((node) => !(node instanceof Element && node.hasAttribute("slot")))
+      .map((node) => node.textContent ?? "")
+      .join("")
+      .replace(/\s+/g, " ")
+      .trim();
   }
 
   private bindPanel(): void {
@@ -114,6 +156,7 @@ export class IdsAccordionTitle extends LitElement {
           <span class="accordion-title" data-hook-ids="accordion-title">
             <slot></slot>
           </span>
+          <slot name="meta" class="accordion-meta" data-hook-ids="accordion-meta"></slot>
           ${chevron === "right" ? this.renderChevron() : nothing}
         </button>
       </h3>

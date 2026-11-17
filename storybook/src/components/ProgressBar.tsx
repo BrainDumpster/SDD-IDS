@@ -100,7 +100,7 @@ export function ProgressBar({
         track
       )}
       {showHelperText && helperText && (
-        <div className={styles.helperRow}>
+        <div className={styles.helperRow} title={helperText}>
           {state !== "in-progress" && <HelperStateIcon state={state} />}
           <p className={styles.helperText}>{helperText}</p>
         </div>

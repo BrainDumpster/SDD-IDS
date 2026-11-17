@@ -2,15 +2,61 @@
   display: inline-flex;
 }
 
-.group {
-  display: flex;
+.IdsRadioGroup {
+  display: inline-flex;
+  align-items: flex-start;
+}
+
+.IdsRadioGroup[data-label-position="left"] {
+  flex-direction: row;
   gap: var(--spacing-space-16);
 }
 
-.vertical {
+.IdsRadioGroup[data-label-position="left"][data-orientation="horizontal"]:not(
+    [data-has-error-message="true"]
+  ) {
+  align-items: center;
+}
+
+.IdsRadioGroup[data-label-position="top"] {
+  flex-direction: column;
+  gap: 0;
+}
+
+:host ::ng-deep .IdsRadioGroupLabel {
+  display: inline-flex;
+  align-items: center;
+}
+
+.IdsRadioGroupBody {
+  display: flex;
   flex-direction: column;
 }
 
-.horizontal {
+.IdsRadioGroup[data-label-position="left"][data-has-error-message="true"] .IdsRadioGroupBody,
+.IdsRadioGroup[data-label-position="left"][data-orientation="vertical"] .IdsRadioGroupBody {
+  padding: var(--spacing-space-10) 0;
+}
+
+.IdsRadioGroup[data-orientation="vertical"] .IdsRadioGroupBody {
+  gap: var(--spacing-space-16);
+}
+
+.IdsRadioGroup[data-orientation="horizontal"] .IdsRadioGroupBody {
+  gap: var(--spacing-space-8);
+}
+
+.IdsRadioGroupItems {
+  display: flex;
+}
+
+.IdsRadioGroup[data-orientation="vertical"] .IdsRadioGroupItems {
+  flex-direction: column;
+  gap: var(--spacing-space-16);
+}
+
+.IdsRadioGroup[data-orientation="horizontal"] .IdsRadioGroupItems {
   flex-direction: row;
+  gap: var(--spacing-space-16);
+  flex-wrap: wrap;
 }

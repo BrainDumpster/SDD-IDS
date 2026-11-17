@@ -484,12 +484,14 @@ Any slug matching `^[a-z0-9-]+$` under `assets/icons/` is valid at runtime; the 
 - **Storybook implementation (React composition):** `storybook/src/components/SegmentedButtonComposition.tsx` (`SegmentedButtons`, `SegmentedText`, `SegmentedIcon`), `SegmentedButton.module.css`
 - **Storybook implementation (React aggregate — deprecated):** `storybook/src/components/SegmentedButton.tsx`
 - **Lib React (compound API):** `lib/react/ids/segmented-button/` (`IdsSegmentedButton`, `IdsSegmentedText`, `IdsSegmentedIcon`); stories: `storybook/src/components/lib-generated/SegmentedButton.stories.tsx`
+- **Lib Lit (compound API):** `lib/lit/ids/src/segmented-button/` (`ids-segmented-buttons`, `ids-segmented-text`, `ids-segmented-icon`); stories: `storybook-lit/src/components/SegmentedButton.stories.ts`
 - **Storybook implementation (Angular composition):** `storybook-angular/src/components/ids-segmented-button/` (`ids-segmented-buttons`, `ids-segmented-text`, `ids-segmented-icon`)
 - **Runtime contract:** `component-contracts/ids/segmented-button.contract.ts`
 - **Composition reference (parent/child props):** product Angular tags `def-segmented-buttons` / `def-segmented-text` / `def-segmented-icon` — props `type`, `selected` event, child `value` / `label` / `shape` / `selected` / `title` / `ariaLabel`
 - **Shared Icon primitive (Storybook):** `storybook/src/components/Icon.tsx` (`shapeName` → `assets/icons/*.svg`)
 - **Codegen Icon module (IDS React):** `config/design_systems/ids.yaml` → `codegen.react.icon_component_module`
 - **Extraction method:** Figma MCP on `42113:67348`, `42113:67622`, `8218:13149`, `8218:13150`, `8218:13156`, `9015:20992`, `10148:29576`, `10148:29585`, `11925:236070` (validated 2026-04-20; **state matrix 2026-06-15**; **icon variant geometry 2026-06-24** — text `8218:13150`: **34px** outer / **28px** segment row; icon `42113:67622`: **39px** CSS `border-box` (layer **37px**) / **33px** content row / **32px** cell width / **100px** content width (3 options); root **1px** `border-accessible`, **2px** `padding-2`, **2px** inter-segment gap; segment **8px** horizontal padding, **9.5px** vertical auto-layout; glyph **16×14**, no icon stroke).
+- **Lit lib live re-verify (2026-11-09):** Figma MCP session on `42113:67348`, `42113:67622` (`get_variable_defs`), `10148:29585`, `8218:13150`, `42113:67642`, `9047:20375` (selected focus dashed `var(--color-border-gray-white)`).
 
 ## Implementation Notes
 

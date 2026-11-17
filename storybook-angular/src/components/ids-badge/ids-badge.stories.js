@@ -83,9 +83,14 @@ export const ContentSizing = {
         <ids-badge [value]="12" type="default"></ids-badge>
         <ids-badge [value]="128" type="default"></ids-badge>
         <ids-badge
-          value="999+"
+          [value]="999"
           type="default"
-          ariaLabel="Nine hundred ninety nine plus notifications"
+          ariaLabel="999 notifications"
+        ></ids-badge>
+        <ids-badge
+          [value]="1250"
+          type="critical"
+          ariaLabel="1250 notifications"
         ></ids-badge>
       </div>
     `,

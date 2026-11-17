@@ -18,8 +18,8 @@
   - Calendar — Range: `42159:132558` (`DatePicker-Element-Calendar`, range selection highlight)
   - Calendar — Month dropdown: `42159:132514` (`DatePicker-Element-Calendar`, property `Month Dropdown`)
   - Calendar — Year dropdown: `42159:132470` (`DatePicker-Element-Calendar`, property `Year Dropdown`)
-- Verification method: Figma MCP (`get_design_context` + `get_metadata`)
-- Last verified: 2026-05-26
+- Verification method: Figma MCP (`get_design_context` + `get_metadata` + `get_variable_defs`)
+- Last verified: 2026-11-06 (Lit port session — overview `42159:132058`, field `42159:133115`, calendar `42159:132612`, date cell `42159:132767`)
 
 ## Anatomy
 
@@ -653,7 +653,9 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 | `lib/react/ids/date-picker/` | React reference implementation |
 | `lib/react/ids/form-label/` | Shared label consumed by the Date Picker (`IdsFormLabel`) |
 | `lib/angular/ids/date-picker/` | Angular implementation (parity with React) |
+| `lib/lit/ids/src/date-picker/` | Lit web component (`ids-date-picker`; label markup matches Form Label tokens until Lit `ids-form-label` exists) |
 | `storybook-angular/src/components/ids-date-picker/` | Angular Spec Generated stories |
+| `storybook-lit/src/components/DatePicker.stories.ts` | Lit Spec Generated stories |
 
 ---
 

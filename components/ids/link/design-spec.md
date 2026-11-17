@@ -14,7 +14,7 @@
   - `Type=Dark Bg`: `9628:25130` (default), `12520:73197` (hover), `12520:73199` (press), `12520:73209` (focus)
   - With-icon matrix container: `43478:105167`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
-- Last verified: 2026-04-29 (current session)
+- Last verified: 2026-11-10 (Lit lib port; Figma MCP session)
 ## Anatomy
 - `root` (required): inline-flex container for text and optional icon.
 - `label` (required): clickable text content.
@@ -190,7 +190,9 @@ Variant matrix:
 - Reference implementations (API/style parity):
   - React: `lib/react/ids/link/`
   - Angular: `lib/angular/ids/link/`
+  - Lit: `lib/lit/ids/src/link/`
 - Storybook (Angular lib examples): `storybook-angular/src/components/ids-link/`
+- Storybook (Lit lib examples): `storybook-lit/src/components/Link.stories.ts`
 - External icon asset: `assets/icons/pop-up-square-corner-big.svg` (slug `pop-up-square-corner-big`, 16px via lib `IdsIcon`)
 - Layout tokens used by lib CSS (map Figma 8px / 14/20 / focus geometry):
   - Gap: `var(--spacing-space-8)`

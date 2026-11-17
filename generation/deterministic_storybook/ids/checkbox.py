@@ -31,7 +31,7 @@ const meta: Meta<typeof {component_name}> = {{
   parameters: {{ layout: "centered" }},
   argTypes: {{
     disabled: {{ control: "boolean" }},
-    indeterminate: {{ control: "boolean" }},
+    partial: {{ control: "boolean" }},
     error: {{ control: "boolean" }},
     helperText: {{ control: "text" }},
     label: {{ control: "text" }},
@@ -39,7 +39,7 @@ const meta: Meta<typeof {component_name}> = {{
   args: {{
     label: "Accept terms and conditions",
     disabled: false,
-    indeterminate: false,
+    partial: false,
     error: false,
   }},
 }};
@@ -56,7 +56,7 @@ export const SelectionStates: Story = {{
     <div className="sbCheckboxRow">
       <{component_name} label="Unchecked" />
       <{component_name} label="Checked" checked />
-      <{component_name} label="Indeterminate" indeterminate />
+      <{component_name} label="Partial" partial />
     </div>
   ),
 }};
@@ -66,7 +66,7 @@ export const DisabledStates: Story = {{
     <div className="sbCheckboxRow">
       <{component_name} label="Unchecked" disabled />
       <{component_name} label="Checked" checked disabled />
-      <{component_name} label="Indeterminate" indeterminate disabled />
+      <{component_name} label="Partial" partial disabled />
     </div>
   ),
 }};
@@ -112,10 +112,10 @@ export const StateHarness: Story = {{
       <div className="sbHarnessControl"><{component_name} label="Error (selected uses selected tokens)" checked error /></div>
       <div className="sbHarnessControl"><{component_name} label="Disabled" checked disabled /></div>
 
-      <div className="sbHarnessTitle">Indeterminate</div>
-      <div className="sbHarnessControl"><{component_name} label="Default" indeterminate /></div>
-      <div className="sbHarnessControl"><{component_name} label="Error (mixed uses mixed tokens)" indeterminate error /></div>
-      <div className="sbHarnessControl"><{component_name} label="Disabled" indeterminate disabled /></div>
+      <div className="sbHarnessTitle">Partial</div>
+      <div className="sbHarnessControl"><{component_name} label="Default" partial /></div>
+      <div className="sbHarnessControl"><{component_name} label="Error (mixed uses mixed tokens)" partial error /></div>
+      <div className="sbHarnessControl"><{component_name} label="Disabled" partial disabled /></div>
     </div>
   ),
 }};

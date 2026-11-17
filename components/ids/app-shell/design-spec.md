@@ -16,7 +16,7 @@
 | Figma file key | `0bHk3XhrjFhowgFkz9yLr4` |
 | Component set | `App Shell` (`43478:90797`) |
 | Verification method | Figma MCP (`get_design_context`, `get_metadata`) |
-| Last verified | 2026-07-13 |
+| Last verified | 2026-11-15 |
 | Storybook examples requested | yes |
 | Storybook path | `storybook-generated/ids/src/components/AppShell.stories.tsx` |
 | Storybook meta title | `Spec Generated/IDS/App Shell` |
@@ -26,6 +26,7 @@
 | Reference implementation | `storybook/src/components/AppShell.tsx`, `storybook/src/components/AppShell.module.css` |
 | React library | `lib/react/ids/app-shell` |
 | Angular library | `lib/angular/ids/app-shell` |
+| Lit library | `lib/lit/ids/app-shell` |
 
 ### Composed child specifications (mandatory)
 
@@ -246,7 +247,7 @@ Composable wrapper for the Masthead icons region (left → right, before App Lau
 |---|---|
 | React | `<AppShell headerActions={<AppShellHeaderActions>…</AppShellHeaderActions>} />` |
 | Angular | Prefer TemplateRef props matching React: `[headerActions]` / `[appLauncherSlot]` / `[avatarSlot]` on \`ids-app-shell\` (see \`lib/angular/ids/app-shell\`). Content projection of \`ids-app-shell-header-actions\` remains supported as a fallback. |
-| Vue / Lit | Named slot `header-actions` with default slot on wrapper component |
+| Vue / Lit | **Lit is projection-first** (`lib/lit/ids/app-shell`): host projects `ids-masthead` (`slot="masthead"`), `ids-main-menu-left` (`slot="main-menu"`), and `ids-footer` (`slot="footer"`) with **child-owned props**. Shell props are limited to layout/page chrome (`pages`, `breakpointPreset`, `showPageDescription`, `focusManagementOnNavigate`, `pageTitleLevel`, `persistMenuExpanded`). Masthead utility region uses Masthead slots (`icons` / `app-launcher` / `avatar`), not flat App Shell masthead passthrough. |
 
 **Optional primitives** (re-exported from Masthead spec for convenience inside `headerActions`):
 
@@ -648,10 +649,13 @@ Invalid `activePageId` → fall back to `defaultPageId` or first `pages[]` entry
 | Composed Main Menu instance | `43478:50551` → expanded `11099:56218` / collapsed `11099:56206` — see [`main-menu-left/design-spec.md`](../main-menu-left/design-spec.md) |
 | Composed Footer instance | `43478:50555` → `Footer` (`38908:5818`) |
 | Verification method | Figma MCP — `get_design_context`, `get_metadata` (confirmed nested Masthead + MainMenu-Left instances) |
-| Last live verification | 2026-07-13 |
+| Last live verification | 2026-11-15 (Figma MCP `get_metadata` / `get_design_context` / `get_variable_defs` on `43478:46307`, `43478:90925`, `43478:50553`) |
 | Design spec path | `components/ids/app-shell/design-spec.md` |
 | React library path | `lib/react/ids/app-shell` |
 | Angular library path | `lib/angular/ids/app-shell` |
+| Lit library path | `lib/lit/ids/app-shell` |
+| Lit Storybook | `storybook-lit/src/components/AppShell.stories.ts` (`Spec Generated/IDS/App Shell`) |
+| Lit composition | Projection-first: `slot="masthead"` / `slot="main-menu"` / `slot="footer"`; no flat Masthead/Main Menu/Footer passthrough props on `ids-app-shell`. `app-shell.constants.ts` = shell-owned types/helpers only (`AppShellPage`, breakpoint/persist helpers) — Spec Accurate menu/footer samples stay in Storybook. Host binds Main Menu `.expanded` via `resolveMenuExpandedDefault` / `menuExpandedDefault` when needed. |
 | Angular masthead slots | `headerActions` / `appLauncherSlot` / `avatarSlot` as `TemplateRef` inputs (React prop parity); Spec Accurate demo: `ids-app-shell-demo-host` |
 | Angular Storybook | `storybook-angular/src/components/ids-app-shell-lib/` (`Spec Generated/IDS/App Shell`) on port **6007** |
 | App Shell Figma (1920) | [`43478:46307`](https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=43478-46307&m=dev) — do not confuse with App Launcher main `13231:123761` |

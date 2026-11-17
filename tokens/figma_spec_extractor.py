@@ -13,6 +13,8 @@ from mcp.client.stdio import StdioServerParameters
 from tokens.figma_client import FigmaMCPClient
 from tokens.token_extractor import TokenExtractor
 
+from ingestion.figma_spec_extract import extract_slot_geometry
+
 
 @dataclass
 class ComponentSpec:
@@ -52,6 +54,9 @@ class ComponentSpec:
     
     # Usage Guidelines
     usage_guidelines: Optional[str] = None
+    
+    # Slot geometry (Figma-verified) markdown table
+    slot_geometry: Optional[str] = None
 
 
 class FigmaSpecExtractor:
@@ -88,15 +93,42 @@ class FigmaSpecExtractor:
         await self.figma_client.connect()
         
         try:
-            # Get design variables and context
-            figma_data = await self.figma_client.get_variables(figma_url)
-            figma_json = json.loads(figma_data) if figma_data else {}
+            # Get design context (node tree) and variables via MCP
+            design_context_text = await self.figma_client.get_design_context(figma_url)
+            design_context_json = json.loads(design_context_text) if design_context_text else {}
+            
+            variables_text = await self.figma_client.get_variables(figma_url)
+            variables_json = json.loads(variables_text) if variables_text else {}
+            
+            # Normalize design context into a node tree for extraction
+            if isinstance(design_context_json, dict):
+                if "nodes" in design_context_json:
+                    nodes_json = design_context_json
+                    node_search_data = {"document": design_context_json.get("nodes", {}).get(node_id, {}).get("document", {})}
+                elif "document" in design_context_json:
+                    node_search_data = design_context_json
+                    nodes_json = {"nodes": {node_id: design_context_json}}
+                else:
+                    node_search_data = {"document": design_context_json}
+                    nodes_json = {"nodes": {node_id: {"document": design_context_json}}}
+            else:
+                node_search_data = {}
+                nodes_json = {}
             
             # Extract design tokens
-            design_tokens = self.token_extractor.extract(figma_json)
+            design_tokens = self.token_extractor.extract(variables_json)
             
             # Parse node-specific information
-            node_info = self._extract_node_info(figma_json, node_id)
+            node_info = self._extract_node_info(node_search_data, node_id)
+            
+            # Build slot geometry table from live Figma data
+            slot_geometry_md = extract_slot_geometry(
+                nodes_json,
+                variables_json,
+                file_key="",
+                node_id=node_id,
+                component_name=component_name,
+            )
             
             # Build comprehensive spec
             spec = ComponentSpec(
@@ -105,7 +137,8 @@ class FigmaSpecExtractor:
                 figma_url=figma_url,
                 node_id=node_id,
                 **node_info,
-                design_tokens=design_tokens
+                design_tokens=design_tokens,
+                slot_geometry=slot_geometry_md,
             )
             
             print(f"✅ Extracted spec for {component_name}")
@@ -386,7 +419,13 @@ class FigmaSpecExtractor:
         
         mdx_content += """
 ## Layout & Measurements
+
 """
+        if spec.slot_geometry:
+            mdx_content += spec.slot_geometry + "\n"
+        else:
+            from scripts.design_spec_template import SLOT_GEOMETRY_BOILERPLATE
+            mdx_content += SLOT_GEOMETRY_BOILERPLATE + "\n"
         
         # Add layout information
         if spec.width and spec.height:

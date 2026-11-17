@@ -94,6 +94,10 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
     return this.disabled || Boolean(this.group?.disabled);
   }
 
+  get resolvedError(): boolean {
+    return this.error || Boolean(this.group?.error);
+  }
+
   get resolvedName(): string | undefined {
     return this.name ?? this.group?.name;
   }
@@ -140,8 +144,30 @@ export class IdsCheckboxComponent implements OnInit, OnChanges, AfterViewInit {
   }
 
   onInputChange(event: Event): void {
+    if (this.resolvedDisabled) {
+      event.preventDefault();
+      return;
+    }
     const input = event.target as HTMLInputElement;
-    const next = input.checked;
+    // Spec: next user toggle from partial → checked.
+    const next = this.partialState ? true : input.checked;
+    if (this.partialState) {
+      this.partialState = false;
+    }
+    if (!this.isControlled) {
+      this.internalChecked = next;
+    }
+    this.checkedChange.emit(next);
+    this.syncPartial();
+    this.cdr.markForCheck();
+  }
+
+  onInputKeydown(event: KeyboardEvent): void {
+    if (event.key !== "Enter" || this.resolvedDisabled) {
+      return;
+    }
+    event.preventDefault();
+    const next = this.partialState ? true : !this.resolvedChecked;
     if (this.partialState) {
       this.partialState = false;
     }

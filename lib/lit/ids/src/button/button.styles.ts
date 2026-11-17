@@ -126,16 +126,6 @@ export const buttonStyles = css`
     min-height: var(--ui-icon-spacing-icon-16);
   }
 
-  .ids-button--icon-only.ids-button--large.ids-button--ghost .ids-button-leading-icon,
-  .ids-button--icon-only.ids-button--large.ids-button--ghost-neutral .ids-button-leading-icon,
-  .ids-button--icon-only.ids-button--large.ids-button--ghost .ids-button-leading-icon ids-icon,
-  .ids-button--icon-only.ids-button--large.ids-button--ghost-neutral .ids-button-leading-icon ids-icon {
-    width: var(--ui-icon-spacing-icon-14);
-    height: var(--ui-icon-spacing-icon-14);
-    min-width: var(--ui-icon-spacing-icon-14);
-    min-height: var(--ui-icon-spacing-icon-14);
-  }
-
   .ids-button-leading-icon ids-icon {
     width: var(--ui-icon-spacing-icon-16);
     height: var(--ui-icon-spacing-icon-16);
@@ -259,7 +249,7 @@ export const buttonStyles = css`
 
   .ids-button--secondary:active:not(:disabled),
   .ids-button--secondary[data-state="press"] {
-    background: var(--color-background-controls-light);
+    background: var(--color-background-controls-press, var(--color-background-controls-light));
     box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-brand-strong);
   }
 
@@ -299,7 +289,7 @@ export const buttonStyles = css`
 
   .ids-button--tertiary:active:not(:disabled),
   .ids-button--tertiary[data-state="press"] {
-    background: var(--color-background-controls-light);
+    background: var(--color-background-controls-press, var(--color-background-controls-light));
     box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
   }
 
@@ -368,7 +358,7 @@ export const buttonStyles = css`
 .ids-button--ghost-neutral[data-state="hover"] {
     background: color-mix(
       in srgb,
-      var(--color-background-gray-neutral-lighter) 10%,
+      var(--ui-palette-slate-600) 10%,
       transparent
     );
   }
@@ -379,7 +369,7 @@ export const buttonStyles = css`
 .ids-button--ghost-neutral[data-state="press"] {
     background: color-mix(
       in srgb,
-      var(--color-background-gray-neutral-lighter) 20%,
+      var(--ui-palette-slate-600) 20%,
       transparent
     );
   }
@@ -401,7 +391,7 @@ export const buttonStyles = css`
 .ids-button--ghost-neutral[data-state="focus-visible"] {
     background: color-mix(
       in srgb,
-      var(--color-background-gray-neutral-lighter) 10%,
+      var(--ui-palette-slate-600) 10%,
       transparent
     );
     box-shadow:

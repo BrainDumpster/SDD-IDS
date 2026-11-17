@@ -12,9 +12,9 @@
     "isolatedModules": true,
     "noEmit": true,
     "paths": {
-      "@ids/lit": ["../lib/lit/ids/src/index.ts"],
-      "@ids/lit/ids-theme.css": ["../lib/lit/ids/styles/ids-theme.css"],
-      "@ids/lit/*": ["../lib/lit/ids/src/*"]
+      "@ids/core": ["../lib/lit/ids/src/index.ts"],
+      "@ids/core/ids-theme.css": ["../lib/lit/ids/styles/ids-theme.css"],
+      "@ids/core/*": ["../lib/lit/ids/src/*"]
     }
   },
   "include": ["src/**/*.ts", ".storybook/**/*.ts"]

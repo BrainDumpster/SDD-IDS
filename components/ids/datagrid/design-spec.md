@@ -1413,6 +1413,10 @@ Variant matrix:
   - `get_metadata`, `get_design_context`, `get_variable_defs` on nodes above; sort icon matrix **`37721:114646`** (symbols **`37721:114647`**–**`37721:114661`**) re-checked **`2026-06-05`** (Figma MCP); column freeze scenario **`37721:115949`** re-checked **`2026-06-05`**; row/cell frame **`37721:114580`** re-checked **`2026-05-13`**; column header **`37721:114663`**, title row **`37721:114673`**, filter **`37721:114677`** same method **`2026-05-13`**; **rows/columns layout** **`37721:113987`** + column instance **`37721:113995`**, settings **`37721:113997`** re-checked **`2026-05-14`**; chrome headers **`37721:114682`**, **`37721:114686`**, grid columns **`37721:113988`**, **`37721:114944`** re-checked **`2026-05-14`**; filter types **`37822:91069`**, **`44360:147581`**, **`44360:179074`**, **`44360:182265`**, **`37822:91073`** re-checked **`2026-05-25`** (Figma MCP — file key **`0bHk3XhrjFhowgFkz9yLr4`**); text filter search field **`37822:91077`** re-checked **`2026-07-28`** (Figma MCP `get_variable_defs` + REST + screenshot).
 - Angular library: `lib/angular/ids/datagrid/`
 - Angular Storybook: `storybook-angular/src/components/ids-datagrid/`
+- Lit library: `lib/lit/ids/src/datagrid/` (`@ids/core/datagrid`) — Angular composition child tags + host-owned chrome
+- Lit Storybook: `storybook-lit/src/components/Datagrid.stories.ts`
+- React library: `lib/react/ids/datagrid/`
+- Live Figma re-verified for Lit port **2026-11-10** (Figma MCP session): redesign root **`48122:183847`**, Column Header **`37721:114663`** (`get_design_context` + `get_variable_defs`), row/cell **`37721:114580`** (`get_variable_defs` + screenshot)
 
 ### Storybook generation contract
 

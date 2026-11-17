@@ -5,8 +5,13 @@
  * Visuals: `components/ids/checkbox/design-spec.md`
  *
  * Preferred composition: projected children in `ids-checkbox-group`.
- * edf-core uses a different slotted `ids-checkbox-wrapper` form pattern;
- * this port follows the design-spec / Angular / React API.
+ * Option label is a projected light-DOM `<label>` child (not a `label` prop):
+ *
+ * ```html
+ * <ids-checkbox>
+ *   <label>Email</label>
+ * </ids-checkbox>
+ * ```
  *
  * Event: `checked-change` (detail: boolean) — Angular `checkedChange`.
  */
@@ -30,14 +35,18 @@ export class IdsCheckbox extends LitElement {
   @query(".ids-checkbox-input")
   private inputEl?: HTMLInputElement;
 
+  private childObserver?: MutationObserver;
+
   @property({ type: String })
   id = "";
 
-  @property({ type: String })
-  label = "Accept terms and conditions";
-
+  /** When false, hide the projected option label (use `ariaLabel` for the name). */
   @property({ type: Boolean, attribute: "showlabel", reflect: true })
   showLabel = true;
+
+  /** Accessible name when no visible option label is projected (e.g. datagrid). */
+  @property({ type: String, attribute: "arialabel" })
+  ariaLabel = "";
 
   /** Storybook/docs only — static focus ring. */
   @property({ type: Boolean, attribute: "simulatefocusvisible", reflect: true })
@@ -63,8 +72,9 @@ export class IdsCheckbox extends LitElement {
   @property({ type: Boolean, attribute: "defaultchecked" })
   defaultChecked = false;
 
+  /** Partial / mixed selection (Figma “Partial”; ARIA `mixed`). */
   @property({ type: Boolean, reflect: true })
-  indeterminate = false;
+  partial = false;
 
   @property({ type: Boolean, reflect: true })
   disabled = false;
@@ -91,6 +101,9 @@ export class IdsCheckbox extends LitElement {
   @state()
   private internalChecked = false;
 
+  @state()
+  private hasLabelProjection = false;
+
   private autoId = `ids-checkbox-${++checkboxUid}`;
 
   override connectedCallback(): void {
@@ -99,16 +112,34 @@ export class IdsCheckbox extends LitElement {
     if (this.checked === undefined) {
       this.internalChecked = this.defaultChecked;
     }
+    this.syncProjectedLabels();
+    this.childObserver = new MutationObserver(() => this.syncProjectedLabels());
+    this.childObserver.observe(this, {
+      childList: true,
+      characterData: true,
+      subtree: true,
+    });
+  }
+
+  override disconnectedCallback(): void {
+    this.childObserver?.disconnect();
+    this.childObserver = undefined;
+    super.disconnectedCallback();
+  }
+
+  protected override firstUpdated(): void {
+    this.syncProjectedLabels();
   }
 
   override updated(changed: Map<string, unknown>): void {
     if (
-      changed.has("indeterminate") ||
+      changed.has("partial") ||
       changed.has("checked") ||
       changed.has("internalChecked")
     ) {
-      this.syncIndeterminate();
+      this.syncPartial();
     }
+    this.syncProjectedLabels();
   }
 
   private group(): IdsCheckboxGroup | null {
@@ -133,33 +164,69 @@ export class IdsCheckbox extends LitElement {
     );
   }
 
+  private resolvedError(): boolean {
+    return Boolean(this.error || this.group()?.error);
+  }
+
   private resolvedName(): string {
     return this.name || this.group()?.name || "";
+  }
+
+  private projectedLabels(): HTMLLabelElement[] {
+    return Array.from(this.children).filter(
+      (child): child is HTMLLabelElement => child.tagName === "LABEL",
+    );
+  }
+
+  private labelText(): string {
+    return (
+      this.projectedLabels()
+        .map((label) => label.textContent?.trim() ?? "")
+        .find(Boolean) ?? ""
+    );
   }
 
   private resolvedId(): string {
     if (this.id) return this.id;
     const prefix = this.group()?.idPrefix;
-    const slug = this.label.toLowerCase().replace(/[^a-z0-9]+/g, "-") || "option";
+    const slug =
+      this.labelText()
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, "") || "option";
     if (prefix) return `${prefix}-${slug}`;
     return this.autoId;
   }
 
-  private syncIndeterminate(): void {
-    const el = this.inputEl;
-    if (el) el.indeterminate = this.indeterminate;
+  /**
+   * Route direct `<label>` children into the option-label named slot and wire
+   * `for` to the input id (authors write plain `<label>` without `slot=`).
+   */
+  private syncProjectedLabels(): void {
+    const labels = this.projectedLabels();
+    const inputId = this.resolvedId();
+    for (const label of labels) {
+      if (label.getAttribute("slot") !== "label") {
+        label.setAttribute("slot", "label");
+      }
+      label.setAttribute("for", inputId);
+      label.setAttribute("data-ids", "ids-checkbox-label");
+    }
+
+    const nextHasLabel = labels.length > 0;
+    if (nextHasLabel !== this.hasLabelProjection) {
+      this.hasLabelProjection = nextHasLabel;
+    }
   }
 
-  private onInputChange = (event: Event): void => {
-    if (this.resolvedDisabled()) {
-      event.preventDefault();
-      return;
-    }
-    const input = event.target as HTMLInputElement;
-    // Spec: next user toggle from indeterminate → checked.
-    const next = this.indeterminate ? true : input.checked;
-    if (this.indeterminate) {
-      this.indeterminate = false;
+  private syncPartial(): void {
+    const el = this.inputEl;
+    if (el) el.indeterminate = this.partial;
+  }
+
+  private applyToggle(next: boolean): void {
+    if (this.partial) {
+      this.partial = false;
     }
     if (!this.isControlled()) {
       this.internalChecked = next;
@@ -171,7 +238,6 @@ export class IdsCheckbox extends LitElement {
         composed: true,
       }),
     );
-    // Native-like alias for form consumers.
     this.dispatchEvent(
       new CustomEvent("change", {
         detail: { checked: next },
@@ -179,18 +245,49 @@ export class IdsCheckbox extends LitElement {
         composed: true,
       }),
     );
+  }
+
+  private onInputChange = (event: Event): void => {
+    if (this.resolvedDisabled()) {
+      event.preventDefault();
+      return;
+    }
+    const input = event.target as HTMLInputElement;
+    // Spec: next user toggle from partial → checked.
+    const next = this.partial ? true : input.checked;
+    this.applyToggle(next);
+  };
+
+  private onInputKeydown = (event: KeyboardEvent): void => {
+    if (event.key !== "Enter" || this.resolvedDisabled()) return;
+    event.preventDefault();
+    const next = this.partial ? true : !this.resolvedChecked();
+    this.applyToggle(next);
+  };
+
+  /** Row is a div (projected `<label>` can't nest); clicks on the control toggle. */
+  private onRowClick = (event: MouseEvent): void => {
+    if (this.resolvedDisabled()) return;
+    const path = event.composedPath();
+    if (path.includes(this.inputEl as EventTarget)) return;
+    if (path.some((node) => node instanceof HTMLLabelElement)) return;
+    this.inputEl?.click();
   };
 
   override render() {
     const checked = this.resolvedChecked();
     const disabled = this.resolvedDisabled();
-    const partial = this.indeterminate;
-    const showChecked = checked && !partial;
+    const hasError = this.resolvedError();
+    const isPartial = this.partial;
+    const showChecked = checked && !isPartial;
     const inputId = this.resolvedId();
     const assistiveId = this.helperText ? `${inputId}-assistive` : undefined;
     const demoState =
       this.dataState && this.dataState !== "default" ? this.dataState : nothing;
-    const ariaChecked: boolean | "mixed" = partial ? "mixed" : checked;
+    const ariaChecked: boolean | "mixed" = isPartial ? "mixed" : checked;
+    const visibleLabel = this.showLabel && this.hasLabelProjection;
+    const inputAriaLabel =
+      !visibleLabel && this.ariaLabel ? this.ariaLabel : nothing;
 
     return html`
       <div
@@ -198,17 +295,17 @@ export class IdsCheckbox extends LitElement {
         data-ids="ids-checkbox"
         data-density=${this.density === "datagrid" ? "datagrid" : nothing}
         data-checked=${showChecked ? "true" : "false"}
-        data-indeterminate=${partial ? "true" : "false"}
+        data-partial=${isPartial ? "true" : "false"}
         data-disabled=${disabled ? "true" : "false"}
-        data-error=${this.error ? "true" : "false"}
+        data-error=${hasError ? "true" : "false"}
         data-simulate-focus=${this.simulateFocusVisible ? "true" : nothing}
         data-state=${demoState}
       >
-        <label
+        <div
           class="ids-checkbox-row"
           data-ids="ids-checkbox-row"
           data-disabled=${disabled ? "true" : "false"}
-          for=${inputId}
+          @click=${this.onRowClick}
         >
           <input
             id=${inputId}
@@ -220,10 +317,12 @@ export class IdsCheckbox extends LitElement {
             .value=${this.value}
             .checked=${checked}
             ?disabled=${disabled}
+            aria-label=${inputAriaLabel}
             aria-checked=${ariaChecked}
-            aria-invalid=${this.error ? "true" : nothing}
+            aria-invalid=${hasError ? "true" : nothing}
             aria-describedby=${assistiveId || nothing}
             @change=${this.onInputChange}
+            @keydown=${this.onInputKeydown}
           />
           <span
             class="ids-checkbox-control"
@@ -233,32 +332,33 @@ export class IdsCheckbox extends LitElement {
             <span
               class=${classMap({
                 "ids-checkbox-indicator": true,
-                "ids-checkbox-indicator--partial": partial,
-                "ids-checkbox-indicator--check": !partial,
+                "ids-checkbox-indicator--partial": isPartial,
+                "ids-checkbox-indicator--check": !isPartial,
               })}
               data-ids="ids-checkbox-indicator"
             ></span>
           </span>
           <span
-            class=${this.showLabel
+            class=${visibleLabel
               ? "ids-checkbox-label"
               : "ids-checkbox-label ids-checkbox-label--hidden"}
-            data-ids="ids-checkbox-label"
-            >${this.label}</span
+            data-ids="ids-checkbox-label-slot"
           >
-        </label>
+            <slot name="label"></slot>
+          </span>
+        </div>
         ${this.helperText
           ? html`
               <div
                 id=${assistiveId}
                 class=${classMap({
                   "ids-checkbox-assistive": true,
-                  "ids-checkbox-assistive--error": this.error && !disabled,
+                  "ids-checkbox-assistive--error": hasError && !disabled,
                   "ids-checkbox-assistive--disabled": disabled,
                 })}
                 data-ids="ids-checkbox-assistive"
               >
-                ${this.error && !disabled
+                ${hasError && !disabled
                   ? html`<span
                       class="ids-checkbox-error-icon"
                       aria-hidden="true"

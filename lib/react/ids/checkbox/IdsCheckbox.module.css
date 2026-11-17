@@ -102,11 +102,12 @@
   border-color: var(--color-border-brand-transparent-brand);
 }
 
+/* Spec: hover changes border/icon emphasis only — checked fill stays controls-base. */
 .ids-checkbox[data-checked="true"] .ids-checkbox-row:hover:not([data-disabled="true"]) .ids-checkbox-control,
 .ids-checkbox[data-checked="true"][data-state="hover"] .ids-checkbox-control,
 .ids-checkbox[data-checked="true"] .ids-checkbox-row:active:not([data-disabled="true"]) .ids-checkbox-control,
 .ids-checkbox[data-checked="true"][data-state="press"] .ids-checkbox-control {
-  background: var(--color-background-controls-strong);
+  background: var(--color-background-controls-base);
   border-color: var(--color-border-brand-transparent-brand);
 }
 

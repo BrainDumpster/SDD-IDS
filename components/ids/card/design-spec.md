@@ -18,11 +18,12 @@
 | Element overflow (kebab / Filter Menu) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=15718-197531&m=dev — **`15718:197531`** (`Filter Menu=Hide` closed trigger) |
 | Element content | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=15718-220135&m=dev — **`15718:220135`** (`.Card-Element-Content`) |
 | Validated variant nodes | **`8381:14245`** (Buttons=Yes, Overflow=Yes), **`8381:14305`** (Buttons=Yes, Overflow=No), **`15718:197984`** (Buttons=No, Overflow=Yes), **`15718:197994`** (Buttons=No, Overflow=No), **`15718:219736`** (Content Type=Text), **`15718:220110`** (Content Type=Key Value Pair) |
-| Verification method | Figma MCP (`get_screenshot`, `get_metadata`, `get_design_context`, `get_variable_defs`) — **2026-07-14** |
+| Verification method | Figma MCP (`get_screenshot`, `get_metadata`, `get_design_context`, `get_variable_defs`) — **2026-07-14**; re-verified for Lit port **2026-11-05** (`8381:14051`, `8381:14245`, `14978:28002`, `15718:197453`, `15718:219736`) |
 | Storybook | `storybook-generated/ids/src/components/Card.stories.tsx` — title **`Spec Generated/IDS/Card`**, story **`Spec Accurate Design`** |
 | Reference implementation | `storybook/src/components/Card.tsx`, `Card.module.css`, `CardHeaderMenu.tsx` |
 | Reference implementation (React lib) | `lib/react/ids/card` |
 | Reference implementation (Angular lib) | `lib/angular/ids/card` (`ids-card`; Dashboard override via `IDS_DASHBOARD_CARD_OVERRIDE`) |
+| Reference implementation (Lit lib) | `lib/lit/ids/src/card` (`ids-card`; Storybook `storybook-lit` → **Spec Generated/IDS/Card**) |
 | Deterministic generator | `generation/deterministic_storybook/ids/card.py` (registry key `("ids", "card")`) |
 | Composition dependencies | IDS Button (footer actions), IDS Dropdown menu / overlay pattern (kebab options), optional consumer Dropdown in `CardAdditionalFilter`, optional Key-value table instance in body |
 
@@ -476,4 +477,5 @@ Card [data-card-size=span-1|span-2|span-3]
 - Extraction path: Main board → primary variant `Show Buttons=Yes, Show Overflow menu=Yes` → header/body/footer shells → overflow element → content element templates
 - Runtime contract (React lib): `lib/react/ids/card/`
 - Runtime contract (Angular lib): `lib/angular/ids/card/`
+- Runtime contract (Lit lib): `lib/lit/ids/src/card/` (`ids-card`; Storybook `storybook-lit/src/components/Card.stories.ts`)
 - Dashboard parent override: `IDS_DASHBOARD_CARD_OVERRIDE` (`showDividerInCard` wins over Card `showDivider`)

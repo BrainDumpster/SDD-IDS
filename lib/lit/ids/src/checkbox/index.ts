@@ -6,5 +6,6 @@ export {
   CHECKBOX_MATRIX_LABEL,
   type CheckboxDensity,
   type CheckboxGroupOrientation,
+  type CheckboxGroupLabelPosition,
   type IdsCheckboxDataState,
 } from "./checkbox.constants.js";

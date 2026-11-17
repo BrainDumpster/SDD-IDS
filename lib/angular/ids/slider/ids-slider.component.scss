@@ -66,9 +66,12 @@
 
 .ids-slider-rail::before {
   background: var(--color-background-gray-light);
+  /* Closed 4-side outline via inset shadows (keeps 4px height; no border-box shrink). */
   box-shadow:
     inset 0 var(--border-width-border-1) 0 0 var(--color-border-gray-disabled),
-    inset 0 calc(-1 * var(--border-width-border-1)) 0 0 var(--color-border-gray-disabled);
+    inset 0 calc(-1 * var(--border-width-border-1)) 0 0 var(--color-border-gray-disabled),
+    inset var(--border-width-border-1) 0 0 0 var(--color-border-gray-disabled),
+    inset calc(-1 * var(--border-width-border-1)) 0 0 0 var(--color-border-gray-disabled);
   content: "";
   inset: 0;
   pointer-events: none;

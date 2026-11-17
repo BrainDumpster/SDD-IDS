@@ -1,5 +1,6 @@
 import asyncio
 import json
+import os
 import re
 from typing import Dict, Any, Optional
 from urllib.parse import urlparse, parse_qs
@@ -162,3 +163,75 @@ class FigmaAPIClient:
     def close(self):
         """Close the client (no-op for API client)"""
         pass
+
+
+class FigmaMCPClient:
+    """Async MCP client for Figma variable and design-context retrieval."""
+
+    def __init__(self):
+        self.session = None
+        self.read = None
+        self.write = None
+        self.figma_token = os.getenv("FIGMA_TOKEN")
+
+    async def connect(self):
+        """Connect to the Figma MCP server via stdio."""
+        if not self.figma_token:
+            raise RuntimeError("FIGMA_TOKEN not set in environment")
+
+        try:
+            from mcp.client.stdio import stdio_client, StdioServerParameters
+            from mcp import ClientSession
+        except ImportError as e:
+            raise RuntimeError(f"MCP SDK not installed: {e}")
+
+        server_params = StdioServerParameters(
+            command="npx",
+            args=[
+                "-y",
+                "mcp-remote",
+                "https://mcp.figma.com/mcp",
+                "--static-oauth-client-metadata",
+                '{"client_name":"Design Intelligence","client_uri":"http://100.65.144.93:8000"}',
+            ],
+            env={
+                "FIGMA_TOKEN": self.figma_token,
+                "NODE_EXTRA_CA_CERTS": "/etc/ssl/certs/ca-certificates.crt",
+            },
+        )
+
+        self._stdio_ctx = stdio_client(server_params)
+        self.read, self.write = await self._stdio_ctx.__aenter__()
+        self.session = ClientSession(self.read, self.write)
+        await self.session.initialize()
+
+    async def _call_tool_text(self, tool_name: str, figma_url: str) -> str:
+        if not self.session:
+            await self.connect()
+        result = await self.session.call_tool(
+            tool_name,
+            arguments={"url": figma_url},
+        )
+        if result.content:
+            return result.content[0].text
+        return "{}"
+
+    async def get_variables(self, figma_url: str) -> str:
+        """Return the raw JSON text from the Figma ``get_variable_defs`` tool."""
+        return await self._call_tool_text("get_variable_defs", figma_url)
+
+    async def get_design_context(self, figma_url: str) -> str:
+        """Return the raw JSON text from the Figma ``get_design_context`` tool."""
+        return await self._call_tool_text("get_design_context", figma_url)
+
+    async def disconnect(self):
+        """Close the MCP session."""
+        if self.session:
+            await self.session.close()
+            self.session = None
+        if getattr(self, "_stdio_ctx", None):
+            try:
+                await self._stdio_ctx.__aexit__(None, None, None)
+            except Exception:
+                pass
+            self._stdio_ctx = None

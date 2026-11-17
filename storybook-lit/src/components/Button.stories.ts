@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components";
 import { html } from "lit";
-import "@ids/lit/button/register.js";
+import "@ids/core/button/register.js";
 import {
   BUTTON_DOCS_DESCRIPTION,
   BUTTON_SOURCE_CODE,

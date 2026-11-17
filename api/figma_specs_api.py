@@ -36,7 +36,6 @@ class SpecGenerationRequest(BaseModel):
     node_id: str = Field(..., description="Figma node ID")
     category: str = Field(default="Unknown", description="Component category")
     save_to_file: bool = Field(default=True, description="Save spec to file")
-    index_in_vectorstore: bool = Field(default=True, description="Index in vector store")
 
 
 class BatchSpecRequest(BaseModel):
@@ -157,11 +156,6 @@ async def generate_specification(request: SpecGenerationRequest):
                 f.write(md_content)
             
             logger.info(f"💾 Saved spec to {file_path}")
-        
-        # Index in vector store if requested
-        if request.index_in_vectorstore:
-            # TODO: Implement vector store indexing
-            logger.info("🔍 Vector store indexing not yet implemented")
         
         return SpecResponse(
             success=True,

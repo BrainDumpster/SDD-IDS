@@ -4,7 +4,7 @@ Generate consolidated `components/ids/{slug}/design-spec.md` from:
   - Figma REST API (nodes + variables) using `figmaUrl` + `nodeId` from
     `data/component-figma-map.json` (file key is parsed from each URL, not from FIGMA_FILE_KEY).
   - Documentation MDX (local `components/ids/{slug}/` and/or GitHub `content/<slug>/` on branch `main` by default — see GITHUB_REF)
-  - Ollama vision for each relative image, routed by MDX heading context.
+  - Each relative image is listed under the MDX heading it appears in, routed by heading context.
     Unmatched headings become dynamic `##` sections in the spec (see `section_routes`).
 
 Example:
@@ -48,6 +48,7 @@ from config.settings import settings  # noqa: E402
 from ingestion.design_spec_composer import compose_design_spec_mdx  # noqa: E402
 from ingestion.figma_spec_extract import (  # noqa: E402
     extract_from_nodes_response,
+    extract_slot_geometry,
     summarize_variables,
 )
 from ingestion.figma_sync_client import FigmaSyncClient, extract_file_key_and_node_id  # noqa: E402
@@ -57,7 +58,6 @@ from ingestion.github_markdown_text import (  # noqa: E402
     merge_github_doc_sections,
 )
 from ingestion.markdown_heading_context import extract_images_with_heading_context  # noqa: E402
-from ingestion.ollama_vision import describe_design_image  # noqa: E402
 from ingestion.path_resolve import resolve_relative_path  # noqa: E402
 from ingestion.section_routes import route_section  # noqa: E402
 
@@ -241,10 +241,6 @@ def _append_vision_from_mdx(
     mdx_text: str,
     rel_mdx_path: str,
     *,
-    use_vision: bool,
-    vision_model: str | None,
-    ollama_host: str | None,
-    component_name: str,
     dynamic_heading_fallback: bool,
     image_fetch: Callable[[str], bytes | None],
     source_tag: str,
@@ -271,29 +267,9 @@ def _append_vision_from_mdx(
         )
         ctx = " > ".join(img.section_titles) if img.section_titles else "(root)"
 
-        if not use_vision:
-            vision_by_section[target].append(
-                f"- *(Vision skipped)* `{resolved_display}` under *{ctx}* [{source_tag}]"
-            )
-            continue
-
-        try:
-            out = describe_design_image(
-                raw,
-                section_context=ctx,
-                component_name=component_name,
-                alt=img.alt,
-                host=ollama_host,
-                model=vision_model,
-            )
-            vision_by_section[target].append(
-                f"*Image `{resolved_display}` — {ctx} [{source_tag}]*\n\n{out}"
-            )
-        except Exception as e:
-            print(f"❌ Ollama vision failed for {resolved}: {e}")
-            vision_by_section["Documentation imagery"].append(
-                f"- Vision error for `{resolved}` [{source_tag}]: `{e}`"
-            )
+        vision_by_section[target].append(
+            f"- `{resolved_display}` under *{ctx}* [{source_tag}]"
+        )
 
 
 def _dedupe_keep_order(lines: list[str]) -> list[str]:
@@ -340,9 +316,6 @@ def collect_vision_for_component(
     slug: str,
     component_name: str,
     *,
-    use_vision: bool,
-    vision_model: str | None,
-    ollama_host: str | None,
     docs_source: str,
     dynamic_heading_fallback: bool,
     github_prefix_extras: list[str] | None = None,
@@ -373,10 +346,6 @@ def collect_vision_for_component(
                     vision_by_section,
                     text,
                     rel,
-                    use_vision=use_vision,
-                    vision_model=vision_model,
-                    ollama_host=ollama_host,
-                    component_name=component_name,
                     dynamic_heading_fallback=dynamic_heading_fallback,
                     image_fetch=fetch_local,
                     source_tag="local",
@@ -417,10 +386,6 @@ def collect_vision_for_component(
                     vision_by_section,
                     text,
                     path,
-                    use_vision=use_vision,
-                    vision_model=vision_model,
-                    ollama_host=ollama_host,
-                    component_name=component_name,
                     dynamic_heading_fallback=dynamic_heading_fallback,
                     image_fetch=fetch_github_for_mdx,
                     source_tag="github",
@@ -461,8 +426,6 @@ def main() -> int:
     ap.add_argument("--component", required=True, help='Name as in component-figma-map, e.g. "Accordion"')
     ap.add_argument("--map", type=Path, default=ROOT / "data" / "component-figma-map.json")
     ap.add_argument("--skip-figma", action="store_true", help="Do not call Figma API")
-    ap.add_argument("--no-vision", action="store_true", help="Skip Ollama; still list image locations")
-    ap.add_argument("--vision-model", default=None, help="Override OLLAMA_VISION_MODEL")
     ap.add_argument(
         "--docs-source",
         choices=("local", "github", "both"),
@@ -503,12 +466,17 @@ def main() -> int:
     file_key = ""
     node_id_api = ""
 
+    slot_geometry_md = ""
     if not args.skip_figma:
         try:
             fk, nid = extract_file_key_and_node_id(figma_url)
             file_key, node_id_api = fk, nid
             client = FigmaSyncClient()
-            nodes_json = client.get_file_nodes(file_key, [node_id_raw.replace(":", "-")])
+
+            # Prefer the state matrix for slot geometry, fall back to the main node.
+            geometry_node_id = entry.get("stateMatrixNodeId") or node_id_raw
+            node_ids_to_fetch = list({node_id_raw.replace(":", "-"), geometry_node_id.replace(":", "-")})
+            nodes_json = client.get_file_nodes(file_key, node_ids_to_fetch)
             frag = extract_from_nodes_response(nodes_json, node_id_api)
             figma_anatomy = frag.get("anatomy", [])
             figma_layout = frag.get("layout", [])
@@ -516,6 +484,14 @@ def main() -> int:
             figma_colors = frag.get("colors", [])
             vars_json = client.get_variables(file_key)
             variable_bullets = summarize_variables(vars_json, limit=80)
+
+            slot_geometry_md = extract_slot_geometry(
+                nodes_json,
+                vars_json,
+                file_key,
+                geometry_node_id.replace("-", ":"),
+                component_name=args.component,
+            )
         except Exception as e:
             print(f"❌ Figma extraction failed: {e}")
             return 1
@@ -531,9 +507,6 @@ def main() -> int:
     vision_by_section, docs_by_section, local_doc_by_section, conflict_notes_by_section = collect_vision_for_component(
         slug,
         args.component,
-        use_vision=not args.no_vision,
-        vision_model=args.vision_model or settings.ollama_vision_model,
-        ollama_host=settings.ollama_host,
         docs_source=args.docs_source,
         dynamic_heading_fallback=not args.no_dynamic_headings,
         github_prefix_extras=gh_extras,
@@ -556,6 +529,7 @@ def main() -> int:
         local_doc_by_section=local_doc_by_section,
         conflict_notes_by_section=conflict_notes_by_section,
         map_path=_map_display_path(args.map),
+        slot_geometry_md=slot_geometry_md if slot_geometry_md else None,
     )
 
     out_dir = ids_spec_out_dir(slug)

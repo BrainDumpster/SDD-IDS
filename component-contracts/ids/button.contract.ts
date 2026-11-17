@@ -19,11 +19,23 @@ export type ButtonVariant =
 /** React/Synapse extended variants (rendering layer may map destructive → danger). */
 export type ButtonVariantExtended = ButtonVariant | "danger";
 
-export type ButtonSize = "sm" | "md" | "lg";
+/** Canonical size tokens from design-spec (`small` | `medium` | `large`). */
+export type ButtonSize = "small" | "medium" | "large";
+
+/** Accepted size inputs — short aliases map to canonical sizes. */
+export type ButtonSizeInput = ButtonSize | "sm" | "md" | "lg";
+
+/** Resolve design-spec size; unknown → `large`. Accepts `sm`/`md`/`lg` aliases. */
+export function resolveButtonSize(value: unknown): ButtonSize {
+  if (value === "small" || value === "sm") return "small";
+  if (value === "medium" || value === "md") return "medium";
+  if (value === "large" || value === "lg") return "large";
+  return "large";
+}
 
 export const BUTTON_SPEC_ACCURATE_DEFAULTS = {
   variant: "primary" as ButtonVariant,
-  size: "lg" as ButtonSize,
+  size: "large" as ButtonSize,
   /** React `children` / Angular default slot label for spec-accurate stories. */
   children: "Button",
   disabled: false,

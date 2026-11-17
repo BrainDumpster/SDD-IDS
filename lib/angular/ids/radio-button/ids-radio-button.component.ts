@@ -43,6 +43,11 @@ export class IdsRadioButtonComponent {
     return this.group.isItemDisabled(this);
   }
 
+  /** Merged with group `error` (design-spec cascade). */
+  get hasError(): boolean {
+    return this.error || this.group.error;
+  }
+
   get optionId(): string {
     return this.group.optionId(this.value);
   }

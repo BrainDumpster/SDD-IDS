@@ -291,7 +291,6 @@ When Storybook = **yes**, do this **in order** (do not stop at a hand-authored `
    ```bash
    DESIGN_SYSTEM=<programme> python3 scripts/strict_spec_storybook_gate.py \
      --component <kebab-slug> \
-     --spec-only \
      --deterministic-story
    ```
    - Exit must be **STRICT GATE PASSED** (fix coverage, theme import, overflow tokens when present in the spec)

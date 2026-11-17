@@ -17,15 +17,21 @@ import {
   type RadioButtonOrientation,
   type RadioButtonSimulatedState,
 } from "@component-contracts/ids/radio-button.contract";
+import { IdsErrorComponent, IdsErrorTextComponent } from "../error";
+import { IdsFormLabelComponent } from "../form-label/ids-form-label.component";
 import {
   IDS_RADIO_BUTTON_GROUP_CONTEXT,
   type IdsRadioButtonGroupContext,
+  type RadioButtonGroupLabelPosition,
 } from "./ids-radio-button-group-context";
 import { IdsRadioButtonComponent } from "./ids-radio-button.component";
+
+let radioGroupUid = 0;
 
 @Component({
   selector: "ids-radio-button-group",
   standalone: true,
+  imports: [IdsFormLabelComponent, IdsErrorComponent, IdsErrorTextComponent],
   templateUrl: "./ids-radio-button-group.component.html",
   styleUrl: "./ids-radio-button-group.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +42,8 @@ import { IdsRadioButtonComponent } from "./ids-radio-button.component";
 export class IdsRadioButtonGroupComponent
   implements OnInit, OnChanges, AfterContentInit, IdsRadioButtonGroupContext
 {
+  private readonly uid = ++radioGroupUid;
+
   @ContentChildren(IdsRadioButtonComponent) itemQuery!: QueryList<IdsRadioButtonComponent>;
 
   @Input() id?: string;
@@ -45,6 +53,23 @@ export class IdsRadioButtonGroupComponent
   @Input() disabled = RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.disabled;
   @Input() orientation: RadioButtonOrientation =
     RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.orientation;
+  /** Form label text for the whole group. */
+  @Input() label?: string;
+  /** When false, hide the form label and use `ariaLabel` for the accessible name. */
+  @Input() showLabel = RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.showLabel;
+  /** Accessible name when no visible label is rendered. */
+  @Input() ariaLabel?: string;
+  /** Form label position relative to options. */
+  @Input() labelPosition: RadioButtonGroupLabelPosition =
+    RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.labelPosition;
+  /** Renders `*` in the form label and sets `aria-required` on the group. */
+  @Input() required = RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.required;
+  /** When truthy, shows the shared form-label info icon (`showInfoIcon`). */
+  @Input() labelIcon: unknown;
+  /** Group-wide error; cascades to children and renders `errorText`. */
+  @Input() error = RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS.error;
+  /** Validation error message when `error` is true. */
+  @Input() errorText?: string;
 
   @Output() readonly valueChange = new EventEmitter<string>();
 
@@ -69,6 +94,9 @@ export class IdsRadioButtonGroupComponent
       this.internalValue = this.defaultValue;
       this.notifySelectionChange();
     }
+    if (changes["error"] || changes["disabled"]) {
+      this.notifySelectionChange();
+    }
   }
 
   ngAfterContentInit(): void {
@@ -82,6 +110,26 @@ export class IdsRadioButtonGroupComponent
 
   get resolvedValue(): string {
     return this.isControlled ? (this.value ?? "") : this.internalValue;
+  }
+
+  get shouldRenderLabel(): boolean {
+    return this.showLabel && Boolean(this.label);
+  }
+
+  get hasErrorMessage(): boolean {
+    return Boolean(this.error && this.errorText);
+  }
+
+  get labelId(): string {
+    return `${this.id ?? `ids-radio-group-${this.uid}`}-label`;
+  }
+
+  get errorId(): string {
+    return `${this.id ?? `ids-radio-group-${this.uid}`}-error`;
+  }
+
+  get showInfoIcon(): boolean {
+    return Boolean(this.labelIcon);
   }
 
   registerItems(items: readonly IdsRadioButtonComponent[]): void {
@@ -157,6 +205,7 @@ export class IdsRadioButtonGroupComponent
         targetIndex = enabledIndices[enabledIndices.length - 1];
         break;
       case " ":
+      case "Enter":
         event.preventDefault();
         this.select(item.value);
         return;

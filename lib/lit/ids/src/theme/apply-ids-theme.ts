@@ -1,18 +1,30 @@
 /**
  * Reusable IDS theme helpers for Lit apps / Storybook.
  *
- * Components in `@ids/lit` do **not** bundle theme CSS. Consumers must:
- * 1. Load `components/ids-theme.css` (or `@ids/lit/ids-theme.css`) globally
+ * Components in `@ids/core` do **not** bundle theme CSS inside shadow roots.
+ * Consumers must:
+ * 1. Load `@ids/core/ids-theme.css` once at the app root
  * 2. Call `applyIdsTheme({ theme })` (or set the same attributes manually)
  *
- * Tokens inherit into shadow DOM via CSS custom properties.
+ * Theme apply is **runtime-dynamic**: call again anytime to switch light/dark
+ * (or a future named theme). Tokens inherit into shadow DOM via CSS variables —
+ * no reload or component re-registration required.
  */
 
-export type IdsThemeMode = "light" | "dark";
-export type IdsDesignSystem = "ids" | "dap" | "synapse";
+/** Built-in modes shipped in ids-theme.css today. */
+export type IdsBuiltInThemeMode = "light" | "dark";
+
+/**
+ * Theme mode written to `data-theme`.
+ * Open string so future named themes (e.g. `high-contrast`) can be applied
+ * without a breaking type change once matching CSS blocks exist.
+ */
+export type IdsThemeMode = IdsBuiltInThemeMode | (string & {});
+
+export type IdsDesignSystem = "ids" | "dap" | "synapse" | (string & {});
 
 export interface ApplyIdsThemeOptions {
-  /** Light (default) or dark token set. */
+  /** Theme name written to `data-theme`. Default: `light`. */
   theme?: IdsThemeMode;
   /** Which programme theme block to activate. Default: `ids`. */
   designSystem?: IdsDesignSystem;
@@ -29,15 +41,15 @@ export interface ApplyIdsThemeOptions {
 }
 
 const THEME_LINK_ATTR = "data-ids-theme";
+const DEFAULT_THEME_HREF = "ids-theme.css";
 
 /**
  * Ensure the global IDS theme stylesheet is present (idempotent).
- * Prefer bundler import of `@ids/lit/ids-theme.css` / `components/ids-theme.css`
- * in apps; this helper is for Storybook / runtime injection when CSS is served
- * from `/components/ids-theme.css`.
+ * Prefer bundler import of `@ids/core/ids-theme.css` in apps; this helper is
+ * for Storybook / runtime injection when a CSS URL must be attached manually.
  */
 export function ensureIdsThemeStylesheet(
-  href = "/components/ids-theme.css",
+  href: string = DEFAULT_THEME_HREF,
   doc: Document = document,
 ): HTMLLinkElement | null {
   if (typeof doc === "undefined") return null;
@@ -55,14 +67,15 @@ export function ensureIdsThemeStylesheet(
 }
 
 /**
- * Apply light/dark (+ design-system) attributes so `ids-theme.css` token blocks activate.
- * Safe to call repeatedly (e.g. Storybook toolbar).
+ * Apply theme (+ design-system) attributes so `ids-theme.css` token blocks activate.
+ * Safe to call repeatedly at runtime (settings toggle, Storybook toolbar, OS preference).
  */
 export function applyIdsTheme(options: ApplyIdsThemeOptions = {}): void {
   const doc = options.doc ?? (typeof document !== "undefined" ? document : undefined);
   if (!doc) return;
 
-  const theme: IdsThemeMode = options.theme === "dark" ? "dark" : "light";
+  const rawTheme = options.theme == null ? "light" : String(options.theme).trim();
+  const theme: IdsThemeMode = rawTheme || "light";
   const designSystem: IdsDesignSystem = options.designSystem ?? "ids";
   const surface =
     options.surface === undefined
@@ -75,17 +88,32 @@ export function applyIdsTheme(options: ApplyIdsThemeOptions = {}): void {
 
   for (const el of targets) {
     el.setAttribute("data-theme", theme);
-    el.setAttribute("data-design-system", designSystem);
+    el.setAttribute("data-design-system", String(designSystem));
     el.classList.toggle("ids-theme-dark", theme === "dark");
     if (surface) {
       el.style.backgroundColor = surface;
     }
   }
 
-  doc.documentElement.style.colorScheme = theme;
+  if (theme === "dark") {
+    doc.documentElement.style.colorScheme = "dark";
+  } else if (theme === "light") {
+    doc.documentElement.style.colorScheme = "light";
+  }
+  // Future named themes: leave color-scheme alone unless callers set it.
+}
+
+/** Read the current theme from `document.documentElement` (`data-theme`). */
+export function getIdsTheme(doc: Document = document): IdsThemeMode {
+  if (typeof doc === "undefined") return "light";
+  const value = doc.documentElement.getAttribute("data-theme");
+  return value && value.trim() ? value.trim() : "light";
 }
 
 /** Resolve Storybook / app theme globals to a concrete mode. */
 export function resolveIdsThemeMode(value: unknown): IdsThemeMode {
-  return value === "dark" ? "dark" : "light";
+  if (typeof value === "string" && value.trim()) {
+    return value.trim();
+  }
+  return "light";
 }

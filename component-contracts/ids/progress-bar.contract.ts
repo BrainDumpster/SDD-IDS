@@ -43,14 +43,14 @@ export const PROGRESS_BAR_RUNTIME_DEFAULTS = {
 } as const;
 
 /**
- * Spec Accurate Design — Figma `11099:57210`
- * Determinate/regular, Thin, In Progress + helper. Frame max-width 300px.
+ * Spec Accurate Design — live Figma `11099:57210`
+ * Determinate/regular, Medium, In Progress + helper. Frame width 100% (no max-width cap).
  */
 export const PROGRESS_BAR_SPEC_ACCURATE_DEFAULTS = {
   value: 30,
   label: "Label",
   type: "with-label" as IdsProgressBarType,
-  thickness: "thin" as IdsProgressBarThickness,
+  thickness: "medium" as IdsProgressBarThickness,
   state: "in-progress" as IdsProgressBarState,
   showHelperText: true,
   helperText: "Helper text (time estimate)",
