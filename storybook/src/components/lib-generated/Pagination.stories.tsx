@@ -38,7 +38,6 @@ const specAccurateArgs: IdsPaginationProps = {
 
 const frameStyle: React.CSSProperties = {
   padding: 20,
-  maxWidth: 960,
   width: "100%",
   boxSizing: "border-box",
 };
