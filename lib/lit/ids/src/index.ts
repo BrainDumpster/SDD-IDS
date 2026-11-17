@@ -1,6 +1,7 @@
 export * from "./accordion/index.js";
 export * from "./progress-bar/index.js";
 export * from "./button/index.js";
+export * from "./icon-button/index.js";
 export * from "./badge/index.js";
 export * from "./link/index.js";
 export * from "./breadcrumb/index.js";

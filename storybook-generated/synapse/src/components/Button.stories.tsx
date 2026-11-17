@@ -35,7 +35,6 @@ const meta: Meta<typeof Button> = {
     size: { control: "select", options: ["small", "medium", "large"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
-    iconOnly: { control: "boolean" },
   },
   args: {
     programme: "synapse",
@@ -43,7 +42,6 @@ const meta: Meta<typeof Button> = {
     size: "large",
     disabled: false,
     loading: false,
-    iconOnly: false,
   },
 };
 
@@ -64,25 +62,18 @@ export const SpecAccurateDesign: Story = {
     size: "large",
     disabled: BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
     loading: BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
-    iconOnly: BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly,
   },
 };
 
 export const Playground: Story = {
   render: (args: ComponentProps<typeof Button>) => (
-    <Button
-      {...args}
-      aria-label={args.iconOnly ? (args["aria-label"] as string | undefined) ?? "Icon only button" : undefined}
-    >
-      {args.iconOnly ? <DemoIcon /> : (
-        <>
-          <DemoIcon />
-          Button
-        </>
-      )}
+    <Button {...args}>
+      <DemoIcon />
+      Button
     </Button>
   ),
 };
+
 
 export const StatesMatrix: Story = {
   render: () => (
@@ -159,30 +150,6 @@ export const SizeExamples: Story = {
         <Button programme="synapse" variant="secondary" size="large">
           <DemoIcon />
           Large
-        </Button>
-        <Button programme="synapse" variant="primary" size="small" iconOnly aria-label="Settings small">
-          <DemoIcon />
-        </Button>
-        <Button programme="synapse" variant="secondary" size="medium" iconOnly aria-label="Settings medium">
-          <DemoIcon />
-        </Button>
-        <Button programme="synapse" variant="tertiary" size="large" iconOnly aria-label="Settings large">
-          <DemoIcon />
-        </Button>
-        <Button programme="synapse" variant="ghostNeutral" size="large" iconOnly aria-label="Ghost Neutral large">
-          <DemoIcon />
-        </Button>
-        <Button programme="synapse" variant="primary" size="large" iconOnly disabled aria-label="Primary disabled">
-          <DemoIcon />
-        </Button>
-        <Button programme="synapse" variant="secondary" size="large" iconOnly disabled aria-label="Secondary disabled">
-          <DemoIcon />
-        </Button>
-        <Button programme="synapse" variant="tertiary" size="large" iconOnly disabled aria-label="Tertiary disabled">
-          <DemoIcon />
-        </Button>
-        <Button programme="synapse" variant="ghostNeutral" size="large" iconOnly disabled aria-label="Ghost Neutral disabled">
-          <DemoIcon />
         </Button>
       </div>
     </div>

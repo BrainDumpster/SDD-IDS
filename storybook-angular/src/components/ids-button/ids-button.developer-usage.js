@@ -6,6 +6,7 @@ export const BUTTON_DOCS_DESCRIPTION = `
 ## Overview
 
 Primary interactive control with variants, sizes, loading, and leading-icon projection.
+Icon-only → \`ids-icon-button\`.
 
 ## Props
 
@@ -17,8 +18,7 @@ Primary interactive control with variants, sizes, loading, and leading-icon proj
 | \`size\` | \`ButtonSize\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.size\` |
 | \`disabled\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.dis…\` |
 | \`loading\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.loa…\` |
-| \`iconOnly\` | \`boolean\` | \`false\` — square small 24 / medium 32 / large 40; glyph 12 / 14 / 16 |
-| \`ariaLabel\` | \`string\` | **required** when \`iconOnly\` (or Ghost Neutral) |
+| \`ariaLabel\` | \`string\` | — |
 | \`type\` | \`"button" \\| "submit" \\| "reset"\` | \`"button"\` |
 
 ## Events
@@ -30,10 +30,6 @@ Primary interactive control with variants, sizes, loading, and leading-icon proj
 ## API
 
 Import \`IDS_BUTTON_IMPORTS\` from the component imports barrel (compiled \`lib/angular/ids/button\`).
-
-\`\`\`ts
-import { IDS_BUTTON_IMPORTS } from "@ids/angular/button";
-\`\`\`
 `.trim();
 
 export const BUTTON_SOURCE_CODE = `import { Component } from "@angular/core";
@@ -80,16 +76,8 @@ export const BUTTON_COMPOSITION_DEMO_TEMPLATE = `
   [size]="size"
   [disabled]="disabled"
   [loading]="loading"
-  [iconOnly]="iconOnly"
-  [ariaLabel]="(iconOnly || variant === 'ghostNeutral' || variant === 'ghost') ? (ariaLabel || 'Icon only button') : ariaLabel"
 >
-  @if (!iconOnly && variant !== 'destructive' && variant !== 'ghostNeutral' && variant !== 'ghost') {
-    <ids-icon shapeName="${DEMO_ICON}" variant="mask" />
-  }
-  @if (!iconOnly && variant !== 'ghostNeutral' && variant !== 'ghost') {
-    Button
-  } @else {
-    <ids-icon shapeName="${DEMO_ICON}" variant="mask" />
-  }
+  <ids-icon shapeName="${DEMO_ICON}" variant="mask" />
+  Button
 </ids-button>
 `.trim();

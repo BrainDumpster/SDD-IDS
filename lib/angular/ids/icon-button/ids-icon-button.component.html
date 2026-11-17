@@ -1,0 +1,20 @@
+<button
+  [attr.type]="type"
+  [attr.aria-label]="ariaLabel || null"
+  [attr.data-size]="size"
+  [attr.data-shape]="shape"
+  [ngClass]="['ids-icon-button', variantClass, size, loading ? 'loading' : '']"
+  [class.pressed]="keyboardPressed"
+  [disabled]="disabled || loading"
+  (click)="onClick($event)"
+  (keydown)="onKeyDown($event)"
+  (keyup)="onKeyUp($event)"
+  (blur)="onBlur()"
+>
+  @if (loading) {
+    <span class="spinner" aria-hidden="true"></span>
+  }
+  <span class="icon-slot" [class.visually-hidden]="loading" aria-hidden="true">
+    <ids-icon [shape]="shape" [size]="glyphSize" variant="mask" />
+  </span>
+</button>

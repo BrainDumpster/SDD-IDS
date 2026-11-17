@@ -1,14 +1,8 @@
 /**
  * Button constants — design-spec + edf-core mapping.
+ * Icon-only → `lib/lit/ids/src/icon-button`.
  */
-export type IdsButtonVariant =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "destructive"
-  | "ghostNeutral"
-  /** @deprecated Alias of `ghostNeutral`. */
-  | "ghost";
+export type IdsButtonVariant = "primary" | "secondary" | "tertiary" | "destructive";
 
 export type IdsButtonSize = "small" | "medium" | "large";
 
@@ -28,8 +22,6 @@ const VARIANTS = new Set<IdsButtonVariant>([
   "secondary",
   "tertiary",
   "destructive",
-  "ghostNeutral",
-  "ghost",
 ]);
 
 const SIZES = new Set<IdsButtonSize>(["small", "medium", "large"]);
@@ -39,11 +31,7 @@ export function resolveVariant(value: unknown): IdsButtonVariant {
   if (typeof value !== "string") return "primary";
   const v = value.toLowerCase().replace(/_/g, "-");
   if (v === "danger" || v === "destructive") return "destructive";
-  if (v === "ghost" || v === "ghostneutral" || v === "ghost-neutral") {
-    return "ghostNeutral";
-  }
   if (VARIANTS.has(v as IdsButtonVariant)) return v as IdsButtonVariant;
-  if (v === "warning" || v === "success" || v === "icon") return "primary";
   return "primary";
 }
 
@@ -60,16 +48,4 @@ export function resolveSize(value: unknown): IdsButtonSize {
 export function resolveNativeType(value: unknown): IdsButtonNativeType {
   if (value === "submit" || value === "reset") return value;
   return "button";
-}
-
-export function iconGlyphSize(
-  size: IdsButtonSize,
-  iconOnly: boolean,
-  _variant: IdsButtonVariant = "primary",
-): number {
-  if (!iconOnly) return 16;
-  if (size === "small") return 12;
-  if (size === "medium") return 14;
-  /* Large (all types incl. Ghost Neutral) → UI Icon Spacing/icon-16 */
-  return 16;
 }

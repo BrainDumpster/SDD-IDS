@@ -1,20 +1,14 @@
 /**
  * IDS Button — framework-agnostic spec contract.
  * Full contract: `components/ids/button/design-spec.md`
+ * Icon-only / Ghost Neutral → `component-contracts/ids/icon-button.contract.ts`
  */
 export const IDS_BUTTON_DESIGN_SPEC_PATH = "components/ids/button/design-spec.md" as const;
 
 export const BUTTON_DEMO_ICON_SLUG = "settings-gear-detailed" as const;
 
-/** IDS button variants from design-spec.md variant matrix. */
-export type ButtonVariant =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "destructive"
-  | "ghostNeutral"
-  /** @deprecated Alias of `ghostNeutral` (Figma Type=Ghost / docs label Ghost Neutral). */
-  | "ghost";
+/** IDS button variants from design-spec.md variant matrix (text / icon+text). */
+export type ButtonVariant = "primary" | "secondary" | "tertiary" | "destructive";
 
 /** React/Synapse extended variants (rendering layer may map destructive → danger). */
 export type ButtonVariantExtended = ButtonVariant | "danger";
@@ -40,7 +34,6 @@ export const BUTTON_SPEC_ACCURATE_DEFAULTS = {
   children: "Button",
   disabled: false,
   loading: false,
-  iconOnly: false,
   /** Demo leading icon slug — Angular: project `<ids-icon [shapeName]="…" variant="mask" />`. */
   iconSlug: BUTTON_DEMO_ICON_SLUG,
 } as const;

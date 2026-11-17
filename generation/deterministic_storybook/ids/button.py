@@ -120,45 +120,6 @@ export const StateHarness: Story = {{
     # Replace placeholder tag with div (avoid accidental invalid elements in f-string)
     state_harness = state_harness.replace("motionless", "div")
 
-    icon_only_block = ""
-    if use_dap_sizes:
-        icon_only_block = f"""
-      {{(["medium", "large"] as const).map((size) => (
-        <div key={{size}} className="sbIconOnlyRow">
-          {{({variants_array} as const).map((variant) => (
-            <{component_name}
-              key={{`${{variant}}-${{size}}`}}
-              iconOnly
-              size={{size}}
-              variant={{variant}}
-              aria-label={{`${{variant}} icon button ${{size}}`}}
-            >
-              <Icon shapeName={{DEMO_ICON_SLUG}} variant="mask" />
-            </{component_name}>
-          ))}}
-        </div>
-      ))}}
-"""
-    else:
-        icon_only_block = f"""
-      {{(["medium", "large"] as const).map((size) => (
-        <motionless key={{size}} className="sbIconOnlyRow">
-          {{({variants_array} as const).map((variant) => (
-            <{component_name}
-              key={{`${{variant}}-${{size}}`}}
-              iconOnly
-              size={{size}}
-              variant={{variant}}
-              aria-label={{`${{variant}} icon button ${{size}}`}}
-            >
-              <Icon shapeName={{DEMO_ICON_SLUG}} variant="mask" />
-            </{component_name}>
-          ))}}
-        </motionless>
-      ))}}
-"""
-    icon_only_block = icon_only_block.replace("motionless", "motionless")
-    icon_only_block = icon_only_block.replace("motionless", "div")
 
     return f"""import type {{ Meta, StoryObj }} from "@storybook/react";
 import type {{ ComponentProps }} from "react";
@@ -189,16 +150,6 @@ function ButtonStoryStyles() {{
         gap: 12px;
         align-items: center;
         flex-wrap: wrap;
-      }}
-      .sbIconOnlyGrid {{
-        display: grid;
-        gap: 12px;
-      }}
-      .sbIconOnlyRow {{
-        display: flex;
-        gap: 12px;
-        flex-wrap: wrap;
-        align-items: center;
       }}
       .sbGrid {{
         display: grid;
@@ -236,14 +187,12 @@ const meta: Meta<typeof {component_name}> = {{
     size: {{ control: "select", options: {size_options_json} }},
     disabled: {{ control: "boolean" }},
     loading: {{ control: "boolean" }},
-    iconOnly: {{ control: "boolean" }},
   }},
   args: {{
     variant: "primary",
     size: "{default_size}",
     disabled: false,
     loading: false,
-    iconOnly: false,
   }},
 }};
 
@@ -283,22 +232,14 @@ export const SpecAccurateDesign: Story = {{
     size: "{default_size}",
     disabled: BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
     loading: BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
-    iconOnly: BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly,
   }},
 }};
 
 export const Playground: Story = {{
   render: (args) => (
-    <{component_name}
-      {{...args}}
-      aria-label={{args.iconOnly ? (args["aria-label"] as string | undefined) ?? "Icon only button" : undefined}}
-    >
-      {{args.iconOnly ? <DemoIcon /> : (
-        <>
-          <DemoIcon />
-          Button
-        </>
-      )}}
+    <{component_name} {{...args}}>
+      <DemoIcon />
+      Button
     </{component_name}>
   ),
 }};
@@ -342,14 +283,6 @@ export const SizeExamples: Story = {{
         <{component_name} variant="secondary" size="large">
           <DemoIcon />
           Large
-        </{component_name}>
-      </div>
-      <div style={{{{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}}}>
-        <{component_name} variant="tertiary" size="medium" iconOnly aria-label="Settings medium">
-          <DemoIcon />
-        </{component_name}>
-        <{component_name} variant="tertiary" size="large" iconOnly aria-label="Settings large">
-          <DemoIcon />
         </{component_name}>
       </div>
     </div>
@@ -462,15 +395,5 @@ export const IconComposition: Story = {{
   ),
 }};
 
-export const IconOnly: Story = {{
-  render: () => (
-    <motionless>
-      <ButtonStoryStyles />
-      <motionless className="sbIconOnlyGrid">
-{icon_only_block}
-      </motionless>
-    </motionless>
-  ),
-}};
 {state_harness}
 """.replace("motionless", "div")

@@ -21,8 +21,19 @@
     "nodeId": "41894-116123",
     "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
     "stateMatrixNodeId": "9662-25120",
-    "iconButtonSetNodeId": "52172-249499",
     "focusStateNodeId": "9662-25507"
+  },
+  {
+    "category": "Formelements",
+    "component": "Icon Button",
+    "designSpecPath": "components/ids/icon-button/design-spec.md",
+    "figmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=52172-249499&m=dev",
+    "nodeId": "52172-249499",
+    "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
+    "mainComponentSetNodeId": "52172-249499",
+    "focusStateNodeId": "9662-25541",
+    "ghostNeutralLargeDefaultNodeId": "52173-249627",
+    "docsLabelsNodeId": "52188-184316"
   },
   {
     "category": "Formelements",
