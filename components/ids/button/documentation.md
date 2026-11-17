@@ -1,6 +1,6 @@
 # Button documentation images
 
-Local companion to GitHub `ids-content`. Images are merged into `design-spec.md` via Ollama vision.
+Local companion to GitHub `ids-content`. Images are listed in `design-spec.md` under their MDX heading.
 
 ## Anatomy
 

@@ -35,7 +35,7 @@
 - Form label belongs to a `CheckboxGroup`, not to an individual `Checkbox`.
 - The group renders it with the shared **`IdsFormLabel`** component (`size="lg"`, 40px) — the group's `required` → `IdsFormLabel required`, and `labelIcon` (the `info-circ-solid` icon) → `IdsFormLabel showInfoIcon`. `aria-labelledby` points at the form label's inner `<label>`.
 - It is placed to the left or top of the checkbox group; the chosen position (left or top) should be common across the product.
-- Use `label` (string), `showLabel` (boolean, default `true`), and `ariaLabel` (string) props on `CheckboxGroup`. When `showLabel` is false or `label` is omitted, use `ariaLabel` as the accessible name of the group.
+- Use `showLabel` (boolean, default `true`) and `ariaLabel` (string) on `CheckboxGroup`. **React / Angular:** also use `label` (string) for form label text. **Lit:** project a light-DOM `<label>…</label>` child (no group `label` string prop / no `slot="label"`). When `showLabel` is false or the form label is omitted, use `ariaLabel` as the accessible name of the group.
 - Form label text is single-line (`nowrap`).
 - Use title case with colon for form label text.
 - An optional required mark (`*`) can appear inside the form label, placed after the text with a `2px` gap. It uses `var(--color-text-gray-neutral-strong)` and is `aria-hidden`.
@@ -150,18 +150,19 @@ Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts
 **Preferred pattern:** projected children inside a group wrapper — not an `options[]` prop.
 
 ```
-CheckboxGroup [orientation?, disabled?, name?, label?, showLabel?, labelPosition?, required?, labelIcon?, ariaLabel?, error?, errorText?]
+CheckboxGroup [orientation?, disabled?, name?, showLabel?, labelPosition?, required?, labelIcon?, ariaLabel?, error?, errorText?]
+  [form label]  — React/Angular: `label` string prop · Lit: projected `<label>` child
   Checkbox [checked?, defaultChecked?, partial?, disabled?, error?, name?, value?, ariaLabel?, density?, dataState?]
-    IdsCheckboxLabel | IdsHelper | IdsError  (projected children — there is no `label` or `helperText` prop)
+    IdsCheckboxLabel | `<label>` (Lit) | IdsHelper | IdsError  (projected option label — React: IdsCheckboxLabel; Lit: `<label>`; Angular still accepts `label` string)
   Checkbox …
 ```
 
-Angular reference selectors: `ids-checkbox-group` → `ids-checkbox` (`storybook-angular`, port 6007). React reference: `storybook/src/components/Checkbox.tsx` (single item); group layout via composition or field wrapper.
+Angular reference selectors: `ids-checkbox-group` → `ids-checkbox` (`storybook-angular`, port 6007). React reference: `storybook/src/components/Checkbox.tsx` (single item); group layout via composition or field wrapper. Lit: `storybook-lit` → **Spec Generated/IDS/Checkbox** (form label via projected `<label>`).
 
 ### Group (`CheckboxGroup` / `groupRoot`)
 | Prop / Slot | Required | Behavior |
 |---|---|---|
-| `label` | No | Form label text for the whole group. |
+| `label` (React/Angular) / `<label>` child (Lit) | No | Form label for the whole group. **Lit:** project `<label>Notifications:</label>` as a direct child; there is no group `label` string prop. |
 | `showLabel` | No | `true` (default) — render the form label; `false` — hide it but keep it accessible via `aria-label`. |
 | `ariaLabel` | No | Accessible name used when `showLabel` is false or `label` is omitted. |
 | `labelPosition` | No | `left` (default) or `top`. |
@@ -179,14 +180,14 @@ Angular reference selectors: `ids-checkbox-group` → `ids-checkbox` (`storybook
 |---|---|---|
 | `checked` | No (controlled) | Controlled selection state. |
 | `defaultChecked` | No (uncontrolled) | Initial selection for uncontrolled usage. |
-| `partial` | No | Enables mixed/partial state visual and ARIA `aria-checked="mixed"` mapping. |
+| `partial` | No | Enables mixed/partial state visual and ARIA `aria-checked="mixed"` mapping. Dom property remains `indeterminate`. |
 | `disabled` | No | Locks interaction and applies disabled state tokens (merged with group `disabled`). |
-| `label` | Yes | Visible, associated text. |
+| `IdsCheckboxLabel` (projected) / `<label>` (Lit) / `label` (Angular) | Yes* | **React:** project `IdsCheckboxLabel`. **Lit:** project `<label>…</label>` child (no `label` string prop). **Angular:** `label` string input. Required unless `density="datagrid"` (then `ariaLabel` / accessible name). |
 | `name` / `value` | No | Native form integration (`name` falls back to group `name` when inside a group). |
-| `onChange(checked)` | No | Emits resolved checked value after toggle. |
-| `error` | No | Optional validation styling/assistive text mode. |
-| `helperText` | No | Secondary descriptive text. |
-| `simulateFocusVisible` | No | **Storybook/docs only** — static focus ring for matrices. |
+| `onChange(checked)` / `checkedChange` | No | Emits resolved checked value after toggle. |
+| `error` | No | Optional validation styling (merged with group `error`). |
+| `IdsHelper` / `IdsError` (projected) / `helperText` | No | **React:** project `IdsHelper` or `IdsError`. **Angular / Lit:** `helperText` string (+ `error` for critical styling). |
+| `simulateFocusVisible` / `dataState` | No | **Storybook/docs only** — static focus ring for matrices. |
 
 Outputs (item): `onChange(checked)` / `checkedChange`.
 ## Codegen Contract (Framework-Agnostic Blueprint)
@@ -276,6 +277,7 @@ Outputs (item): `onChange(checked)` / `checkedChange`.
 - Figma link used for extraction: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=41895-299521&m=dev`
 - State annotation source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42151-53254&m=dev`
 - Lib React implementation (no Base UI): `lib/react/ids/checkbox/` (`IdsCheckbox.tsx`, `IdsCheckbox.module.css`; selectors `ids-checkbox`, …); stories: `storybook/src/components/lib-generated/Checkbox.stories.tsx`
+- Lit lib: `lib/lit/ids/src/checkbox/` (`ids-checkbox`, `ids-checkbox-group`); stories: `storybook-lit/src/components/Checkbox.stories.ts` (title `Spec Generated/IDS/Checkbox`). **Lit labels:** project direct `<label>…</label>` children — group form label on `ids-checkbox-group`, option label on `ids-checkbox` (manual slot assignment; no string `label` props). `required` / `labelIcon` remain group attributes that decorate the projected form label.
 - Runtime story / codegen contract: `component-contracts/ids/checkbox.contract.ts`
 - Angular composition reference: `storybook-angular/src/components/ids-checkbox/` (`IDS_CHECKBOX_IMPORTS`)
 

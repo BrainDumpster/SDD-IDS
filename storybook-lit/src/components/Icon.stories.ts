@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from "@storybook/web-components";
 import { html } from "lit";
-import "@ids/lit/icon/register.js";
+import "@ids/core/icon/register.js";
 
 const meta: Meta = {
   title: "Spec Generated/IDS/Icon",

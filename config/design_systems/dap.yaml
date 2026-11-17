@@ -23,8 +23,6 @@ program_components_dir: components/DAP
 program_root_spec_path: components/DAP/root-spec.md
 program_theme_css_path: components/dap-theme.css
 
-qdrant_collection: dap_design_knowledge
-
 framework_layer: ""
 root_spec_path: components/DAP/root-spec.md
 generated_storybook_dir: storybook-generated/dap

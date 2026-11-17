@@ -1,37 +1,19 @@
 /**
- * Asset URL helpers for `@ids/lit` — always resolve from the repo `assets/` folder.
+ * Asset URL helpers for `@ids/core`.
  *
- * Public paths (Storybook `staticDirs` / app static hosting):
+ * Resolution order for the assets base:
+ * 1. `window.__IDS_ASSETS_BASE__` (CDN / app override)
+ * 2. Package-shipped icons via `import.meta.url` → `<pkg>/assets/`
+ * 3. Storybook / site path heuristic (`/…/lit|react|angular/…` → `/assets`)
+ * 4. Fallback `/assets`
+ *
+ * Public paths:
  * - icons  → `assets/icons/<slug>.svg`
  * - images → `assets/images/<file>`
  * - fonts  → `assets/fonts/<file>`
- *
- * Contract matches `lib/shared/ids-assets-base.js` (`getIdsAssetsBase`, `idsAssetUrl`,
- * `window.__IDS_ASSETS_BASE__`) so Lit / Angular / React Storybooks share `/assets`.
  */
 
 export type IdsAssetSegment = "assets" | "components";
-
-function getIdsSitePublicBase(segment: IdsAssetSegment): string {
-  if (typeof window !== "undefined") {
-    const overrideKey =
-      segment === "components" ? "__IDS_COMPONENTS_BASE__" : "__IDS_ASSETS_BASE__";
-    const override =
-      overrideKey === "__IDS_ASSETS_BASE__"
-        ? window.__IDS_ASSETS_BASE__
-        : window.__IDS_COMPONENTS_BASE__;
-    if (typeof override === "string" && override.trim()) {
-      return override.replace(/\/+$/, "") || `/${segment}`;
-    }
-    const pathname = window.location?.pathname || "/";
-    const match = pathname.match(/^(.*?)\/(?:react|angular|lit)(?:\/|$)/);
-    if (match) {
-      const siteRoot = match[1] || "";
-      return `${siteRoot}/${segment}`;
-    }
-  }
-  return `/${segment}`;
-}
 
 declare global {
   interface Window {
@@ -40,7 +22,59 @@ declare global {
   }
 }
 
-/** Public base for the repo `assets/` folder (default `/assets`). */
+/** Resolve `<packageRoot>/assets/` from any module emitted under `dist/`. */
+function getPackageAssetsBaseFromModule(): string | null {
+  try {
+    const url = import.meta.url;
+    const match = url.match(/^(.*\/)dist\//);
+    if (match) {
+      return new URL("assets/", match[1]).href.replace(/\/+$/, "");
+    }
+  } catch {
+    // ignore — fall through to site defaults
+  }
+  return null;
+}
+
+function getWindowOverride(segment: IdsAssetSegment): string | null {
+  if (typeof window === "undefined") return null;
+  const override =
+    segment === "components"
+      ? window.__IDS_COMPONENTS_BASE__
+      : window.__IDS_ASSETS_BASE__;
+  if (typeof override === "string" && override.trim()) {
+    return override.replace(/\/+$/, "") || `/${segment}`;
+  }
+  return null;
+}
+
+function getStorybookSiteBase(segment: IdsAssetSegment): string | null {
+  if (typeof window === "undefined") return null;
+  const pathname = window.location?.pathname || "/";
+  const match = pathname.match(/^(.*?)\/(?:react|angular|lit)(?:\/|$)/);
+  if (match) {
+    const siteRoot = match[1] || "";
+    return `${siteRoot}/${segment}`;
+  }
+  return null;
+}
+
+function getIdsSitePublicBase(segment: IdsAssetSegment): string {
+  const override = getWindowOverride(segment);
+  if (override) return override;
+
+  if (segment === "assets") {
+    const fromPackage = getPackageAssetsBaseFromModule();
+    if (fromPackage) return fromPackage;
+  }
+
+  const site = getStorybookSiteBase(segment);
+  if (site) return site;
+
+  return `/${segment}`;
+}
+
+/** Public base for package / hosted `assets/` (icons, images, fonts). */
 export function getIdsAssetsBase(): string {
   return getIdsSitePublicBase("assets");
 }

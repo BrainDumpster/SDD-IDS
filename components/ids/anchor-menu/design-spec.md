@@ -228,9 +228,11 @@ No image or icon assets.
 - Contract: `component-contracts/ids/anchor-menu.contract.ts`
 - Angular library: `lib/angular/ids/anchor-menu/`
 - Angular Storybook (new): `storybook-angular/src/components/ids-anchor-menu/`
+- Lit library: `lib/lit/ids/src/anchor-menu/` (`ids-anchor-menu`; React `items[]` API parity)
+- Lit Storybook: `storybook-lit/src/components/AnchorMenu.stories.ts`
 - React reference (unchanged): `storybook/src/components/AnchorMenu.tsx`, `storybook/src/components/IdsAnchorMenu.stories.tsx`
 - Component map entry: `data/component-figma-map.json` → component "Anchor Menu" (category "Navigation"; node "11067-54486")
-- Last live verification: Figma MCP 2026-10-15 (`get_metadata`, `get_design_context`, `get_variable_defs` on `11955:229729` and its six state variants)
+- Last live verification: Figma MCP 2026-11-10 (`get_metadata`, `get_design_context`, `get_variable_defs` on `11067:54486`, `11955:229729`, `11955:229709`, `11955:230577`)
 
 ### Implementation notes
 - Group styles live in `ids-anchor-menu.component.scss` (`ViewEncapsulation.None`) covering all slots.

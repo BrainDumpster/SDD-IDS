@@ -46,7 +46,7 @@ const meta = {
       control: "select",
       options: ["primary", "secondary", "tertiary", "destructive", "ghostNeutral"],
     },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    size: { control: "select", options: ["small", "medium", "large"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
     iconOnly: { control: "boolean" },
@@ -92,16 +92,16 @@ export const StatesMatrix = {
     template: `
       <div style="display: grid; gap: 12px;">
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <ids-button variant="primary" size="lg">Primary</ids-button>
-          <ids-button variant="secondary" size="lg">Secondary</ids-button>
-          <ids-button variant="tertiary" size="lg">Tertiary</ids-button>
-          <ids-button variant="destructive" size="lg">Destructive</ids-button>
+          <ids-button variant="primary" size="large">Primary</ids-button>
+          <ids-button variant="secondary" size="large">Secondary</ids-button>
+          <ids-button variant="tertiary" size="large">Tertiary</ids-button>
+          <ids-button variant="destructive" size="large">Destructive</ids-button>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-          <ids-button variant="primary" size="lg" [disabled]="true">Primary</ids-button>
-          <ids-button variant="secondary" size="lg" [disabled]="true">Secondary</ids-button>
-          <ids-button variant="tertiary" size="lg" [disabled]="true">Tertiary</ids-button>
-          <ids-button variant="destructive" size="lg" [disabled]="true">Destructive</ids-button>
+          <ids-button variant="primary" size="large" [disabled]="true">Primary</ids-button>
+          <ids-button variant="secondary" size="large" [disabled]="true">Secondary</ids-button>
+          <ids-button variant="tertiary" size="large" [disabled]="true">Tertiary</ids-button>
+          <ids-button variant="destructive" size="large" [disabled]="true">Destructive</ids-button>
         </div>
       </div>
     `,
@@ -114,35 +114,35 @@ export const SizeExamples = {
     template: `
       <div style="display: grid; gap: 12px;">
         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <ids-button variant="primary" size="sm">Small</ids-button>
-          <ids-button variant="primary" size="md">Medium</ids-button>
-          <ids-button variant="primary" size="lg">Large</ids-button>
+          <ids-button variant="primary" size="small">Small</ids-button>
+          <ids-button variant="primary" size="medium">Medium</ids-button>
+          <ids-button variant="primary" size="large">Large</ids-button>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <ids-button variant="secondary" size="sm">
+          <ids-button variant="secondary" size="small">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
             Small
           </ids-button>
-          <ids-button variant="secondary" size="md">
+          <ids-button variant="secondary" size="medium">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
             Medium
           </ids-button>
-          <ids-button variant="secondary" size="lg">
+          <ids-button variant="secondary" size="large">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
             Large
           </ids-button>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <ids-button variant="primary" size="sm" [iconOnly]="true" ariaLabel="Settings small">
+          <ids-button variant="primary" size="small" [iconOnly]="true" ariaLabel="Settings small">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="secondary" size="md" [iconOnly]="true" ariaLabel="Settings medium">
+          <ids-button variant="secondary" size="medium" [iconOnly]="true" ariaLabel="Settings medium">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="tertiary" size="lg" [iconOnly]="true" ariaLabel="Settings large">
+          <ids-button variant="tertiary" size="large" [iconOnly]="true" ariaLabel="Settings large">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="ghostNeutral" size="lg" [iconOnly]="true" ariaLabel="Ghost Neutral large">
+          <ids-button variant="ghostNeutral" size="large" [iconOnly]="true" ariaLabel="Ghost Neutral large">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
         </div>
@@ -158,58 +158,58 @@ export const IconOnly = {
     template: `
       <div style="display: grid; gap: 16px;">
         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <ids-button variant="primary" size="sm" [iconOnly]="true" ariaLabel="primary small">
+          <ids-button variant="primary" size="small" [iconOnly]="true" ariaLabel="primary small">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="primary" size="md" [iconOnly]="true" ariaLabel="primary medium">
+          <ids-button variant="primary" size="medium" [iconOnly]="true" ariaLabel="primary medium">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="primary" size="lg" [iconOnly]="true" ariaLabel="primary large">
+          <ids-button variant="primary" size="large" [iconOnly]="true" ariaLabel="primary large">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="primary" size="lg" [iconOnly]="true" [disabled]="true" ariaLabel="primary disabled">
-            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
-          </ids-button>
-        </div>
-        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <ids-button variant="secondary" size="sm" [iconOnly]="true" ariaLabel="secondary small">
-            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
-          </ids-button>
-          <ids-button variant="secondary" size="md" [iconOnly]="true" ariaLabel="secondary medium">
-            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
-          </ids-button>
-          <ids-button variant="secondary" size="lg" [iconOnly]="true" ariaLabel="secondary large">
-            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
-          </ids-button>
-          <ids-button variant="secondary" size="lg" [iconOnly]="true" [disabled]="true" ariaLabel="secondary disabled">
+          <ids-button variant="primary" size="large" [iconOnly]="true" [disabled]="true" ariaLabel="primary disabled">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <ids-button variant="tertiary" size="sm" [iconOnly]="true" ariaLabel="tertiary small">
+          <ids-button variant="secondary" size="small" [iconOnly]="true" ariaLabel="secondary small">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="tertiary" size="md" [iconOnly]="true" ariaLabel="tertiary medium">
+          <ids-button variant="secondary" size="medium" [iconOnly]="true" ariaLabel="secondary medium">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="tertiary" size="lg" [iconOnly]="true" ariaLabel="tertiary large">
+          <ids-button variant="secondary" size="large" [iconOnly]="true" ariaLabel="secondary large">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="tertiary" size="lg" [iconOnly]="true" [disabled]="true" ariaLabel="tertiary disabled">
+          <ids-button variant="secondary" size="large" [iconOnly]="true" [disabled]="true" ariaLabel="secondary disabled">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
         </div>
         <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
-          <ids-button variant="ghostNeutral" size="sm" [iconOnly]="true" ariaLabel="ghostNeutral small">
+          <ids-button variant="tertiary" size="small" [iconOnly]="true" ariaLabel="tertiary small">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="ghostNeutral" size="md" [iconOnly]="true" ariaLabel="ghostNeutral medium">
+          <ids-button variant="tertiary" size="medium" [iconOnly]="true" ariaLabel="tertiary medium">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="ghostNeutral" size="lg" [iconOnly]="true" ariaLabel="ghostNeutral large">
+          <ids-button variant="tertiary" size="large" [iconOnly]="true" ariaLabel="tertiary large">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
-          <ids-button variant="ghostNeutral" size="lg" [iconOnly]="true" [disabled]="true" ariaLabel="ghostNeutral disabled">
+          <ids-button variant="tertiary" size="large" [iconOnly]="true" [disabled]="true" ariaLabel="tertiary disabled">
+            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
+          </ids-button>
+        </div>
+        <div style="display: flex; gap: 10px; flex-wrap: wrap; align-items: center;">
+          <ids-button variant="ghostNeutral" size="small" [iconOnly]="true" ariaLabel="ghostNeutral small">
+            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
+          </ids-button>
+          <ids-button variant="ghostNeutral" size="medium" [iconOnly]="true" ariaLabel="ghostNeutral medium">
+            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
+          </ids-button>
+          <ids-button variant="ghostNeutral" size="large" [iconOnly]="true" ariaLabel="ghostNeutral large">
+            <ids-icon shapeName="settings-gear-detailed" variant="mask" />
+          </ids-button>
+          <ids-button variant="ghostNeutral" size="large" [iconOnly]="true" [disabled]="true" ariaLabel="ghostNeutral disabled">
             <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           </ids-button>
         </div>
@@ -231,7 +231,7 @@ export const TypographyBody2 = {
   render: () => ({
     template: `
       <div style="display: grid; gap: 8px;">
-        <ids-button variant="primary" size="lg">Body 2 — 14/20 / 400</ids-button>
+        <ids-button variant="primary" size="large">Body 2 — 14/20 / 400</ids-button>
         <p
           style="
             margin: 0;
@@ -254,19 +254,19 @@ export const IconComposition = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <ids-button variant="primary" size="lg">
+        <ids-button variant="primary" size="large">
           <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           Button
         </ids-button>
-        <ids-button variant="secondary" size="lg">
+        <ids-button variant="secondary" size="large">
           <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           Button
         </ids-button>
-        <ids-button variant="tertiary" size="lg">
+        <ids-button variant="tertiary" size="large">
           <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           Button
         </ids-button>
-        <ids-button variant="primary" size="lg" [iconOnly]="true" ariaLabel="Settings">
+        <ids-button variant="primary" size="large" [iconOnly]="true" ariaLabel="Settings">
           <ids-icon shapeName="settings-gear-detailed" variant="mask" />
         </ids-button>
       </div>
@@ -279,9 +279,9 @@ export const Loading = {
   render: () => ({
     template: `
       <div style="display: flex; gap: 10px; flex-wrap: wrap;">
-        <ids-button variant="primary" size="lg" [loading]="true">Primary</ids-button>
-        <ids-button variant="secondary" size="lg" [loading]="true">Secondary</ids-button>
-        <ids-button variant="tertiary" size="lg" [loading]="true">
+        <ids-button variant="primary" size="large" [loading]="true">Primary</ids-button>
+        <ids-button variant="secondary" size="large" [loading]="true">Secondary</ids-button>
+        <ids-button variant="tertiary" size="large" [loading]="true">
           <ids-icon shapeName="settings-gear-detailed" variant="mask" />
           Tertiary
         </ids-button>

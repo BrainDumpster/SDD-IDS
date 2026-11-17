@@ -214,6 +214,8 @@
 
 .ids-progress-bar-helper-text {
   flex-shrink: 1;
+  min-width: 0;
+  max-width: 900px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   line-clamp: 2;

@@ -1,0 +1,274 @@
+/**
+ * IDS App Shell styles — from `components/ids/app-shell/design-spec.md`
+ * + React `IdsAppShell.module.css`.
+ * Theme: `components/ids-theme.css`
+ *
+ * Live Figma (MCP): `43478:46307` (1920), `43478:90925` (1366 collapsed),
+ * page header `43478:50553` tokens via `get_variable_defs`.
+ */
+import { css } from "lit";
+
+export const appShellHostStyles = css`
+  :host {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+  }
+
+  :host([hidden]) {
+    display: none !important;
+  }
+`;
+
+export const appShellStyles = css`
+  *,
+  *::before,
+  *::after {
+    box-sizing: border-box;
+  }
+
+  .IdsAppShell {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+    overflow: hidden;
+    background: var(--color-background-surface-primary);
+    font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+  }
+
+  .IdsAppShell[data-breakpoint-preset="1920"] {
+    width: 1920px;
+  }
+
+  .IdsAppShell[data-breakpoint-preset="1600"] {
+    width: 1600px;
+  }
+
+  .IdsAppShell[data-breakpoint-preset="1366"] {
+    width: 1366px;
+  }
+
+  .IdsAppShell[data-breakpoint-preset="1024"] {
+    width: 1024px;
+  }
+
+  .IdsAppShellMastheadSlot {
+    flex: 0 0 56px;
+    width: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+
+  .IdsAppShellBodyRow {
+    display: flex;
+    flex-direction: row;
+    flex: 1 1 0%;
+    min-height: 0;
+    width: 100%;
+    align-items: stretch;
+  }
+
+  .IdsAppShellMainMenuSlot {
+    flex: 0 0 auto;
+    height: 100%;
+    min-height: 0;
+  }
+
+  .IdsAppShellMainMenuSlot ::slotted(*) {
+    height: 100%;
+    min-height: 0;
+  }
+
+  .IdsAppShellMastheadSlot ::slotted(*),
+  .IdsAppShellFooterSlot ::slotted(*) {
+    display: block;
+    width: 100%;
+  }
+
+  .IdsAppShellMainColumn {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 0%;
+    min-width: 0;
+    min-height: 0;
+    background: var(--color-background-surface-primary);
+  }
+
+  .IdsAppShellPageHeader {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: var(--spacing-space-12);
+    flex: 0 0 auto;
+    padding: var(--padding-padding-24) var(--padding-padding-24)
+      var(--padding-padding-8);
+    box-sizing: border-box;
+    width: 100%;
+    background: transparent;
+  }
+
+  .IdsAppShellPageTitle {
+    margin: 0;
+    font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+    font-size: var(--font-size-header-5);
+    font-weight: 400;
+    line-height: var(--font-line-height-line-height-32);
+    color: var(--color-text-gray-neutral-strong);
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .IdsAppShellPageTitle:focus {
+    outline: none;
+  }
+
+  .IdsAppShellPageTitle:focus-visible {
+    outline: var(--border-width-border-2, 2px) solid
+      var(--color-border-brand-strong, currentColor);
+    outline-offset: 2px;
+  }
+
+  .IdsAppShellPageDescription {
+    margin: 0;
+    font-family: var(--typography-font-style-primary, Roboto, sans-serif);
+    font-size: var(--font-size-body-2);
+    font-weight: 500;
+    line-height: var(--font-line-height-line-height-20);
+    color: var(--color-text-gray-neutral);
+    max-width: 100%;
+    white-space: normal;
+  }
+
+  .IdsAppShellBodyViewport {
+    flex: 1 1 0%;
+    min-height: 0;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  .IdsAppShellBodyContentSlot {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 0;
+    padding: var(--padding-padding-16) var(--padding-padding-24);
+  }
+
+  .IdsAppShellFooterSlot {
+    flex: 0 0 auto;
+    width: 100%;
+  }
+
+  .IdsAppShellHeaderActions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+
+  .IdsAppShellMastheadLogo {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .IdsAppShellPagePanel {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 280px;
+    padding: var(--padding-padding-24);
+    border: var(--border-width-border-default) solid
+      var(--color-border-brand-strong);
+    background: var(--color-background-brand-lighter-slate);
+    color: var(--color-text-gray-neutral-strong);
+  }
+
+  .IdsAppShellPagePanelTitle {
+    margin: 0 0 var(--spacing-space-8);
+    font-size: var(--font-size-header-6);
+    font-weight: 400;
+    line-height: var(--font-line-height-line-height-25);
+  }
+
+  .IdsAppShellPagePanelBody {
+    margin: 0;
+    font-size: var(--font-size-body-2);
+    line-height: var(--font-line-height-line-height-20);
+    color: var(--color-text-gray-neutral);
+  }
+`;
+
+/** Light-DOM anatomy part hosts (Nested Hierarchy). */
+export const appShellPartHostStyles = css`
+  :host {
+    display: contents;
+  }
+
+  :host([hidden]) {
+    display: none !important;
+  }
+`;
+
+export const appShellHeaderActionsStyles = css`
+  :host {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+
+  .IdsAppShellHeaderActions {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 100%;
+    min-height: 0;
+    box-sizing: border-box;
+  }
+`;
+
+export const appShellPagePanelStyles = css`
+  :host {
+    display: block;
+    box-sizing: border-box;
+    width: 100%;
+  }
+
+  .IdsAppShellPagePanel {
+    box-sizing: border-box;
+    width: 100%;
+    min-height: 280px;
+    padding: var(--padding-padding-24);
+    border: var(--border-width-border-default) solid
+      var(--color-border-brand-strong);
+    background: var(--color-background-brand-lighter-slate);
+    color: var(--color-text-gray-neutral-strong);
+  }
+
+  .IdsAppShellPagePanelTitle {
+    margin: 0 0 var(--spacing-space-8);
+    font-size: var(--font-size-header-6);
+    font-weight: 400;
+    line-height: var(--font-line-height-line-height-25);
+  }
+
+  .IdsAppShellPagePanelBody {
+    margin: 0;
+    font-size: var(--font-size-body-2);
+    line-height: var(--font-line-height-line-height-20);
+    color: var(--color-text-gray-neutral);
+  }
+`;

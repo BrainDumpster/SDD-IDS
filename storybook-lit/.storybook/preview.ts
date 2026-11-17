@@ -3,16 +3,17 @@ import {
   applyIdsTheme,
   ensureIdsThemeStylesheet,
   resolveIdsThemeMode,
-} from "@ids/lit/theme/index.js";
+} from "@ids/core/theme/index.js";
 
 /**
- * Global theme stylesheet — single source: `components/ids-theme.css`
- * (also exported as `@ids/lit/ids-theme.css` for app bundlers).
- *
+ * Global theme stylesheet — `@ids/core/ids-theme.css` (light + dark tokens).
  * Do not import theme CSS inside individual Lit components; tokens inherit
  * into shadow roots via CSS variables once host attributes are set.
+ *
+ * Theme switching is runtime-dynamic via the Storybook Theme toolbar
+ * (`applyIdsTheme` on each render).
  */
-import "@ids/lit/ids-theme.css";
+import "@ids/core/ids-theme.css";
 
 const preview: Preview = {
   initialGlobals: {

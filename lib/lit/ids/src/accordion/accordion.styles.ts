@@ -50,7 +50,7 @@ export const accordionTitleStyles = css`
     min-height: var(--scale-40, 40px);
     box-sizing: border-box;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* design-spec: header content is top-aligned */
     gap: var(--spacing-space-8);
     padding: var(--padding-padding-10) var(--padding-padding-16);
     border: 0;
@@ -89,13 +89,15 @@ export const accordionTitleStyles = css`
     text-overflow: ellipsis;
   }
 
+  /* Design-spec: chevron frame uses a padding-2 top offset implemented as margin-top
+     (padding would grow the box while the centered mask glyph stays put). */
   .icon-layout {
     display: inline-flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    padding-block: var(--padding-padding-2, 2px);
-    color: var(--color-icon-gray-neutral-base);
+    margin-top: var(--padding-padding-2, 2px);
+    color: var(--color-icon-gray-neutral-accessible);
   }
 
   .icon-layout ids-icon {
@@ -163,8 +165,20 @@ export const accordionTitleStyles = css`
     );
   }
 
+  /* Design-spec: the expanded header hides its 4px strip while focused (focus ring is the indicator). */
+  .accordion-header.active-header:focus-visible,
+  .accordion-header.active-header:focus-visible:hover:not(:disabled) {
+    background-image: none;
+  }
+
   .accordion-header.active-header .icon-layout {
-    color: var(--color-icon-gray-neutral-base);
+    color: var(--color-icon-gray-neutral-accessible);
+  }
+
+  .accordion-meta {
+    color: var(--color-text-gray-neutral);
+    font-size: var(--font-size-body-2);
+    line-height: var(--font-line-height-line-height-20);
   }
 
   .accordion-header.active-header .icon-layout ids-icon {
@@ -184,6 +198,13 @@ export const accordionContentStyles = css`
   }
 
   .panel-content {
+    box-sizing: border-box;
+    /* Design-spec: 50px floor (padding included). */
+    min-width: 50px;
+    min-height: 50px;
+    /* Design-spec panelMaxHeight: unset grows with content; when set, body scrolls. */
+    max-height: var(--ids-accordion-panel-max-height, none);
+    overflow-y: auto;
     padding: var(--padding-padding-8) var(--padding-padding-24) var(--padding-padding-16)
       calc(var(--padding-padding-32) + var(--padding-padding-8));
     background-color: var(--color-background-surface-component);

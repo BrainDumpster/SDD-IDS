@@ -21,6 +21,8 @@
   font-weight: 400;
   color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
+  letter-spacing: 0;
+  font-variation-settings: "wdth" 100;
   min-height: 20px;
 }
 
@@ -79,14 +81,20 @@
   border-color: var(--color-border-gray-neutral-strong);
 }
 
-.root:has(.input:focus-visible) {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+.root::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--border-width-border-1) + 3px) * -1);
+  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 100ms ease;
 }
 
-.rootSimulatedFocus {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+.root:has(.input:focus-visible)::after,
+.rootSimulatedFocus::after {
+  opacity: 1;
 }
 
 .root[data-checked] {
@@ -99,9 +107,10 @@
   border-color: var(--color-border-brand-base);
 }
 
+/* Spec: hover does not change checked fill — stays controls-base. */
 .root[data-checked]:has(.input:hover:not(:disabled)),
 .root[data-checked]:has(.input:active:not(:disabled)) {
-  background: var(--color-background-controls-strong);
+  background: var(--color-background-controls-base);
   border-color: var(--color-border-brand-transparent-brand);
 }
 

@@ -86,7 +86,9 @@ function resolveVariant(v: unknown): IdsButtonVariant {
 }
 
 function resolveSize(s: unknown): IdsButtonSize {
-  if (s === "small" || s === "medium") return s;
+  if (s === "small" || s === "sm") return "small";
+  if (s === "medium" || s === "md") return "medium";
+  if (s === "large" || s === "lg") return "large";
   return "large";
 }
 
@@ -251,7 +253,7 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const resolvedSize: IdsButtonSize = size;
   const isDisabled = Boolean(disabled || loading || dataState === "disabled");
   const [isPressed, setIsPressed] = useState(false);
-  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly, variant);
+  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly);
   const restAriaLabel =
     typeof (rest as { "aria-label"?: unknown })["aria-label"] === "string"
       ? ((rest as { "aria-label"?: string })["aria-label"] ?? "").trim()

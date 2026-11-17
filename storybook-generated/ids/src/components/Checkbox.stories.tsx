@@ -138,7 +138,7 @@ export const DisabledStates: Story = {
     <div className="sbCheckboxRow">
       <IdsCheckbox label="Unchecked" disabled />
       <IdsCheckbox label="Checked" checked disabled />
-      <IdsCheckbox label="Indeterminate" partial disabled />
+      <IdsCheckbox label="Partial" partial disabled />
     </div>
   ),
 };

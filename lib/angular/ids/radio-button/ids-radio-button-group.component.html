@@ -1,8 +1,37 @@
 <div
-  class="group"
-  [class.vertical]="orientation === 'vertical'"
-  [class.horizontal]="orientation === 'horizontal'"
+  class="IdsRadioGroup"
+  data-ids="IdsRadioGroup"
+  [attr.data-orientation]="orientation"
+  [attr.data-label-position]="labelPosition"
+  [attr.data-error]="error ? 'true' : null"
+  [attr.data-has-error-message]="hasErrorMessage ? 'true' : null"
+  [attr.data-disabled]="disabled ? 'true' : null"
   role="radiogroup"
+  [attr.aria-labelledby]="shouldRenderLabel ? labelId : null"
+  [attr.aria-label]="!shouldRenderLabel ? ariaLabel : null"
+  [attr.aria-invalid]="error ? true : null"
+  [attr.aria-errormessage]="hasErrorMessage ? errorId : null"
+  [attr.aria-required]="required ? true : null"
+  [attr.aria-disabled]="disabled ? true : null"
 >
-  <ng-content />
+  @if (shouldRenderLabel) {
+    <ids-form-label
+      [id]="labelId"
+      [label]="label ?? ''"
+      size="lg"
+      [required]="required"
+      [showInfoIcon]="showInfoIcon"
+      className="IdsRadioGroupLabel"
+    />
+  }
+  <div class="IdsRadioGroupBody" data-ids="IdsRadioGroupBody">
+    <div class="IdsRadioGroupItems" data-ids="IdsRadioGroupItems">
+      <ng-content />
+    </div>
+    @if (hasErrorMessage) {
+      <ids-error [id]="errorId">
+        <ids-error-text [text]="errorText" />
+      </ids-error>
+    }
+  </div>
 </div>

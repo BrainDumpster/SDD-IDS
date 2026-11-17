@@ -3,6 +3,8 @@
  */
 export type RadioButtonOrientation = "vertical" | "horizontal";
 
+export type RadioButtonGroupLabelPosition = "left" | "top";
+
 export type RadioButtonSimulatedState = "default" | "hover" | "focus-visible";
 
 export const RADIO_BUTTON_ERROR_ICON_SLUG = "status-critical-square-solid";
@@ -12,4 +14,11 @@ export const RADIO_BUTTON_SPEC_ACCURATE_DEFAULTS = {
   defaultValue: "option1",
   disabled: false,
   orientation: "vertical" as RadioButtonOrientation,
+  label: "Radio Group",
+  showLabel: true,
+  required: false,
+  labelPosition: "left" as RadioButtonGroupLabelPosition,
+  labelIcon: false,
+  error: false,
+  errorText: undefined as string | undefined,
 } as const;

@@ -10,7 +10,7 @@ export const CHECKBOX_ERROR_ICON_SLUG = "status-critical-square-solid";
 export const CHECKBOX_SPEC_ACCURATE_DEFAULTS = {
     label: CHECKBOX_SPEC_SAMPLE_LABEL,
     checked: false,
-    indeterminate: false,
+    partial: false,
     disabled: false,
     error: false,
     helperText: undefined,
@@ -20,4 +20,8 @@ export const CHECKBOX_SPEC_ACCURATE_DEFAULTS = {
 export const CHECKBOX_GROUP_SPEC_ACCURATE_DEFAULTS = {
     orientation: "vertical",
     disabled: false,
+    showLabel: true,
+    labelPosition: "left",
+    required: false,
+    error: false,
 };

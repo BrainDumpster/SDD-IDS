@@ -96,6 +96,11 @@ export class IdsProgressBarComponent {
     return !this.isIndeterminate && this.clampedValue >= 100;
   }
 
+  /** Indeterminate + success/warning/error: helper text only, no track. */
+  get hideTrack(): boolean {
+    return this.isIndeterminate && this.resolvedState !== "in-progress";
+  }
+
   get ariaLabel(): string {
     return this.label ?? "Progress";
   }

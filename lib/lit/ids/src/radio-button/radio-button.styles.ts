@@ -1,6 +1,6 @@
 /**
  * IDS Radio Button styles — from `components/ids/radio-button/design-spec.md`
- * (Angular SCSS parity).
+ * (Angular / React CSS parity).
  */
 import { css } from "lit";
 
@@ -17,7 +17,9 @@ export const radioButtonStyles = css`
 
   .ids-radio-row {
     display: inline-flex;
-    align-items: center;
+    /* Long labels wrap under a 900px cap; control top-aligns on the first line. */
+    align-items: flex-start;
+    max-width: 900px;
     gap: var(--spacing-space-8);
     cursor: pointer;
     font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -44,6 +46,8 @@ export const radioButtonStyles = css`
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
+    /* Optically center 16px control on first 20px text line ((20-16)/2 = 2px). */
+    margin-top: 2px;
     transition: all 100ms ease;
     cursor: inherit;
     outline: none;
@@ -131,6 +135,31 @@ export const radioButtonStyles = css`
 
   .ids-radio-label {
     user-select: none;
+    min-width: 0;
+    overflow-wrap: break-word;
+  }
+
+  .ids-radio-label ::slotted(label) {
+    font: inherit;
+    font-weight: inherit;
+    font-size: inherit;
+    line-height: inherit;
+    letter-spacing: inherit;
+    color: inherit;
+    cursor: inherit;
+    user-select: none;
+  }
+
+  .ids-radio-label--hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
   }
 
   .ids-radio-assistive {
@@ -170,16 +199,110 @@ export const radioButtonGroupStyles = css`
     display: inline-flex;
   }
 
-  .ids-radio-group {
-    display: flex;
+  .IdsRadioGroup {
+    display: inline-flex;
+    flex-direction: row;
+    align-items: flex-start;
     gap: var(--spacing-space-16);
   }
 
-  .ids-radio-group--vertical {
+  .IdsRadioGroup[data-label-position="left"] {
+    flex-direction: row;
+    gap: var(--spacing-space-16);
+  }
+
+  .IdsRadioGroup[data-label-position="left"][data-orientation="horizontal"]:not(
+      [data-has-error-message="true"]
+    ) {
+    align-items: center;
+  }
+
+  .IdsRadioGroup[data-label-position="top"] {
+    flex-direction: column;
+    gap: 0;
+  }
+
+  .IdsRadioGroupLabel {
+    display: inline-flex;
+    align-items: center;
+    font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+    font-size: var(--font-size-body-2);
+    font-weight: 400;
+    line-height: var(--font-line-height-line-height-20);
+    letter-spacing: 0;
+    color: var(--color-text-gray-neutral-strong);
+    white-space: nowrap;
+    min-height: 20px;
+    padding: var(--spacing-space-10) 0;
+  }
+
+  .IdsRadioGroupLabelText {
+    display: inline;
+  }
+
+  .IdsRadioGroupLabelText ::slotted(*) {
+    font: inherit;
+    color: inherit;
+    white-space: inherit;
+  }
+
+  .IdsRadioGroupLabel[hidden] {
+    display: none;
+  }
+
+  .IdsRadioGroupLabelRequired {
+    margin-left: 2px;
+  }
+
+  .IdsRadioGroupLabelIcon {
+    display: inline-flex;
+    width: 16px;
+    height: 16px;
+    margin-left: var(--spacing-space-8);
+  }
+
+  .IdsRadioGroupBody {
+    display: flex;
     flex-direction: column;
   }
 
-  .ids-radio-group--horizontal {
+  .IdsRadioGroup[data-label-position="left"][data-has-error-message="true"]
+    .IdsRadioGroupBody,
+  .IdsRadioGroup[data-label-position="left"][data-orientation="vertical"]
+    .IdsRadioGroupBody {
+    padding: var(--spacing-space-10) 0;
+  }
+
+  .IdsRadioGroup[data-orientation="vertical"] .IdsRadioGroupBody {
+    gap: var(--spacing-space-16);
+  }
+
+  .IdsRadioGroup[data-orientation="horizontal"] .IdsRadioGroupBody {
+    gap: var(--spacing-space-8);
+  }
+
+  .IdsRadioGroupItems {
+    display: flex;
+  }
+
+  .IdsRadioGroup[data-orientation="vertical"] .IdsRadioGroupItems {
+    flex-direction: column;
+    gap: var(--spacing-space-16);
+  }
+
+  .IdsRadioGroup[data-orientation="horizontal"] .IdsRadioGroupItems {
     flex-direction: row;
+    gap: var(--spacing-space-16);
+    flex-wrap: wrap;
+  }
+
+  .IdsRadioGroupError {
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-space-8);
+    font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
+    font-size: var(--font-size-body-2);
+    line-height: var(--font-line-height-line-height-20);
+    color: var(--color-text-alerting-critical-base);
   }
 `;

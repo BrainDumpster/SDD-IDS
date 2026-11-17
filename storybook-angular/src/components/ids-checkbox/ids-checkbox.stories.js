@@ -104,7 +104,8 @@ export const CheckboxGroup = {
   parameters: {
     docs: {
       description: {
-        story: "Composition: `ids-checkbox-group` wraps multiple independent `ids-checkbox` items.",
+        story:
+          "Composition: `ids-checkbox-group` wraps form label + independent `ids-checkbox` items (label position, orientation, required, error).",
       },
       source: {
         type: "code",
@@ -115,6 +116,27 @@ export const CheckboxGroup = {
   },
   render: () => ({
     template: CHECKBOX_GROUP_DEMO_TEMPLATE,
+  }),
+};
+
+/** @type {import("@storybook/angular").StoryObj} */
+export const CheckboxGroupError = {
+  name: "Checkbox Group Error",
+  render: () => ({
+    template: `
+      <ids-checkbox-group
+        label="Notifications:"
+        [required]="true"
+        [labelIcon]="true"
+        [error]="true"
+        errorText="You must select at least one option."
+        orientation="vertical"
+      >
+        <ids-checkbox label="Email"></ids-checkbox>
+        <ids-checkbox label="SMS" [checked]="true"></ids-checkbox>
+        <ids-checkbox label="Push notification"></ids-checkbox>
+      </ids-checkbox-group>
+    `,
   }),
 };
 

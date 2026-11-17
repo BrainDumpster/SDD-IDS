@@ -258,7 +258,6 @@ Do not publish spec-driven examples under generic Storybook folders. Optional ex
    ```bash
    DESIGN_SYSTEM=<programme> python3 scripts/strict_spec_storybook_gate.py \
      --component <kebab-slug> \
-     --spec-only \
      --deterministic-story
    ```
 3. Require **STRICT GATE PASSED**; record story + generator paths in spec Metadata.

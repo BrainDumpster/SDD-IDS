@@ -49,8 +49,8 @@ Synapse IDS-fork: inherit composition markup from IDS reference components; appl
 3. Import exactly one theme CSS per programme in React stories (`ids-theme.css` / `dap-theme.css` / `synapse-theme.css`).
 4. Regenerate when deterministic pipeline applies:
    ```bash
-   DESIGN_SYSTEM=ids python3 scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story
-   DESIGN_SYSTEM=dap python3 scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story
+   DESIGN_SYSTEM=ids python3 scripts/strict_spec_storybook_gate.py --component <slug> --deterministic-story
+   DESIGN_SYSTEM=dap python3 scripts/strict_spec_storybook_gate.py --component <slug> --deterministic-story
    ```
    Add `--framework Angular` for IDS/DAP Angular generated stories. Synapse: React only.
 

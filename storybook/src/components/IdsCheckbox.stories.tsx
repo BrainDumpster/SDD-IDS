@@ -8,7 +8,7 @@ const meta: Meta<typeof Checkbox> = {
   component: Checkbox,
   argTypes: {
     disabled: { control: "boolean" },
-    indeterminate: { control: "boolean" },
+    partial: { control: "boolean" },
     error: { control: "boolean" },
     helperText: { control: "text" },
     onChange: { action: "onChange" },
@@ -29,7 +29,7 @@ export const SelectionStatesManual: Story = {
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Option" />
       <Checkbox label="Option" checked />
-      <Checkbox label="Option" indeterminate />
+      <Checkbox label="Option" partial />
     </div>
   ),
 };
@@ -54,15 +54,15 @@ export const FigmaMainMatrix: Story = {
       <div>Default</div>
       <Checkbox label="Option" />
       <Checkbox label="Option" checked />
-      <Checkbox label="Option" indeterminate />
+      <Checkbox label="Option" partial />
       <div>Focus-visible (simulated)</div>
       <Checkbox label="Option" simulateFocusVisible />
       <Checkbox label="Option" checked simulateFocusVisible />
-      <Checkbox label="Option" indeterminate simulateFocusVisible />
+      <Checkbox label="Option" partial simulateFocusVisible />
       <div>Disabled</div>
       <Checkbox label="Option" disabled />
       <Checkbox label="Option" checked disabled />
-      <Checkbox label="Option" indeterminate disabled />
+      <Checkbox label="Option" partial disabled />
     </div>
   ),
 };
@@ -72,7 +72,7 @@ export const DisabledStatesManual: Story = {
     <div style={{ display: "flex", gap: 24, flexWrap: "wrap" }}>
       <Checkbox label="Unchecked" disabled />
       <Checkbox label="Checked" checked disabled />
-      <Checkbox label="Partial" indeterminate disabled />
+      <Checkbox label="Partial" partial disabled />
     </div>
   ),
 };

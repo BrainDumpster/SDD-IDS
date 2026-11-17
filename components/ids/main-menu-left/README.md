@@ -45,13 +45,12 @@ After you change **`design-spec.md`**, **`MainMenuLeft.tsx`** (API/types the spe
 
 ```bash
 export DESIGN_SYSTEM=ids
-python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --spec-only --deterministic-story
+python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --deterministic-story
 ```
 
 | Flag | Role |
 |------|------|
 | `--component main-menu-left` | Target slug (matches `components/ids/main-menu-left/`) |
-| `--spec-only` | Disables RAG/retrieval context; gate runs on **layered specs + theme** only (faster, CI-friendly) |
 | `--deterministic-story` | Regenerates React + Angular stories from `generation/spec_derived/main_menu_left_composition.py` (composition anatomy emitter) via `main_menu_left.py` / `main_menu_left_angular.py` |
 
 ### Outputs this updates

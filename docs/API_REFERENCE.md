@@ -2,7 +2,7 @@
 
 ## Overview
 
-The Design Intelligence System provides REST APIs for component generation and validation, along with MCP tools for AI assistant integration.
+The Design Intelligence System provides REST APIs for design validation, along with MCP tools for AI assistant integration.
 
 ## REST APIs
 
@@ -76,66 +76,6 @@ curl -X POST "http://localhost:8000/design/validate" \
 
 ---
 
-### Generation API
-
-**Base URL**: `http://localhost:8001`
-
-#### POST /design/generate
-
-Generates a component based on design system requirements.
-
-**Request Body**:
-```json
-{
-  "component": "string",
-  "request": "string",
-  "framework": "string"
-}
-```
-
-**Parameters**:
-- `component` (required): Component name to generate
-- `request` (required): Natural language description of requirements
-- `framework` (optional): "React" or "Angular" (default: "React")
-
-**Response**:
-```json
-{
-  "component": "import React from 'react';\nimport styles from './Button.module.css';\n\nexport const Button = () => {\n  return <button className={styles.button}>Click me</button>;\n};",
-  "css": ".button { background-color: var(--color-bg-brand-primary); }",
-  "validation": {
-    "summary": {"critical": 0, "high": 0, "medium": 0, "low": 0},
-    "violations": []
-  }
-}
-```
-
-**Example**:
-```bash
-curl -X POST "http://localhost:8001/design/generate" \
-  -H "Content-Type: application/json" \
-  -d '{
-    "component": "button",
-    "request": "Generate a primary button with hover effect",
-    "framework": "React"
-  }'
-```
-
-#### Response Structure
-
-**Component Field**: Generated component code
-- React: Complete TypeScript/JavaScript component
-- Angular: Component class, template, and styles
-
-**CSS Field**: Generated styles
-- CSS Modules: `.module.css` content
-- CSS-in-JS: Empty (styles embedded in component)
-- Angular SCSS: Component-specific styles
-
-**Validation Field**: Validation report for generated code
-
----
-
 ## MCP Tools
 
 ### Design Validator Tool
@@ -164,36 +104,6 @@ report = validate_design_tool(
 
 ---
 
-### Component Generator Tool
-
-**Server**: `design-component-generator`
-
-#### generate_component(component, description, framework, style_mode)
-
-Generates production-ready UI component aligned with design system.
-
-**Parameters**:
-- `component` (string): Component name
-- `description` (string): Natural language description
-- `framework` (string): "React" or "Angular" (default: "React")
-- `style_mode` (string): "css-module", "css-in-js", "angular-scss" (default: "css-module")
-
-**Returns**: Generated component with validation report
-
-**Example**:
-```python
-from mcp_tools.component_generator_tool import generate_component
-
-result = generate_component(
-    component="modal",
-    description="A modal dialog with close button and overlay",
-    framework="React",
-    style_mode="css-module"
-)
-```
-
----
-
 ## Python APIs
 
 ### Validation Module
@@ -217,111 +127,6 @@ from validation.validate_design import validate_design
 
 report = validate_design("button", "<button>Click me</button>")
 print(f"Critical issues: {report['summary']['critical']}")
-```
-
----
-
-### Generation Module
-
-#### ComponentGenerator
-
-Main class for component generation.
-
-**Constructor**:
-```python
-ComponentGenerator(model: str = "llama3")
-```
-
-**Methods**:
-
-##### generate(context, framework, style_mode) -> dict
-
-Generates component code based on context and parameters.
-
-**Parameters**:
-- `context` (dict): Component context with rules, tokens, anatomy
-- `framework` (str): "React" or "Angular"
-- `style_mode` (StyleMode): CSS_MODULE, CSS_IN_JS, or ANGULAR_SCSS
-
-**Returns**: Structured output with component code and styles
-
-**Example**:
-```python
-from generation.component_generator import ComponentGenerator
-from generation.style_modes import StyleMode
-
-generator = ComponentGenerator()
-result = generator.generate(
-    context={"rules": "...", "anatomy": ["button"]},
-    framework="React",
-    style_mode=StyleMode.CSS_MODULE
-)
-```
-
----
-
-#### AutoRepairEngine
-
-Automatically repairs generated components using validator feedback.
-
-**Constructor**:
-```python
-AutoRepairEngine(model: str = "llama3")
-```
-
-**Methods**:
-
-##### repair(component_name, generated, max_attempts) -> dict
-
-Repairs component violations automatically.
-
-**Parameters**:
-- `component_name` (str): Component name
-- `generated` (dict): Generated component data
-- `max_attempts` (int): Maximum repair attempts (default: 2)
-
-**Returns**: Repair result with final output and validation
-
-**Example**:
-```python
-from generation.auto_repair_engine import AutoRepairEngine
-
-repair_engine = AutoRepairEngine()
-result = repair_engine.repair(
-    component_name="button",
-    generated={"component": "<button>Bad code</button>"}
-)
-```
-
----
-
-#### GenerationPipeline
-
-Complete pipeline for component generation and validation.
-
-**Constructor**:
-```python
-GenerationPipeline()
-```
-
-**Methods**:
-
-##### run(component, request) -> dict
-
-Runs the complete generation pipeline.
-
-**Parameters**:
-- `component` (str): Component name
-- `request` (str): Natural language request
-
-**Returns**: Complete result with component, CSS, and validation
-
-**Example**:
-```python
-from generation.generation_pipeline import GenerationPipeline
-
-pipeline = GenerationPipeline()
-result = pipeline.run("button", "Generate a primary button")
 ```
 
 ---
@@ -399,22 +204,11 @@ Approved CSS custom properties.
 | structure_violation | Medium | Missing required element |
 | rule_violation | Variable | Design rule not followed |
 
-### Generation Error Types
-
-| Error | Cause | Resolution |
-|-------|-------|------------|
-| Model not available | Ollama model missing | Pull required model |
-| Context too large | Input exceeds limits | Reduce context size |
-| Invalid framework | Unsupported framework | Use React or Angular |
-
----
-
 ## Rate Limiting
 
 ### API Limits
 
 - Validation API: 100 requests/minute
-- Generation API: 50 requests/minute
 - MCP Tools: No rate limiting
 
 ### Response Headers
@@ -441,7 +235,6 @@ curl -H "Authorization: Bearer YOUR_API_KEY" \
 
 ```bash
 export DESIGN_API_KEY="your-api-key"
-export OLLAMA_BASE_URL="http://localhost:11434"
 ```
 
 ---
@@ -453,16 +246,12 @@ export OLLAMA_BASE_URL="http://localhost:11434"
 ```bash
 # Validation API health
 GET http://localhost:8000/health
-
-# Generation API health
-GET http://localhost:8001/health
 ```
 
 ### Metrics
 
 - Request latency
 - Validation success rate
-- Generation success rate
 - Error rates by type
 
 ### Logging

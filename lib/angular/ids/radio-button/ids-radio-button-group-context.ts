@@ -1,10 +1,17 @@
 import { InjectionToken } from "@angular/core";
 import type { IdsRadioButtonComponent } from "./ids-radio-button.component";
-import type { RadioButtonSimulatedState } from "@component-contracts/ids/radio-button.contract";
+import type {
+  RadioButtonOrientation,
+  RadioButtonSimulatedState,
+} from "@component-contracts/ids/radio-button.contract";
+
+export type RadioButtonGroupLabelPosition = "left" | "top";
 
 export interface IdsRadioButtonGroupContext {
   readonly name: string;
   readonly disabled: boolean;
+  readonly error: boolean;
+  readonly orientation: RadioButtonOrientation;
   isSelected(value: string): boolean;
   isItemDisabled(item: IdsRadioButtonComponent): boolean;
   select(value: string): void;

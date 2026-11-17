@@ -13,7 +13,7 @@ import {
 const DEMO_ICON_SLUG = "settings-gear-detailed";
 const DemoIcon = () => <Icon shapeName={DEMO_ICON_SLUG} variant="mask" />;
 
-const synapseButtonProps = { programme: "synapse" as const, size: "lg" as const };
+const synapseButtonProps = { programme: "synapse" as const, size: "large" as const };
 
 const meta: Meta<typeof Button> = {
   title: "Components/Synapse/Button",
@@ -32,7 +32,7 @@ const meta: Meta<typeof Button> = {
   },
   argTypes: {
     variant: { control: "select", options: ["primary", "secondary", "tertiary", "destructive"] },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    size: { control: "select", options: ["small", "medium", "large"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
     iconOnly: { control: "boolean" },
@@ -40,7 +40,7 @@ const meta: Meta<typeof Button> = {
   args: {
     programme: "synapse",
     variant: "primary",
-    size: "lg",
+    size: "large",
     disabled: false,
     loading: false,
     iconOnly: false,
@@ -61,7 +61,7 @@ export const SpecAccurateDesign: Story = {
   args: {
     programme: "synapse",
     variant: BUTTON_SPEC_ACCURATE_DEFAULTS.variant,
-    size: "lg",
+    size: "large",
     disabled: BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
     loading: BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
     iconOnly: BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly,
@@ -145,43 +145,43 @@ export const SizeExamples: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <Button programme="synapse" variant="primary" size="sm">
+        <Button programme="synapse" variant="primary" size="small">
           Small
         </Button>
-        <Button programme="synapse" variant="primary" size="md">
+        <Button programme="synapse" variant="primary" size="medium">
           Medium
         </Button>
-        <Button programme="synapse" variant="primary" size="lg">
+        <Button programme="synapse" variant="primary" size="large">
           Large
         </Button>
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <Button programme="synapse" variant="secondary" size="lg">
+        <Button programme="synapse" variant="secondary" size="large">
           <DemoIcon />
           Large
         </Button>
-        <Button programme="synapse" variant="primary" size="sm" iconOnly aria-label="Settings small">
+        <Button programme="synapse" variant="primary" size="small" iconOnly aria-label="Settings small">
           <DemoIcon />
         </Button>
-        <Button programme="synapse" variant="secondary" size="md" iconOnly aria-label="Settings medium">
+        <Button programme="synapse" variant="secondary" size="medium" iconOnly aria-label="Settings medium">
           <DemoIcon />
         </Button>
-        <Button programme="synapse" variant="tertiary" size="lg" iconOnly aria-label="Settings large">
+        <Button programme="synapse" variant="tertiary" size="large" iconOnly aria-label="Settings large">
           <DemoIcon />
         </Button>
-        <Button programme="synapse" variant="ghostNeutral" size="lg" iconOnly aria-label="Ghost Neutral large">
+        <Button programme="synapse" variant="ghostNeutral" size="large" iconOnly aria-label="Ghost Neutral large">
           <DemoIcon />
         </Button>
-        <Button programme="synapse" variant="primary" size="lg" iconOnly disabled aria-label="Primary disabled">
+        <Button programme="synapse" variant="primary" size="large" iconOnly disabled aria-label="Primary disabled">
           <DemoIcon />
         </Button>
-        <Button programme="synapse" variant="secondary" size="lg" iconOnly disabled aria-label="Secondary disabled">
+        <Button programme="synapse" variant="secondary" size="large" iconOnly disabled aria-label="Secondary disabled">
           <DemoIcon />
         </Button>
-        <Button programme="synapse" variant="tertiary" size="lg" iconOnly disabled aria-label="Tertiary disabled">
+        <Button programme="synapse" variant="tertiary" size="large" iconOnly disabled aria-label="Tertiary disabled">
           <DemoIcon />
         </Button>
-        <Button programme="synapse" variant="ghostNeutral" size="lg" iconOnly disabled aria-label="Ghost Neutral disabled">
+        <Button programme="synapse" variant="ghostNeutral" size="large" iconOnly disabled aria-label="Ghost Neutral disabled">
           <DemoIcon />
         </Button>
       </div>

@@ -10,7 +10,10 @@
 
 .wrapper {
   display: inline-flex;
-  align-items: center;
+  /* Long labels wrap under a 900px cap (control + text); the control top-aligns
+     so it stays on the first line instead of centering across the wrapped text. */
+  align-items: flex-start;
+  max-width: 900px;
   gap: var(--spacing-space-8);
   cursor: pointer;
   font-family: var(--typography-font-style-primary, "Roboto", sans-serif);
@@ -18,12 +21,16 @@
   font-weight: 400;
   color: var(--color-text-gray-neutral);
   line-height: var(--font-line-height-line-height-20);
+  letter-spacing: 0;
+  font-variation-settings: "wdth" 100;
   min-height: 20px;
 }
 
 .field[data-density="datagrid"] .wrapper {
   min-height: 0;
   gap: 0;
+  /* Selection cell has no wrapping label — keep it centered, no top offset. */
+  align-items: center;
 }
 
 .field[data-density="datagrid"] .root {
@@ -31,6 +38,7 @@
   height: 16px;
   min-width: 16px;
   min-height: 16px;
+  margin-top: 0;
 }
 
 .root {
@@ -43,6 +51,9 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+  /* Optically center the 16px control on the first 20px text line while the row
+     top-aligns for multi-line labels ((20 - 16) / 2 = 2px). */
+  margin-top: 2px;
   transition: all 100ms ease;
   cursor: inherit;
   outline: none;
@@ -70,14 +81,20 @@
   border-color: var(--color-border-gray-neutral-strong);
 }
 
-.root:has(.input:focus-visible) {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+.root::after {
+  content: "";
+  position: absolute;
+  inset: calc((var(--border-width-border-1) + 3px) * -1);
+  border-radius: var(--corner-radius-radius-4);
+  border: var(--border-width-border-1) solid var(--color-border-brand-base);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 100ms ease;
 }
 
-.rootSimulatedFocus {
-  outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-  outline-offset: 2px;
+.root:has(.input:focus-visible)::after,
+.rootSimulatedFocus::after {
+  opacity: 1;
 }
 
 .root[data-checked] {
@@ -90,9 +107,10 @@
   border-color: var(--color-border-brand-base);
 }
 
+/* Spec: hover does not change checked fill — stays controls-base. */
 .root[data-checked]:has(.input:hover:not(:disabled)),
 .root[data-checked]:has(.input:active:not(:disabled)) {
-  background: var(--color-background-controls-strong);
+  background: var(--color-background-controls-base);
   border-color: var(--color-border-brand-transparent-brand);
 }
 
@@ -182,6 +200,9 @@
 
 .label {
   user-select: none;
+  /* Wrap long text (never truncate); min-width:0 lets it wrap inside the flex row. */
+  min-width: 0;
+  overflow-wrap: break-word;
 }
 
 .visuallyHidden {

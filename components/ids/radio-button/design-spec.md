@@ -98,13 +98,14 @@ Canonical machine-readable mirror (Storybook + codegen QA): `component-contracts
 **Preferred pattern:** projected children inside a group wrapper — not an `options[]` prop.
 
 ```
-RadioButtonGroup [name, value?, defaultValue?, disabled?, orientation?, id?, label?, showLabel?, labelPosition?, required?, labelIcon?, ariaLabel?, error?, errorText?]
+RadioButtonGroup [name, value?, defaultValue?, disabled?, orientation?, id?, showLabel?, labelPosition?, required?, labelIcon?, ariaLabel?, error?, errorText?]
+  [form label]  — React/Angular: `label` string prop · Lit: projected `<label>` child
   RadioButton [value, name?, checked?, defaultChecked?, disabled?, error?, dataState?]
-    IdsRadioLabel | IdsHelper | IdsError  (projected children — there is no `label` or `helperText` prop)
+    IdsRadioLabel | `<label>` (Lit) | IdsHelper | IdsError  (projected option label — React: IdsRadioLabel; Lit: `<label>`; Angular still accepts `label` string)
   RadioButton …
 ```
 
-Angular reference selectors: `ids-radio-button-group` → `ids-radio-button` (`storybook-angular`, port 6007). Each `ids-radio-button` must be projected inside `ids-radio-button-group`.
+Angular reference selectors: `ids-radio-button-group` → `ids-radio-button` (`storybook-angular`, port 6007). Each `ids-radio-button` must be projected inside `ids-radio-button-group`. Lit: `storybook-lit` → **Spec Generated/IDS/Radio Button** (form + option labels via projected `<label>`; `value` retained on the item).
 
 ### Group (`RadioButtonGroup` / `groupRoot`)
 | Prop | Required | Behavior |
@@ -115,12 +116,12 @@ Angular reference selectors: `ids-radio-button-group` → `ids-radio-button` (`s
 | `onChange(value)` | No | Fires with the new value when selection changes. |
 | `disabled` | No | When true, disables the entire group (merged with per-item `disabled`). |
 | `orientation` | No | `vertical` (default) or `horizontal`. Both use `var(--spacing-space-16)` between radio items. |
-| `label` | No | Group form label text. |
+| `label` (React/Angular) / `<label>` child (Lit) | No | Group form label. **Lit:** project `<label>Radio Group:</label>` as a direct child; there is no group `label` string prop. |
 | `showLabel` | No | Default `true`; when `false`, the group label is not rendered. |
 | `required` | No | Renders a `*` required mark inside the group label and sets `aria-required` on the group. |
 | `labelIcon` | No | Truthy value shows the shared `IdsFormLabel` info icon after the group label text (and after `*`, if present). The node itself is not rendered — it maps to `showInfoIcon`. |
 | `labelPosition` | No | `left` (default) or `top`. |
-| `ariaLabel` | No | Accessible name when `showLabel` is `false` or `label` is not provided. |
+| `ariaLabel` | No | Accessible name when `showLabel` is `false` or form label is not provided. |
 | `error` | No | `true` applies error styling to child radios and renders `errorText`/`error` slot. |
 | `errorText` | No | Validation error message string or node. |
 | `id` | No | Optional id for the group root; used for `aria-labelledby` and `aria-errormessage` ids. |
@@ -128,14 +129,14 @@ Angular reference selectors: `ids-radio-button-group` → `ids-radio-button` (`s
 Outputs (group): `onChange(value)` / `valueChange`.
 
 ### Item (`RadioButton` / `root`)
-| Prop | Required | Behavior |
+| Prop / Slot | Required | Behavior |
 |---|---|---|
-| `value` | Yes | Unique value within the group. |
-| `label` | Yes | Visible label for the option row. |
+| `value` | Yes | Unique value within the group (**retained on Lit** `ids-radio-button`). |
+| `IdsRadioLabel` (projected) / `<label>` (Lit) / `label` (Angular) | Yes | **React:** project `IdsRadioLabel`. **Lit:** project `<label>…</label>` child (no `label` string prop). **Angular:** `label` string input. |
 | `disabled` | No | Disables this option only (merged with group `disabled`). |
-| `error` | No | Error state: ring border shifts to `var(--color-border-gray-neutral-strong)`; label color unchanged; assistive text turns critical with icon. |
-| `helperText` | No | Helper or error line under the option row. |
-| `simulatedState` | No | **Docs / Storybook only**: `"hover"` or `"focus-visible"` for static matrices; not a substitute for real `:hover` / `:focus-visible` in production. |
+| `error` | No | Error state: ring border shifts to `var(--color-border-gray-neutral-strong)`; label color unchanged; assistive text turns critical with icon. Merged with group `error`. |
+| `IdsHelper` / `IdsError` (projected) / `helperText` | No | **React:** project `IdsHelper` or `IdsError`. **Angular / Lit:** `helperText` string (+ `error` for critical styling). |
+| `simulatedState` / `dataState` | No | **Docs / Storybook only**: `"hover"` or `"focus-visible"` for static matrices; not a substitute for real `:hover` / `:focus-visible` in production. |
 
 ### Legacy aggregate (React Storybook only)
 `RadioButton` with `options[]` in `storybook/src/components/RadioButton.tsx` is a **convenience wrapper** that expands to the same group/item anatomy. New framework ports must use composition; do not add new `options[]`-first APIs.
@@ -218,6 +219,7 @@ Outputs (group): `onChange(value)` / `valueChange`.
 - Component/state matrix source: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42077-26730&m=dev`
 - Additional state validation board: `https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=8505-14225&m=dev`
 - Lib React implementation (no Base UI): `lib/react/ids/radio-button/` (`IdsRadioGroup`, `IdsRadioButton`, `IdsRadioLabel`; selectors `IdsRadioGroup*` / `ids-radio-*`); stories: `storybook/src/components/lib-generated/RadioButton.stories.tsx`
+- Lit lib: `lib/lit/ids/src/radio-button/` (`ids-radio-button`, `ids-radio-button-group`); stories: `storybook-lit/src/components/RadioButton.stories.ts` (title `Spec Generated/IDS/Radio Button`). **Lit labels:** project direct `<label>…</label>` children — group form label on `ids-radio-button-group`, option label on `ids-radio-button` (auto `slot="label"`); `value` remains a required item prop.
 - Runtime story / codegen contract: `component-contracts/ids/radio-button.contract.ts`
 - Angular composition reference: `storybook-angular/src/components/ids-radio-button/` (`IDS_RADIO_BUTTON_IMPORTS`)
 
@@ -229,6 +231,11 @@ Outputs (group): `onChange(value)` / `valueChange`.
 - `IdsRadioGroup` now owns the group form label, `labelPosition`, `required` mark, `labelIcon`, `error`, `errorText`, and orientation for projected `IdsRadioButton` children.
 - `IdsRadioButton` consumes group context for cascaded `name`, `disabled`, and `error`.
 - Layout/label/selectors are documented in the Codegen Contract above.
+
+**2026-11-04 parity:**
+- Angular `ids-radio-button-group` and Lit `ids-radio-button-group` match the React group API (form label, `labelPosition`, `required`, `labelIcon`, group `error`/`errorText`, body/items layout tokens).
+- Angular / Lit items cascade group `error` and accept `Enter` (with `Space`) to select.
+- Long-label layout (`max-width: 900px`, control `flex-start` + `2px` offset, label wrap) is required in React, Angular, and Lit.
 
 **Layout & structure**
 - **Group gap**: use `var(--spacing-space-16)` between radio items, not `var(--spacing-space-12)`

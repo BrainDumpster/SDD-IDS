@@ -20,8 +20,8 @@
 - Storybook examples requested: yes
 - Storybook path: `storybook-generated/ids/src/components/TimePicker.stories.tsx`
 - Storybook title: `Spec Generated/IDS/Time Picker`
-- Verification method: Figma MCP (`get_design_context`)
-- Last verified: 2026-05-26
+- Verification method: Figma MCP (`get_design_context`, `get_variable_defs`, `get_metadata`)
+- Last verified: 2026-11-10 (Lit port — TimePicker-Main `42159:132203`, Element-Dropdown `42159:132108`)
 
 ## Anatomy
 
@@ -352,9 +352,11 @@ See **Interactions → Keyboard navigation** and **Interactions → Accessibilit
 | Runtime path | Role |
 |---|---|
 | `lib/react/ids/time-picker/` | React reference implementation |
+| `lib/lit/ids/src/time-picker/` | Lit web component (`ids-time-picker`) |
 | `lib/react/ids/form-label/` | Shared label consumed by the Time Picker (`IdsFormLabel`) |
 | `lib/angular/ids/time-picker/` | Angular implementation (parity with React) |
 | `storybook-angular/src/components/ids-time-picker/` | Angular Spec Generated stories |
+| `storybook-lit/src/components/TimePicker.stories.ts` | Lit Spec Generated stories |
 | `components/ids/date-and-time-picker/design-spec.md` | Family map entry (Date and Time Picker) |
 
 ## Implementation Notes

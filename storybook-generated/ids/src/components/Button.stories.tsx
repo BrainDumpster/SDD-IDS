@@ -75,7 +75,7 @@ const meta: Meta<typeof IdsButton> = {
   },
   argTypes: {
     variant: { control: "select", options: ["primary", "secondary", "tertiary", "destructive", "ghostNeutral"] },
-    size: { control: "select", options: ["sm", "md", "lg"] },
+    size: { control: "select", options: ["small", "medium", "large"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
     iconOnly: { control: "boolean" },
@@ -86,7 +86,7 @@ const meta: Meta<typeof IdsButton> = {
   },
   args: {
     variant: "primary",
-    size: "lg",
+    size: "large",
     disabled: false,
     loading: false,
     iconOnly: false,
@@ -126,7 +126,7 @@ export const SpecAccurateDesign: Story = {
   ),
   args: {
     variant: BUTTON_SPEC_ACCURATE_DEFAULTS.variant,
-    size: "lg",
+    size: "large",
     disabled: BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
     loading: BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
     iconOnly: BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly,
@@ -153,16 +153,16 @@ export const StatesMatrix: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <IdsButton variant="primary" size="lg">Primary</IdsButton>
-        <IdsButton variant="secondary" size="lg">Secondary</IdsButton>
-        <IdsButton variant="tertiary" size="lg">Tertiary</IdsButton>
-        <IdsButton variant="destructive" size="lg">Destructive</IdsButton>
+        <IdsButton variant="primary" size="large">Primary</IdsButton>
+        <IdsButton variant="secondary" size="large">Secondary</IdsButton>
+        <IdsButton variant="tertiary" size="large">Tertiary</IdsButton>
+        <IdsButton variant="destructive" size="large">Destructive</IdsButton>
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap" }}>
-        <IdsButton variant="primary" size="lg" disabled>Primary</IdsButton>
-        <IdsButton variant="secondary" size="lg" disabled>Secondary</IdsButton>
-        <IdsButton variant="tertiary" size="lg" disabled>Tertiary</IdsButton>
-        <IdsButton variant="destructive" size="lg" disabled>Destructive</IdsButton>
+        <IdsButton variant="primary" size="large" disabled>Primary</IdsButton>
+        <IdsButton variant="secondary" size="large" disabled>Secondary</IdsButton>
+        <IdsButton variant="tertiary" size="large" disabled>Tertiary</IdsButton>
+        <IdsButton variant="destructive" size="large" disabled>Destructive</IdsButton>
       </div>
     </div>
   ),
@@ -172,35 +172,35 @@ export const SizeExamples: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 12 }}>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <IdsButton variant="primary" size="sm">Small</IdsButton>
-        <IdsButton variant="primary" size="md">Medium</IdsButton>
-        <IdsButton variant="primary" size="lg">Large</IdsButton>
+        <IdsButton variant="primary" size="small">Small</IdsButton>
+        <IdsButton variant="primary" size="medium">Medium</IdsButton>
+        <IdsButton variant="primary" size="large">Large</IdsButton>
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <IdsButton variant="secondary" size="sm">
+        <IdsButton variant="secondary" size="small">
           <DemoIcon />
           Small
         </IdsButton>
-        <IdsButton variant="secondary" size="md">
+        <IdsButton variant="secondary" size="medium">
           <DemoIcon />
           Medium
         </IdsButton>
-        <IdsButton variant="secondary" size="lg">
+        <IdsButton variant="secondary" size="large">
           <DemoIcon />
           Large
         </IdsButton>
       </div>
       <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <IdsButton variant="tertiary" size="sm" iconOnly aria-label="Settings small">
+        <IdsButton variant="tertiary" size="small" iconOnly aria-label="Settings small">
           <DemoIcon />
         </IdsButton>
-        <IdsButton variant="tertiary" size="md" iconOnly aria-label="Settings medium">
+        <IdsButton variant="tertiary" size="medium" iconOnly aria-label="Settings medium">
           <DemoIcon />
         </IdsButton>
-        <IdsButton variant="tertiary" size="lg" iconOnly aria-label="Settings large">
+        <IdsButton variant="tertiary" size="large" iconOnly aria-label="Settings large">
           <DemoIcon />
         </IdsButton>
-        <IdsButton variant="ghostNeutral" size="lg" iconOnly aria-label="Ghost Neutral large">
+        <IdsButton variant="ghostNeutral" size="large" iconOnly aria-label="Ghost Neutral large">
           <DemoIcon />
         </IdsButton>
       </div>
@@ -212,7 +212,7 @@ export const SizeExamples: Story = {
 export const TypographyBody2: Story = {
   render: () => (
     <div style={{ display: "grid", gap: 8 }}>
-      <IdsButton variant="primary" size="lg">
+      <IdsButton variant="primary" size="large">
         Body 2 — 14/20 / 400
       </IdsButton>
       <p
@@ -235,10 +235,10 @@ export const Variants: Story = {
   <div>
       <ButtonStoryStyles />
       <div className="sbVariantGrid">
-        <IdsButton variant="primary" size="lg">Primary</IdsButton>
-        <IdsButton variant="secondary" size="lg">Secondary</IdsButton>
-        <IdsButton variant="tertiary" size="lg">Tertiary</IdsButton>
-        <IdsButton variant="destructive" size="lg">Destructive</IdsButton>
+        <IdsButton variant="primary" size="large">Primary</IdsButton>
+        <IdsButton variant="secondary" size="large">Secondary</IdsButton>
+        <IdsButton variant="tertiary" size="large">Tertiary</IdsButton>
+        <IdsButton variant="destructive" size="large">Destructive</IdsButton>
       </div>
     </div>
   ),
@@ -249,9 +249,9 @@ export const Sizes: Story = {
     <div>
       <ButtonStoryStyles />
       <div className="sbSizeRow">
-        <IdsButton variant="primary" size="sm">Small</IdsButton>
-        <IdsButton variant="primary" size="md">Medium</IdsButton>
-        <IdsButton variant="primary" size="lg">Large</IdsButton>
+        <IdsButton variant="primary" size="small">Small</IdsButton>
+        <IdsButton variant="primary" size="medium">Medium</IdsButton>
+        <IdsButton variant="primary" size="large">Large</IdsButton>
       </div>
     </div>
   ),
@@ -262,10 +262,10 @@ export const Disabled: Story = {
     <div>
       <ButtonStoryStyles />
       <div className="sbVariantGrid">
-        <IdsButton variant="primary" size="lg" disabled>Primary</IdsButton>
-        <IdsButton variant="secondary" size="lg" disabled>Secondary</IdsButton>
-        <IdsButton variant="tertiary" size="lg" disabled>Tertiary</IdsButton>
-        <IdsButton variant="destructive" size="lg" disabled>Destructive</IdsButton>
+        <IdsButton variant="primary" size="large" disabled>Primary</IdsButton>
+        <IdsButton variant="secondary" size="large" disabled>Secondary</IdsButton>
+        <IdsButton variant="tertiary" size="large" disabled>Tertiary</IdsButton>
+        <IdsButton variant="destructive" size="large" disabled>Destructive</IdsButton>
       </div>
     </div>
   ),
@@ -276,9 +276,9 @@ export const Loading: Story = {
     <div>
       <ButtonStoryStyles />
       <div className="sbVariantGrid">
-        <IdsButton variant="primary" size="lg" loading>Primary</IdsButton>
-        <IdsButton variant="secondary" size="lg" loading>Secondary</IdsButton>
-        <IdsButton variant="tertiary" size="lg" loading>
+        <IdsButton variant="primary" size="large" loading>Primary</IdsButton>
+        <IdsButton variant="secondary" size="large" loading>Secondary</IdsButton>
+        <IdsButton variant="tertiary" size="large" loading>
           <DemoIcon />
           Tertiary
         </IdsButton>
@@ -293,19 +293,19 @@ export const IconComposition: Story = {
     <div>
       <ButtonStoryStyles />
       <div className="sbVariantGrid">
-        <IdsButton variant="primary" size="lg">
+        <IdsButton variant="primary" size="large">
           <DemoIcon />
           Primary
         </IdsButton>
-        <IdsButton variant="secondary" size="lg">
+        <IdsButton variant="secondary" size="large">
           <DemoIcon />
           Secondary
         </IdsButton>
-        <IdsButton variant="tertiary" size="lg">
+        <IdsButton variant="tertiary" size="large">
           <DemoIcon />
           Tertiary
         </IdsButton>
-        <IdsButton variant="destructive" size="lg">
+        <IdsButton variant="destructive" size="large">
           <DemoIcon />
           Destructive
         </IdsButton>
@@ -340,7 +340,7 @@ export const IconOnly: Story = {
           <IdsButton
             key={`${variant}-disabled`}
             iconOnly
-            size="lg"
+            size="large"
             variant={variant}
             disabled
             aria-label={`${variant} icon button disabled`}
@@ -375,7 +375,7 @@ export const StateHarness: Story = {
           border-color: var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="secondary"]:not(:disabled) {
-          background: var(--color-background-controls-light);
+          background: var(--color-background-controls-press, var(--color-background-controls-light));
           border-color: var(--color-border-brand-strong);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled) {
@@ -383,7 +383,7 @@ export const StateHarness: Story = {
           border-color: transparent;
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {
-          background: var(--color-background-controls-light);
+          background: var(--color-background-controls-press, var(--color-background-controls-light));
           border-color: transparent;
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="destructive"]:not(:disabled) {
@@ -399,11 +399,11 @@ export const StateHarness: Story = {
       {(["primary", "secondary", "tertiary", "destructive"] as const).map((variant) => (
         <div key={variant} className="sbRow">
           <div className="sbLabel">{variant}</div>
-          <SimButton simVariant={variant} simState="default" variant={variant} size="lg">Default</SimButton>
-          <SimButton simVariant={variant} simState="hover" variant={variant} size="lg">Hover</SimButton>
-          <SimButton simVariant={variant} simState="press" variant={variant} size="lg">Press</SimButton>
-          <SimButton simVariant={variant} simState="focus-visible" variant={variant} size="lg">Focus</SimButton>
-          <SimButton simVariant={variant} simState="default" variant={variant} size="lg" disabled>Disabled</SimButton>
+          <SimButton simVariant={variant} simState="default" variant={variant} size="large">Default</SimButton>
+          <SimButton simVariant={variant} simState="hover" variant={variant} size="large">Hover</SimButton>
+          <SimButton simVariant={variant} simState="press" variant={variant} size="large">Press</SimButton>
+          <SimButton simVariant={variant} simState="focus-visible" variant={variant} size="large">Focus</SimButton>
+          <SimButton simVariant={variant} simState="default" variant={variant} size="large" disabled>Disabled</SimButton>
         </div>
       ))}
     </div>

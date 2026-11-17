@@ -11,19 +11,20 @@
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
 - Verified at: 2026-04-20
 ## Anatomy
+- `TextBoxContainer` (**preferred composition root**; Lit `ids-textbox-container` — checkbox-group pattern)
 - `TextBoxField` (outer wrapper; only rendered when a label is present, lays label left of or above the field group via `labelPosition`)
-- `TextBoxLabel` (**optional** form label; `<label>` linked to the input via `for`/`id`)
+- `TextBoxLabel` (**optional** form label; projected `<label>` in the container, or string `label` on standalone control; linked via `for`/`id`)
 - `TextBoxRequiredMark` (**optional** `*` shown when `required`, inside the label)
 - `TextBoxInfoIcon` (**optional** info icon shown when `showInfoIcon` is true, inside the label)
-- `TextBoxRoot` (field wrapper)
+- `TextBoxRoot` (field wrapper / Lit `ids-text-box`)
 - `TextBoxControl` (input/textarea container)
 - `TextBoxInput` (single-line `<input>`)
 - `TextBoxTextArea` (multi-line `<textarea>`)
 - `TextBoxSuffixIcon` (optional trailing icon, default `mail`)
-- `TextBoxHelperRow` (helper/error row)
-- `TextBoxHelperText`
+- `TextBoxHelperRow` (helper/error row — standalone prop API, or projected shared primitives)
+- `TextBoxHelperText` / shared `ControlHelper` (Lit `ids-control-helper`; React `IdsHelper`)
 - `TextBoxErrorIcon` (critical icon `status-critical-square-solid`)
-- `TextBoxErrorText`
+- `TextBoxErrorText` / shared `ControlError` (Lit `ids-control-error`; React `IdsError`)
 ## Layout & Measurements
 - Runtime width is container-driven (`width: 100%`) with `min-width: 70px` and `max-width: 700px` on the **non-label field area** only. Sample frame width `300px`.
 - Width behavior:
@@ -125,20 +126,42 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Error state keeps control interactive (unless separately disabled) and shows critical helper row.
 - Demo/testing mode may force visual states with `data-state`; this must not block runtime pointer/keyboard behavior.
 ## Composition & API (runtime)
+
+### Preferred composition (group + projected children)
+
+Deterministic child order (Lit / framework-agnostic):
+
+```
+TextBoxContainer [error?, invalid?, disabled?, required?, labelPosition?, size?, showInfoIcon?]
+  label?                 → projected <label>
+  TextBoxRoot            → control (ids-text-box / IdsTextBox)
+  ControlHelper?         → ids-control-helper / IdsHelper   (shown when not error)
+  ControlError?          → ids-control-error / IdsError     (shown when error/invalid)
+```
+
+- Helper and error are **mutually exclusive** in render output: when `error` / `invalid` is true, show `ControlError` and hide `ControlHelper`.
+- `ControlHelper` / `ControlError` are **shared form primitives** (also usable with checkbox, radio, textarea, and other form fields).
+- Container cascades `invalid` / `disabled` / `required` onto the projected control and wires `label[for]` + `aria-describedby` to the visible message.
+- Contract mirror: `component-contracts/ids/text-box.contract.ts`
+- Lit reference: `lib/lit/ids/src/text-box/` (`ids-textbox-container`, `ids-text-box`) + `lib/lit/ids/src/control/`
+- React reference: `lib/react/ids/text-box` projects `IdsHelper` | `IdsError` as children of `IdsTextBox` (same mutual-exclusion rule).
+
+### Control (TextBoxRoot) props
+
 - `componentType: "text-input" | "text-area"` (default `"text-input"`)
 - `size: "large" | "small"` (default `"large"`; `small` valid for text-input)
-- `label?: string` (**optional**; when omitted no label renders and output is the bare field group)
-- `showLabel?: boolean` (default `true`; toggles label visibility when `label` is set)
-- `labelPosition?: "left" | "top"` (default `"left"`)
+- `label?: string` (**optional standalone**; when using the container, project `<label>` instead)
+- `showLabel?: boolean` (default `true`; toggles label visibility when `label` is set; forced off inside container)
+- `labelPosition?: "left" | "top"` (default `"left"`; prefer container `labelPosition` when composing)
 - `required?: boolean` (default `false`; renders the `*` mark and sets `aria-required`)
 - `state: "default" | "hover" | "selected" | "focus" | "disabled" | "error"` (default `"default"`; demo override)
 - `value?: string` / `defaultValue?: string`
 - `placeholder?: string`
 - `disabled?: boolean`
 - `invalid?: boolean`
-- `helperText?: string`
-- `errorText?: string`
-- `showHelperText?: boolean` (default `true`)
+- `helperText?: string` (**standalone prop API**; prefer projected `ControlHelper` in composition)
+- `errorText?: string` (**standalone prop API**; prefer projected `ControlError` in composition)
+- `showHelperText?: boolean` (default `true`; forced off inside container)
 - `showIcon?: boolean` (default `true`)
 - `iconName?: string` (default `"mail"`; user-defined icon slug from `assets/icons`)
 - `showInfoIcon?: boolean` (default `false`)
@@ -149,7 +172,12 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - `id?: string`, `name?: string`, `ariaLabel?: string`, `ariaDescribedBy?: string`
 - `onValueChange?: (value: string) => void`
 ## Codegen Contract (Framework-Agnostic Blueprint)
-- Deterministic slot order:
+- Deterministic structure (composition):
+  1. `TextBoxContainer`
+  2. `TextBoxLabel?` (projected)
+  3. `TextBoxRoot` → `TextBoxControl` → `TextBoxInput | TextBoxTextArea` → `TextBoxSuffixIcon?`
+  4. `ControlHelper?` **xor** `ControlError?` (error wins when `invalid` / `error`)
+- Deterministic slot order (standalone control):
   1. `TextBoxRoot`
   2. `TextBoxControl`
   3. `TextBoxInput | TextBoxTextArea`
@@ -224,17 +252,25 @@ Common keystrokes used to navigate text boxes:
   - [ ] dark theme uses same semantic tokens (no hardcoded literals)
   - [ ] unknown icon slug does not crash rendering
 ## Implementation Notes
-- Width constraints (`70px` min / `700px` max) apply to the non-label field area only (`TextBoxRoot`), using `width: 100%` so it fills its container in small panels and caps at `700px` on wide pages.
+- Width constraints (`70px` min / `700px` max) apply to the non-label field area only (`TextBoxRoot` / container body), using `width: 100%` so it fills its container in small panels and caps at `700px` on wide pages.
 - Label vertical padding tracks control size: `10px` for `large` (40px), `6px` for `small` (32px). Label text, asterisk, and info icon are grouped with `2px` text-to-asterisk gap and `8px` label-to-icon gap.
 - `<textarea>` fills the control height (`align-self: stretch`) and `cols={1}` is set so CSS `width: 100%` controls the rendered width instead of the browser default `cols`.
-- `TextBoxErrorText` is constrained to one line (`white-space: nowrap`) without ellipsis truncation; it overflows visibly if longer than the field.
+- `TextBoxErrorText` / `ControlError` is constrained to one line (`white-space: nowrap`) without ellipsis truncation; it overflows visibly if longer than the field.
 - Focus (2026-10 review): the focus state is the Selected state — brand border, no outer ring — for click and Tab alike, so a field reached by Tab no longer looks different from one that was clicked. `selectTextOnFocus` (Figma *Select text when in focus*) lets each Text Box / Text Area choose select-all or caret-at-end, and applies to click focus the same way as to Tab.
+- Lit composition: `ids-textbox-container` auto-assigns slots for `<label>`, `ids-text-box`, `ids-control-helper`, and `ids-control-error` (same auto-slot pattern as `ids-checkbox-group`).
+- Shared message tags (`ids-control-helper`, `ids-control-error`) live under `lib/lit/ids/src/control/` for reuse across form controls.
 ## Source Mapping
 - Map source: `data/component-figma-map.json` -> component `"Text Box"`.
 - IDS design library source:
   - file key: `0bHk3XhrjFhowgFkz9yLr4`
   - node id: `42065:39424`
   - URL: https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42065-39424&m=dev
+- Runtime contract: `component-contracts/ids/text-box.contract.ts`
+- Reference implementations:
+  - Lit: `lib/lit/ids/src/text-box/`, `lib/lit/ids/src/control/`
+  - React: `lib/react/ids/text-box/`, `lib/react/ids/helper/`, `lib/react/ids/error/`
+  - Angular: `lib/angular/ids/text-box/`
+  - Storybook Lit: `storybook-lit/src/components/TextBox.stories.ts`
 - Verified instance evidence includes:
   - Text input states (`default`, `hover`, `selected`, `focus`, `disabled`, `error`)
   - Text area states (`default`, `hover`, `selected`, `focus`, `disabled`, `error`)

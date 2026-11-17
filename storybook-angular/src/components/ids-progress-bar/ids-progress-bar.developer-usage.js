@@ -69,14 +69,15 @@ export const PROGRESS_BAR_STORY_SOURCE_CODE = `<ids-progress-bar
   [value]="30"
   label="Label"
   type="with-label"
-  thickness="thin"
+  thickness="medium"
   state="in-progress"
   [showHelperText]="true"
   helperText="Helper text (time estimate)"
 ></ids-progress-bar>`;
 
+/** Resizable frame — width 100%, no max-width cap (design-spec); drag to verify min-widths. */
 export const PROGRESS_BAR_FRAME_TEMPLATE = `
-<div style="max-width: 300px; width: 100%;">
+<div style="width: 320px; max-width: 100%; box-sizing: border-box; resize: horizontal; overflow: auto; border: 1px dashed var(--color-border-gray-neutral-base); padding: 8px;">
   <ids-progress-bar
     [value]="value"
     [label]="label"

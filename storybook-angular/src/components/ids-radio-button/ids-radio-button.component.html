@@ -4,7 +4,7 @@
       class="root"
       [attr.data-checked]="isSelected ? '' : null"
       [attr.data-disabled]="isDisabled ? '' : null"
-      [attr.data-error]="error ? 'true' : null"
+      [attr.data-error]="hasError ? 'true' : null"
       [attr.data-simulated-state]="simulatedStateAttr"
     >
       <input
@@ -16,7 +16,7 @@
         [checked]="isSelected"
         [disabled]="isDisabled"
         [tabIndex]="tabIndex"
-        [attr.aria-invalid]="error || null"
+        [attr.aria-invalid]="hasError || null"
         [attr.aria-describedby]="assistiveId"
         (change)="onSelect()"
         (keydown)="onKeydown($event)"
@@ -30,10 +30,10 @@
     <div
       [id]="assistiveId"
       class="assistiveText"
-      [class.assistiveTextError]="error"
+      [class.assistiveTextError]="hasError"
       [class.assistiveTextDisabled]="isDisabled"
     >
-      @if (error && !isDisabled) {
+      @if (hasError && !isDisabled) {
         <ids-icon
           shapeName="status-critical-square-solid"
           variant="img"

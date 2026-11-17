@@ -2,7 +2,8 @@ import { Button as BaseButton } from "@base-ui-components/react/button";
 import { forwardRef, useMemo, type ComponentProps, type ReactNode } from "react";
 import {
   BUTTON_SPEC_ACCURATE_DEFAULTS,
-  type ButtonSize,
+  resolveButtonSize,
+  type ButtonSizeInput,
   type ButtonVariantExtended,
 } from "@component-contracts/ids/button.contract";
 import { splitButtonChildren } from "./buttonChildren";
@@ -14,7 +15,8 @@ interface ButtonProps extends ComponentProps<"button"> {
   /** Programme chrome (`synapse`: ::after focus ring; radius from theme aliases). */
   programme?: "ids" | "synapse";
   variant?: ButtonVariantExtended;
-  size?: ButtonSize;
+  /** Design-spec: `small` | `medium` | `large` (aliases `sm` | `md` | `lg`). */
+  size?: ButtonSizeInput;
   loading?: boolean;
   /**
    * Leading icon node — prefer composition: `<Button><Icon … />Label</Button>`.
@@ -90,6 +92,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     iconSlug && iconUrl ? <Icon shapeName={iconSlug} variant={iconVariant} /> : undefined;
   const resolvedIcon = isDestructive ? undefined : (icon ?? composedIcon ?? slugIconNode);
   const resolvedIconOnly = isDestructive ? false : isGhostNeutral ? true : iconOnly;
+  const resolvedSize = resolveButtonSize(size);
   const hasIcon = Boolean(resolvedIcon);
   const showIconWithLabel = hasIcon && !loading;
   const resolvedClassName = useMemo(
@@ -97,7 +100,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       [
         styles.button,
         styles[variantClass],
-        styles[size],
+        styles[resolvedSize],
         programme === "synapse" ? styles.programmeSynapse : "",
         resolvedIconOnly ? styles.iconOnly : "",
         loading ? styles.loading : "",
@@ -105,7 +108,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       ]
         .filter(Boolean)
         .join(" "),
-    [className, loading, programme, resolvedIconOnly, size, variantClass],
+    [className, loading, programme, resolvedIconOnly, resolvedSize, variantClass],
   );
 
   return (

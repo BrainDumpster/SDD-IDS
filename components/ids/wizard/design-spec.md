@@ -9,7 +9,7 @@
 - File key: `0bHk3XhrjFhowgFkz9yLr4`
 - Main node: `12690:246134` (`WizardInline-Main`)
 - Variant nodes (MCP-verified): `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164`
-- Last live verification: 2026-08-19 — Figma MCP `get_metadata` on `12690:246134` (`WizardInline-Main`, 1710×3777) containing variant symbols `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164` (each `1594×843`).
+- Last live verification: 2026-11-13 — Figma MCP `get_metadata` / `get_variable_defs` / `get_design_context` on `12690:246134` (`WizardInline-Main`, 1710×3777) and sample shell `12690:246164` (1594×843); variant symbols `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164`.
 - Runtime references used for API semantics:
   - https://clarity.design/documentation/wizard/api
   - https://clarity.design/documentation/wizard
@@ -309,6 +309,7 @@ Validation checklist:
 | Component map baseline | `data/component-figma-map.json` (`Wizard - Inline`, `Wizard - Modal`) |
 | New unified IDS wizard spec target | `components/ids/wizard/design-spec.md` |
 | Lib React (no Base UI) | `lib/react/ids/wizard/` (`IdsWizard` = `Wizard`; anatomy slots `IdsWizardHeader` …); stories: `storybook/src/components/lib-generated/Wizard.stories.tsx` |
+| Lib Lit | `lib/lit/ids/src/wizard/` (`ids-wizard` + anatomy tags); stories: `storybook-lit` → **Spec Generated/IDS/Wizard Inline**, **Wizard Modal** |
 | Figma canonical node | `12690:246134` (`WizardInline-Main`) |
 | Figma variant nodes | `12690:246194`, `12690:246135`, `12690:246221`, `12690:246164` |
 | Figma step-element node | `13446:21486` (`Active Step=True, State=Success, Show Sub-Steps=True`) |

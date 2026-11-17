@@ -49,7 +49,7 @@ def parse_args() -> argparse.Namespace:
 def main() -> int:
     args = parse_args()
     cfg = load_design_system(args.programme)
-    compiler = ComponentContextCompiler(config=cfg, enable_rag=False)
+    compiler = ComponentContextCompiler(config=cfg)
     context = compiler.compile(args.component, "resolve design spec layers")
 
     if args.json:

@@ -17,7 +17,7 @@ Primary interactive control with variants, sizes, loading, and leading-icon proj
 | \`size\` | \`ButtonSize\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.size\` |
 | \`disabled\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.dis…\` |
 | \`loading\` | \`—\` | \`BUTTON_SPEC_ACCURATE_DEFAULTS.loa…\` |
-| \`iconOnly\` | \`boolean\` | \`false\` — square sm 24 / md 32 / lg 40; glyph 12 / 14 / 16 |
+| \`iconOnly\` | \`boolean\` | \`false\` — square small 24 / medium 32 / large 40; glyph 12 / 14 / 16 |
 | \`ariaLabel\` | \`string\` | **required** when \`iconOnly\` (or Ghost Neutral) |
 | \`type\` | \`"button" \\| "submit" \\| "reset"\` | \`"button"\` |
 
@@ -68,10 +68,11 @@ bootstrapApplication(AppComponent, {
   providers: [provideZoneChangeDetection()],
 });`;
 
-export const BUTTON_STORY_SOURCE_CODE = `<ids-button variant="primary" size="lg">
+export const BUTTON_STORY_SOURCE_CODE = `<ids-button variant="primary" size="large">
   <ids-icon shapeName="${DEMO_ICON}" variant="mask" />
   Button
 </ids-button>`;
+
 
 export const BUTTON_COMPOSITION_DEMO_TEMPLATE = `
 <ids-button

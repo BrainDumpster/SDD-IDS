@@ -1,14 +1,12 @@
 # SDD-IDS — Spec-Driven Design Intelligence System
 
-A RAG-powered platform that extracts design system knowledge from Figma, generates framework-agnostic `design-spec.md` files, and serves them to downstream AI coding agents and development teams.
+A platform that extracts design system knowledge from Figma, generates framework-agnostic `design-spec.md` files, and serves them to downstream AI coding agents and development teams.
 
 ## What It Does
 
 - **Extracts** component specs from Figma via MCP tools (tokens, states, anatomy, measurements)
 - **Generates** framework-agnostic `design-spec.md` files — the canonical deliverable for any developer (React, Angular, Vue, native)
 - **Validates** generated code against design system rules and tokens
-- **Indexes** design system documentation (MDX from GitHub Enterprise) into Qdrant vectors for RAG
-- **Answers** design system questions via chat agent and semantic search API
 
 Supports multiple design systems via `DESIGN_SYSTEM` env var:
 - **IDS** (default): Original IDS design system (`components/ids`, `components/ids-theme.css`)
@@ -128,7 +126,7 @@ When SDD-IDS is open, the agent loads layers **in order** (most specific wins):
 
 ### Portable spec bundle (generate without cloning SDD-IDS)
 
-If your team works in **another repository**, copy only the **design contract files** for the component(s) you need. You do **not** need Qdrant, Ollama, Figma MCP, or the rest of SDD-IDS to generate code from specs.
+If your team works in **another repository**, copy only the **design contract files** for the component(s) you need. You do **not** need Figma MCP, or the rest of SDD-IDS to generate code from specs.
 
 **Suggested folder in your app repo** (keep the same relative paths so prompts stay simple):
 
@@ -166,7 +164,7 @@ design-contract/
 3. Ensure your app loads the theme CSS (or maps the same `var(--…)` tokens in your build).
 4. Copy any referenced icons into your app’s asset pipeline.
 
-**What you do *not* need to copy:** `storybook/`, `generation/`, `rag/`, vector DB, `.env` Figma tokens, or full `data/` maps — unless you want Storybook parity inside SDD-IDS itself.
+**What you do *not* need to copy:** `storybook/`, `generation/`, `.env` Figma tokens, or full `data/` maps — unless you want Storybook parity inside SDD-IDS itself.
 
 ### Copy-paste prompts
 
@@ -438,7 +436,7 @@ Regenerate Main Menu/Left stories after spec changes:
 
 ```bash
 export DESIGN_SYSTEM=ids
-python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --spec-only --deterministic-story
+python3 scripts/strict_spec_storybook_gate.py --component main-menu-left --deterministic-story
 ```
 
 **Normalize headings** (from repository root). Does **not** delete body text—only moves sections and renames headings:
@@ -524,30 +522,12 @@ For a new program `<program>`:
 
 ## Generation Folder Roles
 
-The `generation/` folder contains runtime codegen orchestration and adapters (not generated output artifacts):
+The `generation/` folder contains spec-context compilation and offline generators (not generated output artifacts):
 
 - `generation/component_context_compiler.py`
   - Builds layered context for each component.
   - Composes IDS baseline + program deltas + theme layers.
   - Adds layer validation diagnostics (required layers, inherits marker, hardcoded drift checks).
-- `generation/prompt_templates.py`
-  - Defines prompt rules/templates and context injection.
-  - Injects `PRECEDENCE RULES`, `IDS BASELINE`, `PROGRAM DELTAS`, and `THEME LAYERS`.
-- `generation/component_generator.py`
-  - Calls the LLM with compiled prompt/context.
-  - Parses structured output sections (`COMPONENT`, `CSS`, etc.).
-- `generation/generation_pipeline.py`
-  - High-level orchestrator: compile context -> generate -> repair/validate.
-- `generation/theme_injector.py`
-  - Materializes theme layers in deterministic order (IDS theme first, program theme second).
-- `generation/auto_repair_engine.py`
-  - Post-generation auto-repair loop driven by validation feedback.
-- `generation/rag_component_generator.py`
-  - RAG-aware generation path using retrieved design knowledge context.
-- `generation/figma_aware_generator.py` and `generation/figma_enhanced_prompts.py`
-  - Figma-context-aware generation helpers/prompts.
-- `generation/framework_adapters/*`
-  - Framework-specific shaping/adaptation (`react_css_adapter.py`, `angular_adapter.py`, `base_ui_adapter.py`).
 - `generation/style_modes.py`
   - Enumerates supported style output modes.
 
@@ -586,12 +566,6 @@ Prompt guidance:
 - treat `root-spec.md`, `synapse-theme.css`, and component `design-spec.md` as canonical;
 - do not invent styles/behaviors not present in spec;
 - if information is missing, return explicit gaps instead of guessing.
-
-### For MCP server / API flows
-
-- resolve source node from `data/synapse-component-figma-map.json`;
-- preserve `Source Mapping` metadata in generated outputs;
-- return code + contract checklist pass/fail status.
 
 ## Production-Ready Gate
 
@@ -652,12 +626,6 @@ Run strict gate for one component:
 python scripts/strict_spec_storybook_gate.py --component button --framework React --style-mode css-module
 ```
 
-Run in spec-only mode (no RAG/retrieval dependency):
-
-```bash
-python scripts/strict_spec_storybook_gate.py --component button --spec-only
-```
-
 Run for all components in the baseline components directory:
 
 ```bash
@@ -690,13 +658,13 @@ Use this workflow when you want deterministic, repeatable generation from `desig
 
 3. **Generate deterministic Storybook from layered specs** (root Storybook **Spec Generated** is **IDS** and **DAP** only; each story imports **`components/ids-theme.css`** or **`components/dap-theme.css`**. Running the gate for **`DESIGN_SYSTEM=ids`** on **`toast`** also syncs `Toast.module.css` from the IDS toast spec.)
    - Single component:
-     - `DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story`
-     - DAP: `DESIGN_SYSTEM=dap python scripts/strict_spec_storybook_gate.py --component <slug> --spec-only --deterministic-story`
+     - `DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component <slug> --deterministic-story`
+     - DAP: `DESIGN_SYSTEM=dap python scripts/strict_spec_storybook_gate.py --component <slug> --deterministic-story`
    - Example:
-     - `DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component button --spec-only --deterministic-story`
+     - `DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component button --deterministic-story`
 
 4. **(Optional) run all baseline components**
-   - `python scripts/strict_spec_storybook_gate.py --all --spec-only --deterministic-story`
+   - `python scripts/strict_spec_storybook_gate.py --all --deterministic-story`
 
 5. **Validate generated output artifacts**
    - Stories:
@@ -709,8 +677,8 @@ Use this workflow when you want deterministic, repeatable generation from `desig
    - React: `cd storybook && pnpm build`
    - Angular: `cd storybook-angular && npm run build`
    - or from root via gate:
-     - `python scripts/strict_spec_storybook_gate.py --component button --framework React --spec-only --deterministic-story --build-storybook`
-     - `python scripts/strict_spec_storybook_gate.py --component button --framework Angular --spec-only --deterministic-story --build-storybook`
+     - `python scripts/strict_spec_storybook_gate.py --component button --framework React --deterministic-story --build-storybook`
+     - `python scripts/strict_spec_storybook_gate.py --component button --framework Angular --deterministic-story --build-storybook`
 
 7. **Generate framework code (agent-driven) using same layered inputs**
    - Use:
@@ -734,7 +702,7 @@ The Storybook **Theme** toolbar (`storybook/.storybook/preview.tsx`) sets `data-
 When you change `components/ids/toast/design-spec.md`, regenerate the shared Storybook implementation CSS:
 
 ```bash
-DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component toast --spec-only --deterministic-story
+DESIGN_SYSTEM=ids python scripts/strict_spec_storybook_gate.py --component toast --deterministic-story
 ```
 
 ### Design Team Mode (recommended for external consumers)
@@ -905,11 +873,6 @@ Key `synapse.yaml` fields:
 # Python dependencies (uses uv)
 uv pip install -r requirements.txt
 
-# Required services (for RAG features)
-docker run -p 6333:6333 qdrant/qdrant          # vector DB
-ollama serve                                     # LLM backend
-ollama pull llama3 && ollama pull embeddinggemma  # models
-
 # Environment
 cp .env.example .env
 # Edit .env: FIGMA_TOKEN, GITHUB_HOST, GITHUB_REPO, GITHUB_PERSONAL_ACCESS_TOKEN
@@ -919,11 +882,7 @@ cp .env.example .env
 
 | API | Port | Module | Purpose |
 |---|---|---|---|
-| RAG Query | 8000 | `api/rag_api.py` | Design system Q&A |
 | Figma Specs | 8001 | `api/figma_specs_api.py` | Figma spec extraction |
-| Enhanced Generation | 8002 | `api/enhanced_generation_api.py` | Framework-aware code gen |
-| Search | 8005 | `api/search_api.py` | Semantic search for website |
-| MCP Streamable | 8080 | `mcp_tools/streamable_mcp_server.py` | MCP tool server |
 | Audit Status | 8099 | `scripts/synapse_spec_audit.py` | Spec audit status (watch mode) |
 
 ## Architecture
@@ -941,31 +900,20 @@ Figma (MCP tools)
               ├── synapse-component-aliases.json (name resolution)
               ├── synapse-interaction-templates.json (keyboard/ARIA)
               └── synapse-figma-layout-cache.json (measurements)
-
-GitHub Enterprise MDX
-  │
-  └──► ingestion/ (parse/chunk) ──► embeddings/ ──► Qdrant
-                                                       │
-  User query ──► rag/ (component detection + retrieval) ┘──► LLM ──► answer
-             ──► generation/ (prompt compilation) ──► code output
-             ──► validation/ (rules + tokens + structure) ──► report
 ```
 
 ### Key Subsystems
 
 - **Spec pipeline** (`scripts/rebuild_specs.py`): Root spec + 46 component override specs from CSS modules, Figma map, theme CSS, interaction templates, and layout cache
 - **Audit agent** (`scripts/synapse_spec_audit.py`): Persistent watcher or single-pass auditor that detects stale specs, invalid tokens, hardcoded values
-- **Ingestion** (`pipeline/index_pipeline.py`): GitHub MDX fetch, parse, chunk, embed, store in Qdrant
-- **RAG** (`rag/`): Component detection, filtered semantic search, LLM answer generation
-- **Generation** (`generation/`): Framework-aware code gen with Base UI, Angular, CSS Modules adapters
+- **Generation** (`generation/`): Spec context compilation and deterministic (offline) generators
 - **Validation** (`validation/`): Rule + token + structure validation with severity scoring
 - **Token management** (`tokens/`): Figma MCP client, token extraction, CSS syntax generation
 
 ## Project Structure
 
 ```
-├── agent/                  # Chat agents (design_chat.py, rag_agent.py)
-├── api/                    # FastAPI servers (RAG, search, figma specs, generation)
+├── api/                    # FastAPI servers (figma specs, validation)
 ├── components/
 │   ├── synapse-theme.css   # Global CSS variables (light + dark)
 │   ├── ids/
@@ -978,15 +926,10 @@ GitHub Enterprise MDX
 │   ├── design_systems/             # Per-DS YAML configs
 │   └── settings.py                 # Global settings
 ├── data/                   # JSON data files (figma map, registry, aliases, etc.)
-├── generation/             # Code generation (adapters, prompts, theme injection)
+├── generation/             # Spec context compilation and deterministic generators
 ├── ingestion/              # GitHub MDX ingestion, Figma spec extraction
-├── knowledge/              # Component registry, pattern graphs, schema
-├── mcp_tools/              # MCP server implementation
-├── pipeline/               # Orchestration (index, rules, knowledge)
-├── rag/                    # RAG chain (component detection, retrieval)
-├── retrieval/              # Semantic search, reranking
-├── rules/                  # Rule extraction, filtering, confidence scoring
-├── scripts/                # CLI tools (rebuild_specs, audit, enricher, indexing)
+├── rules/                  # Rule engine, registry, filtering, confidence scoring
+├── scripts/                # CLI tools (rebuild_specs, audit, enricher)
 ├── storybook/              # 46 Synapse component implementations (React + CSS Modules)
 ├── tokens/                 # Figma token management (extraction, sync, mapping)
 ├── validation/             # Design validation engine (rules, tokens, structure)
@@ -1016,7 +959,7 @@ npm install
 npm run dev     # http://localhost:6007
 
 # Generate Angular spec story (example: IDS Button)
-python scripts/strict_spec_storybook_gate.py --component button --framework Angular --spec-only --deterministic-story
+python scripts/strict_spec_storybook_gate.py --component button --framework Angular --deterministic-story
 
 # Build gates
 cd storybook && pnpm build
@@ -1028,7 +971,6 @@ cd storybook-angular && npm run build
 - Python 3.12+ (`.python-version` = 3.12)
 - Node.js + pnpm (for Storybook)
 - Config via `.env` (see `.env.example`)
-- Embedding dimension: 768 (embeddinggemma), Qdrant distance: COSINE
 - `DESIGN_SYSTEM=synapse` for Synapse pipeline
 - `DESIGN_SYSTEM=dap` for DAP pipeline (IDS baseline + DAP overrides)
 - default when unset: `DESIGN_SYSTEM=ids`

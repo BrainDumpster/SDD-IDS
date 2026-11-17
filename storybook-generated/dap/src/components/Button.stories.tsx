@@ -375,7 +375,7 @@ export const StateHarness: Story = {
           border-color: var(--color-border-brand-base);
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="secondary"]:not(:disabled) {
-          background: var(--color-background-controls-light);
+          background: var(--color-background-controls-press, var(--color-background-controls-light));
           border-color: var(--color-border-brand-strong);
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="tertiary"]:not(:disabled) {
@@ -383,7 +383,7 @@ export const StateHarness: Story = {
           border-color: transparent;
         }
         .sbSimButton[data-sim-state="press"][data-sim-variant="tertiary"]:not(:disabled) {
-          background: var(--color-background-controls-light);
+          background: var(--color-background-controls-press, var(--color-background-controls-light));
           border-color: transparent;
         }
         .sbSimButton[data-sim-state="hover"][data-sim-variant="destructive"]:not(:disabled) {

@@ -1,0 +1,30 @@
+export { IdsModal } from "./modal.element.js";
+export {
+  IdsModalClose,
+  IdsModalHeader,
+  IdsModalTitle,
+  IdsModalDescription,
+  IdsModalTabs,
+  IdsModalContent,
+  IdsModalFooter,
+} from "./modal-parts.element.js";
+export {
+  MODAL_API_DEFAULTS,
+  MODAL_SIZE_DIMENSIONS,
+  MODAL_DIALOG_TYPE_ICON,
+  MODAL_TWO_BUTTON_TYPES,
+  MODAL_ALERTING_TYPES,
+  MODAL_FOOTER_CHECKBOX_LABEL,
+  MODAL_CLOSE_ICON_SLUG,
+  MODAL_COMPOUND_TAGS,
+  resolveModalScenario,
+  resolveModalType,
+  resolveModalSize,
+  resolveModalLayer,
+  getFocusable,
+  type IdsModalScenario,
+  type IdsModalType,
+  type IdsModalSize,
+  type IdsModalLayer,
+  type IdsModalPage,
+} from "./modal.constants.js";

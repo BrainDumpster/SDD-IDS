@@ -227,6 +227,8 @@ Validation checklist (pass/fail):
 - Angular composition reference: `lib/angular/ids/toggle-switch/` (`IDS_TOGGLE_SWITCH_IMPORTS`)
 - Angular Storybook: `storybook-angular/src/components/ids-toggle-switch/`
 - React convenience reference: `storybook/src/components/ToggleSwitch.tsx`
+- Lit convenience reference: `lib/lit/ids/src/toggle-switch/` (`ids-toggle-switch`)
+- Lit Storybook: `storybook-lit/src/components/ToggleSwitch.stories.ts` (port 6008)
 
 ---
 

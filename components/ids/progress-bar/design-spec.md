@@ -9,17 +9,18 @@
 - Description: Determinate and indeterminate progress with optional label, inline percentage, helper row, and status-colored fills.
 - Status: active
 - Created: 2026-05-22
-- Updated: 2026-09-22
+- Updated: 2026-11-04
 - Primary Figma URL: https://www.figma.com/design/VZJ48bbVYrIynw8DdSukWw/-Exploration-only--IDS-with-variables?node-id=11067-54665&m=dev
 - Primary node id: `11067:54665`
-- Spec-accurate reference node: `11099:57210` (Determinate/regular, Thin, In Progress + helper)
+- Spec-accurate reference node: `11099:57210` (Determinate/regular, Medium, In Progress + helper)
 - Inline reference node: `11099:57186` (Determinate/Inline, Medium, In Progress, 30%)
 - Figma file key: `VZJ48bbVYrIynw8DdSukWw`
 - Verification method: Figma MCP (`get_metadata`, `get_design_context`, `get_variable_defs`)
-- Verified at: 2026-06-10
+- Verified at: 2026-11-09
 - Storybook examples requested: yes
 - Storybook path: `storybook-generated/ids/src/components/ProgressBar.stories.tsx`
 - Angular Storybook path: `storybook-angular/src/components/ids-progress-bar/ids-progress-bar.stories.js`
+- Lit Storybook path: `storybook-lit/src/components/ProgressBar.stories.ts`
 - Storybook title: `Spec Generated/IDS/Progress Bar`
 
 ## Anatomy
@@ -151,6 +152,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Contract mirror: `component-contracts/ids/progress-bar.contract.ts`
 - React lib: `lib/react/ids/progress-bar`
 - Angular lib: `lib/angular/ids/progress-bar` (`ids-progress-bar`)
+- Lit lib: `lib/lit/ids/src/progress-bar` (`ids-progress-bar`)
 - Storybook reference: `storybook/src/components/ProgressBar.tsx`
 
 ### Variants
@@ -170,11 +172,11 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 | `state` | see Variants | `in-progress` | |
 
 ### Spec Accurate Design story defaults
-Canonical Storybook args (Figma `11099:57210`):
+Canonical Storybook args (live Figma `11099:57210` — Thickness=Medium):
 - `value`: `30`
 - `label`: `"Label"`
 - `type`: `"with-label"`
-- `thickness`: `"thin"`
+- `thickness`: `"medium"`
 - `state`: `"in-progress"`
 - `showHelperText`: `true`
 - `helperText`: `"Helper text (time estimate)"`
@@ -237,16 +239,18 @@ See **Interactions → Accessibility**.
 | Runtime contract | `component-contracts/ids/progress-bar.contract.ts` |
 | React lib | `lib/react/ids/progress-bar` |
 | Angular lib | `lib/angular/ids/progress-bar` |
+| Lit lib | `lib/lit/ids/src/progress-bar` |
 | Storybook implementation | `storybook/src/components/ProgressBar.tsx`, `ProgressBar.module.css`, `IdsProgressBar.tsx` |
-| Spec Generated stories (React) | `storybook-generated/ids/src/components/ProgressBar.stories.tsx` |
+| Spec Generated stories (React) | `storybook/src/components/lib-generated/ProgressBar.stories.tsx` |
 | Spec Generated stories (Angular) | `storybook-angular/src/components/ids-progress-bar/ids-progress-bar.stories.js` |
-| Icon primitive | `storybook/src/components/Icon.tsx`; Angular `lib/angular/ids/icon` |
+| Spec Generated stories (Lit) | `storybook-lit/src/components/ProgressBar.stories.ts` |
+| Icon primitive | `storybook/src/components/Icon.tsx`; Angular `lib/angular/ids/icon`; Lit `lib/lit/ids/src/icon` |
 | Figma MCP (2026-05-22) | `get_metadata(fileKey=VZJ48bbVYrIynw8DdSukWw, nodeId=11067:54665)` |
-| Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57210)` — with-label thin in-progress |
-| Figma MCP (2026-05-22) | `get_design_context(..., nodeId=11099:57186)` — inline medium in-progress |
+| Figma MCP (2026-11-09) | `get_metadata` + `get_design_context(..., nodeId=11099:57210)` — with-label **medium** in-progress + helper |
+| Figma MCP (2026-11-09) | `get_design_context(..., nodeId=11099:57186)` — inline medium in-progress |
 | Figma MCP (2026-05-22) | `get_variable_defs(..., nodeId=11067:54665)` |
-| IDS Design Library track evidence | `0bHk3XhrjFhowgFkz9yLr4` → `42635:19947` (`.ProgressBar-Element-Amount` track `11099:57042` uses `var(--color-background-gray-light)`) |
-| Figma MCP (2026-06-10) | `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=42635:19947)` — track `gray-light` dark `#393939` |
+| IDS Design Library track evidence | `0bHk3XhrjFhowgFkz9yLr4` → `42635:19947` (`.ProgressBar-Element-Amount` track uses `var(--color-background-gray-light)`) |
+| Figma MCP (2026-11-09) | `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4, nodeId=42635:19947)` — track `gray-light` dark `#393939`; radius `Corner Radius/radius-none` → `0` |
 
 ## Implementation Notes
 
@@ -263,5 +267,4 @@ See **Interactions → Accessibility**.
 - Icons are **16px**. Storybook CSS Modules use `helperIcon`; Angular lib uses `ids-progress-bar-helper-icon`; React lib composes `IdsHelper` + `IdsIcon`.
 
 **Lib ports**
-- React (`lib/react/ids/progress-bar`) and Angular (`lib/angular/ids/progress-bar`) share anatomy, tokens, `data-ids` slots, fallbacks, and determinate/indeterminate behavior. Neither lib depends on Base UI; `role="progressbar"` and `aria-valuemin` / `aria-valuemax` / `aria-valuenow` are applied on the root.
-- **Angular divergence (pending port)**: the Angular lib does not yet implement the `inline` min-widths (80px root / 36px track), the indeterminate track hiding for success/warning/error states, the indeterminate 80px track min-width, or the meta-row 16px min gap with label truncation + native `title` tooltip. React lib and Storybook reference implementation are current.
+- React (`lib/react/ids/progress-bar`), Angular (`lib/angular/ids/progress-bar`), and Lit (`lib/lit/ids/src/progress-bar`) share anatomy, tokens, `data-ids` slots, fallbacks, min-widths, meta/helper truncation + native `title` tooltips, and determinate/indeterminate behavior (including hiding the track for indeterminate + success/warning/error). Neither React nor Angular depends on Base UI; `role="progressbar"` and `aria-valuemin` / `aria-valuemax` / `aria-valuenow` are applied on the root.

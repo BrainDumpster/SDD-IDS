@@ -57,3 +57,6 @@ ds-bundle-synapse/
 .design-sync/types/
 .design-sync/*.log
 .design-sync/*-theme-bundle.css
+
+storybook-lit/*.log
+

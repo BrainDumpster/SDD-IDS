@@ -36,7 +36,7 @@ From repo root (requires Python env per root `README.md`):
 export DESIGN_SYSTEM=ids
 
 # Deterministic stories + spec hash (no LLM)
-python3 scripts/strict_spec_storybook_gate.py --component datagrid --spec-only --deterministic-story
+python3 scripts/strict_spec_storybook_gate.py --component datagrid --deterministic-story
 
 # Optional: verify Storybook build
 cd storybook && pnpm build
@@ -104,9 +104,6 @@ Angular child components (`ids-datagrid-column`, `ids-datagrid-filter`, `ids-dat
 ## Related commands
 
 ```bash
-# Index spec into Qdrant (optional)
-python3 scripts/index_component_specs.py
-
 # Figma specs API (if running locally)
 python3 api/figma_specs_api.py
 ```

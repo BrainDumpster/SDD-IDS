@@ -27,7 +27,13 @@ export type CheckboxDensity = "default" | "datagrid";
 
 export type CheckboxGroupOrientation = "vertical" | "horizontal";
 
+export type CheckboxGroupLabelPosition = "left" | "top";
+
 export const CHECKBOX_GROUP_SPEC_ACCURATE_DEFAULTS = {
   orientation: "vertical" as CheckboxGroupOrientation,
   disabled: false,
+  showLabel: true,
+  labelPosition: "left" as CheckboxGroupLabelPosition,
+  required: false,
+  error: false,
 } as const;

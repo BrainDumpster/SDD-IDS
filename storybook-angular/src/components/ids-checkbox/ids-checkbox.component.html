@@ -6,7 +6,7 @@
       [attr.data-checked]="dataChecked"
       [attr.data-disabled]="resolvedDisabled ? '' : null"
       [attr.data-partial]="partial ? '' : null"
-      [attr.data-error]="error ? 'true' : null"
+      [attr.data-error]="resolvedError ? 'true' : null"
     >
       <input
         #checkboxInput
@@ -18,9 +18,10 @@
         [checked]="resolvedChecked"
         [disabled]="resolvedDisabled"
         [attr.aria-checked]="ariaChecked"
-        [attr.aria-invalid]="error || null"
+        [attr.aria-invalid]="resolvedError || null"
         [attr.aria-describedby]="assistiveId"
         (change)="onInputChange($event)"
+        (keydown)="onInputKeydown($event)"
       />
       @if (showIndicator) {
         <span class="indicator" [attr.data-indicator-type]="indicatorType"></span>
@@ -32,10 +33,10 @@
     <div
       [id]="assistiveId"
       class="assistiveText"
-      [class.assistiveTextError]="error"
+      [class.assistiveTextError]="resolvedError"
       [class.assistiveTextDisabled]="resolvedDisabled"
     >
-      @if (error && !resolvedDisabled) {
+      @if (resolvedError && !resolvedDisabled) {
         <ids-icon
           shapeName="status-critical-square-solid"
           variant="img"

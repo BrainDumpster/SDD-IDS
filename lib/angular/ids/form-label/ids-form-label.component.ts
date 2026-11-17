@@ -23,6 +23,11 @@ import {
 export class IdsFormLabelComponent {
   /** Label text content. */
   @Input() label = "";
+  /**
+   * Id on the inner `<label>` for `aria-labelledby` from a group/field
+   * (React spreads `id` onto the same element).
+   */
+  @Input() id?: string;
   /** Visual size mapped to Figma `Size` 24/32/40. Default `md`. Unknown → `md`. */
   @Input() size: IdsFormLabelSize | string = FORM_LABEL_RUNTIME_DEFAULTS.size;
   /** Render trailing required marker `*`. Default `false`. */

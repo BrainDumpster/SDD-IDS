@@ -17,6 +17,7 @@
 - **Generated Storybook:** `storybook/src/components/IdsDualListBox.stories.tsx`, `storybook-angular/src/components/ids-dual-list-box/ids-dual-list-box.stories.js` (title **`Spec Generated/IDS/Dual List Box`**, primary story **`Spec Accurate Design`**)
 - **Implementation reference:** `lib/react/ids/dual-list-box/` (`IdsDualListBox` = DualListBoxRoot; anatomy slots `IdsDualListBoxListsParent` …); stories: `storybook/src/components/lib-generated/DualListBox.stories.tsx`. Legacy Storybook: `storybook/src/components/IdsDualListBox.tsx`.
 - **Angular library:** `lib/angular/ids/dual-list-box/`
+- **Lit library:** `lib/lit/ids/src/dual-list-box/`
 - **Primary Figma URL:** https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=22468-31229&m=dev
 - **Primary node id:** `22468:31229` (library instance slot; element nodes below carry measurable UI)
 - **Figma file key:** `0bHk3XhrjFhowgFkz9yLr4`
@@ -355,6 +356,8 @@ Pane wrappers use `display: contents` so Header + ListGroup participate in `List
 - **Component map:** `data/component-figma-map.json` → `Dual List Box` (Form Elements)
 - **Angular library:** `lib/angular/ids/dual-list-box/`
 - **Angular Storybook:** `storybook-angular/src/components/ids-dual-list-box/ids-dual-list-box.stories.js`
+- **Lit library:** `lib/lit/ids/src/dual-list-box/` (`ids-dual-list-box`; React API parity)
+- **Lit Storybook:** `storybook-lit/src/components/DualListBox.stories.ts` (title **`Spec Generated/IDS/Dual List Box`**)
 - **Intake session:** design-spec intake wizard, confirmed 2026-05-20
-- **Evidence:** Figma MCP `get_design_context` + `get_metadata` on `12114:232557` and element nodes (2026-05-20)
+- **Evidence:** Figma MCP `get_design_context` + `get_metadata` on `12114:232557` and element nodes (2026-05-20; re-verified for Lit port 2026-11-15)
 - **Lib React:** `lib/react/ids/dual-list-box/` — named anatomy slots with `data-slot` matching this spec; stories `storybook/src/components/lib-generated/DualListBox.stories.tsx`

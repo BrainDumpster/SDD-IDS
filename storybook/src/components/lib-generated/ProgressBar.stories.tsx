@@ -23,12 +23,12 @@ import {
 
 const DESIGN_SPEC_PATH = "components/ids/progress-bar/design-spec.md";
 
-/** Figma `11099:57210` — Determinate/regular, Thin, In Progress + helper. */
+/** Live Figma `11099:57210` — Determinate/regular, Medium, In Progress + helper. */
 const specAccurateArgs: IdsProgressBarProps = {
   value: 30,
   label: "Label",
   type: "with-label",
-  thickness: "thin",
+  thickness: "medium",
   state: "in-progress",
   showHelperText: true,
   helperText: "Helper text (time estimate)",
