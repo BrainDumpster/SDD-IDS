@@ -14,6 +14,12 @@ export {
   type IdsButtonSize,
 } from "./button";
 export {
+  IdsIconButton,
+  type IdsIconButtonProps,
+  type IdsIconButtonVariant,
+  type IdsIconButtonSize,
+} from "./icon-button";
+export {
   IdsCheckbox,
   IdsCheckboxLabel,
   type IdsCheckboxProps,

@@ -41,6 +41,10 @@ export {
   IdsButtonComponent,
 } from "./button/index";
 export {
+  IDS_ICON_BUTTON_IMPORTS,
+  IdsIconButtonComponent,
+} from "./icon-button/index";
+export {
   IDS_CARD_IMPORTS,
   IdsCardComponent,
   IdsCardHeaderMenuComponent,

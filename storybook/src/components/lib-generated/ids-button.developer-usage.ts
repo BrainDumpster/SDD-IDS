@@ -7,20 +7,11 @@ Primary interactive control with variants, sizes, loading, and leading-icon proj
 
 \`\`\`
 IdsButton
-  IdsButtonLeadingIcon
+  IdsButtonLeadingIcon?
   IdsButtonLabel
 \`\`\`
 
-Import from \`@ids/react/button\`.
-
-## Icon-only contract
-
-When \`iconOnly\` is \`true\` (or \`variant\` is \`ghostNeutral\` / \`ghost\`):
-
-- \`ariaLabel\` is **required** (native \`aria-label\` also accepted).
-- Project \`IdsButtonLeadingIcon\` (no label).
-- Control is **square**: small \`24×24\`, medium \`32×32\`, large \`40×40\`.
-- Glyph: small \`12×12\`, medium \`14×14\`, large \`16×16\` (Ghost Neutral large = \`14×14\`).
+Import from \`@ids/react/button\`. For icon-only controls use \`IdsIconButton\` (\`@ids/react/icon-button\`).
 
 ## Props
 
@@ -29,61 +20,27 @@ When \`iconOnly\` is \`true\` (or \`variant\` is \`ghostNeutral\` / \`ghost\`):
 | Prop | Type | Default |
 |------|------|---------|
 | \`children\` | \`ReactNode\` | — |
-| \`variant\` | \`IdsButtonVariant\` | \`primary\` |
-| \`size\` | \`IdsButtonSize\` | \`large\` |
-| \`iconOnly\` | \`boolean\` | \`false\` |
+| \`variant\` | \`primary \\| secondary \\| tertiary \\| destructive\` | \`primary\` |
+| \`size\` | \`small \\| medium \\| large\` | \`large\` |
+| \`showIcon\` | \`boolean\` | \`true\` |
 | \`disabled\` | \`boolean\` | \`false\` |
 | \`loading\` | \`boolean\` | \`false\` |
 | \`type\` | \`"button" \\| "submit" \\| "reset"\` | \`button\` |
-| \`ariaLabel\` | \`string\` | — (required when \`iconOnly\`) |
+| \`ariaLabel\` | \`string\` | — |
 | \`dataState\` | \`IdsButtonDataState\` | — |
 
-### \`IdsButtonLeadingIconProps\`
-
-| Prop | Type | Default |
-|------|------|---------|
-| \`children\` | \`ReactNode\` | — |
-| \`className\` | \`string\` | — |
-| \`hidden\` | \`boolean\` | — |
-
-### \`IdsButtonLabelProps\`
-
-| Prop | Type | Default |
-|------|------|---------|
-| \`children\` | \`ReactNode\` | — |
-| \`className\` | \`string\` | — |
-| \`hidden\` | \`boolean\` | — |
-
-## Events
-
-| Callback | On | Signature |
-|----------|----|-----------|
-| \`onPressStart\` | \`IdsButtonProps\` | \`(event: MouseEvent<HTMLButtonElement> \\| KeyboardEvent<HTMLBu…\` |
-| \`onPressEnd\` | \`IdsButtonProps\` | \`(event: MouseEvent<HTMLButtonElement> \\| KeyboardEvent<HTMLBu…\` |
-
-## API
-
-### Import
-
-\`\`\`tsx
-import {
-  IdsButton,
-  IdsButtonLeadingIcon,
-  IdsButtonLabel,
-} from "@ids/react/button";
-\`\`\`
-
-### Usage
+## Usage
 
 \`\`\`tsx
 <IdsButton variant="primary">
   <IdsButtonLabel>Button</IdsButtonLabel>
 </IdsButton>
 
-<IdsButton variant="tertiary" iconOnly ariaLabel="Settings" size="large">
+<IdsButton variant="secondary">
   <IdsButtonLeadingIcon>
     <IdsIcon shape="settings-gear-detailed" size={16} />
   </IdsButtonLeadingIcon>
+  <IdsButtonLabel>Settings</IdsButtonLabel>
 </IdsButton>
 \`\`\`
 `.trim();
@@ -97,15 +54,11 @@ import { IdsIcon } from "@ids/react/icon";
 
 export function Example() {
   return (
-    <>
-      <IdsButton variant="primary">
-        <IdsButtonLabel>Button</IdsButtonLabel>
-      </IdsButton>
-      <IdsButton iconOnly ariaLabel="Settings" size="medium">
-        <IdsButtonLeadingIcon>
-          <IdsIcon shape="settings-gear-detailed" size={14} />
-        </IdsButtonLeadingIcon>
-      </IdsButton>
-    </>
+    <IdsButton variant="primary">
+      <IdsButtonLeadingIcon>
+        <IdsIcon shape="settings-gear-detailed" size={16} />
+      </IdsButtonLeadingIcon>
+      <IdsButtonLabel>Button</IdsButtonLabel>
+    </IdsButton>
   );
 }`;

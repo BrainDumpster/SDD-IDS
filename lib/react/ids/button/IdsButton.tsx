@@ -8,10 +8,9 @@
  * Content projection only:
  *   IdsButton
  *     IdsButtonLeadingIcon?  — project <IdsIcon /> (or any icon node)
- *     IdsButtonLabel?        — project any label content
+ *     IdsButtonLabel         — project any label content
  *
- * Selectors: ids-button, ids-button-leading-icon, ids-button-label
- * No @base-ui-components dependency.
+ * Icon-only → `lib/react/ids/icon-button` (`IdsIconButton`).
  */
 
 import React, {
@@ -28,14 +27,7 @@ import React, {
 } from "react";
 import styles from "./IdsButton.module.css";
 
-export type IdsButtonVariant =
-  | "primary"
-  | "secondary"
-  | "tertiary"
-  | "destructive"
-  | "ghostNeutral"
-  /** @deprecated Alias of `ghostNeutral`. */
-  | "ghost";
+export type IdsButtonVariant = "primary" | "secondary" | "tertiary" | "destructive";
 export type IdsButtonSize = "small" | "medium" | "large";
 export type IdsButtonDataState =
   | "default"
@@ -52,7 +44,6 @@ export interface IdsButtonProps
   children?: ReactNode;
   variant?: IdsButtonVariant;
   size?: IdsButtonSize;
-  iconOnly?: boolean;
   /**
    * Figma `Show Icon` — when false, hide a projected leading icon (default true when icon projected).
    */
@@ -60,10 +51,7 @@ export interface IdsButtonProps
   disabled?: boolean;
   loading?: boolean;
   type?: "button" | "submit" | "reset";
-  /**
-   * Accessible name. **Required** when `iconOnly` is true (or when `variant` is
-   * `ghostNeutral` / `ghost`, which force icon-only). Native `aria-label` is also accepted.
-   */
+  /** Optional accessible name override. */
   ariaLabel?: string;
   /** Demo/testing visual override only — does not replace interaction logic. */
   dataState?: IdsButtonDataState;
@@ -76,11 +64,8 @@ function cx(...parts: Array<string | false | null | undefined>): string {
 }
 
 function resolveVariant(v: unknown): IdsButtonVariant {
-  if (v === "ghost" || v === "ghostNeutral" || v === "ghost-neutral") {
-    return "ghostNeutral";
-  }
-  if (v === "secondary" || v === "tertiary" || v === "destructive") {
-    return v;
+  if (v === "secondary" || v === "tertiary" || v === "destructive" || v === "danger") {
+    return v === "danger" ? "destructive" : v;
   }
   return "primary";
 }
@@ -90,13 +75,6 @@ function resolveSize(s: unknown): IdsButtonSize {
   if (s === "medium" || s === "md") return "medium";
   if (s === "large" || s === "lg") return "large";
   return "large";
-}
-
-function iconGlyphSize(size: IdsButtonSize, iconOnly: boolean): number {
-  if (!iconOnly) return 16;
-  if (size === "small") return 12;
-  if (size === "medium") return 14;
-  return 16;
 }
 
 const sizeClass: Record<IdsButtonSize, string> = {
@@ -110,16 +88,13 @@ const variantClass: Record<IdsButtonVariant, string> = {
   secondary: styles["ids-button--secondary"],
   tertiary: styles["ids-button--tertiary"],
   destructive: styles["ids-button--destructive"],
-  ghostNeutral: styles["ids-button--ghost-neutral"],
-  ghost: styles["ids-button--ghost-neutral"],
 };
 
 /* -------------------------------------------------------------------------- */
-/* IdsButtonLeadingIcon — project IdsIcon (or any icon node)                  */
+/* IdsButtonLeadingIcon                                                       */
 /* -------------------------------------------------------------------------- */
 
 export interface IdsButtonLeadingIconProps {
-  /** Projected icon, typically `<IdsIcon shape="…" size={16} />`. */
   children?: ReactNode;
   className?: string;
   hidden?: boolean;
@@ -149,7 +124,7 @@ export function IdsButtonLeadingIcon({
 IdsButtonLeadingIcon.displayName = "IdsButtonLeadingIcon";
 
 /* -------------------------------------------------------------------------- */
-/* IdsButtonLabel — projected label content                                   */
+/* IdsButtonLabel                                                             */
 /* -------------------------------------------------------------------------- */
 
 export interface IdsButtonLabelProps {
@@ -221,7 +196,6 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
     children,
     variant: variantProp,
     size: sizeProp,
-    iconOnly = false,
     showIcon = true,
     disabled = false,
     loading = false,
@@ -246,14 +220,8 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const variant = resolveVariant(variantProp);
   const size = resolveSize(sizeProp);
   const isDestructive = variant === "destructive";
-  const isGhostNeutral = variant === "ghostNeutral" || variant === "ghost";
-  /** Spec Accurate: destructive never shows a leading icon / icon-only chrome. */
-  /** Ghost Neutral is icon-only only (Figma Icon Button Type=Ghost). */
-  const resolvedIconOnly = isDestructive ? false : isGhostNeutral ? true : iconOnly;
-  const resolvedSize: IdsButtonSize = size;
   const isDisabled = Boolean(disabled || loading || dataState === "disabled");
   const [isPressed, setIsPressed] = useState(false);
-  const glyphPx = iconGlyphSize(resolvedSize, resolvedIconOnly);
   const restAriaLabel =
     typeof (rest as { "aria-label"?: unknown })["aria-label"] === "string"
       ? ((rest as { "aria-label"?: string })["aria-label"] ?? "").trim()
@@ -277,37 +245,11 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
   const hasIcon = iconSlot != null;
   const hasLabel = labelSlot != null;
 
-  if (resolvedIconOnly) {
-    if (!resolvedAriaLabel) {
-      throw new Error("IdsButton: `ariaLabel` is required when `iconOnly` is true.");
-    }
-    if (!hasIcon) {
-      throw new Error(
-        "IdsButton: project `IdsButtonLeadingIcon` when `iconOnly` is true.",
-      );
-    }
-  } else if (!hasLabel) {
+  if (!hasLabel) {
     throw new Error(
-      "IdsButton: project `IdsButtonLabel` (required unless `iconOnly` is true).",
+      "IdsButton: project `IdsButtonLabel`. For icon-only controls use `IdsIconButton`.",
     );
   }
-
-  // Propagate glyph size hint to IdsIcon children when size prop is unset/16.
-  const sizedIconSlot =
-    iconSlot &&
-    React.isValidElement(iconSlot) &&
-    iconSlot.props.children != null
-      ? React.cloneElement(iconSlot, {
-          children: Children.map(iconSlot.props.children, (child) => {
-            if (!isValidElement(child)) return child;
-            const childProps = child.props as { size?: number };
-            if (childProps.size != null && childProps.size !== 16) return child;
-            return React.cloneElement(child as ReactElement<{ size?: number }>, {
-              size: glyphPx,
-            });
-          }),
-        })
-      : iconSlot;
 
   const handleClick = (event: MouseEvent<HTMLButtonElement>) => {
     if (isDisabled) {
@@ -377,15 +319,13 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       aria-busy={loading || undefined}
       data-ids="ids-button"
       data-variant={variant}
-      data-size={resolvedSize}
+      data-size={size}
       data-state={isPressed ? "press" : dataState && dataState !== "default" ? dataState : undefined}
-      data-icon-only={resolvedIconOnly ? "true" : undefined}
       data-loading={loading ? "true" : undefined}
       className={cx(
         styles["ids-button"],
         variantClass[variant],
-        sizeClass[resolvedSize],
-        resolvedIconOnly && styles["ids-button--icon-only"],
+        sizeClass[size],
         loading && styles["ids-button--loading"],
         isDisabled && styles["ids-button--disabled"],
         className,
@@ -400,15 +340,8 @@ export const IdsButton = forwardRef<HTMLButtonElement, IdsButtonProps>(function 
       onMouseLeave={handleMouseLeave}
     >
       {loading ? <span className={styles["ids-button-spinner"]} aria-hidden="true" /> : null}
-
-      {resolvedIconOnly ? (
-        hasIcon ? sizedIconSlot : null
-      ) : (
-        <>
-          {hasIcon ? sizedIconSlot : null}
-          {hasLabel ? labelSlot : null}
-        </>
-      )}
+      {hasIcon ? iconSlot : null}
+      {labelSlot}
     </button>
   );
 });

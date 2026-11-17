@@ -5,7 +5,7 @@ export const BUTTON_DOCS_DESCRIPTION = `
 ## Overview
 
 Lit \`ids-button\` — tag/props aligned with **edf-core**, visuals from
-\`components/ids/button/design-spec.md\`.
+\`components/ids/button/design-spec.md\`. Icon-only → \`ids-icon-button\`.
 
 ## edf-core props
 
@@ -27,8 +27,7 @@ Lit \`ids-button\` — tag/props aligned with **edf-core**, visuals from
 |------|------|-------|
 | \`variant\` | alias of \`kind\` | \`destructive\` accepted |
 | \`label\` | \`string\` | when not using slot |
-| \`iconSlug\` / \`lineicon\` | icon slug | via \`ids-icon\` |
-| \`iconOnly\` | \`boolean\` | |
+| \`iconSlug\` / \`lineicon\` | leading icon slug | via \`ids-icon\` |
 | \`loading\` | \`boolean\` | |
 | \`ariaLabel\` | \`string\` | |
 | \`data-state\` | demo override | |

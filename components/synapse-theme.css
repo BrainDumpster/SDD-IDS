@@ -569,6 +569,7 @@ html, body {
 html[data-design-system="synapse"],
 body[data-design-system="synapse"] {
   --button-control-radius: var(--corner-radius-radius-4);
+  --icon-button-control-radius: var(--corner-radius-radius-4);
   --button-focus-ring-offset: var(--scale-2);
   --button-focus-ring-radius: var(--corner-radius-radius-4);
   --dropdown-control-radius: var(--corner-radius-radius-4);

@@ -30,11 +30,6 @@ interface ButtonProps extends ComponentProps<"button"> {
   iconSlug?: string;
   /** Rendering mode for `iconSlug` shorthand only. */
   iconVariant?: "mask" | "img";
-  /**
-   * Icon only — square control (sm 24×24 / md 32×32 / lg 40×40);
-   * glyph 12 / 14 / 16 (Ghost Neutral lg = 14). Requires accessible `aria-label`.
-   */
-  iconOnly?: boolean;
 }
 
 const iconUrlBySlug: Record<string, string> = (() => {
@@ -52,7 +47,6 @@ const iconUrlBySlug: Record<string, string> = (() => {
   } catch {
     // Non-Vite bundler (esbuild): `import.meta.glob` is not a function. Fall through.
   }
-  // Vite populates `out` (unchanged behaviour); esbuild falls back to the generated registry.
   return Object.keys(out).length > 0 ? out : IDS_ICON_URL_BY_SHAPE;
 })();
 
@@ -70,7 +64,6 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
     icon,
     iconSlug,
     iconVariant = "mask",
-    iconOnly = false,
     disabled,
     children,
     className,
@@ -79,20 +72,13 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
   forwardedRef,
 ) {
   const variantClass =
-    variant === "destructive" || variant === "danger"
-      ? "danger"
-      : variant === "ghost" || variant === "ghostNeutral"
-        ? "ghost-neutral"
-        : variant;
+    variant === "destructive" || variant === "danger" ? "danger" : variant;
   const isDestructive = variant === "destructive" || variant === "danger";
-  const isGhostNeutral = variant === "ghost" || variant === "ghostNeutral";
   const { leadingIcon: composedIcon, label } = splitButtonChildren(children);
   const iconUrl = iconSlug ? resolveIconUrl(iconSlug) : undefined;
   const slugIconNode =
     iconSlug && iconUrl ? <Icon shapeName={iconSlug} variant={iconVariant} /> : undefined;
   const resolvedIcon = isDestructive ? undefined : (icon ?? composedIcon ?? slugIconNode);
-  const resolvedIconOnly = isDestructive ? false : isGhostNeutral ? true : iconOnly;
-  const resolvedSize = resolveButtonSize(size);
   const hasIcon = Boolean(resolvedIcon);
   const showIconWithLabel = hasIcon && !loading;
   const resolvedClassName = useMemo(
@@ -102,13 +88,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
         styles[variantClass],
         styles[resolvedSize],
         programme === "synapse" ? styles.programmeSynapse : "",
-        resolvedIconOnly ? styles.iconOnly : "",
         loading ? styles.loading : "",
         className,
       ]
         .filter(Boolean)
         .join(" "),
-    [className, loading, programme, resolvedIconOnly, resolvedSize, variantClass],
+    [className, loading, programme, size, variantClass],
   );
 
   return (
@@ -119,25 +104,12 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       {...rest}
     >
       {loading && <span className={styles.spinner} aria-hidden="true" />}
-      {resolvedIconOnly ? (
-        hasIcon && (
-          <span
-            className={[styles.iconSlot, loading ? styles.visuallyHidden : ""].filter(Boolean).join(" ")}
-            aria-hidden="true"
-          >
-            {resolvedIcon}
-          </span>
-        )
-      ) : (
-        <>
-          {showIconWithLabel && (
-            <span className={styles.iconSlot} aria-hidden="true">
-              {resolvedIcon}
-            </span>
-          )}
-          <span className={loading ? styles.labelHidden : styles.label}>{label}</span>
-        </>
+      {showIconWithLabel && (
+        <span className={styles.iconSlot} aria-hidden="true">
+          {resolvedIcon}
+        </span>
       )}
+      <span className={loading ? styles.labelHidden : styles.label}>{label}</span>
     </BaseButton>
   );
 });

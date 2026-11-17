@@ -74,22 +74,16 @@ const meta: Meta<typeof IdsButton> = {
     },
   },
   argTypes: {
-    variant: { control: "select", options: ["primary", "secondary", "tertiary", "destructive", "ghostNeutral"] },
+    variant: { control: "select", options: ["primary", "secondary", "tertiary", "destructive"] },
     size: { control: "select", options: ["small", "medium", "large"] },
     disabled: { control: "boolean" },
     loading: { control: "boolean" },
-    iconOnly: { control: "boolean" },
-    "aria-label": {
-      control: "text",
-      description: "Required when iconOnly is true (or ghostNeutral).",
-    },
   },
   args: {
     variant: "primary",
     size: "large",
     disabled: false,
     loading: false,
-    iconOnly: false,
   },
 };
 
@@ -129,25 +123,18 @@ export const SpecAccurateDesign: Story = {
     size: "large",
     disabled: BUTTON_SPEC_ACCURATE_DEFAULTS.disabled,
     loading: BUTTON_SPEC_ACCURATE_DEFAULTS.loading,
-    iconOnly: BUTTON_SPEC_ACCURATE_DEFAULTS.iconOnly,
   },
 };
 
 export const Playground: Story = {
   render: (args) => (
-    <IdsButton
-      {...args}
-      aria-label={args.iconOnly ? (args["aria-label"] as string | undefined) ?? "Icon only button" : undefined}
-    >
-      {args.iconOnly ? <DemoIcon /> : (
-        <>
-          <DemoIcon />
-          Button
-        </>
-      )}
+    <IdsButton {...args}>
+      <DemoIcon />
+      Button
     </IdsButton>
   ),
 };
+
 
 export const StatesMatrix: Story = {
   render: () => (
@@ -188,20 +175,6 @@ export const SizeExamples: Story = {
         <IdsButton variant="secondary" size="large">
           <DemoIcon />
           Large
-        </IdsButton>
-      </div>
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <IdsButton variant="tertiary" size="small" iconOnly aria-label="Settings small">
-          <DemoIcon />
-        </IdsButton>
-        <IdsButton variant="tertiary" size="medium" iconOnly aria-label="Settings medium">
-          <DemoIcon />
-        </IdsButton>
-        <IdsButton variant="tertiary" size="large" iconOnly aria-label="Settings large">
-          <DemoIcon />
-        </IdsButton>
-        <IdsButton variant="ghostNeutral" size="large" iconOnly aria-label="Ghost Neutral large">
-          <DemoIcon />
         </IdsButton>
       </div>
     </div>
@@ -309,47 +282,6 @@ export const IconComposition: Story = {
           <DemoIcon />
           Destructive
         </IdsButton>
-      </div>
-    </div>
-  ),
-};
-
-export const IconOnly: Story = {
-  render: () => (
-    <div>
-      <ButtonStoryStyles />
-      <div className="sbIconOnlyGrid">
-
-      {(["sm", "md", "lg"] as const).map((size) => (
-        <div key={size} className="sbIconOnlyRow">
-          {(["primary", "secondary", "tertiary", "ghostNeutral"] as const).map((variant) => (
-            <IdsButton
-              key={`${variant}-${size}`}
-              iconOnly
-              size={size}
-              variant={variant}
-              aria-label={`${variant} icon button ${size}`}
-            >
-              <Icon shapeName={DEMO_ICON_SLUG} variant="mask" />
-            </IdsButton>
-          ))}
-        </div>
-      ))}
-      <div className="sbIconOnlyRow">
-        {(["primary", "secondary", "tertiary", "ghostNeutral"] as const).map((variant) => (
-          <IdsButton
-            key={`${variant}-disabled`}
-            iconOnly
-            size="large"
-            variant={variant}
-            disabled
-            aria-label={`${variant} icon button disabled`}
-          >
-            <Icon shapeName={DEMO_ICON_SLUG} variant="mask" />
-          </IdsButton>
-        ))}
-      </div>
-
       </div>
     </div>
   ),

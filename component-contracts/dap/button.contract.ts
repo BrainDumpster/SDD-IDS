@@ -5,5 +5,4 @@ export const DAP_BUTTON_DEFAULTS = {
   variant: "primary",
   size: "large",
   disabled: false,
-  iconOnly: false,
 } as const;

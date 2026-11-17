@@ -11,7 +11,6 @@ const meta: Meta<typeof IdsButton> = {
     size: "large",
     disabled: false,
     loading: false,
-    iconOnly: false,
   },
   argTypes: {
     variant: {
@@ -27,7 +26,6 @@ const meta: Meta<typeof IdsButton> = {
       control: "select",
       options: ["mask", "img"],
     },
-    iconOnly: { control: "boolean" },
     loading: { control: "boolean" },
     disabled: { control: "boolean" },
     onClick: { action: "onClick" },
@@ -109,10 +107,6 @@ export const SizeExamples: Story = {
           Large
         </IdsButton>
       </div>
-      <div style={{ display: "flex", gap: 10, flexWrap: "wrap", alignItems: "center" }}>
-        <IdsButton variant="tertiary" size="medium" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings medium" />
-        <IdsButton variant="tertiary" size="large" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings large" />
-      </div>
     </div>
   ),
 };
@@ -151,7 +145,6 @@ export const IconSlugExamples: Story = {
       <IdsButton variant="tertiary" size="large" iconSlug="settings-gear-detailed">
         Button
       </IdsButton>
-      <IdsButton variant="primary" size="large" iconOnly iconSlug="settings-gear-detailed" aria-label="Settings" />
     </div>
   ),
 };

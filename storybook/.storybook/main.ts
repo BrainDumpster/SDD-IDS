@@ -49,6 +49,7 @@ const hiddenIdsGeneratedStories = new Set([
   "AppShell.stories.tsx",
   "Badge.stories.tsx",
   "Button.stories.tsx",
+  "IconButton.stories.tsx",
   "Card.stories.tsx",
   "Checkbox.stories.tsx",
   "Dashboard.stories.tsx",

@@ -19,7 +19,7 @@ const meta: Meta = {
   argTypes: {
     kind: {
       control: "select",
-      options: ["primary", "secondary", "tertiary", "danger", "ghostNeutral"],
+      options: ["primary", "secondary", "tertiary", "danger"],
     },
     size: {
       control: "select",
@@ -28,7 +28,6 @@ const meta: Meta = {
     disabled: { control: "boolean" },
     fluid: { control: "boolean" },
     loading: { control: "boolean" },
-    iconOnly: { control: "boolean" },
   },
   args: {
     kind: "primary",
@@ -37,7 +36,6 @@ const meta: Meta = {
     disabled: false,
     fluid: false,
     loading: false,
-    iconOnly: false,
     iconSlug: "",
   },
 };
@@ -55,7 +53,6 @@ export const SpecAccurateDesign: Story = {
       ?disabled=${Boolean(args.disabled)}
       ?fluid=${Boolean(args.fluid)}
       ?loading=${Boolean(args.loading)}
-      ?iconOnly=${Boolean(args.iconOnly)}
       .iconSlug=${args.iconSlug || ""}
       >${args.label}</ids-button
     >
@@ -103,66 +100,10 @@ export const WithIcon: Story = {
       <ids-button kind="secondary" iconSlug="settings-gear-detailed"
         >Settings</ids-button
       >
-      <ids-button
-        kind="primary"
-        iconSlug="settings-gear-detailed"
-        iconOnly
-        size="small"
-        ariaLabel="Settings"
-      ></ids-button>
-      <ids-button
-        kind="ghostNeutral"
-        iconSlug="settings-gear-detailed"
-        iconOnly
-        size="large"
-        ariaLabel="Ghost Neutral"
-      ></ids-button>
     </div>
   `,
 };
 
-export const IconOnly: Story = {
-  name: "Icon Only",
-  render: () => html`
-    <div style="display: grid; gap: 16px">
-      ${(["primary", "secondary", "tertiary", "ghostNeutral"] as const).map(
-        (variant) => html`
-          <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center">
-            <ids-button
-              kind=${variant}
-              iconSlug="settings-gear-detailed"
-              iconOnly
-              size="small"
-              ariaLabel=${`${variant} small`}
-            ></ids-button>
-            <ids-button
-              kind=${variant}
-              iconSlug="settings-gear-detailed"
-              iconOnly
-              size="medium"
-              ariaLabel=${`${variant} medium`}
-            ></ids-button>
-            <ids-button
-              kind=${variant}
-              iconSlug="settings-gear-detailed"
-              iconOnly
-              size="large"
-              ariaLabel=${`${variant} large`}
-            ></ids-button>
-            <ids-button
-              kind=${variant}
-              iconSlug="settings-gear-detailed"
-              iconOnly
-              size="large"
-              disabled
-              ariaLabel=${`${variant} disabled`}
-            ></ids-button>
-          </div>
-        `,
-      )}
-    </div>
-  `,
-};
 
 export const Fluid: Story = {
   render: () => html`
@@ -193,13 +134,6 @@ export const ForcedStates: Story = {
         data-state="focus-visible"
         >Secondary focus</ids-button
       >
-      <ids-button
-        kind="ghostNeutral"
-        iconOnly
-        iconSlug="settings-gear-detailed"
-        ariaLabel="Ghost Neutral focus"
-        data-state="focus-visible"
-      ></ids-button>
     </div>
   `,
 };
