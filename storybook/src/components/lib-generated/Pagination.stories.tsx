@@ -171,7 +171,6 @@ const meta: Meta<IdsPaginationProps> = {
       control: "select",
       options: ["gray", "white", "none"],
     },
-    showResultsPerPage: { control: "boolean" },
     responsiveMode: {
       control: "select",
       options: ["auto", "keep-inline"],
@@ -189,13 +188,16 @@ export const SpecAccurateDesign: Story = {
   args: specAccurateArgs,
   render: (args) => (
     <div style={frameStyle}>
-      <ControlledPagination {...args} />
+      <div style={args.background === "none" ? checkerboardStyle : undefined}>
+        <ControlledPagination {...args} />
+      </div>
     </div>
   ),
 };
 
 export const BackgroundModes: Story = {
   name: "Background Modes",
+  parameters: { controls: { disable: true } },
   render: () => (
     <div style={stackStyle}>
       <StoryRow caption='background="gray" (default)'>
@@ -215,6 +217,7 @@ export const BackgroundModes: Story = {
 
 export const PageNavigationStates: Story = {
   name: "Page Navigation States",
+  parameters: { controls: { disable: true } },
   render: () => (
     <div style={stackStyle}>
       <StoryRow caption="First page — first/prev disabled">
@@ -251,6 +254,7 @@ export const PageNavigationStates: Story = {
 
 export const PerPageDropdownOpen: Story = {
   name: "Per-Page Dropdown Open",
+  parameters: { controls: { disable: true } },
   render: () => (
     <div style={frameStyle}>
       <OpenPerPageMenuDemo {...specAccurateArgs} />

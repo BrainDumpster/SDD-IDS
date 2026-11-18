@@ -68,7 +68,7 @@
   - Horizontal overflow inside the root container is not allowed.
 - Layout adaptation order (deterministic):
   1. Keep both groups in a single row while space allows.
-  2. If insufficient width, collapse controls in `collapseOrder` — but `ResultsPerPageGroup` **always renders** when `showResultsPerPage` is true (it is never a collapse candidate; `"results-per-page"` entries in `collapseOrder` are ignored).
+  2. If insufficient width, collapse controls in `collapseOrder` — but `ResultsPerPageGroup` **always renders** (it is never a collapse candidate; `showResultsPerPage` is always `true` and `"results-per-page"` entries in `collapseOrder` are ignored).
   3. Keep `PageNavigationGroup` visible as highest priority.
   4. Preserve control heights (`32px`) and touch targets while adapting spacing.
 - Spacing adaptation:
@@ -154,7 +154,7 @@ Runtime contract mirror: `component-contracts/ids/pagination.contract.ts`. Refer
 | `pageSize` | `number` | `25` | Selected results-per-page value shown in the per-page dropdown trigger. |
 | `pageSizeOptions` | `number[]` | `[25, 50, 75, 100]` | Positive unique options for the per-page dropdown. Empty/invalid arrays fall back to the default list. |
 | `pageOffsetOptions` | `number[]` | all pages `1…totalPages` | When `showPageOffset` is `true`, the page-offset dropdown lists these page numbers (each clamped to `[1, totalPages]`). |
-| `showPerPage` | `boolean` | `true` | Show/hide the `Show: [n] per page` group. |
+| `showPerPage` (React: `showResultsPerPage`) | `boolean` | `true` (always) | The results-per-page group always renders — hiding it is not part of this design; the flag remains in the API but must stay `true` (reference stories expose no control for it). |
 | `showFirstLast` | `boolean` | `true` | Show/hide first (`double-chev-left`) and last (`double-chev-right`) navigation buttons. |
 | `showPageOffset` | `boolean` | `false` | When `true`, replace the page-number text input with a page-offset dropdown bound to `pageOffsetOptions`. |
 | `background` | `"gray" \| "white" \| "none"` | `"gray"` | Root surface variant. |
@@ -163,7 +163,7 @@ Runtime contract mirror: `component-contracts/ids/pagination.contract.ts`. Refer
 | `dropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Per-page dropdown visual state (demo/testing; runtime defaults to collapsed until opened). |
 | `pageOffsetDropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Page-offset dropdown visual state (demo/testing). |
 | `responsiveMode` | `"auto" \| "keep-inline"` | `"auto"` | Responsive layout strategy (see **Responsiveness**). |
-| `collapseOrder` | `("results-per-page" \| "page-input" \| "first-last-buttons")[]` | `["results-per-page"]` | Collapse priority when `responsiveMode="auto"`. `"results-per-page"` is ignored — the group always renders when `showResultsPerPage` is true. |
+| `collapseOrder` | `("results-per-page" \| "page-input" \| "first-last-buttons")[]` | `["results-per-page"]` | Collapse priority when `responsiveMode="auto"`. `"results-per-page"` is ignored — the group always renders. |
 
 ### Outputs / events
 
@@ -321,3 +321,4 @@ Variant matrix:
 - **Minimum width (2026-09-17)**: `PaginationRoot` sets `min-width: 495px` alongside `width: 100%`. The row still fills its host but never renders narrower than 495px; below that threshold the host is responsible for overflow behavior.
 
 - **Navigation buttons (2026-11-18)**: First/previous/next/last controls render via `IdsIconButton` (`variant="tertiary"`, `size="small"` — `24×24` button, `12×12` glyph) instead of a bare `<button>` wrapping `Icon`. Default/hover/press/focus-visible/disabled state design is owned by `components/ids/icon-button/design-spec.md`; the pagination spec no longer hand-rolls nav-button states or glyph sizing.
+- **Results-per-page always shown (2026-11-18)**: `ResultsPerPageGroup` always renders — the hidden variant is not part of this design. `showResultsPerPage`/`showPerPage` stays in the API at `true` for compatibility, but the reference stories expose no control for it.
