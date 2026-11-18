@@ -24,6 +24,8 @@ Import from \`@ids/react/card\`.
 | \`title\` | \`string\` | — |
 | \`secondaryTitle\` | \`ReactNode\` | — |
 | \`headerMeta\` | \`ReactNode\` | — |
+| \`headerIcon\` | \`ReactNode \\| string\` | \`"productivity-alt"\` |
+| \`showIcon\` | \`boolean\` | \`true\` |
 | \`header\` | \`ReactNode\` | — |
 | \`additionalFilter\` | \`ReactNode\` | — |
 | \`children\` | \`ReactNode\` | required |
