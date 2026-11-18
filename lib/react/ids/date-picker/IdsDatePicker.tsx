@@ -9,7 +9,7 @@ import React, {
   type CSSProperties,
 } from "react";
 import { createPortal } from "react-dom";
-import { IdsButton, IdsButtonLeadingIcon } from "../button";
+import { IdsIconButton } from "../icon-button";
 import { IdsFormLabel } from "../form-label";
 import { IdsIcon } from "../icon";
 import styles from "./IdsDatePicker.module.css";
@@ -923,11 +923,11 @@ export function IdsDatePicker({
         </div>
 
         <div className={styles.navButtons}>
-          <IdsButton
+          <IdsIconButton
             type="button"
             variant="ghostNeutral"
             size="small"
-            iconOnly
+            shape="chev-left-thick"
             ariaLabel="Previous month"
             onClick={() => {
               if (viewMonth === 0) {
@@ -937,16 +937,12 @@ export function IdsDatePicker({
                 setViewMonth((m) => m - 1);
               }
             }}
-          >
-            <IdsButtonLeadingIcon>
-              <IdsIcon shape="chev-left-thick" size={12} />
-            </IdsButtonLeadingIcon>
-          </IdsButton>
-          <IdsButton
+          />
+          <IdsIconButton
             type="button"
             variant="ghostNeutral"
             size="small"
-            iconOnly
+            shape="chev-right-thick"
             ariaLabel="Next month"
             onClick={() => {
               if (viewMonth === 11) {
@@ -956,11 +952,7 @@ export function IdsDatePicker({
                 setViewMonth((m) => m + 1);
               }
             }}
-          >
-            <IdsButtonLeadingIcon>
-              <IdsIcon shape="chev-right-thick" size={12} />
-            </IdsButtonLeadingIcon>
-          </IdsButton>
+          />
         </div>
       </div>
 
@@ -1128,12 +1120,12 @@ export function IdsDatePicker({
               // The format hint (or the error) is the field's description, per the guideline.
               aria-describedby={describedBy}
             />
-            <IdsButton
+            <IdsIconButton
               ref={calendarBtnRef}
               type="button"
               variant="tertiary"
               size={size === "large" ? "large" : "medium"}
-              iconOnly
+              shape="calendar-simple-16"
               ariaLabel="Choose date"
               aria-haspopup="dialog"
               aria-expanded={open}
@@ -1142,11 +1134,7 @@ export function IdsDatePicker({
               onClick={() => {
                 if (!disabled) setOpen((v) => !v);
               }}
-            >
-              <IdsButtonLeadingIcon>
-                <IdsIcon shape="calendar-simple-16" size={16} />
-              </IdsButtonLeadingIcon>
-            </IdsButton>
+            />
           </div>
 
           {!popupPortal && calendarPopup}
