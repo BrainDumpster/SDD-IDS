@@ -106,7 +106,7 @@ export const NestedHierarchy: Story = {
           <IdsStatusBarItem itemId="critical">
             <IdsStatusBarItemDivider side="left" />
             <IdsStatusBarItemIconSlot>
-              <IdsIcon shape="status-critical-square-solid" size={32} variant="img" />
+              <IdsIcon shape="status-critical-square-solid" size={24} variant="img" />
             </IdsStatusBarItemIconSlot>
             <IdsStatusBarItemValue>10</IdsStatusBarItemValue>
             <IdsStatusBarItemMeta category="<Category>">Critical</IdsStatusBarItemMeta>
@@ -114,7 +114,7 @@ export const NestedHierarchy: Story = {
           </IdsStatusBarItem>
           <IdsStatusBarItem itemId="warning">
             <IdsStatusBarItemIconSlot>
-              <IdsIcon shape="status-warn-tri-solid" size={32} variant="img" />
+              <IdsIcon shape="status-warn-tri-solid" size={24} variant="img" />
             </IdsStatusBarItemIconSlot>
             <IdsStatusBarItemValue>10</IdsStatusBarItemValue>
             <IdsStatusBarItemMeta category="<Category>">Warning</IdsStatusBarItemMeta>
@@ -122,7 +122,7 @@ export const NestedHierarchy: Story = {
           </IdsStatusBarItem>
           <IdsStatusBarItem itemId="success">
             <IdsStatusBarItemIconSlot>
-              <IdsIcon shape="status-ok-circ-solid" size={32} variant="img" />
+              <IdsIcon shape="status-ok-circ-solid" size={24} variant="img" />
             </IdsStatusBarItemIconSlot>
             <IdsStatusBarItemValue>10</IdsStatusBarItemValue>
             <IdsStatusBarItemMeta category="<Category>">Success</IdsStatusBarItemMeta>
@@ -221,71 +221,139 @@ export const InventoryNestedHierarchy: Story = {
   ),
 };
 
-export const ItemStates: Story = {
+const inventoryOverflowItems: IdsStatusBarItemInput[] = [
+  { id: "inv-default", value: 10, category: "Category", label: "Category", iconShapeName: "docs-bundle" },
+  { id: "inv-in-progress", value: 10, category: "Category", label: "Category 2", severity: "in-progress", iconShapeName: "docs-bundle" },
+  { id: "inv-warning", value: 10, category: "Category", label: "Category 3", severity: "warning", iconShapeName: "docs-bundle" },
+  { id: "inv-critical", value: 10, category: "Category", label: "Category 4", severity: "critical", iconShapeName: "docs-bundle" },
+  { id: "inv-5", value: 10, category: "Category", label: "Category 5", iconShapeName: "docs-bundle" },
+  { id: "inv-6", value: 10, category: "Category", label: "Category 6", iconShapeName: "docs-bundle" },
+  { id: "inv-7", value: 10, category: "Category", label: "Category 7", iconShapeName: "docs-bundle" },
+];
+
+export const InventoryOverflow: Story = {
+  name: "Inventory Overflow",
   args: {
-    type: "status-large",
-    total: 90,
+    type: "inventory",
+    total: undefined,
+    overflowState: "auto",
+    items: inventoryOverflowItems,
+  },
+  render: (args) => (
+    <div style={{ maxWidth: 520 }}>
+      <IdsStatusBar {...args} />
+    </div>
+  ),
+};
+
+export const InventoryNoIcon: Story = {
+  name: "Inventory No Icon",
+  args: {
+    type: "inventory",
+    total: undefined,
+    showIcons: false,
     items: [
-      { id: "default", value: 10, category: "<Category>", label: "Critical", severity: "critical", state: "default" },
-      { id: "hover", value: 10, category: "<Category>", label: "Warning", severity: "warning", state: "hover" },
-      { id: "press", value: 10, category: "<Category>", label: "Success", severity: "success", state: "press" },
-      {
-        id: "selected",
-        value: 10,
-        category: "<Category>",
-        label: "In Progress",
-        severity: "in-progress",
-        state: "selected",
-      },
-      {
-        id: "disabled",
-        value: 10,
-        category: "<Category>",
-        label: "Scheduled",
-        severity: "scheduled",
-        state: "disabled",
-      },
+      { id: "ni-1", value: 10, category: "Category", label: "Category" },
+      { id: "ni-2", value: 10, category: "Category", label: "Category" },
+      { id: "ni-3", value: 10, category: "Category", label: "Category" },
+      { id: "ni-4", value: 10, category: "Category", label: "Category" },
     ],
   },
   render: (args) => (
-    <div style={{ maxWidth: 900 }}>
+    <div style={{ maxWidth: 520 }}>
       <IdsStatusBar {...args} />
     </div>
   ),
 };
 
-export const OverflowBeginning: Story = {
-  name: "Overflow Beginning",
-  args: {
-    overflowState: "beginning",
-    items: longItems,
-    total: 90,
+// All item states shown at once in a single non-overflowing inventory bar, with
+// the state name noted under each cell (mirrors the Figma "States" reference).
+const inventoryStateItems: IdsStatusBarItemInput[] = [
+  { id: "st-default", value: 10, category: "Category", label: "Category 1", severity: "in-progress", iconShapeName: "docs-bundle", state: "default" },
+  { id: "st-hover", value: 10, category: "Category", label: "Category 5", iconShapeName: "docs-bundle", state: "hover" },
+  { id: "st-press", value: 10, category: "Category", label: "Category 2", severity: "warning", iconShapeName: "docs-bundle", state: "press" },
+  { id: "st-selected", value: 10, category: "Category", label: "Category 3", severity: "critical", iconShapeName: "docs-bundle", state: "selected" },
+  { id: "st-disabled", value: 0, category: "Category", label: "Category 4", iconShapeName: "docs-bundle", state: "disabled" },
+];
+
+const STATE_NOTES = ["Default", "Hover", "Press", "Selected", "Disabled"];
+
+export const InventoryStates: Story = {
+  name: "Inventory States",
+  render: () => (
+    // width: max-content keeps all five cells on one bar (never overflows into
+    // the scroll arrows); the page scrolls instead if the canvas is narrow.
+    <div style={{ width: "max-content", maxWidth: "none" }}>
+      <IdsStatusBar type="inventory" items={inventoryStateItems} />
+      <div style={{ display: "flex", marginTop: "var(--spacing-space-8, 8px)" }}>
+        {STATE_NOTES.map((note) => (
+          <span
+            key={note}
+            style={{
+              flex: "1 1 0",
+              textAlign: "center",
+              fontFamily: "var(--typography-font-style-primary, 'Roboto', sans-serif)",
+              fontSize: "var(--font-size-body-2, 14px)",
+              lineHeight: "var(--font-line-height-line-height-20, 20px)",
+              color: "var(--color-text-gray-neutral, #4d4d4d)",
+            }}
+          >
+            {note}
+          </span>
+        ))}
+      </div>
+    </div>
+  ),
+};
+
+// Live states: hover and press (mouse-down) act on any cell directly, and
+// clicking a cell toggles its selected ribbon — no cell is pinned to a state.
+// One cell stays disabled, since disabled is a prop, not something you can
+// interact a cell into.
+const itemStateItems: IdsStatusBarItemInput[] = [
+  { id: "critical", value: 10, category: "<Category>", label: "Critical", severity: "critical" },
+  { id: "warning", value: 10, category: "<Category>", label: "Warning", severity: "warning" },
+  { id: "success", value: 10, category: "<Category>", label: "Success", severity: "success" },
+  { id: "in-progress", value: 10, category: "<Category>", label: "In Progress", severity: "in-progress" },
+  { id: "scheduled", value: 10, category: "<Category>", label: "Scheduled", severity: "scheduled", state: "disabled" },
+];
+
+export const ItemStates: Story = {
+  name: "Item States",
+  parameters: {
+    docs: {
+      description: {
+        story:
+          "Live states — hover and press (mouse-down) act on any cell, and clicking a cell toggles its selected ribbon. No cell is pinned to a state; one cell stays disabled to show that variant.",
+      },
+    },
   },
-  render: (args) => (
-    <div style={{ maxWidth: 640 }}>
-      <IdsStatusBar {...args} />
-    </div>
-  ),
-};
-
-export const OverflowMiddle: Story = {
-  name: "Overflow Middle",
-  args: {
-    overflowState: "middle",
-    items: longItems,
-    total: 90,
+  render: () => {
+    const [selectedId, setSelectedId] = React.useState<string | null>(null);
+    const items = itemStateItems.map((item) =>
+      item.state === "disabled"
+        ? item
+        : { ...item, state: selectedId === item.id ? ("selected" as const) : undefined },
+    );
+    return (
+      <div style={{ maxWidth: 900 }}>
+        <IdsStatusBar
+          type="status-large"
+          total={90}
+          items={items}
+          onItemSelect={(id) => setSelectedId((cur) => (cur === id ? null : id))}
+        />
+      </div>
+    );
   },
-  render: (args) => (
-    <div style={{ maxWidth: 640 }}>
-      <IdsStatusBar {...args} />
-    </div>
-  ),
 };
 
-export const OverflowEnd: Story = {
-  name: "Overflow End",
+// One scrollable bar: the arrows appear from the scroll position (auto). In
+// Figma "Beginning / Middle / End" are just snapshots of this same bar at
+// different scroll offsets, not separate variants.
+export const Overflow: Story = {
   args: {
-    overflowState: "end",
+    overflowState: "auto",
     items: longItems,
     total: 90,
   },
