@@ -332,31 +332,3 @@ export const OptionsWithFooter: Story = {
     />
   ),
 };
-
-const optionsWithLogos: IdsAppLauncherOption[] = [
-  {
-    id: "l1",
-    label: "Option with logo",
-    icon: <IdsIcon shape="shield-encrypt-alt" size={16} color="var(--color-icon-gray-neutral-strong)" />,
-  },
-  {
-    id: "l2",
-    label: "Another option with logo",
-    icon: <IdsIcon shape="shield-encrypt-alt" size={16} color="var(--color-icon-gray-neutral-strong)" />,
-  },
-  { id: "l3", label: "Option without logo" },
-];
-
-/** Option rows with an optional leading logo (16px, height auto, 8px gap); rows
- *  without a logo keep their label flush-left, aligned with the logo rows. */
-export const OptionRowWithLogo: Story = {
-  name: "Option Row With Logo",
-  render: () => (
-    <IdsAppLauncher
-      products={products}
-      options={optionsWithLogos}
-      footerAction={{ label: "View all apps", onClick: () => undefined }}
-      panelOnly
-    />
-  ),
-};

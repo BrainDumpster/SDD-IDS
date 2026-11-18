@@ -445,21 +445,6 @@
   transition: background 80ms ease;
 }
 
-/* Leading logo: fixed 16px width, height auto (aspect ratio), 8px gap before label. */
-.optionIcon {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  width: 16px;
-  margin-inline-end: var(--spacing-space-8);
-}
-
-.optionIcon :where(svg, img) {
-  display: block;
-  width: 16px;
-  height: auto;
-}
-
 .optionLabel {
   flex: 1 1 auto;
   min-width: 0;

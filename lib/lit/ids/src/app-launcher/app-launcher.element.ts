@@ -39,7 +39,6 @@ import {
   productToOption,
   resolveColumns,
   resolveItemIconSlug,
-  resolveOptionIconSlug,
   resolveProductIconSlug,
   resolveProgramme,
   resolveTriggerVariant,
@@ -787,17 +786,6 @@ export class IdsAppLauncher extends LitElement {
           data-state=${ifDefined(visual)}
           @click=${() => this.onOptionActivate(option, index)}
         >
-          ${resolveOptionIconSlug(option)
-            ? html`
-                <span class="ids-app-launcher-option-icon" aria-hidden="true">
-                  <ids-icon
-                    shape=${resolveOptionIconSlug(option)!}
-                    size="16"
-                    color="var(--color-icon-gray-neutral-strong)"
-                  ></ids-icon>
-                </span>
-              `
-            : nothing}
           ${label}
         </button>
       </li>
