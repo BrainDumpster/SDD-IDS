@@ -170,10 +170,13 @@ export const sliderStyles = css`
     cursor: grabbing;
   }
 
-  /* Focus footprint 22px around 16px thumb → offset 3px (Figma 22505:177044) */
+  /* Focus footprint 22px around 16px thumb: 2px white gap ring + 1px brand ring (Figma 22505:177044) */
   .ids-slider-thumb:focus-visible {
-    outline: var(--border-width-border-1) solid var(--color-border-brand-base);
-    outline-offset: 3px;
+    outline: none;
+    box-shadow:
+      0 0 0 var(--border-width-border-2) var(--color-text-gray-white),
+      0 0 0 calc(var(--border-width-border-2) + var(--border-width-border-1))
+        var(--color-border-brand-base);
   }
 
   .ids-slider-thumb:disabled {
@@ -196,7 +199,7 @@ export const sliderStyles = css`
     font-size: var(--font-size-body-2);
     font-weight: 400;
     left: 0;
-    line-height: var(--sizing-size-8);
+    line-height: var(--font-line-height-line-height-20);
     position: absolute;
     transform: translateX(-50%);
     white-space: nowrap;
