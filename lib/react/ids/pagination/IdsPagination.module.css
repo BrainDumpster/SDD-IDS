@@ -84,46 +84,6 @@
   min-width: 0;
 }
 
-.iconButton {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  width: 16px;
-  height: 16px;
-  margin: 0;
-  padding: 0;
-  border: 0;
-  border-radius: 0;
-  background: transparent;
-  color: var(--color-icon-brand-base);
-  cursor: pointer;
-}
-
-.iconButton:hover:not(:disabled) {
-  color: var(--color-icon-brand-base);
-}
-
-.iconButton:focus-visible {
-  outline: none;
-}
-
-.iconButton:focus-visible::after {
-  content: "";
-  position: absolute;
-  inset: -4px;
-  border: var(--border-width-border-default, 1px) solid
-    var(--color-border-brand-base);
-  border-radius: var(--corner-radius-radius-4);
-  pointer-events: none;
-}
-
-.iconButton:disabled {
-  color: var(--color-icon-gray-disabled);
-  cursor: not-allowed;
-}
-
 .iconButtonCollapsed {
   display: none;
 }

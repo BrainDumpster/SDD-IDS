@@ -29,7 +29,7 @@ import React, {
   type ReactElement,
 } from "react";
 import { DropdownMenu, IdsDropdownTriggerShell } from "../dropdown-shared";
-import { IdsIcon } from "../icon";
+import { IdsIconButton } from "../icon-button";
 import { IdsTextBox } from "../text-box";
 import styles from "./IdsPagination.module.css";
 
@@ -302,37 +302,25 @@ export function IdsPagination({
             <span className={styles.countText}>{countText}</span>
           ) : (
             <>
-              <button
-                type="button"
-                className={cx(
-                  styles.iconButton,
-                  firstLastCollapsed && styles.iconButtonCollapsed,
-                )}
+              <IdsIconButton
+                variant="tertiary"
+                size="small"
+                shape="double-chev-left"
+                className={
+                  firstLastCollapsed ? styles.iconButtonCollapsed : undefined
+                }
                 onClick={() => goToPage(1)}
                 disabled={atFirstPage}
-                aria-label="First page"
-              >
-                <IdsIcon
-                  shape="double-chev-left"
-                  size={16}
-                  color="currentColor"
-                  style={{ width: 16, height: 16 }}
-                />
-              </button>
-              <button
-                type="button"
-                className={styles.iconButton}
+                ariaLabel="First page"
+              />
+              <IdsIconButton
+                variant="tertiary"
+                size="small"
+                shape="chev-left"
                 onClick={() => goToPage(safeCurrentPage - 1)}
                 disabled={atFirstPage}
-                aria-label="Previous page"
-              >
-                <IdsIcon
-                  shape="chev-left"
-                  size={16}
-                  color="currentColor"
-                  style={{ width: 16, height: 16 }}
-                />
-              </button>
+                ariaLabel="Previous page"
+              />
               <div
                 className={cx(
                   styles.pageInput,
@@ -366,37 +354,25 @@ export function IdsPagination({
                 />
               </div>
               <span className={styles.countText}>{countText}</span>
-              <button
-                type="button"
-                className={styles.iconButton}
+              <IdsIconButton
+                variant="tertiary"
+                size="small"
+                shape="chev-right"
                 onClick={() => goToPage(safeCurrentPage + 1)}
                 disabled={atLastPage}
-                aria-label="Next page"
-              >
-                <IdsIcon
-                  shape="chev-right"
-                  size={16}
-                  color="currentColor"
-                  style={{ width: 16, height: 16 }}
-                />
-              </button>
-              <button
-                type="button"
-                className={cx(
-                  styles.iconButton,
-                  firstLastCollapsed && styles.iconButtonCollapsed,
-                )}
+                ariaLabel="Next page"
+              />
+              <IdsIconButton
+                variant="tertiary"
+                size="small"
+                shape="double-chev-right"
+                className={
+                  firstLastCollapsed ? styles.iconButtonCollapsed : undefined
+                }
                 onClick={() => goToPage(safeTotalPages)}
                 disabled={atLastPage}
-                aria-label="Last page"
-              >
-                <IdsIcon
-                  shape="double-chev-right"
-                  size={16}
-                  color="currentColor"
-                  style={{ width: 16, height: 16 }}
-                />
-              </button>
+                ariaLabel="Last page"
+              />
             </>
           )}
         </div>

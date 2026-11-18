@@ -68,7 +68,7 @@
   - Horizontal overflow inside the root container is not allowed.
 - Layout adaptation order (deterministic):
   1. Keep both groups in a single row while space allows.
-  2. If insufficient width, collapse controls in `collapseOrder` — but `ResultsPerPageGroup` **always renders** when `showResultsPerPage` is true (it is never a collapse candidate; `"results-per-page"` entries in `collapseOrder` are ignored).
+  2. If insufficient width, collapse controls in `collapseOrder` — but `ResultsPerPageGroup` **always renders** (it is never a collapse candidate; `showResultsPerPage` is always `true` and `"results-per-page"` entries in `collapseOrder` are ignored).
   3. Keep `PageNavigationGroup` visible as highest priority.
   4. Preserve control heights (`32px`) and touch targets while adapting spacing.
 - Spacing adaptation:
@@ -107,10 +107,7 @@
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| Navigation icon buttons | default | transparent | none | disabled/neutral/brand icon based on position |
-| Navigation icon buttons | hover | transparent | none | `var(--color-icon-brand-base)` |
-| Navigation icon buttons | focus-visible | transparent | none + outer ring `var(--color-border-brand-base)` (`var(--corner-radius-radius-4)`) | icon unchanged |
-| Navigation icon buttons | disabled | transparent | none | `var(--color-icon-gray-disabled)` |
+| Navigation icon buttons | all states | IDS Icon Button `variant="tertiary"` `size="small"` — state design owned by `components/ids/icon-button/design-spec.md` (transparent default; hover/focus `var(--color-background-controls-light)`; brand-base focus ring) | | |
 | Page input | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | `var(--color-text-gray-neutral)` |
 | Page input | focus-visible | `var(--color-background-surface-component)` | `1px solid var(--color-border-brand-base)` (selected state) | text unchanged |
 | Per-page dropdown trigger | default | `var(--color-background-surface-component)` | `1px solid var(--color-border-gray-neutral-base)` | text `var(--color-text-gray-neutral)`, caret `var(--color-icon-gray-neutral-base)` |
@@ -157,7 +154,7 @@ Runtime contract mirror: `component-contracts/ids/pagination.contract.ts`. Refer
 | `pageSize` | `number` | `25` | Selected results-per-page value shown in the per-page dropdown trigger. |
 | `pageSizeOptions` | `number[]` | `[25, 50, 75, 100]` | Positive unique options for the per-page dropdown. Empty/invalid arrays fall back to the default list. |
 | `pageOffsetOptions` | `number[]` | all pages `1…totalPages` | When `showPageOffset` is `true`, the page-offset dropdown lists these page numbers (each clamped to `[1, totalPages]`). |
-| `showPerPage` | `boolean` | `true` | Show/hide the `Show: [n] per page` group. |
+| `showPerPage` (React: `showResultsPerPage`) | `boolean` | `true` (always) | The results-per-page group always renders — hiding it is not part of this design; the flag remains in the API but must stay `true` (reference stories expose no control for it). |
 | `showFirstLast` | `boolean` | `true` | Show/hide first (`double-chev-left`) and last (`double-chev-right`) navigation buttons. |
 | `showPageOffset` | `boolean` | `false` | When `true`, replace the page-number text input with a page-offset dropdown bound to `pageOffsetOptions`. |
 | `background` | `"gray" \| "white" \| "none"` | `"gray"` | Root surface variant. |
@@ -166,7 +163,7 @@ Runtime contract mirror: `component-contracts/ids/pagination.contract.ts`. Refer
 | `dropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Per-page dropdown visual state (demo/testing; runtime defaults to collapsed until opened). |
 | `pageOffsetDropdownState` | `"collapsed" \| "expanded-below" \| "expanded-above"` | `"collapsed"` | Page-offset dropdown visual state (demo/testing). |
 | `responsiveMode` | `"auto" \| "keep-inline"` | `"auto"` | Responsive layout strategy (see **Responsiveness**). |
-| `collapseOrder` | `("results-per-page" \| "page-input" \| "first-last-buttons")[]` | `["results-per-page"]` | Collapse priority when `responsiveMode="auto"`. `"results-per-page"` is ignored — the group always renders when `showResultsPerPage` is true. |
+| `collapseOrder` | `("results-per-page" \| "page-input" \| "first-last-buttons")[]` | `["results-per-page"]` | Collapse priority when `responsiveMode="auto"`. `"results-per-page"` is ignored — the group always renders. |
 
 ### Outputs / events
 
@@ -214,26 +211,30 @@ All glyphs resolve through the shared **`Icon`** primitive (`storybook/src/compo
 
 | Slot | `shapeName` | Render size | Color / tint |
 |---|---|---|---|
-| First page | `double-chev-left` | `16×16` | Parent nav button: `var(--color-icon-brand-base)`; disabled: `var(--color-icon-gray-disabled)` |
-| Previous page | `chev-left` | `16×16` | Same as first page |
-| Next page | `chev-right` | `16×16` | Same as first page |
-| Last page | `double-chev-right` | `16×16` | Same as first page |
+| First page | `double-chev-left` | `IdsIconButton` `size="small"` glyph (`12×12` in `24×24` button) | IDS Icon Button `variant="tertiary"` tokens — see icon-button spec |
+| Previous page | `chev-left` | Same as first page | Same as first page |
+| Next page | `chev-right` | Same as first page | Same as first page |
+| Last page | `double-chev-right` | Same as first page | Same as first page |
 | Per-page dropdown caret | `arrow-drop-tri-caret` | `10×10` | `var(--color-icon-gray-neutral-base)`; disabled: `var(--color-icon-gray-disabled)` |
 
 ### Rendering rules
 
-- **Navigation arrows:** wrap each `Icon` in a native `<button type="button">` with `aria-label`. Set button `color` to the semantic icon token; `Icon` inherits tint via `currentColor` (mask variant). Always render all four controls on multi-page views; use `disabled` + `var(--color-icon-gray-disabled)` at boundaries — do not remove controls.
+- **Navigation arrows:** render each control with **`IdsIconButton`** (`variant="tertiary"`, `size="small"`); pass the glyph via `shape` and the accessible name via `ariaLabel`. The component renders the `Icon` internally (mask variant) and owns default/hover/press/focus-visible/disabled state design. Always render all four controls on multi-page views; use `disabled` at boundaries — do not remove controls.
 - **Dropdown carets:** render inside the dropdown trigger button. Pass explicit `style={{ width: 10, height: 10 }}` on `Icon` — the primitive defaults to `16×16` inline and CSS classes alone cannot override that.
-- **Navigation size:** pass explicit `style={{ width: 16, height: 16 }}` on nav `Icon` instances for deterministic sizing across frameworks.
+- **Navigation size:** no manual glyph sizing — `size="small"` fixes the icon-button slot (`24×24` button, `12×12` glyph).
 - **Codegen:** when the target library provides a shared `Icon` (or equivalent), generators MUST compose all pagination glyphs through it with `shapeName` (or equivalent prop). Do not emit inline SVG paths, raw `<img>`, or per-component asset globs in pagination source.
 - **Fallback:** inline SVG is permitted only when no reusable icon primitive exists in the target library.
 
 ### Reference usage (React)
 
 ```tsx
-<button type="button" className={styles.iconButton} disabled={atFirstPage} aria-label="First page">
-  <Icon shapeName="double-chev-left" className={styles.navIcon} style={{ width: 16, height: 16 }} />
-</button>
+<IdsIconButton
+  variant="tertiary"
+  size="small"
+  shape="double-chev-left"
+  ariaLabel="First page"
+  disabled={atFirstPage}
+/>
 
 <button type="button" className={styles.dropdownTrigger} aria-label="Items per page">
   <span>{pageSize}</span>
@@ -271,10 +272,10 @@ Variant matrix:
   - See **Icon Component (implementation)** for the authoritative `shapeName` → size → color mapping.
   - Icon slugs (summary):
     - Per-page dropdown caret: `arrow-drop-tri-caret` (`10×10`)
-    - First page: `double-chev-left` (`16×16`)
-    - Previous page: `chev-left` (`16×16`)
-    - Next page: `chev-right` (`16×16`)
-    - Last page: `double-chev-right` (`16×16`)
+    - First page: `double-chev-left` (via `IdsIconButton` `size="small"` glyph)
+    - Previous page: `chev-left` (via `IdsIconButton` `size="small"` glyph)
+    - Next page: `chev-right` (via `IdsIconButton` `size="small"` glyph)
+    - Last page: `double-chev-right` (via `IdsIconButton` `size="small"` glyph)
   - Codegen icon resolution rule:
     - Generator MUST use the library `Icon` component with `shapeName`/icon-name mapping above instead of inlining SVG paths.
     - Inline SVG is fallback-only when no reusable icon component exists in the target library.
@@ -283,7 +284,7 @@ Variant matrix:
   - `currentPage` out of range -> clamp.
   - Empty/invalid `pageSizeOptions` -> fallback to `[25, 50, 75, 100]`.
 ### Validation checklist
-- [ ] Navigation arrows and dropdown carets render via shared `Icon` with documented `shapeName` and explicit sizes (`16×16` nav, `10×10` carets).
+- [ ] Navigation arrows render via `IdsIconButton` (`variant="tertiary"`, `size="small"`) and dropdown carets via shared `Icon` with documented `shapeName` and explicit size (`10×10` carets).
 - [ ] `Pagination - Main` layout from `11677:157840` is represented with all three background modes (`gray`, `white`, `none`).
 - [ ] Per-page dropdown states/placements from `37721:115839` are represented.
 - [ ] Page-number states from `11677:157817` use `.TextBox` input (not a dropdown).
@@ -318,3 +319,5 @@ Variant matrix:
 - **Navigation arrows (2026-06-19)**: First/previous/next/last controls always render on multi-page views; boundary positions use disabled styling instead of hiding controls. All four use shared `Icon` with `style={{ width: 16, height: 16 }}`; button `color` drives `var(--color-icon-brand-base)` / `var(--color-icon-gray-disabled)`.
 - **Datagrid embed (2026-07-06)**: Pass **`embeddedInDatagrid`** when hosted in datagrid footer; **`rootEmbedded`** class sets `border: 0; border-top: 1px solid var(--color-border-gray-neutral-base)` so shell owns left/right/bottom edges.
 - **Minimum width (2026-09-17)**: `PaginationRoot` sets `min-width: 495px` alongside `width: 100%`. The row still fills its host but never renders narrower than 495px; below that threshold the host is responsible for overflow behavior.
+- **Navigation buttons (2026-11-18)**: First/previous/next/last controls render via `IdsIconButton` (`variant="tertiary"`, `size="small"` — `24×24` button, `12×12` glyph) instead of a bare `<button>` wrapping `Icon`. Default/hover/press/focus-visible/disabled state design is owned by `components/ids/icon-button/design-spec.md`; the pagination spec no longer hand-rolls nav-button states or glyph sizing.
+- **Results-per-page always shown (2026-11-18)**: `ResultsPerPageGroup` always renders — the hidden variant is not part of this design. `showResultsPerPage`/`showPerPage` stays in the API at `true` for compatibility, but the reference stories expose no control for it.
