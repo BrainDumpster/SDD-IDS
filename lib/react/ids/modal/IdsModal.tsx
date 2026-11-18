@@ -37,7 +37,8 @@ import React, {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { IdsButton, IdsButtonLabel, IdsButtonLeadingIcon } from "../button";
+import { IdsButton, IdsButtonLabel } from "../button";
+import { IdsIconButton } from "../icon-button";
 import { IdsIcon } from "../icon";
 import { IdsTabs } from "../tab";
 import styles from "./IdsModal.module.css";
@@ -206,11 +207,11 @@ export function IdsModalClose({
   const ctx = useContext(IdsModalContext);
 
   return (
-    <IdsButton
+    <IdsIconButton
       type="button"
       variant="ghostNeutral"
       size="medium"
-      iconOnly
+      shape="shape-x"
       ariaLabel="Close"
       className={className}
       data-ids="ids-modal-close"
@@ -219,13 +220,7 @@ export function IdsModalClose({
         if (!event.defaultPrevented) ctx?.close();
       }}
       {...rest}
-    >
-      <IdsButtonLeadingIcon>
-        {children ?? (
-          <IdsIcon shape="shape-x" variant="mask" size={16} color="currentColor" />
-        )}
-      </IdsButtonLeadingIcon>
-    </IdsButton>
+    />
   );
 }
 

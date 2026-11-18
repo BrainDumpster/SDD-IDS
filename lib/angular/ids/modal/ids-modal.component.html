@@ -33,15 +33,13 @@
         <ng-content select="ids-modal-close" />
 
         @if (closable && !hasCloseSlot) {
-          <ids-button
+          <ids-icon-button
             variant="ghostNeutral"
             size="md"
-            [iconOnly]="true"
+            shape="shape-x"
             ariaLabel="Close"
             (clicked)="closeModal()"
-          >
-            <ids-icon shapeName="shape-x" variant="img" [size]="14" />
-          </ids-button>
+          />
         }
       </div>
     </header>
