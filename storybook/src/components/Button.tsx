@@ -86,7 +86,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(function Button
       [
         styles.button,
         styles[variantClass],
-        styles[resolvedSize],
+        styles[size],
         programme === "synapse" ? styles.programmeSynapse : "",
         loading ? styles.loading : "",
         className,
