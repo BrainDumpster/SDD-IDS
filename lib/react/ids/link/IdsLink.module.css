@@ -78,20 +78,24 @@
   color: var(--color-text-link-brand-light);
 }
 
-/* --- Focus-visible ring (1px / 4px radius; ~4px x / 2px y offset) --- */
+/* --- Focus-visible ring (1px / 4px radius; ~3px x / 2px y offset) --- */
 .ids-link:focus-visible:not(:disabled):not([aria-disabled="true"]),
 .ids-link[data-state="focus-visible"]:not(:disabled):not([aria-disabled="true"]) {
   border-radius: var(--corner-radius-radius-4);
-  box-shadow: 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
-  padding-inline: var(--padding-padding-4);
-  margin-inline: calc(var(--padding-padding-4) * -1);
+  /* Inset shadow = Figma inside-aligned stroke: the 1px ring is drawn within
+     the padded focus box, leaving ~2px/1px between ring and text. */
+  box-shadow: inset 0 0 0 var(--border-width-border-1)
+    var(--color-border-brand-base);
+  padding-inline: 3px; /* no padding-3 token exists */
+  margin-inline: -3px;
   padding-block: var(--padding-padding-2);
   margin-block: calc(var(--padding-padding-2) * -1);
 }
 
 .ids-link--dark-bg:focus-visible:not(:disabled):not([aria-disabled="true"]),
 .ids-link--dark-bg[data-state="focus-visible"]:not(:disabled):not([aria-disabled="true"]) {
-  box-shadow: 0 0 0 var(--border-width-border-1) var(--color-border-gray-white);
+  box-shadow: inset 0 0 0 var(--border-width-border-1)
+    var(--color-border-gray-white);
 }
 
 .ids-link--standalone:focus-visible:not(:disabled):not([aria-disabled="true"]),
