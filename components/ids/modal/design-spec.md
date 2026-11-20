@@ -303,6 +303,9 @@ IdsModal
 - [ ] Light and dark theme snapshots preserve tokenized contrast.
 ## Implementation Notes
 
+### 2026-11-18 — Close button composes the IDS Icon Button component
+- The header close control (`ghostNeutral`, `md`) is rendered with the standalone **IDS Icon Button** (`ids-icon-button` / `IdsIconButton`), passing `shape="shape-x"` directly — no projected icon. This replaces `ids-button` / `IdsButton` with `iconOnly`, which the Icon Button split removed from the Button API. Footer action buttons stay on the regular Button. Applies to the Angular `ids-modal` + `ids-modal-close` and the React `IdsModalClose`.
+
 ### 2026-10-11 — Lib React aligned with the single-page / multi-page fixes and Figma (`Modal-Main`, `ModalDialog-Main`, overlay, button groups)
 - Dialogs are always `640px` wide (`ids-modal-surface--dialog`); `size` applies to single-page / multi-page only, with the Figma heights as fixed heights (capped by the viewport) — the content scrolls inside rather than growing the modal.
 - Dialog content block padding follows the reference: `0` top for Non-Alerting / Informational, `16px` top / `0` bottom for the alerting types.
