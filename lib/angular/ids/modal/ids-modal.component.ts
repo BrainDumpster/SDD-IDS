@@ -32,6 +32,7 @@ import {
   type ModalStatusIconBinding,
 } from "@component-contracts/ids/modal.contract";
 import { IdsButtonComponent } from "../button/ids-button.component";
+import { IdsIconButtonComponent } from "../icon-button/ids-icon-button.component";
 import { IdsCheckboxComponent } from "../checkbox/ids-checkbox.component";
 import { IdsIconComponent } from "../icon/ids-icon.component";
 import { IDS_MODAL_CONTEXT, type IdsModalContext } from "./ids-modal-context";
@@ -46,7 +47,7 @@ const FOCUSABLE =
 @Component({
   selector: "ids-modal",
   standalone: true,
-  imports: [CommonModule, IdsButtonComponent, IdsCheckboxComponent, IdsIconComponent],
+  imports: [CommonModule, IdsButtonComponent, IdsIconButtonComponent, IdsCheckboxComponent, IdsIconComponent],
   templateUrl: "./ids-modal.component.html",
   styleUrl: "./ids-modal.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

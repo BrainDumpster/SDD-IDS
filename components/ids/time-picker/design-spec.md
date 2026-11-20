@@ -360,7 +360,10 @@ See **Interactions → Keyboard navigation** and **Interactions → Accessibilit
 | `components/ids/date-and-time-picker/design-spec.md` | Family map entry (Date and Time Picker) |
 
 ## Implementation Notes
-Last updated: 2026-10-24
+Last updated: 2026-11-18
+
+### 2026-11-18 — Clock trigger composes the IDS Icon Button component (React)
+- The React clock trigger (`tertiary`, `lg`/`md`) is rendered with the standalone **IDS Icon Button** (`IdsIconButton`), passing `shape="time-clock-16"` directly and forwarding `ref` / `aria-expanded` / `onMouseDown`. This replaces `IdsButton` with `iconOnly`, removed from the Button API by the Icon Button split. (Angular keeps its raw restyled `<button>`.)
 
 ### 2026-10-24 — Hour / minute / second / AM-PM columns are wheel-scrollable
 

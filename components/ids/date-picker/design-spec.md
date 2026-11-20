@@ -660,7 +660,10 @@ Icons resolved via shared `Icon` primitive. No raster images required.
 ---
 
 ## Implementation Notes
-Last updated: 2026-10-24
+Last updated: 2026-11-18
+
+### 2026-11-18 — Nav + calendar trigger buttons compose the IDS Icon Button component
+- The prev/next-month nav buttons (`ghostNeutral`, `sm`) and the calendar trigger (`tertiary`, `lg`/`md`) are rendered with the standalone **IDS Icon Button** (`ids-icon-button` / `IdsIconButton`), passing `shape` directly — no projected `ids-icon` child. This replaces `ids-button` with `iconOnly`, which the Icon Button split removed from the Button API.
 
 ### 2026-10-24 — Calendar prev/next-month nav buttons → ghost-neutral small icon button
 
