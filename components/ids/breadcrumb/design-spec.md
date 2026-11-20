@@ -67,6 +67,7 @@
 - Focus states use brand colors for visual consistency
 - Link states use the `IdsLink` component, inheriting its standalone hover/press/focus treatment
 - Breadcrumb items and the ellipsis share the same `IdsLink` standalone styling
+- The ellipsis is rendered inside the DropdownMenu trigger button (`role="combobox"`), which is the element that receives keyboard focus — apply the `IdsLink` focus-visible treatment to the ellipsis when the wrapping trigger matches `:focus-visible`; its accessible name ("Collapsed breadcrumbs") is set via the trigger's `aria-label`
 - Current page state is clearly distinguished
 - Dark theme adaptation through semantic tokens
 ## States (Light Theme)
@@ -90,6 +91,7 @@
 - Disabled items prevent interaction and use gray colors
 - Keyboard navigation: Tab through items, Enter to navigate
 - Truncated breadcrumbs reveal the IDS DropdownMenu when the "..." ellipsis is clicked or keyboard-activated
+- Only shortened breadcrumb labels show a native browser tooltip (`title`) on hover, displaying that item's full label; the "..." ellipsis and untruncated items show no tooltip
 - When the overflow menu opens, focus moves to the first menu item
 - When focus moves out of the menu (Tab past the last item, Shift+Tab back to the trigger, or focus leaving the menu entirely), the menu closes
 ### Accessibility
@@ -107,6 +109,7 @@
 - From 4 items, breadcrumb automatically truncates to show only 2 items - first and last breadcrumb with ellipsis ("...") in between. The threshold is configurable via `maxVisibleItems` (default 3); no opt-in prop is required
 - The ellipsis uses the same `IdsLink` standalone color and hover/focus/press styling as the other breadcrumb links
 - Clicking or keyboard-activating the "..." ellipsis opens the IDS DropdownMenu (single-select dropdown) with all truncated links
+- Clicking an overflow menu item navigates to that breadcrumb's `href` (same-page navigation)
 - Use proper separator characters (/ > »)
 - Implement responsive behavior for mobile
 - Test with screen readers for proper navigation announcement
