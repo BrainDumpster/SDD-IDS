@@ -34,6 +34,8 @@ export class IdsIconButtonComponent implements OnChanges {
    * Glyph size: sm 12 / md 14 / lg 16.
    */
   @Input() shape: string = ICON_BUTTON_SPEC_ACCURATE_DEFAULTS.shape;
+  /** Optional icon color override — forwarded to the inner `ids-icon` `[color]`. */
+  @Input() color?: string;
   @Input() type: "button" | "submit" | "reset" = "button";
 
   /**
