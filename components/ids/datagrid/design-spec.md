@@ -1450,6 +1450,19 @@ Generators (`strict_spec_storybook_gate.py --deterministic-story`, spec-driven p
 
 ## Implementation Notes
 
+**Column alignment (`align`, numeric columns)**
+- `IdsDataGridColumn.align` (`"left"` default | `"right"`) right-aligns both the header title and the body cells of a column, per the redesign Cells `Type=Numeric` (values hug the trailing edge; cell `pr 12`).
+- Implemented via `data-align="right"` on the header `<th class="headerDataCell">` and each body `<td class="bodyCell">`, with `.headerDataCell[data-align="right"] .titleButton { text-align: right }` and `.bodyCell[data-align="right"] .cellText { text-align: right }` in `IdsDataGrid.module.css`. The sort/filter icon group keeps its position; only the title text and cell text align right.
+- Default story: the `amount` (Numeric) column sets `align: "right"`.
+
+**Surface style (`surfaceStyle`, Figma Data Grid `Style`)**
+- `IdsDataGrid.surfaceStyle` (`"standard"` default | `"all-white"` | `"no-background"`). Fills only — borders, leading rails, and hover/selected overlays are unchanged across all three (verified against the redesign `Style` variants: only surface fills differ).
+  - **Standard:** gray header band (`--color-background-gray-neutral-lighter`) + gray footer; white rows.
+  - **All White:** header band + footer render white (`--color-background-surface-component`); rows already white.
+  - **No Background:** header, idle rows, footer, and the surface containers (`gridWrap` / `frozenPane` / `scrollablePane`) are `transparent` so the grid blends into the page; `:hover` / selected rows keep their brand overlays.
+- Implemented with `data-surface` on `.shell`; CSS under `.shell[data-surface="all-white"]` / `.shell[data-surface="no-background"]`. Independent of `headerColorAndBorder` (which still owns the header border treatment). Stories: `AllWhiteSurface`, `NoBackgroundSurface`.
+- Shipped in the lib for **React** (`lib/react/ids/datagrid/IdsDatagrid.tsx` + `IdsDatagrid.module.css`) and **Angular** (`lib/angular/ids/datagrid/ids-datagrid.component.{ts,html,scss}`). Mirrored in the Storybook reference `storybook/src/components/IdsDataGrid.{tsx,module.css}`.
+
 **Column-freeze boundary bar (`freezePaneEdge`, `37721:114144`)**
 - **Width:** `20px`; **do NOT** substitute `box-shadow` or a reversed `to right` gradient — Figma uses a single **`linear-gradient(270deg, var(--color-gradient-overflow-vertical-end) 0%, var(--color-gradient-overflow-vertical-start) 63%, var(--color-gradient-overflow-vertical-start) 100%)`** fill on the bar.
 - **Pin:** `position: absolute; top: 0; bottom: 0; left: calc(var(--datagrid-frozen-pane-width) + 1px)` on `.gridScrollHost[data-split-freeze="true"]` so the bar sits immediately to the right of the divider rail, spans header + body, and stays fixed while scrollable columns move.

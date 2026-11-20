@@ -1034,6 +1034,40 @@
   white-space: nowrap;
 }
 
+/* Right-aligned columns (Figma Cells `Type=Numeric`): right-align header title + body text. */
+.headerDataCell[data-align="right"] .titleButton {
+  text-align: right;
+}
+
+.bodyCell[data-align="right"] .cellText {
+  text-align: right;
+}
+
+/* Surface style (Figma Data Grid `Style`). Fills only — borders/rails/overlays unchanged. */
+/* All White: header band + footer go white (no gray); body rows are already white. */
+.shell[data-surface="all-white"] .headerCell,
+.shell[data-surface="all-white"] .headerSelectionColumn,
+.shell[data-surface="all-white"] .settingsColumn.headerCell,
+.shell[data-surface="all-white"] .footer {
+  background: var(--color-background-surface-component);
+}
+
+/* No Background: header, idle rows, footer, and surface containers are transparent. */
+.shell[data-surface="no-background"] .headerCell,
+.shell[data-surface="no-background"] .headerSelectionColumn,
+.shell[data-surface="no-background"] .settingsColumn.headerCell,
+.shell[data-surface="no-background"] .footer,
+.shell[data-surface="no-background"] .gridWrap,
+.shell[data-surface="no-background"] .frozenPane,
+.shell[data-surface="no-background"] .scrollablePane {
+  background: transparent;
+}
+
+/* Idle data cells transparent; :hover / selected keep their brand overlays. */
+.shell[data-surface="no-background"] .bodyRow:not([data-selected="true"]):not(:hover) > td {
+  background: transparent;
+}
+
 .footer {
   flex: 0 0 auto;
   background: var(--color-background-surface-component);

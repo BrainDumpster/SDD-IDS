@@ -228,6 +228,7 @@ export function IdsDataGridDefaultStoryHost({
           const filterActive = isIdsDataGridNumericFilterActive(numericFilter);
           return {
             ...col,
+            align: "right" as const,
             filterable: true,
             filterActive,
             numericFilterState: filterActive ? numericFilter : undefined,

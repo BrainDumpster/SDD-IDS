@@ -349,6 +349,30 @@ export const WithoutVerticalSelectionIndicator: Story = {
   args: { rowVerticalIndicator: false },
 };
 
+/** Surface `All White` (Figma Data Grid `Style=All White`): header band + footer render white, no gray. */
+export const AllWhiteSurface: Story = {
+  name: "All White Surface",
+  render: (args) => <SpecAccurateAnatomy {...args} />,
+  args: { surfaceStyle: "all-white" },
+};
+
+/** Surface `No Background` (Figma `Style=No Background`): header, rows, footer transparent — blends into the page. */
+export const NoBackgroundSurface: Story = {
+  name: "No Background Surface",
+  render: (args) => (
+    <div
+      style={{
+        background: "var(--color-background-surface-primary)",
+        padding: 16,
+        height: "100dvh",
+        boxSizing: "border-box",
+      }}
+    >
+      <SpecAccurateAnatomy {...args} surfaceStyle="no-background" />
+    </div>
+  ),
+};
+
 /** Attached detail panel: click a row to open it. */
 export const WithDetailPanel: Story = {
   name: "With Detail Panel",

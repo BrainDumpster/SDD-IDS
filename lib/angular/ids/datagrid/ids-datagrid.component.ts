@@ -89,6 +89,12 @@ export class IdsDatagridComponent implements AfterContentInit, OnDestroy, IdsDat
   @Input() readOnly = DATAGRID_SPEC_ACCURATE_DEFAULTS.readOnly;
   @Input() rowVerticalIndicator = DATAGRID_SPEC_ACCURATE_DEFAULTS.rowVerticalIndicator;
   @Input() headerColorAndBorder = DATAGRID_SPEC_ACCURATE_DEFAULTS.headerColorAndBorder;
+  /**
+   * Grid surface treatment (Figma Data Grid `Style`): `'standard'` (gray header band + footer),
+   * `'all-white'` (header + footer white), `'no-background'` (header, rows, footer transparent).
+   * Only affects surface fills; borders, rails, and hover/selected overlays are unchanged.
+   */
+  @Input() surfaceStyle: 'standard' | 'all-white' | 'no-background' = 'standard';
   @Input() columnResizeEnabled = DATAGRID_SPEC_ACCURATE_DEFAULTS.columnResizeEnabled;
 
   columns: IdsDatagridColumnModel[] = [];

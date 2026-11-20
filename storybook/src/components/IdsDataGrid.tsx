@@ -49,6 +49,12 @@ export interface IdsDataGridColumn {
   width?: number;
   /** Fallback base width (px) when `width` is omitted. Also seeds resize state when `columnResizeEnabled`. */
   defaultWidth?: number;
+  /**
+   * Horizontal alignment of the header title and body cells.
+   * `"right"` for numeric columns (Figma Cells `Type=Numeric`); defaults to `"left"`.
+   * Emitted as `data-align="right"` on the header + body cells.
+   */
+  align?: "left" | "right";
   sortable?: boolean;
   filterable?: boolean;
   /**
@@ -188,6 +194,14 @@ export interface IdsDataGridProps {
   rowVerticalIndicator?: boolean;
   /** Figma `colorAndBorder` on column header `37721:114663`: gray band + top/bottom borders vs component fill only. */
   headerColorAndBorder?: boolean;
+  /**
+   * Grid surface treatment (Figma Data Grid `Style`):
+   * `"standard"` — gray header band + footer (default);
+   * `"all-white"` — header + footer white (no gray band);
+   * `"no-background"` — header, rows, and footer transparent so the grid blends into the page.
+   * Only affects surface fills; borders, rails, and hover/selected overlays are unchanged.
+   */
+  surfaceStyle?: "standard" | "all-white" | "no-background";
   /** Data columns: trailing-edge drag resize + `<col>` widths (Storybook Default). */
   columnResizeEnabled?: boolean;
   /** Fired when a hideable column is shown or hidden via the settings popup. */
@@ -248,6 +262,7 @@ export function IdsDataGrid({
   readOnly = false,
   rowVerticalIndicator = false,
   headerColorAndBorder = true,
+  surfaceStyle = "standard",
   columnResizeEnabled = false,
   onColumnVisibilityChange,
   onRowSelectionChange,
@@ -973,6 +988,7 @@ export function IdsDataGrid({
                   key={column.key}
                   className={`${styles.headerCell} ${styles.headerDataCell}`}
                   scope="col"
+                  data-align={column.align === "right" ? "right" : undefined}
                   aria-sort={
                     column.sortable
                       ? isSorted
@@ -1140,7 +1156,11 @@ export function IdsDataGrid({
                       </td>
                 ) : null}
                 {dataColumns.map((column) => (
-                  <td key={column.key} className={styles.bodyCell}>
+                  <td
+                    key={column.key}
+                    className={styles.bodyCell}
+                    data-align={column.align === "right" ? "right" : undefined}
+                  >
                     <span className={styles.cellText}>{row.values[column.key]}</span>
                   </td>
                 ))}
@@ -1295,6 +1315,7 @@ export function IdsDataGrid({
       className={styles.shell}
       data-with-detail-panel={withDetailPanel ? "true" : undefined}
       data-header-styled={headerColorAndBorder ? "true" : "false"}
+      data-surface={surfaceStyle}
     >
       <div className={styles.topBar}>
         <span className={styles.modeLabel}>View: {viewMode}</span>

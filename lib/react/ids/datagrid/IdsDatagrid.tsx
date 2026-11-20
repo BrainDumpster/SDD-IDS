@@ -194,6 +194,14 @@ export interface IdsDatagridProps {
   readOnly?: boolean;
   rowVerticalIndicator?: boolean;
   headerColorAndBorder?: boolean;
+  /**
+   * Grid surface treatment (Figma Data Grid `Style`):
+   * `"standard"` — gray header band + footer (default);
+   * `"all-white"` — header + footer white (no gray band);
+   * `"no-background"` — header, rows, and footer transparent so the grid blends into the page.
+   * Only affects surface fills; borders, rails, and hover/selected overlays are unchanged.
+   */
+  surfaceStyle?: "standard" | "all-white" | "no-background";
   columnResizeEnabled?: boolean;
   showSettingsColumn?: boolean;
   freezeUntilColumnKey?: string | null;
@@ -239,6 +247,7 @@ export function IdsDatagrid({
   readOnly = false,
   rowVerticalIndicator = false,
   headerColorAndBorder = true,
+  surfaceStyle = "standard",
   columnResizeEnabled = false,
   showSettingsColumn = true,
   freezeUntilColumnKey = null,
@@ -1465,6 +1474,7 @@ export function IdsDatagrid({
       data-ids="ids-datagrid"
       data-with-detail-panel={showDetail ? "true" : undefined}
       data-header-styled={headerColorAndBorder ? "true" : "false"}
+      data-surface={surfaceStyle}
       style={
         {
           ["--datagrid-selection-col-width" as string]: "48px",
