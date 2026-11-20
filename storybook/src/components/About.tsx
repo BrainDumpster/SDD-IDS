@@ -4,9 +4,16 @@ import { Dialog } from "./Dialog";
 import styles from "./About.module.css";
 
 export interface AboutProps {
+  /** Programme chrome — `ids` (square corners, default) or `synapse` (16px radius). */
+  programme?: "ids" | "synapse";
   /** Omit when `open` / `onOpenChange` control visibility from outside. */
   trigger?: ReactNode;
   productTitle: string;
+  /** Product brand logo (Figma shield) shown above the product name. */
+  productLogoSrc?: string;
+  productLogo?: ReactNode;
+  /** Optional tab row rendered in the header (Figma `Tabs=True`). */
+  tabs?: ReactNode;
   versionLabel: string;
   /** Figma `49962:52727` — optional serial row with copy affordance. */
   showSerialNumber?: boolean;
@@ -28,8 +35,12 @@ export interface AboutProps {
 }
 
 export function About({
+  programme = "ids",
   trigger,
   productTitle,
+  productLogoSrc,
+  productLogo,
+  tabs,
   versionLabel,
   showSerialNumber = false,
   serialNumber,
@@ -52,19 +63,24 @@ export function About({
   const resolvedCopyrightText = copyrightText ?? legalText;
   const resolvedCopyrightContent = copyrightContent ?? legalContent;
 
+  const resolvedProductLogo =
+    productLogo ?? (productLogoSrc ? <img src={productLogoSrc} alt="" /> : null);
+
   const showBrandCluster = Boolean(
     logoSrc || resolvedCopyrightText || resolvedCopyrightContent != null
   );
 
   return (
     <Dialog
-      programme="synapse"
+      programme={programme}
       variant="about"
       trigger={trigger}
       open={open}
       onOpenChange={onOpenChange}
       openDidalog={defaultOpen}
       dialogTitle={productTitle}
+      aboutLogo={resolvedProductLogo}
+      tabs={tabs}
       dialogType="None"
       dialogClosable
       primaryButtonName={closeLabel}
