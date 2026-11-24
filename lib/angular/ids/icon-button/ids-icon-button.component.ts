@@ -28,12 +28,14 @@ export class IdsIconButtonComponent implements OnChanges {
   @Input() disabled = ICON_BUTTON_SPEC_ACCURATE_DEFAULTS.disabled;
   @Input() loading = ICON_BUTTON_SPEC_ACCURATE_DEFAULTS.loading;
   /** Required accessible name. */
-  @Input() ariaLabel = ICON_BUTTON_SPEC_ACCURATE_DEFAULTS.ariaLabel;
+  @Input() ariaLabel: string = ICON_BUTTON_SPEC_ACCURATE_DEFAULTS.ariaLabel;
   /**
    * Required icon name — forwarded to `ids-icon` `[shape]`.
    * Glyph size: sm 12 / md 14 / lg 16.
    */
-  @Input() shape = ICON_BUTTON_SPEC_ACCURATE_DEFAULTS.shape;
+  @Input() shape: string = ICON_BUTTON_SPEC_ACCURATE_DEFAULTS.shape;
+  /** Optional icon color override — forwarded to the inner `ids-icon` `[color]`. */
+  @Input() color?: string;
   @Input() type: "button" | "submit" | "reset" = "button";
 
   /**

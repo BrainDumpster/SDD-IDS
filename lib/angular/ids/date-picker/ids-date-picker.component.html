@@ -96,24 +96,20 @@
               </button>
             </div>
             <div class="navButtons">
-              <ids-button
+              <ids-icon-button
                 variant="ghostNeutral"
                 size="sm"
-                [iconOnly]="true"
+                shape="chev-left-thick"
                 ariaLabel="Previous month"
                 (clicked)="prevMonth()"
-              >
-                <ids-icon shape="chev-left-thick" [size]="12" />
-              </ids-button>
-              <ids-button
+              />
+              <ids-icon-button
                 variant="ghostNeutral"
                 size="sm"
-                [iconOnly]="true"
+                shape="chev-right-thick"
                 ariaLabel="Next month"
                 (clicked)="nextMonth()"
-              >
-                <ids-icon shape="chev-right-thick" [size]="12" />
-              </ids-button>
+              />
             </div>
           </div>
 

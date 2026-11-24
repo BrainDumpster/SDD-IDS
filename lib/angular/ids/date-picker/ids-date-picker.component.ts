@@ -18,7 +18,7 @@ import {
 import { CommonModule } from "@angular/common";
 import { DATE_PICKER_SPEC_ACCURATE_DEFAULTS, type DatePickerSize } from "@component-contracts/ids/date-picker.contract";
 import { IdsIconComponent } from "../icon/ids-icon.component";
-import { IdsButtonComponent } from "../button/ids-button.component";
+import { IdsIconButtonComponent } from "../icon-button/ids-icon-button.component";
 import { cx } from "../../shared/utils/cx";
 import {
   buildCalendarGrid,
@@ -36,7 +36,7 @@ const CALENDAR_PORTAL_Z_INDEX = 10050;
 @Component({
   selector: "ids-date-picker",
   standalone: true,
-  imports: [CommonModule, IdsIconComponent, IdsButtonComponent],
+  imports: [CommonModule, IdsIconComponent, IdsIconButtonComponent],
   templateUrl: "./ids-date-picker.component.html",
   styleUrl: "./ids-date-picker.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,

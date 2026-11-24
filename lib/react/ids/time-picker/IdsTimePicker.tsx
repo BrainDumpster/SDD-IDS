@@ -22,7 +22,7 @@ import React, {
   type CSSProperties,
 } from "react";
 import { createPortal } from "react-dom";
-import { IdsButton, IdsButtonLeadingIcon } from "../button";
+import { IdsIconButton } from "../icon-button";
 import { IdsFormLabel } from "../form-label";
 import { IdsIcon } from "../icon";
 import styles from "./IdsTimePicker.module.css";
@@ -537,12 +537,12 @@ export function IdsTimePicker({
             aria-required={required || undefined}
             aria-describedby={describedBy}
           />
-          <IdsButton
+          <IdsIconButton
             ref={clockBtnRef}
             type="button"
             variant="tertiary"
             size={size === "large" ? "large" : "medium"}
-            iconOnly
+            shape="time-clock-16"
             ariaLabel="Open time picker"
             aria-expanded={open}
             className={styles.clockButton}
@@ -557,11 +557,7 @@ export function IdsTimePicker({
                 setOpen((v) => !v);
               }
             }}
-          >
-            <IdsButtonLeadingIcon>
-              <IdsIcon shape="time-clock-16" size={16} />
-            </IdsButtonLeadingIcon>
-          </IdsButton>
+          />
         </div>
 
         {!popupPortal && popup}
