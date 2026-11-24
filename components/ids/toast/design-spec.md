@@ -21,7 +21,7 @@ Figma-verified slot order (examples frame `42903:139689`; representative instanc
 6. `Message` — body-2 notification text
 7. `ActionContainer` (Figma layer `Action Container`) — trailing actions
 8. `ViewDetailsAction?` (Figma layer `Link` when present) — optional View Details control
-9. `CloseAction?` (Figma layer `Close Icon`; runtime: IDS tertiary icon-only `Button` with `shape-x`) — optional dismiss
+9. `CloseAction?` (Figma layer `Close Icon`; runtime: IDS Icon Button `ghost neutral` · `small` with `shape-x`) — optional dismiss
 
 ### Slot hierarchy
 - `ToastViewport`
@@ -56,8 +56,8 @@ ids-toast-viewport
 - Action row: horizontal layout with view details/close gap exactly `var(--spacing-space-4)` (4px) when view details exists.
 - Vertical alignment: status icon and message must be top-aligned on the same row (`align-items: flex-start` in root, `Content`, and `IconContainer`).
 - Status icon slot: fixed `16x16` container with `padding-block: var(--padding-padding-2)` and `16x16` rendered icon (no scaling above slot size).
-- Close action: IDS tertiary icon-only button, fixed `24×24` inner control (`26×26` outer with the separate 1px Button border), `Padding/padding-6` on all sides, `shape-x` icon `12×12`.
-- View Details action: IDS small tertiary button with `View Details` text, uses IDS Button component `sm` size/padding, text color `var(--color-text-gray-white)`, matching close button hover/active colors.
+- Close action: IDS Icon Button (`variant: ghost neutral`, `size: small`) — fixed `24×24` control (`sizing/size-24`), `shape-x` glyph `12×12` (the icon button's small glyph size). Toast chrome overrides: glyph stays `var(--color-icon-gray-white)` on the dark surface, and **hover reuses the button's press-state background** (`color-mix(in srgb, var(--ui-palette-slate-600) 20%, transparent)`) so the background shows up — see states table.
+- View Details action: IDS small tertiary button with `View Details` text, uses IDS Button component `sm` size/padding, text color `var(--color-text-gray-white)` with toast-specific brand hover/active states (see states table).
 
 ### Slot geometry (Figma-verified)
 
@@ -68,7 +68,7 @@ ids-toast-viewport
 | `ToastItem` root | `border-radius` | `var(--toast-control-radius)` → `var(--corner-radius-radius-2)` / `2px` | `get_design_context` `42903:139523` (`rounded-[2px]`); alias in `components/ids-theme.css` |
 | `ToastItem` root | inset border | `box-shadow: inset 0 0 0 var(--border-width-border-1) var(--color-border-gray-white)` | `get_variable_defs` `42903:139523` (`var(--color-border-white)`); Layout inner-border rule |
 | `IconContainer` / `StatusIcon` | size | `16×16` | `get_metadata` / `get_design_context` Icon Container |
-| `CloseAction` glyph | size | `12×12` (`shape-x`); control shell `24×24` | Figma Close Icon `12×12`; Implementation Notes Button shell |
+| `CloseAction` glyph | size | `12×12` (`shape-x`); control shell `24×24` (IDS Icon Button small) | Figma Close Icon `12×12`; Implementation Notes icon-button shell |
 ## Tokens
 
 ### Layout aliases (theme-resolvable)
@@ -96,9 +96,11 @@ Programmes override these **same alias names** in programme theme CSS. Component
 ## States (Light Theme)
 | State | Background | Border | Text/Icon |
 |---|---|---|---|
-| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/view details `var(--color-static-gray-white)`; close button icon `var(--color-icon-gray-white)` |
-| Hover close | `var(--ui-palette-brand-900)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-gray-white)` |
-| Active close | `var(--ui-palette-brand-800)` | `var(--ui-palette-brand-400)` | Close button icon `var(--color-icon-gray-white)` |
+| Rest | `var(--color-static-gray-900)` | Variant border token (table above) | Message/view details `var(--color-static-gray-white)`; close glyph `var(--color-icon-gray-white)` |
+| Hover view details | `var(--ui-palette-brand-900)` | `var(--ui-palette-brand-400)` | View details text `var(--color-text-gray-white)` |
+| Press view details | `var(--ui-palette-brand-800)` | `var(--ui-palette-brand-400)` | View details text `var(--color-text-gray-white)` |
+| Hover/press close | Ghost-neutral press state — `color-mix(in srgb, var(--ui-palette-slate-600) 20%, transparent)` (hover uses the button's press-state background so it shows up on the dark surface) | none (transparent inset) | Close glyph `var(--color-icon-gray-white)` |
+| Focus-visible close | IDS Icon Button focus ring (white + brand dual ring) | ring | Close glyph `var(--color-icon-gray-white)` |
 | Focus-visible view details | No root color change | No change | Focus ring uses brand token from root-spec rules |
 ## States (Dark Theme)
 Use the same semantic tokens as Light Theme. Dark mode behavior is token-resolved, with the same structural table and no hardcoded hex in runtime code.
@@ -199,12 +201,13 @@ Resolution rules:
 - [ ] Queue behavior is implemented at viewport level, not single item level.
 - [ ] `position` API supports all six values with default `top-right`.
 - [ ] View Details contract supports `routerLink`, `href`, and event mode.
-- [ ] Close action is an IDS tertiary icon-only button, fixed `24x24` with `Padding/padding-6`, using `shape-x`; icon fills the content area.
+- [ ] Close action is an IDS Icon Button (`variant: ghost neutral`, `size: small`) — `24×24` shell, `12×12` `shape-x` glyph; glyph stays `var(--color-icon-gray-white)` and hover shows the button's press-state background (`color-mix(in srgb, var(--ui-palette-slate-600) 20%, transparent)`).
 - [ ] Layout uses `var(--toast-control-radius)` on toast root, not hardcoded px.
 - [ ] No hardcoded style values in generated code where token exists.
 ## Implementation Notes
 - **React / Angular parity:** React (`lib/react/ids/toast`) inlines Content / IconContainer / Message / ViewDetails / Close. Angular exposes the same slots as projected children (`ids-toast-icon-container`, `ids-toast-message`, `ids-toast-view-details-action`, `ids-toast-close-action`) and also supports React’s viewport `items[]` FIFO list. Shared helpers: `cx` (`lib/angular/shared/utils/cx.ts`), toast resolve functions (`ids-toast.utils.ts`). Escape dismiss reason is `close-click`. Item root border is `var(--color-border-gray-white)`; type tokens color the status icon. `routerLink` without `href` renders a tertiary button (same as React).
-- **Close button fix**: Replaced the bare close icon with the IDS `Button` component in `tertiary`/`iconOnly` mode, using `shape-x` rendered as a mask and sized to the fixed 24x24 Button token with `Padding/padding-6` on all sides.
+- **Close button → IDS Icon Button (2026-11-24)**: Replaced the tertiary icon-only `Button` close with an IDS Icon Button (`variant: ghost neutral`, `size: small`) rendering `shape-x` at `12×12` in its `24×24` shell. Toast chrome re-tints the ghost-neutral glyph ladder to `var(--color-icon-gray-white)` and promotes hover to the button's press-state background (`color-mix(in srgb, var(--ui-palette-slate-600) 20%, transparent)`) so the background shows up on the dark surface — the former `brand-900`/`brand-400` close hover/active overrides were removed (View Details keeps its brand states). React/Storybook apply the 20% overlay via a local `:hover` override; in Lit the shadow boundary blocks that, so `ids-toast-item` drives hover by toggling `data-state="press"` on `ids-icon-button` (its own press visuals — no icon-button changes). Angular is unchanged. Changed in `lib/react/ids/toast/IdsToastItem.tsx`, `IdsToast.module.css`, `lib/lit/ids/src/toast/toast-item.element.ts`, `toast.styles.ts`, `storybook/src/components/Toast.tsx`, `Toast.module.css`.
+- **Close button fix (superseded)**: Replaced the bare close icon with the IDS `Button` component in `tertiary`/`iconOnly` mode, using `shape-x` rendered as a mask and sized to the fixed 24x24 Button token with `Padding/padding-6` on all sides.
 - **Status icon border fix (2025-05-25)**: Added 1px solid #FFFFFF border to all status icons (info-circ-solid, status-critical-square-solid, status-error-diamond-solid, status-warn-tri-solid, status-ok-circ-solid) in the base layer as specified in design spec.
 - **Toast border inside container fix (2025-05-25)**: Changed toast root border from outer border to inner border using CSS pseudo-element (::before) to ensure border is inside the container width, not outside.
 

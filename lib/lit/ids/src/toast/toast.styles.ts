@@ -136,47 +136,14 @@ export const toastItemStyles = css`
     outline-offset: 2px;
   }
 
-  /* Close — tertiary icon-only 24×24, padding-6, shape-x 12×12. */
-  .ids-toast-close {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    box-sizing: border-box;
-    width: var(--sizing-size-24);
-    height: var(--sizing-size-24);
-    min-height: var(--sizing-size-24);
-    min-width: var(--sizing-size-24);
-    padding: var(--padding-padding-6);
-    margin: 0;
-    color: var(--color-icon-gray-white);
-    background: transparent;
-    border: none;
-    border-radius: var(--button-control-radius, var(--corner-radius-radius-none));
-    cursor: pointer;
-  }
-
-  .ids-toast-close:hover {
-    background: var(--ui-palette-brand-900);
-    color: var(--color-icon-gray-white);
-    box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
-  }
-
-  .ids-toast-close:active {
-    background: var(--ui-palette-brand-800);
-    color: var(--color-icon-gray-white);
-    box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
-  }
-
-  .ids-toast-close:focus-visible {
-    outline: var(--border-width-border-1) solid
-      var(--color-border-controls-base, var(--ui-palette-brand-400));
-    outline-offset: 2px;
-  }
-
-  .ids-toast-close-icon {
-    width: 12px;
-    height: 12px;
-    display: block;
+  /* Close — ids-icon-button (ghost neutral · small): 24×24 shell, shape-x
+     12×12. Toast chrome on the dark surface: re-tint the ghost-neutral glyph
+     ladder to icon-gray-white (custom properties pierce the icon button's
+     shadow root). Hover→press is driven in renderClose via data-state. */
+  ids-icon-button[data-slot="ids-toast-close"] {
+    flex-shrink: 0;
+    --color-icon-gray-neutral-base: var(--color-icon-gray-white);
+    --color-icon-gray-neutral-strong: var(--color-icon-gray-white);
   }
 `;
 

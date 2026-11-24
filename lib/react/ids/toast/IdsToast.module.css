@@ -229,39 +229,19 @@
   outline-offset: 2px;
 }
 
-/* Close — tertiary icon-only fixed 24×24, padding-6, shape-x 12×12.
-   Double class selector raises specificity above IdsButton's icon-only
-   size rules (two classes) so the toast override actually applies. */
+/* Close — IDS Icon Button (ghost neutral · small): it owns the 24×24 shell,
+   the 12×12 shape-x glyph, and the focus ring. Toast chrome on the dark
+   surface re-tints the ghost-neutral glyph ladder to icon-gray-white via the
+   theme vars (cascade into the icon span), and hover reuses the button's
+   press-state background (slate-600 20%) so it reads — per design-spec.
+   Double class selector beats the variant ladder's two-class rules. */
 .ids-toast-close.ids-toast-close {
-  width: var(--sizing-size-24);
-  height: var(--sizing-size-24);
-  min-height: var(--sizing-size-24);
-  min-width: var(--sizing-size-24);
-  padding: var(--padding-padding-6);
-  box-sizing: border-box;
-  color: var(--color-icon-gray-white);
-  background: transparent;
-  border: none;
+  flex-shrink: 0;
+  --color-icon-gray-neutral-base: var(--color-icon-gray-white);
+  --color-icon-gray-neutral-strong: var(--color-icon-gray-white);
 }
 
-.ids-toast-close:hover:not(:disabled) {
-  background: var(--ui-palette-brand-900);
-  color: var(--color-icon-gray-white);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
-}
-
-.ids-toast-close:active:not(:disabled) {
-  background: var(--ui-palette-brand-800);
-  color: var(--color-icon-gray-white);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
-}
-
-.ids-toast-close :global([data-ids="ids-button-leading-icon"]) {
-  width: 100%;
-  height: 100%;
-}
-
-.ids-toast-close-icon {
-  width: 12px;
-  height: 12px;
+.ids-toast-close.ids-toast-close:hover:not(:disabled),
+.ids-toast-close.ids-toast-close[data-state="hover"] {
+  background: color-mix(in srgb, var(--ui-palette-slate-600) 20%, transparent);
 }
