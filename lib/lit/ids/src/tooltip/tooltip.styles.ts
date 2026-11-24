@@ -102,6 +102,24 @@ export const tooltipPanelStyles = css`
     padding: 0 var(--padding-padding-12);
   }
 
+  /* Closable: the slotted ids-tooltip-close (IDS Icon Button, 24×24) docks to
+     the panel's top-right corner — sibling of the header/body column per
+     design-spec — and the scroll content reserves padding + 24px + 4px so
+     title/body text never flows under it. */
+  ::slotted(ids-tooltip-close) {
+    position: absolute;
+    top: var(--padding-padding-12);
+    right: var(--padding-padding-12);
+    z-index: 1;
+  }
+
+  :host([data-closable]) .ids-tooltip-content {
+    padding-right: calc(
+      var(--padding-padding-12) + var(--sizing-size-24) +
+        var(--spacing-space-4)
+    );
+  }
+
   .ids-tooltip-arrow {
     position: absolute;
     display: inline-flex;
@@ -202,5 +220,15 @@ export const tooltipHeaderStyles = css`
     font-size: var(--font-size-body-2);
     line-height: var(--font-line-height-line-height-20);
     font-weight: 500;
+  }
+`;
+
+export const tooltipCloseStyles = css`
+  /* Sibling of the header/body column — docks top-right inside the panel.
+     The inner ids-icon-button (ghost neutral · small) owns its 24×24 box,
+     glyph size, and state colors. */
+  :host {
+    display: inline-flex;
+    flex-shrink: 0;
   }
 `;

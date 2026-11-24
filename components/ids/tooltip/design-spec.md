@@ -21,7 +21,7 @@
 - `TooltipHeader` (`ids-tooltip-header`, optional): header chrome; in `closable` mode keep the slot (empty when title is absent) to maintain close-icon alignment and vertical rhythm.
 - `TooltipTitle` (`ids-tooltip-title`, optional): short title text inside the header.
 - `TooltipBody` (`ids-tooltip-body`, required): free tooltip content region.
-- `TooltipClose` (`ids-tooltip-close`, optional / required when `closable=true`): `20×20` IDS tertiary icon-only button (`sizing/size-20`); padding `padding/padding-4`; icon `ctrl-close-16` via shared `ids-icon` at `12×12` (not inline SVG). Sibling of header+body column — **not** nested inside `TooltipHeader`.
+- `TooltipClose` (`ids-tooltip-close`, optional / required when `closable=true`): `24×24` IDS Icon Button (`variant: ghost neutral`, `size: small`, `sizing/size-24`); `ctrl-close-16` glyph at `12×12` (the icon button's small glyph size — not inline SVG). Sibling of header+body column — **not** nested inside `TooltipHeader`.
 - `TooltipArrow` (`ids-tooltip-arrow`, required): directional pointer; supports side and alignment matrix.
 
 Angular composition (canonical child order):
@@ -47,7 +47,7 @@ ids-tooltip
   - arrow lane width: `12`
 - Panel content padding: `12px` on all sides. The top and bottom padding live on a non-scrollable `.ids-tooltip-scroll` wrapper so they remain visible while the body scrolls; left and right padding live on the scrollable `.ids-tooltip-content` region along with `overflow-x: hidden` so content clips inside the panel.
 - Panel internal gap (header/body): `4px`.
-- Close control: `20×20` hit target (`CloseAction`); padding `padding/padding-4` on all sides; icon `ctrl-close-16` rendered through shared `Icon` at `12×12`.
+- Close control: `24×24` hit target (`CloseAction`) — an IDS Icon Button (`variant: ghost neutral`, `size: small`); `ctrl-close-16` glyph rendered at `12×12`.
 - Panel border: `1px solid`.
 - Panel corner radius: `border-radius: var(--tooltip-control-radius)` (IDS theme resolves to `var(--corner-radius-radius-none)` / 0 — square panel corners per Figma).
 - Elevation: drop shadow `x:1 y:1 blur:2 rgba(37,37,37,0.25)`.
@@ -59,11 +59,11 @@ ids-tooltip
 - Panel is a vertical flex column: a fixed top bar (`.ids-tooltip-top`, `display: flex`; `align-items: flex-start`; `padding: padding-12 padding-12 0`) holds the title column and `CloseAction`, above a non-scrollable `.ids-tooltip-scroll` wrapper (`flex: 1 1 auto`; `min-height: 0`; `padding: padding-12 0`) and a scrollable `.ids-tooltip-content` region (`flex: 1 1 auto`; `min-height: 0`; `box-sizing: border-box`; `width: 100%`; `min-width: 0`; `overflow-y: auto`; `overflow-x: hidden`; `scrollbar-width: thin`; `scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter)`; `padding: 0 padding-12`). Under a top bar `.ids-tooltip-scroll` uses `padding: padding-4 0 padding-12` so the remaining `4px` is the header-body gap. The scrollbar therefore starts below the title/close row, and the top/bottom padding stays fixed.
 - `ContentColumn` (`.ids-tooltip-content-column`): holds the `Header` slot inside the top bar; header text is optional, but the slot is always rendered in `closable` mode (empty when title is absent, one-line min-height) to preserve vertical rhythm and close-icon alignment; `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--spacing-space-4)` (4px `spacing/space-4` reserve before the close icon column so the title wraps inside the remaining width).
 - `CloseAction` is a **sibling** of `ContentColumn` in the top bar, top-aligned — **not** nested inside `Header`.
-- `CloseAction` dimensions: `20px × 20px` IDS tertiary icon-only button (`sizing/size-20`); padding `padding/padding-4` on all sides.
-- Close icon: shared `Icon` component with `shapeName="ctrl-close-16"` at explicit `12px × 12px` (overrides `Icon` default `16×16` mask size); color `var(--color-icon-gray-neutral-base)`.
+- `CloseAction` dimensions: `24px × 24px` IDS Icon Button (`variant: ghost neutral`, `size: small`, `sizing/size-24`).
+- Close icon: `ctrl-close-16` glyph rendered by the icon button at its small `12×12` glyph size; state colors come from the ghost-neutral ladder (rest `var(--color-icon-gray-neutral-base)`).
 - Popup shell: `popupClosable` width `264px` (vs `popupStandard` `240px`); inner content box after panel padding remains `240px` (`264 − 24px`).
-- Inner width math: `240px` inner = `ContentColumn` content area (`216px`) + `4px` `spacing/space-4` reserve + `20px` close → title text wraps at ~`216px` (does not extend under the close icon).
-- Closable scroll body reserve: when `closable=true`, the scrollable `.ids-tooltip-content` gets `scrollbar-gutter: stable` (scrollbar track is always reserved, so adding a scrollbar never changes the content or popup width) plus `padding-right: calc(var(--padding-padding-12) + var(--sizing-size-20) + var(--spacing-space-4) - var(--ids-scrollbar-width, 0px))`. The component measures the rendered `thin` scrollbar width at runtime and exposes it as `--ids-scrollbar-width`, so the body text stays exactly `4px` (`spacing/space-4`) to the left of the close icon column and never flows underneath it. For that reason scrollbar color is applied via the `scrollbar-color` property only — no `::-webkit-scrollbar` width override, which would desync the measurement.
+- Inner width math: `240px` inner = `ContentColumn` content area (`212px`) + `4px` `spacing/space-4` reserve + `24px` close → title text wraps at ~`212px` (does not extend under the close button).
+- Closable scroll body reserve: when `closable=true`, the scrollable `.ids-tooltip-content` gets `scrollbar-gutter: stable` (scrollbar track is always reserved, so adding a scrollbar never changes the content or popup width) plus `padding-right: calc(var(--padding-padding-12) + var(--sizing-size-24) + var(--spacing-space-4) - var(--ids-scrollbar-width, 0px))`. The component measures the rendered `thin` scrollbar width at runtime and exposes it as `--ids-scrollbar-width`, so the body text stays exactly `4px` (`spacing/space-4`) to the left of the close icon column and never flows underneath it. For that reason scrollbar color is applied via the `scrollbar-color` property only — no `::-webkit-scrollbar` width override, which would desync the measurement.
 - Standard (`closable=false`): `.ids-tooltip-scroll` / `.ids-tooltip-content` stay a vertical column; `BodyContent` uses full inner width (sample `216px` after padding on `240px` popup).
 
 Arrow geometry contract:
@@ -118,7 +118,7 @@ Programmes override these **same alias names** in programme theme CSS. Component
 - Panel border + arrow stroke: `var(--color-border-gray-neutral-base)`.
 - Header text: `var(--color-text-gray-neutral-strong)`.
 - Body text: `var(--color-text-gray-neutral)`.
-- Close icon color: `var(--color-icon-gray-neutral-base)`.
+- Close glyph color: ghost-neutral icon-button ladder (rest `var(--color-icon-gray-neutral-base)`; hover/focus/press `var(--color-icon-gray-neutral-strong)`; disabled `var(--color-icon-gray-disabled)`).
 - Shadow tone reference: `rgba(37,37,37,0.25)` from Figma effect.
 
 Typography contract:
@@ -208,7 +208,7 @@ Per-slot style contract:
 - `Header`: Body 2 Medium + strong text token; title only (no close control inside header when `closable=true`). In `closable` mode the header slot is rendered even when title is absent, with a one-line min-height to preserve vertical rhythm.
 - `BodyContent`: Body 2 + neutral text token; accepts arbitrary content/slots; when `closable=true`, the body wraps within the scrollable `.ids-tooltip-content` width using the right reserve so it is `4px` (`spacing/space-4`) from the close icon column.
 - `ContentColumn` (`closable=true` only): `flex: 1 1 auto`; `min-width: 0`; `padding-right: var(--spacing-space-4)`.
-- `CloseAction`: `20×20` IDS tertiary icon-only button (`sizing/size-20`, `padding/padding-4`); shared `Icon` with `shapeName="ctrl-close-16"` at `12×12`; color `var(--color-icon-gray-neutral-base)`; sibling of `ContentColumn`, not inside `Header`.
+- `CloseAction`: `24×24` IDS Icon Button (`variant: ghost neutral`, `size: small`, `sizing/size-24`); `ctrl-close-16` glyph at `12×12`; glyph colors from the ghost-neutral ladder; sibling of `ContentColumn`, not inside `Header`.
 - `Arrow`: shares panel surface and border tokens; always renders `10x6` SVG inside `.arrowGraphic` (rotate per side; never resize SVG to `6x10`); apply cross-axis insets and per-placement attachment offsets from the calibration table above.
 
 Behavior contract:
@@ -219,7 +219,7 @@ Behavior contract:
 Accessibility contract:
 - Tooltip root uses `role="tooltip"`.
 - Trigger references tooltip via `aria-describedby` when open.
-- Close action has accessible label ("Close tooltip").
+- Close action has accessible label ("Close tooltip") — provided via the icon button's `ariaLabel`.
 - Keyboard support:
   - Standard: focus/blur lifecycle follows trigger.
   - Closable: `Escape` may close if product enables global dismiss; close button must be keyboard-activatable.
@@ -240,7 +240,7 @@ Validation checklist (pass/fail):
 - [ ] `closable=false` auto-dismisses on leave/blur.
 - [ ] `closable=true` does not auto-dismiss on leave; closes on close action.
 - [ ] Close event emits with deterministic reason payload.
-- [ ] `ctrl-close-16` icon is rendered via shared `Icon` at `12×12` inside a `20×20` IDS tertiary icon-only close button (not inline SVG).
+- [ ] `ctrl-close-16` glyph is rendered at `12×12` inside a `24×24` IDS Icon Button close control (`variant: ghost neutral`, `size: small` — not inline SVG).
 - [ ] When `closable=true`, `CloseAction` is sibling of `ContentColumn` (not inside `Header`); title and scrollable body respect the `4px` `spacing/space-4` right reserve and do not flow under the close icon.
 - [ ] Body content supports arbitrary consumer-provided content.
 - [ ] Only semantic tokens are used; no hardcoded colors in generated styles.
@@ -260,6 +260,7 @@ Validation checklist (pass/fail):
 - Angular Storybook: `storybook-angular/src/components/ids-tooltip/`
 
 ## Changelog
+- **2026-11-24**: Replaced the `20×20` tertiary icon-only close button with an IDS Icon Button (`variant: ghost neutral`, `size: small` — `24×24`, `12×12` `ctrl-close-16` glyph). Ghost-neutral rest glyph color is the same `var(--color-icon-gray-neutral-base)` token, so idle visuals are unchanged; hover/focus/press now come from the icon button's state ladder (including the IDS focus ring). Closable inner width math became `212px` content + `4px` reserve + `24px` close, and the scroll-body right reserve now uses `var(--sizing-size-24)`. Lit gains a dedicated `ids-tooltip-close` element wrapping `ids-icon-button`; Angular is unchanged. Changed in `lib/react/ids/tooltip/IdsTooltip.tsx`, `IdsTooltip.module.css`, `lib/lit/ids/src/tooltip/` (new `tooltip-close.element.ts`, `register.ts`, `tooltip.styles.ts`), `storybook/src/components/IdsTooltip.tsx`, `IdsTooltip.module.css`.
 - **2026-10-23**: Implemented the `delay` prop (default `300` ms) — pointer hover now opens the tooltip only after the pointer rests on the trigger for `delay` ms; leaving early cancels the pending open so sweeping across the trigger never shows it. Lib (`lib/react/ids/tooltip/IdsTooltip.tsx`) schedules the open with `openTimerRef` on `mouseenter` and clears it on leave/blur/dismiss/unmount; focus and popup-hover behavior unchanged. Storybook (`storybook/src/components/IdsTooltip.tsx`) forwards `delay`/`closeDelay` to `BaseTooltip.Provider` — they were previously accepted but never passed through, so Base UI's defaults always applied.
 - **2026-10-21**: Changed trigger-to-tooltip spacing: the *visible* gap between the object's edge and the arrow tip is now `6px` (`spacing/space-6`); since the arrow pokes `5px` past the panel edge, the positioner `sideOffset` is `11px` (was `16px`). Also made the arrow track the trigger's cross-axis center on every `arrowAlign` (e.g. centered on the selected-count badge in dropdown multiselect) — previously `start`/`end` pinned the arrow to fixed `8px`/`18px` insets. `arrowAlign` now only shifts the popup. The lib implementation measures the trigger rect and sets `--ids-tooltip-arrow-offset` (clamped ~`4px` from panel corners); the Storybook implementation defers cross-axis positioning to Floating UI's arrow middleware. The 6px gap is measured from the slotted object's box — lib unions the trigger's element-children rects (`measureTriggerBox`, falling back to the wrapper rect for plain-text triggers); Storybook `.trigger` is now `inline-flex` so its box hugs the slotted object. Also fixed the closable gap drifting on open: the lib's scrollbar-width measurement changes content padding and panel height *after* the initial position compute (for `side=top`/`left` the stale height pushed the panel edge off its anchor); `update` now runs from a `ResizeObserver` on the trigger and popup so the gap is corrected in the same frame. Changed in `lib/react/ids/tooltip/IdsTooltip.tsx`, `IdsTooltip.module.css`, `storybook/src/components/IdsTooltip.tsx`, `storybook/src/components/IdsTooltip.module.css`.
 - **2026-10-14**: Tinted the scroll-region scrollbar with theme tokens — `scrollbar-color: var(--color-background-gray-base) var(--color-background-gray-lighter)` on `.ids-tooltip-content` (same contract as the dual-list-box pane) so the scrollbar follows dark mode. `scrollbar-color` is used instead of `::-webkit-scrollbar` rules so `scrollbar-width: thin` stays authoritative and the runtime `--ids-scrollbar-width` measurement remains exact for the closable 4px reserve. Changed in `lib/react/ids/tooltip/IdsTooltip.module.css`.

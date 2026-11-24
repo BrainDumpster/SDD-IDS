@@ -11,7 +11,8 @@
  *     TooltipPanel                   — bordered surface
  *       TooltipHeader?               — Header (optional; empty slot when closable + no title)
  *       TooltipBody                  — BodyContent (required)
- *       TooltipClose?                — CloseAction (required when closable; auto-emitted if omitted)
+ *       TooltipClose?                — CloseAction IDS Icon Button ghost neutral · small
+ *                                      (required when closable; auto-emitted if omitted)
  *     Arrow                          — always rendered (directional pointer)
  *
  * No @base-ui-components dependency. Arrow CSS uses `data-side` / `data-align`
@@ -38,8 +39,7 @@ import React, {
   type ReactNode,
 } from "react";
 import { createPortal } from "react-dom";
-import { IdsButton, IdsButtonLeadingIcon } from "../button";
-import { IdsIcon } from "../icon";
+import { IdsIconButton } from "../icon-button";
 import styles from "./IdsTooltip.module.css";
 
 /* -------------------------------------------------------------------------- */
@@ -454,6 +454,7 @@ TooltipBody.displayName = "TooltipBody";
 export function TooltipClose({
   className,
   onClick,
+  children: _children, // glyph is owned by the icon button (design-spec)
   ...rest
 }: TooltipCloseProps) {
   const { closable, closeIconShapeName, dismiss } =
@@ -462,28 +463,20 @@ export function TooltipClose({
   if (!closable) return null;
 
   return (
-    <IdsButton
+    <IdsIconButton
       type="button"
-      variant="tertiary"
-      iconOnly
-      size="medium"
+      variant="ghostNeutral"
+      size="small"
+      shape={closeIconShapeName}
       ariaLabel="Close tooltip"
       className={cx(styles["ids-tooltip-close"], className)}
-      data-ids="ids-tooltip-close"
+      data-slot="ids-tooltip-close"
       onClick={(event) => {
         onClick?.(event);
         if (!event.defaultPrevented) dismiss("close-click");
       }}
       {...rest}
-    >
-      <IdsButtonLeadingIcon className={styles["ids-tooltip-close-icon"]}>
-        <IdsIcon
-          shape={closeIconShapeName}
-          size={12}
-          color="var(--color-icon-gray-neutral-base)"
-        />
-      </IdsButtonLeadingIcon>
-    </IdsButton>
+    />
   );
 }
 markSlot(TooltipClose, "close");
