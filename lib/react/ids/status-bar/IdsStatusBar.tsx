@@ -80,6 +80,8 @@ export interface IdsStatusBarItemInput {
 export interface IdsStatusBarProps extends Omit<HTMLAttributes<HTMLElement>, "onSelect"> {
   type?: IdsStatusBarType;
   items?: IdsStatusBarItemInput[];
+  /** Inventory only: render items without the icon tile (Figma "No Icon"). */
+  showIcons?: boolean;
   total?: number | string;
   totalLabel?: string;
   totalCategory?: string;
@@ -122,6 +124,14 @@ const SEVERITY_ICON: Record<IdsStatusBarSeverity, string> = {
 };
 
 const SEVERITY_SET = new Set<string>(Object.keys(SEVERITY_ICON));
+
+/* Inventory items only render a severity badge for these statuses (Figma:
+   Default / Complete / Not Applicable show no badge). */
+const INVENTORY_BADGE_SEVERITIES = new Set<string>([
+  "critical",
+  "warning",
+  "in-progress",
+]);
 
 const OVERFLOW_LEFT_ICON = "chev-left-thick";
 const OVERFLOW_RIGHT_ICON = "chev-right-thick";
@@ -166,6 +176,7 @@ const s = {
   large: styles["ids-status-bar--status-large"],
   small: styles["ids-status-bar--status-small"],
   inventory: styles["ids-status-bar--inventory"],
+  noIcons: styles["ids-status-bar--no-icons"],
   withTotal: styles["ids-status-bar--with-total"],
   totalItem: styles["ids-status-bar-total-item"],
   viewport: styles["ids-status-bar-content-viewport"],
@@ -182,6 +193,8 @@ const s = {
   divider: styles["ids-status-bar-item-divider"],
   dividerLeft: styles["ids-status-bar-item-divider--left"],
   dividerRight: styles["ids-status-bar-item-divider--right"],
+  ribbon: styles["ids-status-bar-item-ribbon"],
+  ribbonCheck: styles["ids-status-bar-item-ribbon-check"],
   overflowLayer: styles["ids-status-bar-overflow-layer"],
   overflowBtn: styles["ids-status-bar-overflow-button"],
   overflowLeft: styles["ids-status-bar-overflow-button--left"],
@@ -239,7 +252,8 @@ function severityIcon(severity: string | undefined): string | undefined {
 }
 
 function iconSizeForType(type: IdsStatusBarType): number {
-  return type === "status-small" ? 16 : 32;
+  // Large status icon is 24px; small is 16px (inventory uses its own 16px tile glyph).
+  return type === "status-large" ? 24 : 16;
 }
 
 function defaultItemsForType(type: IdsStatusBarType): IdsStatusBarItemInput[] {
@@ -263,6 +277,7 @@ interface IdsStatusBarContextValue {
   isInventory: boolean;
   isSmall: boolean;
   hasTotal: boolean;
+  showIcons: boolean;
   iconSize: number;
   overflowState: IdsStatusBarOverflowState;
   showLeft: boolean;
@@ -422,11 +437,13 @@ export function IdsStatusBarInventoryMainIcon({
   shape,
   className,
 }: IdsStatusBarInventoryMainIconProps) {
-  const { iconSize } = useStatusBar("IdsStatusBarInventoryMainIcon");
+  useStatusBar("IdsStatusBarInventoryMainIcon");
   const resolved = shape && shape.trim() ? shape : INVENTORY_DEFAULT_ICON;
+  // 16px glyph centered in the 40px tile; colour comes from the tile state
+  // (accessible gray idle → brand active) via currentColor.
   return (
     <span className={cx(s.mainIcon, className)} data-ids="ids-status-bar-inventory-main-icon">
-      <IdsIcon shape={resolved} size={iconSize} color="var(--color-icon-brand-base)" />
+      <IdsIcon shape={resolved} size={16} color="currentColor" />
     </span>
   );
 }
@@ -443,7 +460,10 @@ export function IdsStatusBarInventoryStatusBadge({
   className,
 }: IdsStatusBarInventoryStatusBadgeProps) {
   const icon = severityIcon(severity);
-  if (!icon) return null;
+  // Inventory only badges critical / warning / in-progress (Figma).
+  if (!icon || severity == null || !INVENTORY_BADGE_SEVERITIES.has(severity)) {
+    return null;
+  }
   return (
     <span className={cx(s.badge, className)} data-ids="ids-status-bar-inventory-status-badge">
       <IdsIcon shape={icon} size={16} variant="img" />
@@ -474,7 +494,8 @@ function DefaultItemIconSlot({
 }: {
   item: Pick<IdsStatusBarItemInput, "severity" | "iconShapeName">;
 }) {
-  const { isInventory, iconSize } = useStatusBar("IdsStatusBarItemIconSlot");
+  const { isInventory, showIcons, iconSize } = useStatusBar("IdsStatusBarItemIconSlot");
+  if (isInventory && !showIcons) return null;
   if (isInventory) {
     return (
       <IdsStatusBarItemIconSlot>
@@ -552,7 +573,11 @@ export function IdsStatusBarItem({
         {showLeadingDivider ? <IdsStatusBarItemDivider side="left" /> : null}
         <DefaultItemIconSlot item={{ severity: severity as IdsStatusBarSeverity | undefined, iconShapeName }} />
         <IdsStatusBarItemValue>{value}</IdsStatusBarItemValue>
-        <IdsStatusBarItemMeta category={category}>{label}</IdsStatusBarItemMeta>
+        {/* Only the large variant carries a category line; small and inventory
+            show value + label only (Figma). */}
+        <IdsStatusBarItemMeta category={ctx.type === "status-large" ? category : undefined}>
+          {label}
+        </IdsStatusBarItemMeta>
         <IdsStatusBarItemDivider side="right" />
       </>
     ) : null);
@@ -571,6 +596,13 @@ export function IdsStatusBarItem({
       onKeyDown={handleKeyDown}
     >
       {composed}
+      {state === "selected" ? (
+        <span className={s.ribbon} data-ids="ids-status-bar-item-ribbon" aria-hidden="true">
+          <span className={s.ribbonCheck}>
+            <IdsIcon shape="shape-check-thick" size={16} variant="mask" color="var(--color-icon-gray-white)" />
+          </span>
+        </span>
+      ) : null}
     </div>
   );
 }
@@ -679,8 +711,7 @@ export function IdsStatusBarOverflowLayer({
   children,
   className,
 }: IdsStatusBarOverflowLayerProps) {
-  const ctx = useStatusBar("IdsStatusBarOverflowLayer");
-  if (!ctx.hasTotal) return null;
+  useStatusBar("IdsStatusBarOverflowLayer");
   const composed =
     children ?? (
       <>
@@ -719,7 +750,7 @@ export function IdsStatusBarContentViewport({
       <div ref={ctx.contentRef} className={s.strip} data-ids="ids-status-bar-content-strip">
         {items}
       </div>
-      {overflow ?? (ctx.hasTotal ? <IdsStatusBarOverflowLayer /> : null)}
+      {overflow ?? <IdsStatusBarOverflowLayer />}
     </div>
   );
 }
@@ -774,6 +805,7 @@ function DefaultStatusBarAnatomy({
 export function IdsStatusBar({
   type: typeProp,
   items: itemsProp,
+  showIcons = true,
   total,
   totalLabel = "Total",
   totalCategory,
@@ -797,7 +829,7 @@ export function IdsStatusBar({
   const [canScrollRight, setCanScrollRight] = useState(false);
 
   const updateOverflow = useCallback(() => {
-    if (!hasTotal || !contentRef.current) {
+    if (!contentRef.current) {
       setCanScrollLeft(false);
       setCanScrollRight(false);
       return;
@@ -806,7 +838,7 @@ export function IdsStatusBar({
     const max = node.scrollWidth - node.clientWidth;
     setCanScrollLeft(node.scrollLeft > 1);
     setCanScrollRight(node.scrollLeft < max - 1);
-  }, [hasTotal]);
+  }, []);
 
   useEffect(() => {
     updateOverflow();
@@ -827,15 +859,13 @@ export function IdsStatusBar({
   }, []);
 
   const showLeft =
-    hasTotal &&
-    (overflowState === "middle" ||
-      overflowState === "end" ||
-      (overflowState === "auto" && canScrollLeft));
+    overflowState === "middle" ||
+    overflowState === "end" ||
+    (overflowState === "auto" && canScrollLeft);
   const showRight =
-    hasTotal &&
-    (overflowState === "beginning" ||
-      overflowState === "middle" ||
-      (overflowState === "auto" && canScrollRight));
+    overflowState === "beginning" ||
+    overflowState === "middle" ||
+    (overflowState === "auto" && canScrollRight);
 
   const runtime = useMemo<IdsStatusBarContextValue>(
     () => ({
@@ -843,6 +873,7 @@ export function IdsStatusBar({
       isInventory,
       isSmall,
       hasTotal,
+      showIcons,
       iconSize: iconSizeForType(type),
       overflowState,
       showLeft,
@@ -856,6 +887,7 @@ export function IdsStatusBar({
       isInventory,
       isSmall,
       hasTotal,
+      showIcons,
       overflowState,
       showLeft,
       showRight,
@@ -908,6 +940,7 @@ export function IdsStatusBar({
           s.root,
           type === "status-small" ? s.small : type === "inventory" ? s.inventory : s.large,
           hasTotal && s.withTotal,
+          isInventory && !showIcons && s.noIcons,
           className,
         )}
       >
