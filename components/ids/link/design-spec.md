@@ -32,7 +32,7 @@
 - Focus ring:
   - Border width: `1px`.
   - Border radius: `4px`.
-  - Inline/Standalone focus box: approximately 4px horizontal and 2px vertical offset around text.
+  - Inline/Standalone focus box: approximately 3px horizontal and 2px vertical offset around text; the 1px stroke is aligned **inside** the focus box (inset, not outside).
   - Dark-bg focus box uses white border token.
 - Icon:
   - External icon size: `16px x 16px`.
