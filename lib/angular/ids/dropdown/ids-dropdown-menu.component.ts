@@ -21,6 +21,7 @@ import {
 } from "@angular/core";
 import { Subscription } from "rxjs";
 import { idsAssetUrl } from "../../../shared/ids-assets-base.js";
+import { IdsButtonComponent } from "../button/ids-button.component";
 import { IdsIconComponent } from "../icon/ids-icon.component";
 import { IDS_DROPDOWN_CONTEXT } from "./ids-dropdown-context";
 import { IdsDropdownMenuFooterComponent } from "./ids-dropdown-menu-footer.component";
@@ -46,7 +47,7 @@ type PopupPlacement = "below" | "above";
 @Component({
   selector: "ids-dropdown-menu",
   standalone: true,
-  imports: [NgStyle, IdsIconComponent, IdsDropdownTagComponent],
+  imports: [NgStyle, IdsButtonComponent, IdsIconComponent, IdsDropdownTagComponent],
   templateUrl: "./ids-dropdown-menu.component.html",
   styleUrl: "./ids-dropdown-menu.component.scss",
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -586,7 +587,10 @@ export class IdsDropdownMenuComponent
     if (this.selectionMode === "multi") {
       // Render the popup now so the toggle can take focus in this same keystroke.
       this.cdr.detectChanges();
-      const toggle = this.popupEl?.nativeElement.querySelector<HTMLElement>(".showSelectedToggle");
+      // `.showSelectedToggle` is the <ids-button> host; focus its inner <button>.
+      const toggle =
+        this.popupEl?.nativeElement.querySelector<HTMLElement>(".showSelectedToggle button") ??
+        this.popupEl?.nativeElement.querySelector<HTMLElement>(".showSelectedToggle");
       if (toggle) {
         toggle.focus();
         return;
@@ -657,13 +661,18 @@ export class IdsDropdownMenuComponent
 
   /** Multi-select Clear All keeps the menu open for continued selection (spec / React parity). */
   onClearAll(event: Event): void {
-    const clearAll = event.currentTarget as HTMLButtonElement;
+    // Clear All is the <ids-button> host; climb to it so previousElementSibling
+    // resolves to the Select All button (the inner <button> has no siblings).
+    const host = (event.target as HTMLElement | null)?.closest(
+      ".clearAllButton",
+    ) as HTMLElement | null;
     this.clearAllClick.emit(this.hasSearchQuery ? this.visibleSelectableValues : undefined);
     // Clearing disables this button, which drops focus to <body>. After the
     // consumer's update renders, hand focus to Select All.
     requestAnimationFrame(() => {
-      if (clearAll.disabled && !this.popupEl?.nativeElement.contains(document.activeElement)) {
-        (clearAll.previousElementSibling as HTMLElement | null)?.focus();
+      const inner = host?.querySelector("button");
+      if (inner?.disabled && !this.popupEl?.nativeElement.contains(document.activeElement)) {
+        (host?.previousElementSibling as HTMLElement | null)?.focus();
       }
     });
   }
