@@ -466,20 +466,6 @@ export const appLauncherSurfaceStyles = css`
     transition: background 80ms ease, color 80ms ease;
   }
 
-  .ids-app-launcher-option-icon {
-    display: flex;
-    align-items: center;
-    flex-shrink: 0;
-    width: 16px;
-    margin-inline-end: var(--spacing-space-8);
-  }
-
-  .ids-app-launcher-option-icon :where(svg, img, ids-icon) {
-    display: block;
-    width: 16px;
-    height: auto;
-  }
-
   .ids-app-launcher-option-label {
     flex: 1 1 auto;
     min-width: 0;

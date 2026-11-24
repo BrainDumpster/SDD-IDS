@@ -449,21 +449,6 @@
   transition: background 80ms ease, color 80ms ease;
 }
 
-/* Leading logo: fixed 16px width, height auto (aspect ratio), 8px gap before label. */
-.ids-app-launcher-option-icon {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-  width: 16px;
-  margin-inline-end: var(--spacing-space-8);
-}
-
-.ids-app-launcher-option-icon :where(svg, img) {
-  display: block;
-  width: 16px;
-  height: auto;
-}
-
 .ids-app-launcher-option-label {
   flex: 1 1 auto;
   min-width: 0;

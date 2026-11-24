@@ -12,7 +12,6 @@ export {
   resolveColumns,
   resolveProductIconSlug,
   resolveItemIconSlug,
-  resolveOptionIconSlug,
   packProductRows,
   type IdsAppLauncherProduct,
   type IdsAppLauncherOption,

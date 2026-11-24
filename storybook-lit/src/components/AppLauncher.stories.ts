@@ -29,8 +29,8 @@ const products: IdsAppLauncherProduct[] = [
 ];
 
 const optionsList: IdsAppLauncherOption[] = [
-  { id: "o1", label: "Option", shape: "shield-encrypt-alt" },
-  { id: "o2", label: "Option", shape: "app-window" },
+  { id: "o1", label: "Option" },
+  { id: "o2", label: "Option" },
   { id: "o3", label: "Option" },
   { id: "o4", label: "Option" },
 ];
@@ -226,27 +226,7 @@ export const OptionsWithFooter: Story = {
   `,
 };
 
-export const OptionRowWithLogo: Story = {
-  name: "Option Row With Logo",
-  render: () => html`
-    <ids-app-launcher
-      panelonly
-      .products=${products}
-      .options=${[
-        { id: "l1", label: "Option with logo", shape: "shield-encrypt-alt" },
-        {
-          id: "l2",
-          label: "Another option with logo",
-          shape: "app-window",
-        },
-        { id: "l3", label: "Option without logo" },
-      ] as IdsAppLauncherOption[]}
-      .footerAction=${{ label: "View all apps" }}
-    ></ids-app-launcher>
-  `,
-};
-
-/** Per-tile / per-option icon shapes via `shape` (or `iconSlug`). */
+/** Per-tile icon shapes via `shape` (or `iconSlug`). Option rows have no leading icon. */
 export const PerItemIconShapes: Story = {
   name: "Per Item Icon Shapes",
   render: () => html`
@@ -259,9 +239,9 @@ export const PerItemIconShapes: Story = {
         { id: "p4", name: "Cloud", shape: "appic-dp-cloud-blue" },
       ] as IdsAppLauncherProduct[]}
       .options=${[
-        { id: "o1", label: "Directory", shape: "active-directory-ldap" },
-        { id: "o2", label: "Alerts", shape: "alert-bell" },
-        { id: "o3", label: "No icon on this row" },
+        { id: "o1", label: "Directory" },
+        { id: "o2", label: "Alerts" },
+        { id: "o3", label: "Settings" },
       ] as IdsAppLauncherOption[]}
     ></ids-app-launcher>
   `,

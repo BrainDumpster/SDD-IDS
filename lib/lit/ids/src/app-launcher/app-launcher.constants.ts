@@ -43,13 +43,6 @@ export interface IdsAppLauncherProduct {
 export interface IdsAppLauncherOption {
   id?: string;
   label: string;
-  /**
-   * Optional leading logo slug (`16px` wide) — `assets/icons/<slug>.svg`.
-   * Alias of `shape`.
-   */
-  iconSlug?: string;
-  /** Alias of `iconSlug` (IdsIcon `shape` parity). */
-  shape?: string;
 }
 
 export interface IdsAppLauncherFooterActionModel {
@@ -93,15 +86,6 @@ export function resolveItemIconSlug(
   item: { shape?: string; iconSlug?: string } | null | undefined,
 ): string {
   return resolveProductIconSlug(item?.shape ?? item?.iconSlug);
-}
-
-/** Leading option logo slug, or `undefined` when neither `shape` nor `iconSlug` is set. */
-export function resolveOptionIconSlug(
-  item: { shape?: string; iconSlug?: string } | null | undefined,
-): string | undefined {
-  const raw = item?.shape ?? item?.iconSlug;
-  if (typeof raw === "string" && raw.trim()) return raw.trim();
-  return undefined;
 }
 
 export function productReflowKey(
