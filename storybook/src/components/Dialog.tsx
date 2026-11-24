@@ -3,6 +3,7 @@ import { isValidElement, type CSSProperties, type ReactNode, useEffect, useRef, 
 import styles from "./Dialog.module.css";
 import buttonStyles from "./Button.module.css";
 import { Button } from "./Button";
+import { IdsIconButton } from "./IdsIconButton";
 import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import statusCriticalSquareSolidIcon from "../../../assets/icons/status-critical-square-solid.svg";
 import statusWarnTriSolidIcon from "../../../assets/icons/status-warn-tri-solid.svg";
@@ -40,6 +41,8 @@ interface DialogProps {
   dialogClosable?: boolean;
   description?: string;
   tabs?: ReactNode;
+  /** About variant only — product brand logo rendered above the product title. */
+  aboutLogo?: ReactNode;
   children?: ReactNode;
 
   primaryButtonName: string;
@@ -70,6 +73,7 @@ export function Dialog({
   dialogClosable = true,
   description,
   tabs,
+  aboutLogo,
   children,
   primaryButtonName,
   enableActionButton = true,
@@ -178,20 +182,35 @@ export function Dialog({
             <>
               <div className={styles.modalMainAbout}>
                 <header className={styles.aboutHeader}>
-                  <div className={styles.aboutHeaderSpacer} aria-hidden="true" />
+                  {tabs ? (
+                    <div className={styles.aboutTabStrip}>{tabs}</div>
+                  ) : (
+                    <div className={styles.aboutHeaderSpacer} aria-hidden="true" />
+                  )}
                   {dialogClosable ? (
                     <BaseDialog.Close
-                      className={styles.close}
                       aria-label="Close"
                       onClick={() => {
                         onClose?.();
                       }}
-                    >
-                      <DialogCloseGlyph />
-                    </BaseDialog.Close>
+                      render={
+                        <IdsIconButton
+                          variant="ghost"
+                          size="large"
+                          shape="ctrl-close-16"
+                          ariaLabel="Close"
+                        />
+                      }
+                    />
+
                   ) : null}
                 </header>
                 <div className={styles.aboutBody}>
+                  {aboutLogo ? (
+                    <div className={styles.aboutLogo} aria-hidden="true">
+                      {aboutLogo}
+                    </div>
+                  ) : null}
                   <BaseDialog.Title className={styles.aboutProductTitle}>
                     {dialogTitle}
                   </BaseDialog.Title>

@@ -211,7 +211,7 @@
 }
 
 .footerBordered {
-  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
 }
 
 .footerActions {
@@ -354,8 +354,8 @@
   width: min(1152px, calc(100vw - var(--padding-padding-24) * 2));
   height: 596px;
   max-height: 90vh;
-  border: var(--border-width-border-1) solid var(--color-border-neutral-light);
-  border-radius: var(--corner-radius-radius-16);
+  border: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
+  /* Corner radius follows the programme (`.popupIds` square / `.popupSynapse` 16px). */
   overflow: hidden;
   box-shadow: none;
   background: transparent;
@@ -392,14 +392,41 @@
   min-height: 1px;
 }
 
+/* About with tabs — the Figma MODAL-TAB-BAR: tab row on the left, close on the right.
+   The tab panel is suppressed since the About content lives in the modal body. */
+.aboutTabStrip {
+  flex: 1 1 auto;
+  min-width: 0;
+}
+
+.aboutTabStrip [role="tabpanel"] {
+  display: none;
+}
+
 .aboutBody {
   flex: 1 1 auto;
   min-height: 0;
   overflow-y: auto;
-  padding: 0 var(--padding-padding-24) var(--padding-padding-24);
+  /* Vertical padding balances the centered content (Figma: ~50px top/bottom gutters). */
+  padding: var(--padding-padding-24) var(--padding-padding-24);
   display: flex;
   flex-direction: column;
   align-items: center;
+  /* Figma centers the About content block vertically; `safe` avoids clipping long content. */
+  justify-content: safe center;
+}
+
+.aboutLogo {
+  display: flex;
+  justify-content: center;
+  margin-bottom: var(--spacing-space-8);
+}
+
+.aboutLogo :where(svg, img) {
+  display: block;
+  height: 104px;
+  width: auto;
+  max-width: 100%;
 }
 
 .aboutProductTitle {
@@ -409,7 +436,8 @@
   font-size: var(--font-size-header-1);
   line-height: var(--font-line-height-line-height-58);
   font-weight: 400;
-  color: var(--color-icon-brand-base);
+  /* Figma design binds the product name to Color/Text/Brand/Base (dell-blue-500). */
+  color: var(--color-text-brand-base);
   text-align: center;
 }
 
@@ -420,5 +448,5 @@
   align-items: center;
   gap: var(--spacing-space-16);
   padding: var(--padding-padding-24);
-  border-top: var(--border-width-border-1) solid var(--color-border-neutral-light);
+  border-top: var(--border-width-border-1) solid var(--color-border-gray-neutral-light);
 }

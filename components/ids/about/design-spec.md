@@ -20,7 +20,7 @@
 ## Layout & Measurements
 - Container width: 500px (minimum)
 - Container height: Auto (based on content)
-- Logo size: 64px × 64px
+- Product logo size: 104px × 104px (Figma website `appic-dp-cloud-blue`)
 - Header padding: 24px
 - Content padding: 24px
 - Footer padding: 16px 24px
@@ -28,7 +28,7 @@
 - Focus ring: 2px offset from element
 - Section spacing: 16px
 - Close button: 16px × 16px
-- Copyright / legal copy: **one paragraph**, `text-align: center`; Body 2 or Body 3 per variant band; long copy wraps to multiple **lines** but must not split into multiple block paragraphs
+- Copyright / legal copy: **one paragraph**, centered as a block but `text-align: justify` with a centered last line (Figma Dell Branding Area — justify a paragraph to avoid ragged-right text); Body 2 or Body 3 per variant band; long copy wraps to multiple **lines** but must not split into multiple block paragraphs
 ## Tokens
 ### Colors
 - White: `var(--color-text-gray-white)` = #ffffff
@@ -90,7 +90,7 @@
 | Element | Background | Border | Text | Icon |
 |---|---|---|---|---|
 | About Container | `var(--color-background-surface-component)` (#ffffff) | `var(--color-border-gray-neutral-light)` (#c5c5c5) | `var(--color-text-gray-neutral-strong)` (#252525) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
-| Header Section | `var(--color-background-surface-component)` (#ffffff) | transparent | `Header 1` (Roboto Regular 48px/58px) | `var(--color-icon-brand-base)` (#0076ce) |
+| Header Section (product name) | `var(--color-background-surface-component)` (#ffffff) | transparent | `Header 1` Roboto Regular 48px/58px, `var(--color-text-brand-base)` (Color/Text/Brand/Base, dell-blue-500) | `var(--color-icon-brand-base)` (dell-blue-500) product icon |
 | Content Section | `var(--color-background-surface-component)` (#ffffff) | transparent | `Body 2` (Roboto Regular 14px/20px) | `var(--color-icon-gray-neutral-base)` (#4d4d4d) |
 | Legal Section | `UI Palettes/Gray/gray-100` (#F4F4F4) | transparent | `Body 3` (Roboto Regular 12px/18px) | `var(--color-icon-gray-neutral-strong)` (#252525) |
 | Link (Default) | transparent | transparent | `var(--color-text-link-brand-base)` (#0062ab) | `var(--color-icon-brand-base)` (#0076ce) |
@@ -155,7 +155,7 @@ See **Composition & API (runtime) → Variants** when present; otherwise documen
 ### Per-slot style contract
 Resolve backgrounds, borders, typography, and icons from **Tokens** and **States (Light Theme)** / **States (Dark Theme)** using `var(--...)` only.
 
-- `CopyrightText`: one `<p>` (or host-equivalent), `text-align: center`, typography from legal band (Body 3 in gray legal section; Body 2 when inline with brand cluster in programme forks)
+- `CopyrightText`: one `<p>` (or host-equivalent), centered block with `text-align: justify` + centered last line, typography from legal band (Body 3 in gray legal section; Body 2 when inline with brand cluster in programme forks)
 
 ### Behavior contract
 See **Interactions** and **Interactions → Behavior & guidelines**.
@@ -186,3 +186,23 @@ When icons are used, resolve from `assets/icons/<slug>.svg` through the shared I
 - Semantic mapping: CSS custom properties with `var(--)` prefix
 - Design source: Figma URL above
 - Component map entry: data/component-figma-map.json → component "About" (category "Patterns and Templates"; node "30680-10863")
+
+## Implementation Notes
+
+### 2026-11-19 — Figma website alignment (node `340:733`): corners, close button, optional icon, spacing
+- **Corners:** the IDS About surface is **square** (`--corner-radius-radius-none`). `About` defaults to `programme="ids"` (`.popupIds`); `programme="synapse"` keeps the 16px radius. (Previously hardcoded `synapse`, which rounded the IDS About.)
+- **Close button:** the header close composes the IDS **Icon Button** — `variant="ghost"`, `size="large"`, icon `ctrl-close-16` (Figma Icon Button: Type Ghost / Size Large).
+- **Product icon is optional** (Figma `340:930` has none). Pass `productLogo` / `productLogoSrc` to show it; omit for the title-only layout. When shown it is a brand-tinted `Icon` (`appic-dp-cloud-blue`, `104×104`).
+- **Spacing (Figma):** ~48px above the product icon, 8px icon→title, 4px title→version→serial, ~48px content→DELL lockup, 8px DELL→copyright; header/content/footer padding `24`.
+- **Footer divider** uses `--color-border-gray-neutral-light` (was the non-existent `--color-border-neutral-light`). All About colors are semantic tokens → light/dark resolve automatically.
+
+### 2026-11-19 — Product brand logo above the product name
+- The About surface renders a product brand logo (the Figma shield/app icon) **centered above** the product name. In the implementation this is an `aboutLogo` slot on the shared `Dialog` (about variant), rendered before the product title; `About` exposes it via `productLogoSrc` (image URL) / `productLogo` (node). Rendered height `104px` (Figma website `appic-dp-cloud-blue` `104×104`), width auto. This is separate from the DELL Technologies lockup (`logoSrc`), which stays in the lower brand cluster.
+
+### 2026-11-20 — Figma website doc alignment: product cluster color, justified copyright
+- **Product name + product icon are dell-blue-500** (brand `-base` tokens). The Figma design binds the product name text to `Color/Text/Brand/Base` and the product icon to the brand-base icon fill — both dell-blue-500 (#0672cb), same hue as the Dell Technologies lockup. (The website doc's prose mentions "dell-blue-600 (#0062AB)", but the live design uses brand-base; the design binding is authoritative.) Implementation: product title → `var(--color-text-brand-base)`; product icon tint → `var(--color-icon-brand-base)`.
+- **Copyright paragraph is justified.** The Dell Branding Area is center-aligned as a block, but the copyright paragraph uses `text-align: justify` with a centered last line so both edges stay flush (the spec calls to avoid ragged-right text; the design renders the paragraph justified).
+- **Product name wrapping:** max width 800px, no truncation, wraps to at most 2 lines (guideline: 60-char limit for Roboto at 48px).
+
+### 2026-11-19 — Optional header tab bar (Figma `Tabs=True`)
+- When `tabs` is supplied, the About header becomes the Figma `MODAL-TAB-BAR`: the tab row sits on the left and the close control on the right. `About` forwards `tabs` to the `Dialog` about header (`.aboutTabStrip`), with the tab panel suppressed since the About content lives in the modal body. Without `tabs`, the header keeps its spacer + close layout.
