@@ -2,6 +2,7 @@ import { Toast as BaseToast } from "@base-ui-components/react/toast";
 import type { ReactNode } from "react";
 import { Icon } from "./Icon";
 import { Button } from "./Button";
+import { IdsIconButton } from "./IdsIconButton";
 import styles from "./Toast.module.css";
 
 export type ToastVariant =
@@ -96,13 +97,12 @@ function ToastViewport({ position }: { position: ToastPosition }) {
                 </Button>
               ) : null}
               {closable ? (
-                <Button
-                  variant="tertiary"
-                  size="sm"
-                  iconOnly
-                  icon={<Icon shapeName="shape-x" variant="mask" color="var(--color-icon-gray-white)" style={{ width: "100%", height: "100%" }} />}
-                  aria-label="Close"
-                  type="button"
+                /* Design-spec CloseAction: IDS Icon Button (ghost neutral · small). */
+                <IdsIconButton
+                  variant="ghostNeutral"
+                  size="small"
+                  shape="shape-x"
+                  ariaLabel="Dismiss notification"
                   className={styles.closeButton}
                   onClick={() => toastManager.close(toast.id)}
                 />

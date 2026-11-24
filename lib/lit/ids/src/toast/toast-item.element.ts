@@ -13,6 +13,7 @@
 import { LitElement, html, nothing } from "lit";
 import { property } from "lit/decorators.js";
 import "../icon/register.js";
+import "../icon-button/register.js";
 import {
   DEFAULT_DURATION,
   DEFAULT_ROLE,
@@ -289,25 +290,38 @@ export class IdsToastItem extends LitElement {
     `;
   }
 
+  /* Design-spec: on the dark toast surface the close button's hover reuses
+     its press state so the background shows up. External CSS cannot reach
+     the icon button's shadow internals, so hover forces data-state="press"
+     via its public API (cleared on leave). */
+  private onCloseMouseEnter = (event: Event): void => {
+    (
+      event.currentTarget as HTMLElement & { dataState: string }
+    ).dataState = "press";
+  };
+
+  private onCloseMouseLeave = (event: Event): void => {
+    (
+      event.currentTarget as HTMLElement & { dataState: string }
+    ).dataState = "";
+  };
+
   private renderClose() {
     if (!this.closable) return nothing;
+    // IDS Icon Button (ghost neutral · small) — spec CloseAction. data-slot
+    // keeps the toast marker; the host overwrites data-ids.
     return html`
-      <button
-        type="button"
-        class="ids-toast-close"
-        data-ids="ids-toast-close"
+      <ids-icon-button
+        variant="ghostNeutral"
+        size="small"
+        shape="shape-x"
+        arialabel="Dismiss notification"
         aria-label="Dismiss notification"
-        @click=${() => this.dismiss("close-click")}
-      >
-        <ids-icon
-          class="ids-toast-close-icon"
-          shape="shape-x"
-          variant="mask"
-          color="var(--color-icon-gray-white)"
-          size="12"
-          aria-hidden="true"
-        ></ids-icon>
-      </button>
+        data-slot="ids-toast-close"
+        @mouseenter=${this.onCloseMouseEnter}
+        @mouseleave=${this.onCloseMouseLeave}
+        @ids-icon-button-click=${() => this.dismiss("close-click")}
+      ></ids-icon-button>
     `;
   }
 

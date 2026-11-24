@@ -167,30 +167,19 @@
   box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
 }
 
-.closeButton.closeButton.closeButton {
-  width: var(--sizing-size-24);
-  height: var(--sizing-size-24);
-  min-height: var(--sizing-size-24);
-  padding: var(--padding-padding-6);
-  box-sizing: border-box;
-  color: var(--color-icon-gray-white);
-  background: transparent;
-  border: none;
+/* Close — IDS Icon Button (ghost neutral · small): it owns the 24×24 shell,
+   the 12×12 shape-x glyph, and the focus ring. Toast chrome re-tints the
+   ghost-neutral glyph ladder to icon-gray-white via the theme vars, and hover
+   reuses the press-state background (slate-600 20%) so it shows up on the dark
+   surface. Triple class selector beats the variant ladder's rules. */
+.closeButton {
+  flex-shrink: 0;
+  --color-icon-gray-neutral-base: var(--color-icon-gray-white);
+  --color-icon-gray-neutral-strong: var(--color-icon-gray-white);
 }
-.closeButton.closeButton.closeButton:hover:not(:disabled) {
-  background: var(--ui-palette-brand-900);
-  color: var(--color-icon-gray-white);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
-}
-.closeButton.closeButton.closeButton:active:not(:disabled) {
-  background: var(--ui-palette-brand-800);
-  color: var(--color-icon-gray-white);
-  box-shadow: inset 0 0 0 var(--border-width-border-1) var(--ui-palette-brand-400);
-}
-
-.closeButton.closeButton > span {
-  width: 100%;
-  height: 100%;
+.closeButton.closeButton.closeButton:hover:not(:disabled),
+.closeButton.closeButton.closeButton[data-state="hover"] {
+  background: color-mix(in srgb, var(--ui-palette-slate-600) 20%, transparent);
 }
 
 .closePlaceholder {

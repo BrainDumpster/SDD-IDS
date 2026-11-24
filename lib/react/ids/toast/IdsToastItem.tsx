@@ -20,12 +20,9 @@ import React, {
   type KeyboardEvent,
   type MouseEvent,
 } from "react";
-import {
-  IdsButton,
-  IdsButtonLabel,
-  IdsButtonLeadingIcon,
-} from "../button";
+import { IdsButton, IdsButtonLabel } from "../button";
 import { IdsIcon } from "../icon";
+import { IdsIconButton } from "../icon-button";
 import styles from "./IdsToast.module.css";
 
 export type IdsToastType =
@@ -275,25 +272,15 @@ export function IdsToastItem({
         ) : null}
 
         {closable ? (
-          <IdsButton
-            variant="tertiary"
-            size="medium"
-            iconOnly
+          <IdsIconButton
+            variant="ghostNeutral"
+            size="small"
+            shape="shape-x"
             ariaLabel="Dismiss notification"
             className={styles["ids-toast-close"]}
-            data-ids="ids-toast-close"
+            data-slot="ids-toast-close"
             onClick={() => dismiss("close-click")}
-          >
-            <IdsButtonLeadingIcon>
-              <IdsIcon
-                shape="shape-x"
-                variant="mask"
-                color="var(--color-icon-gray-white)"
-                size={12}
-                className={styles["ids-toast-close-icon"]}
-              />
-            </IdsButtonLeadingIcon>
-          </IdsButton>
+          />
         ) : null}
       </div>
     </div>
