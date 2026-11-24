@@ -8,7 +8,7 @@ Expandable panel group for sectioned content. Supports single- or multi-expand, 
 \`\`\`
 IdsAccordion
   IdsAccordionItem
-    IdsAccordionHeader          ← title + chevron (trigger surface)
+    IdsAccordionHeader          ← title + chevron icon button (IdsIconButton ghost neutral · small; the focusable trigger control)
     IdsAccordionBody            ← alias: IdsAccordionPanel
       IdsAccordionContent       ← inner content card (optional chrome)
 \`\`\`

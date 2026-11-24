@@ -63,36 +63,31 @@
   text-overflow: ellipsis;
 }
 
-.iconFrame {
-  display: inline-flex;
-  padding-top: var(--padding-padding-2);
-  padding-bottom: var(--padding-padding-2);
+/* Chevron: IDS Icon Button (ghost neutral, small) rendered AS the Base UI
+   trigger — it owns its own state colors; this class only keeps trigger-row
+   layout + the expanded rotation. */
+.chevron {
+  flex-shrink: 0;
+  transition: transform 120ms ease;
 }
 
-/* Mask icon: `Icon` applies mask from `assets/icons/<shapeName>.svg`; tint via `color` + `currentColor` fill (same pattern as MainMenuLeft). */
-.icon {
-  display: inline-block;
-  width: var(--scale-16);
-  height: var(--scale-16);
-  flex-shrink: 0;
-  vertical-align: middle;
-  background-color: currentColor;
-  color: var(--color-icon-gray-neutral-base);
-  transition: transform 120ms ease;
+/* Suppress the icon button's own focus-visible ring — the spec ring is
+   painted on the trigger row instead. */
+.trigger .chevron:focus-visible:not(:disabled) {
+  box-shadow: inset 0 0 0 var(--border-width-border-1) transparent;
+  background: transparent;
 }
 
 .trigger:hover {
   background: var(--color-background-brand-lighter-slate);
 }
 
-.trigger:hover .icon {
-  color: var(--color-icon-gray-neutral-strong);
-}
-
 /* Focus (IDS Design Library .Accordion-Element-Left State=Focus): tinted header,
    1px neutral border (inset shadow, no layout shift), double ring — 2px separator +
-   4px brand outer ring — radius-4. z-index keeps the ring above sibling panels. */
-.trigger:focus-visible {
+   4px brand outer ring — radius-4. z-index keeps the ring above sibling panels.
+   The chevron icon button is the focusable control, so :has() maps its
+   :focus-visible onto the row surface. */
+.trigger:has(.chevron:focus-visible) {
   outline: none;
   position: relative;
   z-index: 1;
@@ -104,30 +99,20 @@
     0 0 0 var(--scale-4) var(--color-border-brand-base);
 }
 
-.trigger:focus-visible .icon,
-.open:focus-visible .icon,
-.trigger[data-panel-open]:focus-visible .icon,
-.item[data-open] .trigger:focus-visible .icon {
-  color: var(--color-icon-gray-neutral-strong);
-}
-
 /* Expanded + focused header: hide the 4px left brand strip — the focus ring
    is the indicator while focused. Panel body keeps its strip. The `:hover`
    variants are required because the open-hover rules below come later in
    source order and would repaint the strip while the pointer rests on the
    focused header. */
-.open:focus-visible,
-.trigger[data-panel-open]:focus-visible,
-.item[data-open] .trigger:focus-visible,
-.open:focus-visible:hover,
-.trigger[data-panel-open]:focus-visible:hover,
-.item[data-open] .trigger:focus-visible:hover {
+.itemOpen .trigger:has(.chevron:focus-visible),
+.item[data-open] .trigger:has(.chevron:focus-visible),
+.itemOpen .trigger:has(.chevron:focus-visible):hover,
+.item[data-open] .trigger:has(.chevron:focus-visible):hover {
   background-image: none;
 }
 
 /* Left highlighter: gradient (opaque child layers hide parent inset box-shadow). */
-.open,
-.trigger[data-panel-open],
+.itemOpen .trigger,
 .item[data-open] .trigger {
   background-color: var(--color-background-brand-lighter-slate);
   background-image: linear-gradient(
@@ -139,8 +124,7 @@
   );
 }
 
-.open:hover,
-.trigger[data-panel-open]:hover,
+.itemOpen .trigger:hover,
 .item[data-open] .trigger:hover {
   background-color: var(--color-background-brand-lighter-slate);
   background-image: linear-gradient(
@@ -152,11 +136,13 @@
   );
 }
 
-.open .icon,
-.trigger[data-panel-open] .icon,
-.item[data-open] .trigger .icon {
+/* Expanded: rotate the icon button (glyph tint comes from the icon button's
+   ghost-neutral ladder). `data-panel-open` is the Base UI trigger marker,
+   merged onto the rendered icon button. */
+.itemOpen .chevron,
+.item[data-open] .chevron,
+.chevron[data-panel-open] {
   transform: rotate(180deg);
-  color: var(--color-icon-gray-neutral-base);
 }
 
 .panel {

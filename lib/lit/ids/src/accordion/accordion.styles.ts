@@ -44,6 +44,8 @@ export const accordionTitleStyles = css`
     font: inherit;
   }
 
+  /* Non-button row — the ids-icon-button chevron inside is the focusable
+     trigger control (no nested <button>). */
   .accordion-header {
     width: 100%;
     height: auto;
@@ -63,8 +65,6 @@ export const accordionTitleStyles = css`
     font-size: var(--font-size-body-2);
     line-height: var(--font-line-height-line-height-20);
     font-weight: 400;
-    appearance: none;
-    -webkit-appearance: none;
   }
 
   .accordion-header--left {
@@ -89,40 +89,26 @@ export const accordionTitleStyles = css`
     text-overflow: ellipsis;
   }
 
-  /* Design-spec: chevron frame uses a padding-2 top offset implemented as margin-top
-     (padding would grow the box while the centered mask glyph stays put). */
-  .icon-layout {
+  /* Design-spec: the chevron is an ids-icon-button (ghost neutral, small).
+     It owns its own state colors — this class only sets layout offsets and
+     the expanded rotation. padding-2 top offset implemented as margin-top. */
+  .accordion-chevron {
     display: inline-flex;
-    align-items: center;
-    justify-content: center;
     flex-shrink: 0;
     margin-top: var(--padding-padding-2, 2px);
-    color: var(--color-icon-gray-neutral-accessible);
-  }
-
-  .icon-layout ids-icon {
-    display: inline-block;
-    flex-shrink: 0;
-    width: 16px;
-    height: 16px;
-    min-width: 16px;
-    min-height: 16px;
     transition: transform 120ms ease;
-    color: inherit;
   }
 
-  .accordion-header:hover:not(:disabled) {
+  .accordion-header:hover:not(.accordion-header--disabled) {
     background: var(--color-background-brand-lighter-slate);
-  }
-
-  .accordion-header:hover:not(:disabled) .icon-layout {
-    color: var(--color-icon-gray-neutral-strong);
   }
 
   /* Focus (IDS Design Library .Accordion-Element-Left State=Focus): tinted header,
      1px neutral border (inset shadow, no layout shift), double ring — 2px separator +
-     4px brand outer ring — radius-4. z-index keeps the ring above sibling panels. */
-  .accordion-header:focus-visible {
+     4px brand outer ring — radius-4. z-index keeps the ring above sibling panels.
+     Focus lives on the icon button's inner shadow button, so :focus-within
+     maps it onto the row (:has() can't pierce the icon button's shadow). */
+  .accordion-header:focus-within {
     outline: none;
     position: relative;
     z-index: 1;
@@ -134,11 +120,7 @@ export const accordionTitleStyles = css`
       0 0 0 var(--scale-4) var(--color-border-brand-base);
   }
 
-  .accordion-header:focus-visible .icon-layout {
-    color: var(--color-icon-gray-neutral-strong);
-  }
-
-  .accordion-header:disabled {
+  .accordion-header--disabled {
     opacity: 0.5;
     cursor: not-allowed;
   }
@@ -154,7 +136,7 @@ export const accordionTitleStyles = css`
     );
   }
 
-  .accordion-header.active-header:hover:not(:disabled) {
+  .accordion-header.active-header:hover:not(.accordion-header--disabled) {
     background-color: var(--color-background-brand-lighter-slate);
     background-image: linear-gradient(
       90deg,
@@ -166,13 +148,9 @@ export const accordionTitleStyles = css`
   }
 
   /* Design-spec: the expanded header hides its 4px strip while focused (focus ring is the indicator). */
-  .accordion-header.active-header:focus-visible,
-  .accordion-header.active-header:focus-visible:hover:not(:disabled) {
+  .accordion-header.active-header:focus-within,
+  .accordion-header.active-header:focus-within:hover:not(.accordion-header--disabled) {
     background-image: none;
-  }
-
-  .accordion-header.active-header .icon-layout {
-    color: var(--color-icon-gray-neutral-accessible);
   }
 
   .accordion-meta {
@@ -181,7 +159,9 @@ export const accordionTitleStyles = css`
     line-height: var(--font-line-height-line-height-20);
   }
 
-  .accordion-header.active-header .icon-layout ids-icon {
+  /* Expanded: rotate the icon button (glyph colors come from its
+     ghost-neutral ladder inside its own shadow styles). */
+  .accordion-header.active-header .accordion-chevron {
     transform: rotate(180deg);
   }
 `;

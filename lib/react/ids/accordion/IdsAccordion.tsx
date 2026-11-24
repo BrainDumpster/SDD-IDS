@@ -8,8 +8,10 @@
  * Hierarchy (Ids-prefixed):
  *   IdsAccordion
  *     IdsAccordionItem
- *       IdsAccordionHeader
- *         IdsAccordionChevron?
+ *       IdsAccordionHeader — non-button trigger row (pointer + focus surface)
+ *         IdsAccordionChevron? — IdsIconButton (ghostNeutral, small,
+ *           `chev-down-thick`); the focusable trigger control carrying
+ *           `id`, `aria-expanded`, `aria-controls`, `disabled`
  *         title
  *       IdsAccordionBody (alias IdsAccordionPanel)
  *         IdsAccordionContent  — generic children slot
@@ -34,7 +36,7 @@ import React, {
   type ReactNode,
 } from "react";
 import styles from "./IdsAccordion.module.css";
-import { IdsIcon } from "../icon";
+import { IdsIconButton } from "../icon-button";
 
 const s = {
   accordion: styles["ids-accordion"],
@@ -148,7 +150,7 @@ function cx(...parts: Array<string | false | null | undefined>): string {
  * browser `title` tooltip with the full text only while the rendered text is
  * actually truncated, so untruncated titles don't show a redundant tooltip.
  */
-function AccordionTitle({ children }: { children: ReactNode }) {
+function AccordionTitle({ children, id }: { children: ReactNode; id?: string }) {
   const [element, setElement] = useState<HTMLSpanElement | null>(null);
   const [isTruncated, setIsTruncated] = useState(false);
 
@@ -188,6 +190,7 @@ function AccordionTitle({ children }: { children: ReactNode }) {
 
   return (
     <span
+      id={id}
       ref={setElement}
       className={s.title}
       title={isTruncated ? (element?.textContent ?? undefined) : undefined}
@@ -505,12 +508,17 @@ export function IdsAccordionHeader({ children, className, title }: IdsAccordionH
   };
 
   const useTitleApi = title != null && children == null;
+  const titleId = `${item.triggerId}-title`;
+  const titleLabel = typeof title === "string" ? title : "Toggle section";
+  const chevron = useTitleApi ? (
+    <IdsAccordionChevron ariaLabelledBy={titleId} ariaLabel={titleLabel} />
+  ) : null;
 
   const composedChildren = useTitleApi ? (
     <>
-      {root.chevronPosition === "left" ? <IdsAccordionChevron /> : null}
-      <AccordionTitle>{title}</AccordionTitle>
-      {root.chevronPosition === "right" ? <IdsAccordionChevron /> : null}
+      {root.chevronPosition === "left" ? chevron : null}
+      <AccordionTitle id={titleId}>{title}</AccordionTitle>
+      {root.chevronPosition === "right" ? chevron : null}
     </>
   ) : (
     children
@@ -518,17 +526,17 @@ export function IdsAccordionHeader({ children, className, title }: IdsAccordionH
 
   return (
     <h3 className={cx(s.header, className)} data-ids="ids-accordion-header">
-      <button
-        type="button"
-        id={item.triggerId}
-        aria-expanded={item.isOpen}
-        aria-controls={item.panelId}
-        disabled={item.disabled}
+      {/* Non-button row: the IdsIconButton chevron inside is the focusable
+          trigger control — nesting it inside a native <button> would be
+          invalid interactive nesting. Pointer clicks anywhere on the row
+          toggle; the icon button's own click handler stops propagation. */}
+      <div
         data-ids="ids-accordion-trigger"
         data-open={item.isOpen ? "true" : "false"}
+        data-disabled={item.disabled ? "true" : "false"}
+        aria-disabled={item.disabled || undefined}
         onClick={() => root.toggle(item.value, item.disabled)}
         onKeyDown={onKeyDown}
-        ref={(el) => root.registerTrigger(item.value, el)}
         className={cx(
           s.trigger,
           root.chevronPosition === "left" ? s.triggerLeft : s.triggerRight,
@@ -537,7 +545,7 @@ export function IdsAccordionHeader({ children, className, title }: IdsAccordionH
         )}
       >
         {composedChildren}
-      </button>
+      </div>
     </h3>
   );
 }
@@ -548,12 +556,43 @@ export function IdsAccordionHeader({ children, className, title }: IdsAccordionH
 
 export interface IdsAccordionChevronProps {
   className?: string;
+  /** Fallback accessible name when the chevron can't be labelled by the title. */
+  ariaLabel?: string;
+  /** Id of the header title element — preferred accessible-name source. */
+  ariaLabelledBy?: string;
 }
 
-/** Slug `chev-down-thick` via shared IdsIcon (`assets/icons/chev-down-thick.svg`). */
-export function IdsAccordionChevron({ className }: IdsAccordionChevronProps) {
+/**
+ * Chevron control — an IDS Icon Button (`ghostNeutral`, `small`,
+ * `chev-down-thick`). Design-spec: this is the focusable trigger control,
+ * so it carries the trigger `id`, `aria-expanded`, `aria-controls`, and
+ * `disabled`; the surrounding header row stays a non-button surface.
+ */
+export function IdsAccordionChevron({
+  className,
+  ariaLabel,
+  ariaLabelledBy,
+}: IdsAccordionChevronProps) {
+  const root = useIdsAccordion("IdsAccordionChevron");
+  const item = useIdsAccordionItem("IdsAccordionChevron");
   return (
-    <IdsIcon shape="chev-down-thick" size={16} className={cx(s.chevron, className)} />
+    <IdsIconButton
+      ref={(el) => root.registerTrigger(item.value, el)}
+      id={item.triggerId}
+      variant="ghostNeutral"
+      size="small"
+      shape="chev-down-thick"
+      disabled={item.disabled}
+      aria-expanded={item.isOpen}
+      aria-controls={item.panelId}
+      aria-labelledby={ariaLabelledBy}
+      ariaLabel={ariaLabel ?? "Toggle section"}
+      className={cx(s.chevron, className)}
+      onClick={(event) => {
+        event.stopPropagation();
+        root.toggle(item.value, item.disabled);
+      }}
+    />
   );
 }
 
