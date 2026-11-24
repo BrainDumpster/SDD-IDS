@@ -33,6 +33,23 @@ export const SpecAccurateDesign: Story = {
   `,
 };
 
+/** Closable — `ids-tooltip-close` is an IDS Icon Button (ghost neutral · small) docked top-right. */
+export const Closable: Story = {
+  name: "Closable",
+  render: () => html`
+    <ids-tooltip closable hugcontent side="top">
+      <ids-tooltip-trigger>
+        <button type="button">Hover me</button>
+      </ids-tooltip-trigger>
+      <ids-tooltip-panel>
+        <ids-tooltip-header>Tooltip Title</ids-tooltip-header>
+        <ids-tooltip-body>Tooltip body content</ids-tooltip-body>
+        <ids-tooltip-close></ids-tooltip-close>
+      </ids-tooltip-panel>
+    </ids-tooltip>
+  `,
+};
+
 export const WithBadgeOverflow: Story = {
   name: "With Badge Overflow",
   render: () => html`

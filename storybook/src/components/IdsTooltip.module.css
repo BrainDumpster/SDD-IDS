@@ -210,34 +210,9 @@
   font-weight: 400;
 }
 
+/* Close: IDS Icon Button (ghost neutral · small) — it owns its 24×24 box,
+   glyph size, state colors, and focus ring; this class only keeps it
+   un-shrunken as a sibling of the content column. */
 .close {
-  box-sizing: border-box;
-  width: 12px;
-  height: 12px;
-  display: inline-flex;
   flex-shrink: 0;
-  align-items: center;
-  justify-content: center;
-  border: none;
-  background: transparent;
-  color: var(--color-text-gray-neutral-strong);
-  padding: 0;
-  cursor: pointer;
-}
-
-.closeIcon {
-  display: inline-block;
-  flex-shrink: 0;
-}
-
-.closeButton.closeButton {
-  min-height: var(--sizing-size-20);
-  min-width: var(--sizing-size-20);
-  padding: var(--padding-padding-4);
-  box-sizing: border-box;
-}
-
-:global([data-theme="dark"]) .close,
-:global(.ids-theme-dark) .close {
-  color: #4d4d4d;
 }

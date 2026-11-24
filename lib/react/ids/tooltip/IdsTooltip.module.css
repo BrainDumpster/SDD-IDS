@@ -219,13 +219,13 @@
 /* Closable: keep body text 4px (space-4) to the left of the close icon column.
    `scrollbar-gutter: stable` permanently reserves the scrollbar track so the
    content width — and popup width — never changes when the scrollbar appears.
-   The right reserve is top-bar right padding + 20px close button + 4px spacing,
+   The right reserve is top-bar right padding + 24px close icon button + 4px spacing,
    minus the measured scrollbar width (`--ids-scrollbar-width` is set at runtime)
    so the visible gap stays exactly 4px whether or not the scrollbar is present. */
 .ids-tooltip-content--closable {
   scrollbar-gutter: stable;
   padding-right: calc(
-    var(--padding-padding-12) + var(--sizing-size-20) + var(--spacing-space-4) -
+    var(--padding-padding-12) + var(--sizing-size-24) + var(--spacing-space-4) -
       var(--ids-scrollbar-width, 0px)
   );
 }
@@ -261,27 +261,9 @@
   font-weight: 400;
 }
 
+/* Close: IDS Icon Button (ghost neutral · small) — it owns its 24×24 box,
+   glyph size, state colors, and focus ring; this class only keeps it
+   un-shrunken as a top-bar sibling of the content column. */
 .ids-tooltip-close {
-  box-sizing: border-box;
-  min-height: var(--sizing-size-20) !important;
-  min-width: var(--sizing-size-20) !important;
-  height: var(--sizing-size-20) !important;
-  width: var(--sizing-size-20) !important;
-  max-width: var(--sizing-size-20);
-  padding: var(--padding-padding-4) !important;
   flex-shrink: 0;
-}
-
-.ids-tooltip-close-icon {
-  width: 12px !important;
-  height: 12px !important;
-  max-width: 12px !important;
-  max-height: 12px !important;
-}
-
-.ids-tooltip-close-icon > * {
-  width: 12px !important;
-  height: 12px !important;
-  max-width: 12px !important;
-  max-height: 12px !important;
 }

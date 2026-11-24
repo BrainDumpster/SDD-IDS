@@ -1,7 +1,6 @@
 import { Tooltip as BaseTooltip } from "@base-ui-components/react/tooltip";
 import { useCallback, useMemo, useState } from "react";
 import type { CSSProperties, ReactNode } from "react";
-import { Icon } from "./Icon";
 import {
   IdsTooltipArrow,
   IdsTooltipBody,
@@ -12,7 +11,7 @@ import {
   IdsTooltipTrigger,
   parseTooltipChildren,
 } from "./ids-tooltip.slots";
-import buttonStyles from "./Button.module.css";
+import { IdsIconButton } from "./IdsIconButton";
 import styles from "./IdsTooltip.module.css";
 
 type TooltipSide = NonNullable<IdsTooltipProps["side"]>;
@@ -201,22 +200,17 @@ export function IdsTooltip({
                         ) : null}
                         <div className={styles.body}>{resolvedContent}</div>
                       </div>
-                      <button
-                        type="button"
-                        className={[
-                          buttonStyles.button,
-                          buttonStyles.tertiary,
-                          styles.closeButton,
-                        ].filter(Boolean).join(" ")}
-                        aria-label="Close tooltip"
+                      {/* Design-spec CloseAction: IDS Icon Button
+                          (ghost neutral · small) — it owns its 24×24 box,
+                          glyph size, state colors, and focus ring. */}
+                      <IdsIconButton
+                        variant="ghostNeutral"
+                        size="small"
+                        shape="ctrl-close-16"
+                        ariaLabel="Close tooltip"
+                        className={styles.close}
                         onClick={dismissTooltip}
-                      >
-                        <Icon
-                          shapeName="ctrl-close-16"
-                          color="var(--color-icon-gray-neutral-base)"
-                          style={{ width: 12, height: 12 }}
-                        />
-                      </button>
+                      />
                     </>
                   ) : (
                     <>
