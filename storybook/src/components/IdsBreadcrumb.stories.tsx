@@ -53,13 +53,13 @@ const meta: Meta<typeof IdsBreadcrumb> = {
 
     items: [
 
-      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
-      { label: "Breadcrumb 3", href: "#" },
+      { label: "Breadcrumb 3", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
 
-      { label: "Breadcrumb 4", href: "#" },
+      { label: "Breadcrumb 4", href: "?id=components-ids-breadcrumb--four-items&viewMode=story" },
 
     ],
 
@@ -109,13 +109,13 @@ export const Default: Story = {
 
     items: [
 
-      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
-      { label: "Breadcrumb 3", href: "#" },
+      { label: "Breadcrumb 3", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
 
-      { label: "Breadcrumb 4", href: "#" },
+      { label: "Breadcrumb 4", href: "?id=components-ids-breadcrumb--four-items&viewMode=story" },
 
     ],
 
@@ -180,10 +180,10 @@ export const Default: Story = {
 export const Truncation: Story = {
   args: {
     items: [
-      { label: "This is an extremely long breadcrumb label that should be truncated", href: "#" },
-      { label: "Another very long label for testing overflow behavior with long text", href: "#" },
-      { label: "Short", href: "#" },
-      { label: "Current", href: "#" },
+      { label: "This is an extremely long breadcrumb label that should be truncated", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
+      { label: "Another very long label for testing overflow behavior with long text", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
+      { label: "Short", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
+      { label: "Current", href: "?id=components-ids-breadcrumb--four-items&viewMode=story" },
     ],
     currentPage: "Current Page",
   },
@@ -219,9 +219,9 @@ export const Truncation: Story = {
 export const MixedLengths: Story = {
   args: {
     items: [
-      { label: "This breadcrumb is exactly seventy characters in the total length now!", href: "#" },
-      { label: "Thirty character breadcrumb!!!", href: "#" },
-      { label: "Fifteen chars!!", href: "#" },
+      { label: "This breadcrumb is exactly seventy characters in the total length now!", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
+      { label: "Thirty character breadcrumb!!!", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
+      { label: "Fifteen chars!!", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
     ],
     currentPage: "Current Page",
   },
@@ -260,7 +260,7 @@ export const OneItem: Story = {
 
     items: [
 
-      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
     ],
 
@@ -278,9 +278,9 @@ export const TwoItems: Story = {
 
     items: [
 
-      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
     ],
 
@@ -298,11 +298,11 @@ export const ThreeItems: Story = {
 
     items: [
 
-      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
-      { label: "Breadcrumb 3", href: "#" },
+      { label: "Breadcrumb 3", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
 
     ],
 
@@ -320,13 +320,13 @@ export const FourItems: Story = {
 
     items: [
 
-      { label: "Breadcrumb 1", href: "#" },
+      { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-      { label: "Breadcrumb 2", href: "#" },
+      { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
-      { label: "Breadcrumb 3", href: "#" },
+      { label: "Breadcrumb 3", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
 
-      { label: "Breadcrumb 4", href: "#" },
+      { label: "Breadcrumb 4", href: "?id=components-ids-breadcrumb--four-items&viewMode=story" },
 
     ],
 
@@ -352,7 +352,7 @@ export const VariantsMatrix: Story = {
 
           items={[
 
-            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
           ]}
 
@@ -370,9 +370,9 @@ export const VariantsMatrix: Story = {
 
           items={[
 
-            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-            { label: "Breadcrumb 2", href: "#" },
+            { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
           ]}
 
@@ -390,11 +390,11 @@ export const VariantsMatrix: Story = {
 
           items={[
 
-            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-            { label: "Breadcrumb 2", href: "#" },
+            { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
-            { label: "Breadcrumb 3", href: "#" },
+            { label: "Breadcrumb 3", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
 
           ]}
 
@@ -412,13 +412,13 @@ export const VariantsMatrix: Story = {
 
           items={[
 
-            { label: "Breadcrumb 1", href: "#" },
+            { label: "Breadcrumb 1", href: "?id=components-ids-breadcrumb--one-item&viewMode=story" },
 
-            { label: "Breadcrumb 2", href: "#" },
+            { label: "Breadcrumb 2", href: "?id=components-ids-breadcrumb--two-items&viewMode=story" },
 
-            { label: "Breadcrumb 3", href: "#" },
+            { label: "Breadcrumb 3", href: "?id=components-ids-breadcrumb--three-items&viewMode=story" },
 
-            { label: "Breadcrumb 4", href: "#" },
+            { label: "Breadcrumb 4", href: "?id=components-ids-breadcrumb--four-items&viewMode=story" },
 
           ]}
 

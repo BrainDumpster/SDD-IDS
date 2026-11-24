@@ -67,6 +67,9 @@ export function IdsBreadcrumb({
 
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
+  const hiddenItemsRef = useRef(hiddenItems);
+  hiddenItemsRef.current = hiddenItems;
+
   useEffect(() => {
     if (!dropdownOpen || !dropdownContainer) return;
     const frame = requestAnimationFrame(() => {
@@ -75,7 +78,26 @@ export function IdsBreadcrumb({
       );
       firstItem?.focus();
     });
-    return () => cancelAnimationFrame(frame);
+    // Open the breadcrumb's link on capture so the click reaches the handler
+    // before anything inside the menu can intercept it.
+    const handleItemClick = (event: MouseEvent) => {
+      const row = (event.target as HTMLElement | null)?.closest<HTMLElement>(
+        "[data-selectable='true'], [role='menuitem']",
+      );
+      if (!row) return;
+      const rows = Array.from(
+        dropdownContainer.querySelectorAll<HTMLElement>("[data-selectable='true'], [role='menuitem']"),
+      );
+      const item = hiddenItemsRef.current[rows.indexOf(row)];
+      if (item?.href) {
+        window.location.href = item.href;
+      }
+    };
+    dropdownContainer.addEventListener("click", handleItemClick, true);
+    return () => {
+      cancelAnimationFrame(frame);
+      dropdownContainer.removeEventListener("click", handleItemClick, true);
+    };
   }, [dropdownOpen, dropdownContainer]);
 
   const navRef = useRef<HTMLElement>(null);
@@ -94,6 +116,7 @@ export function IdsBreadcrumb({
     () => Math.max(0, ...visibleItems.map((item) => item.label.length)),
     [visibleItems],
   );
+
 
   useEffect(() => {
     const nav = navRef.current;
@@ -170,6 +193,9 @@ export function IdsBreadcrumb({
 
           const isLast = index === displayedItems.length - 1;
 
+          const isItemTruncated =
+            labelCap != null && visibleItems[index].label.length > labelCap;
+
 
 
           return (
@@ -183,6 +209,8 @@ export function IdsBreadcrumb({
                 href={item.href ?? "#"}
 
                 type="standalone"
+
+                title={isItemTruncated ? visibleItems[index].label : undefined}
 
               />
 
@@ -206,9 +234,7 @@ export function IdsBreadcrumb({
 
                           <span
 
-                            className={[idsLinkStyles["ids-link"], idsLinkStyles["ids-link--standalone"]].join(" ")}
-
-                            aria-label="Collapsed breadcrumbs"
+                            className={[idsLinkStyles["ids-link"], idsLinkStyles["ids-link--standalone"], styles.overflowTrigger].join(" ")}
 
                           >
 
@@ -218,9 +244,21 @@ export function IdsBreadcrumb({
 
                         }
 
+                        ariaLabel="Collapsed breadcrumbs"
+
                         items={hiddenItems.map((hiddenItem) => ({
 
-                          label: hiddenItem.label,
+                          // Render a real link inside the row — the option leads to
+                          // this breadcrumb's href like every other breadcrumb link.
+                          label: (
+                            <a
+                              href={hiddenItem.href ?? "#"}
+                              className={styles.overflowLink}
+                              tabIndex={-1}
+                            >
+                              {hiddenItem.label}
+                            </a>
+                          ) as unknown as string,
 
                           selectable: true,
 

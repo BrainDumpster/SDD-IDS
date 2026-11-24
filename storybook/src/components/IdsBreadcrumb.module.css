@@ -58,3 +58,25 @@
   white-space: nowrap;
 }
 
+
+.overflowLink {
+  color: inherit;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/* The "..." overflow control is a <span> inside DropdownMenu's <button>, which is
+   the element that actually receives focus — :focus-visible can never match the
+   span itself. Reapply the IdsLink standalone focus-visible treatment
+   (lib/react/ids/link/IdsLink.module.css) when the wrapping combobox button has
+   keyboard focus. */
+.breadcrumbItem :global(button[role="combobox"]:focus-visible) .overflowTrigger {
+  border-radius: var(--corner-radius-radius-4);
+  box-shadow: 0 0 0 var(--border-width-border-1) var(--color-border-brand-base);
+  padding-inline: var(--padding-padding-4);
+  margin-inline: calc(var(--padding-padding-4) * -1);
+  padding-block: var(--padding-padding-2);
+  margin-block: calc(var(--padding-padding-2) * -1);
+  color: var(--color-text-link-brand-base);
+  text-decoration: none;
+}
