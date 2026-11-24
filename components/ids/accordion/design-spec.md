@@ -17,8 +17,8 @@ Main component:
 
 Child components (deterministic order):
 1. `AccordionItem`
-2. `AccordionHeader` — **same surface as the trigger:** the full header row is the interactive unit (title + chevron region, expand/collapse, focus ring, `aria-expanded`). Implementations may use an inner native `button` or a library sub-component (e.g. Base UI `Accordion.Trigger`) **inside** this header for semantics; that inner node is **not** a separate public IDS slot or second generated component—codegen exposes one header/trigger API. Header content is **top-aligned**.
-3. `AccordionChevron` (left or right slot) — wrapped in a frame with **hug content** sizing and a **padding-2** top offset (`var(--padding-padding-2)`)
+2. `AccordionHeader` — **same surface as the trigger:** the full header row is the interactive unit (title + chevron region, expand/collapse, focus ring, `aria-expanded`). Header content is **top-aligned**. The header row is a **non-button interactive surface** (pointer hit area + visual focus surface); the semantic focusable control inside it is the icon-button chevron — it must **not** be nested inside a second `<button>`.
+3. `AccordionChevron` (left or right slot) — rendered as an **IDS Icon Button** (`variant: ghost neutral`, `size: small`, `shape: chev-down-thick`; see `components/ids/icon-button/design-spec.md`) in a **hug-content** frame, **no top offset** (top-aligned with the header row). It is the **focusable trigger control**: it carries the trigger `id`, `aria-expanded`, `aria-controls`, its accessible name, roving-focus participation, and the disabled state.
 4. `AccordionBody` (framework alias: `AccordionPanel`)
 5. `AccordionContent` — content is **top-aligned**
 
@@ -29,16 +29,16 @@ Optional child sub-slots:
 - Root `max-width` is unset by default (fills its container); a cap may be applied via the `maxWidth` prop (number values are interpreted as pixels; string values are used as any CSS length).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
 - Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
-- Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px**.
+- Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px** and a **padding-2** top inset (`padding-top: var(--padding-padding-2)`).
 - Truncated header titles expose the full text via a **native browser tooltip** (`title` attribute on the title element). The tooltip is set **only while the rendered text is actually truncated** (measured overflow), so untruncated titles show no redundant tooltip; tooltip text is the rendered text content.
 - **Expanded body / header join:** The open **panel body** (first wrapper under `AccordionBody`; Storybook `.panel > .content`) must **not** use a `border-top` under the header—separation is **background contrast only** (header `brand-lighter` vs body `component` surface), per IDS expanded treatment.
 - Open **item** left highlighter: **4px** brand strip `var(--color-border-brand-base)` aligned on the **open trigger** and **open panel** regions (implementation: left-edge `linear-gradient` on those surfaces). Do **not** rely on `inset` `box-shadow` on the item container alone—opaque trigger/panel fills paint above it and hide the bar.
 - Selected/open state does **not** add a second item outline beyond shared row borders.
 - Trigger/content gap and block rhythm follow `var(--spacing-space-8)` and body text line-height contracts.
-- Chevron can be placed on:
+- Chevron (IDS Icon Button) can be placed on:
   - `left` (leading; default)
   - `right` (trailing)
-- Chevron icon is wrapped in a frame with **hug content** sizing (`display: inline-flex`) and a **padding-2** top offset (`var(--padding-padding-2)`); implement as `margin-top` when the glyph is painted via a centered CSS mask — `padding-top` only grows the box and leaves the glyph centered
+- The icon button sits in a **hug content** frame (`display: inline-flex`) with **no top offset** — the **padding-2** top inset lives on the title text instead
 - Expanded item: left highlighter reads as **one** continuous **4px** strip through header and body (same token); render on surfaces that carry the row fill (trigger + panel slots), aligned so the bar does not stack into a seam.
 - Expanded panel keeps contiguous border continuity with header (no visual break).
 - Focus indicator must be visible on trigger row and not clipped by item container.
@@ -64,8 +64,9 @@ Optional child sub-slots:
   - `var(--color-icon-gray-neutral-accessible)`
   - `var(--color-icon-gray-neutral-strong)`
 - Icon asset:
-  - canonical chevron **shapeName**: `chev-down-thick` → `assets/icons/chev-down-thick.svg` (see **Icon primitive & asset delivery (codegen)** for Icon-vs-fallback rules and Storybook reference).
+  - canonical chevron **shapeName**: `chev-down-thick` → `assets/icons/chev-down-thick.svg`, rendered **inside the IDS Icon Button** (ghost neutral · small — see `components/ids/icon-button/design-spec.md`), which itself draws the glyph via the shared icon mask primitive.
 - Radius/spacing/type:
+  - `var(--padding-padding-2)` (title top inset)
   - `var(--padding-padding-12)` (trigger vertical rhythm)
   - `var(--padding-padding-16)`
   - `var(--padding-padding-24)`
@@ -84,22 +85,22 @@ Resolved fills from the canonical library frame (Figma REST `GET /v1/files/{key}
 | Left **4px** selection rail (`Rectangle 1`) | `#0076CE` | `var(--color-border-brand-base)` |
 | Primary label / body text | `#252525` | `var(--color-text-gray-neutral-strong)` |
 | Inline link (“Learn how…”) | `#0062AB` | `var(--color-text-link-brand-base)` |
-| Chevron (IDS library) | ~`#4D4D4D` / `#252525` in samples | `var(--color-icon-gray-neutral-accessible)` default & expanded; `var(--color-icon-gray-neutral-strong)` on hover |
+| Chevron (IDS Icon Button, ghost neutral) | ~`#4D4D4D` / `#252525` in samples | Ghost-neutral ladder: `var(--color-icon-gray-neutral-base)` default; `var(--color-icon-gray-neutral-strong)` hover/press/focus; `var(--color-icon-gray-disabled)` disabled |
 
 **Note:** Dark theme values come from the same semantic names in `components/ids-theme.css` dark block (e.g. brand base / link shift to lighter blues for contrast)—re-validate against dark variants in Figma when available.
 ## States (Light Theme)
 | Slot | State | Background | Border | Text/Icon |
 |---|---|---|---|---|
-| trigger | default (collapsed) | `var(--color-background-surface-component)` | item divider `var(--color-border-gray-neutral-base)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-accessible)` |
-| trigger | hover (collapsed) | `var(--color-background-brand-lighter-slate)` | unchanged divider | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
-| trigger | hover (expanded) | `var(--color-background-brand-lighter-slate)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
-| trigger | expanded (open) | `var(--color-background-brand-lighter-slate)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-accessible)` (rotated) |
+| trigger | default (collapsed) | `var(--color-background-surface-component)` | item divider `var(--color-border-gray-neutral-base)` | title `var(--color-text-gray-neutral-strong)`, chevron icon button ghost-neutral default `var(--color-icon-gray-neutral-base)` |
+| trigger | hover (collapsed) | `var(--color-background-brand-lighter-slate)` | unchanged divider | title `var(--color-text-gray-neutral-strong)`, chevron icon button hover `var(--color-icon-gray-neutral-strong)` + ghost-neutral hover fill |
+| trigger | hover (expanded) | `var(--color-background-brand-lighter-slate)` | same expanded header chrome as `expanded (open)` | title `var(--color-text-gray-neutral-strong)`, chevron icon button hover `var(--color-icon-gray-neutral-strong)` + ghost-neutral hover fill |
+| trigger | expanded (open) | `var(--color-background-brand-lighter-slate)` | left **4px** brand strip (e.g. leading-edge gradient), no trigger-only bottom border | title `var(--color-text-gray-neutral-strong)`, chevron icon button rotated 180deg, ghost-neutral default colors |
 | trigger | focus-visible | `var(--color-background-brand-lighter-slate)` (tinted in both collapsed and expanded) | header draws its own `var(--border-width-border-1)` `var(--color-border-gray-neutral-base)` border (inset shadow, no layout shift) + `border-radius: var(--corner-radius-radius-4)`; double focus ring — `0 0 0 var(--scale-2) var(--color-background-surface-component)` inner band + `0 0 0 var(--scale-4) var(--color-border-brand-base)` outer ring; the inner band follows the component surface so it is white in light and `#111619` in dark; `z-index` so the ring paints above sibling panels; when the item is expanded the header **hides the left 4px brand strip** (`background-image: none` on the focused trigger — the focus ring is the indicator), while the panel body keeps its strip | title `var(--color-text-gray-neutral-strong)`, chevron `var(--color-icon-gray-neutral-strong)` |
-| trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor |
+| trigger | disabled | same as base state | unchanged | reduced emphasis (`opacity` contract) + non-interactive cursor; icon button renders its disabled state (`var(--color-icon-gray-disabled)` glyph, `disabled` attribute) |
 | panel/content | expanded | `var(--color-background-surface-component)` | item perimeter `var(--color-border-gray-neutral-base)`; left **4px** brand strip aligned with header; **no** `border-top` on body wrapper | body `var(--color-text-gray-neutral)`, link `var(--color-text-link-brand-base)` |
 | content-card | expanded (optional) | none / transparent | none | heading/body per content; link `var(--color-text-link-brand-base)` |
 
-*Cascade note:* expanded-state chevron selectors that chain `[data-open]` (e.g. `.item[data-open="true"] .trigger .chevron`) can tie the hover rule at equal specificity — place the hover chevron rule **after** the expanded rules (or raise its specificity) so expanded+hover still resolves to `var(--color-icon-gray-neutral-strong)`.
+*Cascade note:* expanded-state rules should target the chevron **icon button** for the 180deg rotation (e.g. `.item[data-open="true"] .trigger .chevron`). Icon-button state colors come from the icon-button module (ghost-neutral ladder); accordion CSS only sets layout (`flex-shrink`, top offset) and the rotation — do not override glyph colors per accordion.
 ## States (Dark Theme)
 
 Dark theme uses the same semantic tokens as **States (Light Theme)**. Resolved values for `[data-theme="dark"]` / `.ids-theme-dark` (and program overlays) live in theme CSS:
@@ -116,7 +117,7 @@ Duplicate the full state matrix in this section only when a dark row genuinely u
 - Single-expand mode (`multiple=false`) keeps max one open panel.
 - Multi-expand mode (`multiple=true`) allows more than one open panel.
 - Disabled item is non-interactive.
-- Chevron rotates 180deg in expanded state for both left and right positions.
+- The icon-button chevron rotates 180deg in expanded state for both left and right positions (transform on the icon button).
 - Arrow key roving focus is supported between triggers.
 - Home/End move focus to first/last trigger.
 - Panel content participates in layout only when expanded.
@@ -128,7 +129,7 @@ Main inputs:
 - `items: AccordionItemInput[]` (required)
 - `multiple?: boolean` (default `false`)
 - `defaultValue?: string[]`
-- `chevronPosition?: "left" | "right"` (default `"left"`)
+- `chevronPosition?: "left" | "right"` (default `"left"` — positions the icon-button chevron)
 - `width?: number | string` (default fluid `100%`; numbers are treated as px, strings as any CSS length)
 - `maxWidth?: number | string` (default unset — no cap; numbers are treated as px, strings as any CSS length)
 - `panelMaxHeight?: number | string` (default unset — panel grows with content; when set, overflowing body content scrolls vertically. Numbers are treated as px, strings as any CSS length)
@@ -147,10 +148,10 @@ Deterministic structure:
 - `AccordionRoot`
   - repeated `AccordionItem`
     - `AccordionHeader` (trigger surface — single public slot; see **Anatomy**)
-      - optional leading `AccordionChevron` (left variant)
+      - optional leading `AccordionChevron` (left variant — IDS Icon Button, ghost neutral · small)
       - `title`
-      - optional trailing `AccordionChevron` (right variant)
-      - *implementation detail:* inner focusable control / library `Trigger` wrapper when required by the target primitive; must not surface as a second IDS peer component
+      - optional trailing `AccordionChevron` (right variant — IDS Icon Button, ghost neutral · small)
+      - *implementation detail:* the chevron icon button **is** the focusable trigger control; the header row is a non-button interactive surface — never nest the icon button inside another `<button>`/trigger element, and do not surface a second IDS peer component
     - `AccordionBody` (aka `AccordionPanel` for libraries that use panel naming)
       - `AccordionContent`
       - optional `AccordionMetaSlot`
@@ -160,10 +161,11 @@ Variant matrix:
 - expand behavior: `single | multiple` (resolved from user input)
 - item state: `collapsed | expanded | disabled`
 
-Asset & icon primitive contract:
-- `AccordionChevron` resolves asset by slug **`chev-down-thick`** (stable across frameworks; path rule in **Icon primitive & asset delivery**).
-- If generated code targets a design system that provides **`Icon` (or equivalent)** → render chevron **through that component** with the slug/shape prop required by that library; apply state colors from this spec via that component’s tintable API.
-- If no Icon exists → document chosen fallback (inline `currentColor` SVG, sprite, etc.) in generated module header and keep slug + token mapping identical.
+Chevron control contract:
+- `AccordionChevron` is rendered as an **IDS Icon Button**: `variant: ghost neutral`, `size: small`, `shape: chev-down-thick` (slug stable across frameworks; path rule in **Icon primitive & asset delivery**).
+- The icon button is the **focusable trigger control**: it carries the trigger `id`, `aria-expanded`, `aria-controls`, an accessible name (`aria-labelledby` → header title when present, otherwise `aria-label`), roving-focus participation, and `disabled`. The header row remains the pointer hit area and visual focus surface — keyboard focus-visible on the icon button paints the spec focus ring on the row (light DOM: `:has(:focus-visible)`; when the button lives inside a shadow root: `:focus-within`).
+- Never nest the icon button inside a second `<button>`/trigger element (invalid interactive nesting, double tab stop). Where a target primitive only exposes a "trigger" part, render that trigger **as** the icon button (e.g. Base UI `Accordion.Trigger render={<IconButton/>}`) or place the icon button inside a non-button row.
+- If the icon-button primitive does not expose `aria-expanded`/`aria-controls` forwarding, forward them onto its inner `<button>` (see `lib/lit/ids` icon-button) so the attributes land on the actual focusable element.
 
 Behavior contract:
 - If `multiple=false`, opening one item closes the previously open item.
@@ -173,7 +175,7 @@ Behavior contract:
 - Expanded open item must show a continuous **4px** left highlighter `var(--color-border-brand-base)` on header and body (aligned surfaces; avoid parent-only `inset` shadow hidden by opaque children). Panel body wrapper must **not** add `border-top` under the header. Implementations may key off library open markers (Base UI: `data-panel-open` on trigger, `data-open` on item/panel).
 
 Accessibility contract:
-- The header/trigger surface carries `aria-expanded` and `aria-controls` on the actual focusable control (if the header wraps an inner `button`, those attributes live on that element).
+- The chevron icon button is the focusable control carrying the trigger `id`, `aria-expanded`, `aria-controls`, and an accessible name (`aria-labelledby` → header title when present, else `aria-label`); the panel `role="region"` `aria-labelledby` resolves through that button.
 - Panel carries `role="region"` and `aria-labelledby`.
 - Keyboard support: `Enter`, `Space`, `Home`, `End`. (Arrow keys no longer move focus between accordion triggers.)
 
@@ -186,7 +188,7 @@ Validation checklist:
 - [ ] All state rows map to semantic tokens (light/dark parallel).
 - [ ] Single and multi expand behavior both implemented.
 - [ ] Chevron renders correctly in both left and right positions.
-- [ ] If the target library exposes an **Icon** (or equivalent), `AccordionChevron` is implemented **through** it with slug `chev-down-thick` (no ad-hoc asset paths in the accordion file); otherwise fallback is documented and still token-tinted per state tables.
+- [ ] `AccordionChevron` is implemented through **IdsIconButton** (`variant="ghostNeutral"`, `size="small"`, `shape="chev-down-thick"`) as the focusable trigger control — not nested inside another `<button>` — while the header row keeps pointer + focus visuals.
 - [ ] Focus-visible ring is visible and not clipped.
 - [ ] Disabled rows are non-interactive.
 - [ ] Expanded open item shows a visible left highlighter on trigger and body (aligned; not hidden under opaque fills); expanded body has **no** `border-top` under the header.
@@ -194,22 +196,22 @@ Validation checklist:
 ### Icon primitive and asset delivery
 Use this section whenever codegen targets a stack that already ships an **Icon** (or equivalent) layer. Names vary by framework (`Icon`, `CdsIcon`, `mat-icon` + registry, `SpriteIcon`, etc.); the contract is the same.
 
-**When the target library exposes an Icon / glyph component**
-- **Prefer it** for `AccordionChevron` instead of hand-rolling `<img src>` or hard-coded file paths in the accordion module.
-- Pass a **stable asset slug** (here: `chev-down-thick`) via whatever prop the library uses (`shapeName`, `name`, `icon`, `glyph`, …). That slug must match the **asset contract** entry for this component (see below).
-- For **monochrome** chevrons, use the library’s **tintable** mode when offered (e.g. mask + semantic `color`, or SVG `currentColor`). Map states to tokens from this spec’s state tables (`var(--color-icon-gray-neutral-accessible)`, `var(--color-icon-gray-neutral-strong)` on hover, etc.).
-- For **multi-color** SVGs only, use the library’s **non-tinted / raster** mode if required; accordion chevron is **not** in that category.
+**When the target library exposes an Icon Button / glyph-button primitive**
+- **Prefer it** for `AccordionChevron` (IDS Icon Button, ghost neutral · small) instead of hand-rolling `<img src>`, bare icon slots, or hard-coded file paths in the accordion module.
+- Pass a **stable asset slug** (here: `chev-down-thick`) via whatever prop the library uses (`shape`, `shapeName`, `name`, `icon`, …). That slug must match the **asset contract** entry for this component (see below).
+- Icon-button state colors come from the icon-button’s own variant ladder (ghost neutral); do not re-map accordion state colors onto the glyph — only layout offsets and the 180deg rotation belong to the accordion module.
 
-**When no Icon primitive exists**
-- Fallback is still slug-driven: inline SVG with `fill="currentColor"`, sprite id, or framework asset pipeline, but the **same slug** and **same token → color** mapping must apply. Do not rely on `color` CSS on `<img>` for fixed-fill SVG assets.
+**When no Icon Button primitive exists**
+- Fallback keeps the same contract shape: a focusable button-styled control rendering the `chev-down-thick` glyph via the shared icon/mask pipeline, ghost-neutral visuals at the small size, carrying `aria-expanded`/`aria-controls`.
 
 **Asset contract (accordion chevron)**
-- Slug: `chev-down-thick`
+- Slug: `chev-down-thick` (passed as the icon button’s `shape`)
 - File: `assets/icons/chev-down-thick.svg` (repo root; bundler resolves from app/storybook config)
-- Rotation: `180deg` when expanded (CSS transform on the chevron slot wrapper is acceptable)
+- Control: IDS Icon Button — `variant: ghost neutral`, `size: small`
+- Rotation: `180deg` when expanded (CSS transform on the icon button)
 
 **IDS / Storybook reference implementation**
-- `Icon` in `storybook/src/components/Icon.tsx`: `import.meta.glob` over `assets/icons/*.svg`, default **`variant` `mask`**, optional `variant` `img` for full-color glyphs. Accordion uses **`Icon` + `shapeName="chev-down-thick"`** + mask tint pattern (`color` + `background-color: currentColor` on the slot class). See `IdsAccordion.tsx` / `IdsAccordion.module.css`.
+- Accordion uses **`IdsIconButton`** (`variant="ghostNeutral"`, `size="small"`, `shape="chev-down-thick"`) as the chevron/trigger control; the header row is a non-button surface and Base UI `Accordion.Trigger` renders the icon button via its `render` prop. See `storybook/src/components/IdsAccordion.tsx` / `IdsAccordion.module.css`.
 ## Source Mapping
 | Source | Location |
 |---|---|
@@ -220,5 +222,6 @@ Use this section whenever codegen targets a stack that already ships an **Icon**
 | IDS Design Library (canonical colors / examples) | https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42156-108639&m=dev (`42156:108639`) |
 | Storybook implementation | `storybook/src/components/IdsAccordion.tsx`, `storybook/src/components/IdsAccordion.module.css`, `storybook/src/components/IdsAccordion.stories.tsx` |
 | Lib React implementation (no Base UI) | `lib/react/ids/accordion/` (`IdsAccordion.tsx`, `IdsAccordion.module.css`; selectors `ids-accordion`, `ids-accordion-header`, …); stories: `storybook/src/components/lib-generated/Accordion.stories.tsx` |
-| Shared Icon primitive (Storybook) | `storybook/src/components/Icon.tsx` (`shapeName` → `assets/icons/*.svg`) |
+| Lib Lit implementation | `lib/lit/ids/src/accordion/` (`ids-icon-button` chevron inside `ids-accordion-title`) |
+| Icon-button primitive | `lib/react/ids/icon-button/` (`IdsIconButton`), `lib/lit/ids/src/icon-button/` (`ids-icon-button`), `storybook/src/components/IdsIconButton.tsx` (re-export) |
 | Runtime story / codegen contract | `storybook/src/spec-contracts/ids-accordion.contract.tsx` (mirrors this spec’s API + anatomy constants; stories import it) |

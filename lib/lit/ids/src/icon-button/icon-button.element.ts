@@ -62,6 +62,20 @@ export class IdsIconButton extends LitElement {
   @property({ type: String, attribute: "arialabel" })
   ariaLabel = "";
 
+  /**
+   * Forwarded onto the inner shadow `<button>` so composite controls
+   * (e.g. the accordion chevron trigger) can place state/relationship
+   * attributes on the actual focusable element.
+   */
+  @property({ type: String, attribute: "ariaexpanded" })
+  ariaExpanded: string | null = null;
+
+  @property({ type: String, attribute: "ariacontrols" })
+  ariaControls = "";
+
+  @property({ type: String, attribute: "arialabelledby" })
+  ariaLabelledby = "";
+
   @property({ type: String, attribute: "data-state", reflect: true })
   dataState: IdsIconButtonDataState | "" = "";
 
@@ -175,6 +189,9 @@ export class IdsIconButton extends LitElement {
         .value=${this.value}
         ?autofocus=${this.autofocus}
         aria-label=${accessibleName}
+        aria-labelledby=${this.ariaLabelledby || nothing}
+        aria-expanded=${this.ariaExpanded ?? nothing}
+        aria-controls=${this.ariaControls || nothing}
         aria-disabled=${disabled ? "true" : nothing}
         aria-busy=${this.loading ? "true" : nothing}
         data-ids="ids-icon-button"

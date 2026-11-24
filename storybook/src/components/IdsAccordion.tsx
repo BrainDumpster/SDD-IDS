@@ -1,7 +1,7 @@
 import { Accordion as BaseAccordion } from "@base-ui-components/react/accordion";
 import type { MouseEvent as ReactMouseEvent } from "react";
 import type { IdsAccordionItem, IdsAccordionProps } from "@component-contracts/ids/accordion.react-bridge";
-import { Icon } from "./Icon";
+import { IdsIconButton } from "./IdsIconButton";
 import styles from "./IdsAccordion.module.css";
 
 export type { IdsAccordionItem, IdsAccordionProps };
@@ -43,6 +43,24 @@ function handleTitleMouseEnter(event: ReactMouseEvent<HTMLSpanElement>) {
     if (el.title !== text) el.title = text;
   } else if (el.title) {
     el.removeAttribute("title");
+  }
+}
+
+/**
+ * Design-spec: the chevron is an IDS Icon Button (ghost neutral, small) and
+ * the focusable trigger control — Base UI `Trigger` renders AS it via
+ * `render`, so no `<button>` is nested inside another `<button>`.
+ * Clicking the non-button row forwards to the trigger button so the full
+ * header stays the pointer hit area. `btn.click()` is a no-op when the
+ * button is disabled, matching the item `disabled` contract.
+ */
+function forwardRowClick(event: ReactMouseEvent<HTMLDivElement>) {
+  const row = event.currentTarget;
+  const button = row.querySelector<HTMLButtonElement>(
+    "button[data-ids='ids-icon-button']",
+  );
+  if (button && event.target !== button && !button.contains(event.target as Node)) {
+    button.click();
   }
 }
 
@@ -90,32 +108,51 @@ export function IdsAccordion({
           key={item.value}
           value={item.value}
           disabled={item.disabled}
-          className={styles.item}
+          className={(state) =>
+            [styles.item, state.open ? styles.itemOpen : ""].filter(Boolean).join(" ")
+          }
           data-first={index === 0 ? "true" : "false"}
-        > onMouseEnter={handleTitleMouseEnter}
-                
-              
+        >
           <BaseAccordion.Header className={styles.header}>
-            <BaseAccordion.Trigger
-              className={(state) =>
-                [
-                  styles.trigger,
-                  chevronPosition === "left" ? styles.triggerLeft : styles.triggerRight,
-                  state.open ? styles.open : "",
-                  item.disabled ? styles.disabled : "",
-                ]
-                  .filter(Boolean)
-                  .join(" ")
-              }
+            <div
+              className={[
+                styles.trigger,
+                chevronPosition === "left" ? styles.triggerLeft : styles.triggerRight,
+              ]
+                .filter(Boolean)
+                .join(" ")}
+              onClick={forwardRowClick}
             >
               {chevronPosition === "left" ? (
-                <Icon shapeName="chev-down-thick" className={styles.icon} />
+                <BaseAccordion.Trigger
+                  render={
+                    <IdsIconButton
+                      variant="ghostNeutral"
+                      size="small"
+                      shape="chev-down-thick"
+                      ariaLabel={item.title}
+                      className={styles.chevron}
+                    />
+                  }
+                />
               ) : null}
-              <span className={styles.title}>{item.title}</span>
+              <span className={styles.title} onMouseEnter={handleTitleMouseEnter}>
+                {item.title}
+              </span>
               {chevronPosition === "right" ? (
-                <Icon shapeName="chev-down-thick" className={styles.icon} />
+                <BaseAccordion.Trigger
+                  render={
+                    <IdsIconButton
+                      variant="ghostNeutral"
+                      size="small"
+                      shape="chev-down-thick"
+                      ariaLabel={item.title}
+                      className={styles.chevron}
+                    />
+                  }
+                />
               ) : null}
-            </BaseAccordion.Trigger>
+            </div>
           </BaseAccordion.Header>
           <BaseAccordion.Panel
             className={styles.panel}

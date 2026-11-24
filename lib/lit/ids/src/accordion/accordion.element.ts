@@ -159,7 +159,13 @@ export class IdsAccordion extends LitElement {
     );
   };
 
-  /** Keyboard contract from design-spec: Enter / Space toggle; Home / End move focus. */
+  /**
+   * Keyboard contract from design-spec: Home / End move focus.
+   * Enter / Space intentionally NOT handled here — the chevron is an
+   * `ids-icon-button` whose inner shadow `<button>` produces a native
+   * click that toggles via the header row's click handler; calling
+   * `toggleActive()` here as well would toggle twice per keypress.
+   */
   onTriggerKeydown(event: KeyboardEvent, panel: IdsAccordionPanel): void {
     this.refreshPanels();
     const enabled = this.panels.filter(
@@ -178,22 +184,20 @@ export class IdsAccordion extends LitElement {
         event.preventDefault();
         target = enabled[enabled.length - 1]!;
         break;
-      case " ":
-      case "Enter":
-        event.preventDefault();
-        panel.toggleActive();
-        return;
       default:
         return;
     }
 
     const value = target.value || target.id || "";
+    // Prefer the icon-button's inner shadow button (the focusable control);
+    // fall back to a plain shadow button or the light-DOM trigger id.
+    const title = target.querySelector("ids-accordion-title");
+    const iconButton = title?.shadowRoot?.querySelector("ids-icon-button");
+    const shadowBtn = (iconButton?.shadowRoot?.querySelector("button") ??
+      title?.shadowRoot?.querySelector("button")) as HTMLButtonElement | null;
     const trigger = this.querySelector(
       `#ids-accordion-trigger-${CSS.escape(value)}`,
     ) as HTMLElement | null;
-    // Prefer shadow trigger inside title
-    const title = target.querySelector("ids-accordion-title");
-    const shadowBtn = title?.shadowRoot?.querySelector("button") as HTMLButtonElement | null;
     (shadowBtn ?? trigger)?.focus();
   }
 

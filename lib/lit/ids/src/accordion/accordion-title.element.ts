@@ -1,6 +1,7 @@
 /**
  * AccordionTitle — edf-core `ids-accordion-title` + IDS header/trigger contract.
- * Chevron: shared `ids-icon` with slug `chev-down-thick` (assets/icons/).
+ * Chevron: `ids-icon-button` (ghostNeutral, small, `chev-down-thick`) — the
+ * focusable trigger control; the header row is a non-button surface.
  */
 import { LitElement, PropertyValues, html, nothing } from "lit";
 import { state } from "lit/decorators.js";
@@ -8,7 +9,7 @@ import type { IdsAccordion } from "./accordion.element.js";
 import type { IdsAccordionPanel } from "./accordion-panel.element.js";
 import { accordionTitleStyles } from "./accordion.styles.js";
 import { ACCORDION_CHEVRON_ICON_SLUG } from "./accordion.constants.js";
-import "../icon/register.js";
+import "../icon-button/register.js";
 
 export class IdsAccordionTitle extends LitElement {
   static override styles = [accordionTitleStyles];
@@ -124,41 +125,54 @@ export class IdsAccordionTitle extends LitElement {
     this.root.onTriggerKeydown(event, this.panel);
   }
 
-  private renderChevron() {
+  /**
+   * Chevron control — `ids-icon-button` (ghost neutral · small). Per the
+   * design-spec it is the focusable trigger control, so it carries the
+   * trigger `id` + forwarded `aria-*` onto its inner shadow button. The
+   * header row stays a non-button surface (no nested `<button>`).
+   */
+  private renderTriggerControl(titleId: string | typeof nothing) {
+    const label = this.ownTitleText() || "Toggle section";
     return html`
-      <span class="icon-layout" aria-hidden="true">
-        <ids-icon
-          shape=${ACCORDION_CHEVRON_ICON_SLUG}
-          size="16"
-          variant="mask"
-        ></ids-icon>
-      </span>
+      <ids-icon-button
+        class="accordion-chevron"
+        id=${this.triggerId || nothing}
+        variant="ghostNeutral"
+        size="small"
+        shape=${ACCORDION_CHEVRON_ICON_SLUG}
+        arialabel=${label}
+        aria-label=${label}
+        arialabelledby=${titleId}
+        ariaexpanded=${String(this.active)}
+        ariacontrols=${this.panelRegionId || nothing}
+        ?disabled=${this.disabled}
+        data-hook-ids="accordion-chevron"
+      ></ids-icon-button>
     `;
   }
 
   override render() {
     const chevron = this.chevronPosition;
+    const titleId = this.triggerId ? `${this.triggerId}-title` : nothing;
     return html`
       <h3>
-        <button
-          type="button"
-          class="accordion-header ${this.active ? "active-header" : ""} accordion-header--${chevron}"
-          id=${this.triggerId || nothing}
-          aria-expanded=${String(this.active)}
-          aria-controls=${this.panelRegionId || nothing}
-          ?disabled=${this.disabled}
+        <div
+          class="accordion-header ${this.active ? "active-header" : ""} accordion-header--${chevron} ${
+            this.disabled ? "accordion-header--disabled" : ""
+          }"
           data-hook-ids="accordion-header"
           data-open=${this.active ? "true" : "false"}
+          data-disabled=${this.disabled ? "true" : "false"}
           @click=${this.handleClick}
           @keydown=${this.handleKeydown}
         >
-          ${chevron === "left" ? this.renderChevron() : nothing}
-          <span class="accordion-title" data-hook-ids="accordion-title">
-            <slot></slot>
+          ${chevron === "left" ? this.renderTriggerControl(titleId) : nothing}
+          <span class="accordion-title" id=${titleId} data-hook-ids="accordion-title">
+            <slot @slotchange=${() => this.requestUpdate()}></slot>
           </span>
           <slot name="meta" class="accordion-meta" data-hook-ids="accordion-meta"></slot>
-          ${chevron === "right" ? this.renderChevron() : nothing}
-        </button>
+          ${chevron === "right" ? this.renderTriggerControl(titleId) : nothing}
+        </div>
       </h3>
     `;
   }
