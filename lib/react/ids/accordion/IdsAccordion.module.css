@@ -77,6 +77,8 @@
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
   color: var(--color-text-gray-neutral-strong);
+  /* Spec: padding-2 top inset on the title text (header is top-aligned). */
+  padding-top: var(--padding-padding-2);
   max-width: 900px;
   display: -webkit-box;
   -webkit-line-clamp: 2;
@@ -89,10 +91,8 @@
 .ids-accordion-chevron {
   /* Ghost-neutral/small glyph styling comes from IdsIconButton + its CSS —
      this class keeps only trigger-row layout + the expanded rotation.
-     margin-top (not padding): spec padding-2 top offset while header
-     content stays top-aligned. */
+     No top offset on the chevron — the padding-2 inset moved to the title. */
   flex-shrink: 0;
-  margin-top: var(--padding-padding-2);
   transition: transform 120ms ease;
 }
 

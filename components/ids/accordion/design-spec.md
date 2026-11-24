@@ -18,7 +18,7 @@ Main component:
 Child components (deterministic order):
 1. `AccordionItem`
 2. `AccordionHeader` — **same surface as the trigger:** the full header row is the interactive unit (title + chevron region, expand/collapse, focus ring, `aria-expanded`). Header content is **top-aligned**. The header row is a **non-button interactive surface** (pointer hit area + visual focus surface); the semantic focusable control inside it is the icon-button chevron — it must **not** be nested inside a second `<button>`.
-3. `AccordionChevron` (left or right slot) — rendered as an **IDS Icon Button** (`variant: ghost neutral`, `size: small`, `shape: chev-down-thick`; see `components/ids/icon-button/design-spec.md`) in a **hug-content** frame with a **padding-2** top offset (`var(--padding-padding-2)`). It is the **focusable trigger control**: it carries the trigger `id`, `aria-expanded`, `aria-controls`, its accessible name, roving-focus participation, and the disabled state.
+3. `AccordionChevron` (left or right slot) — rendered as an **IDS Icon Button** (`variant: ghost neutral`, `size: small`, `shape: chev-down-thick`; see `components/ids/icon-button/design-spec.md`) in a **hug-content** frame, **no top offset** (top-aligned with the header row). It is the **focusable trigger control**: it carries the trigger `id`, `aria-expanded`, `aria-controls`, its accessible name, roving-focus participation, and the disabled state.
 4. `AccordionBody` (framework alias: `AccordionPanel`)
 5. `AccordionContent` — content is **top-aligned**
 
@@ -29,7 +29,7 @@ Optional child sub-slots:
 - Root `max-width` is unset by default (fills its container); a cap may be applied via the `maxWidth` prop (number values are interpreted as pixels; string values are used as any CSS length).
 - Item separators: `var(--border-width-border-1)` using accessible divider token.
 - Trigger row uses IDS Figma contract: `min-height: 40px`, padding `10px 16px` (`var(--padding-padding-10)` `var(--padding-padding-16)`), `height: auto` to hug content.
-- Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px**.
+- Header title wraps up to **2 lines**; text longer than 2 lines is truncated with ellipsis. Header title has a **max-width of 900px** and a **padding-2** top inset (`padding-top: var(--padding-padding-2)`).
 - Truncated header titles expose the full text via a **native browser tooltip** (`title` attribute on the title element). The tooltip is set **only while the rendered text is actually truncated** (measured overflow), so untruncated titles show no redundant tooltip; tooltip text is the rendered text content.
 - **Expanded body / header join:** The open **panel body** (first wrapper under `AccordionBody`; Storybook `.panel > .content`) must **not** use a `border-top` under the header—separation is **background contrast only** (header `brand-lighter` vs body `component` surface), per IDS expanded treatment.
 - Open **item** left highlighter: **4px** brand strip `var(--color-border-brand-base)` aligned on the **open trigger** and **open panel** regions (implementation: left-edge `linear-gradient` on those surfaces). Do **not** rely on `inset` `box-shadow` on the item container alone—opaque trigger/panel fills paint above it and hide the bar.
@@ -38,7 +38,7 @@ Optional child sub-slots:
 - Chevron (IDS Icon Button) can be placed on:
   - `left` (leading; default)
   - `right` (trailing)
-- The icon button sits in a **hug content** frame (`display: inline-flex`) with a **padding-2** top offset (`var(--padding-padding-2)`); implement as `margin-top` on the icon button itself
+- The icon button sits in a **hug content** frame (`display: inline-flex`) with **no top offset** — the **padding-2** top inset lives on the title text instead
 - Expanded item: left highlighter reads as **one** continuous **4px** strip through header and body (same token); render on surfaces that carry the row fill (trigger + panel slots), aligned so the bar does not stack into a seam.
 - Expanded panel keeps contiguous border continuity with header (no visual break).
 - Focus indicator must be visible on trigger row and not clipped by item container.
@@ -66,6 +66,7 @@ Optional child sub-slots:
 - Icon asset:
   - canonical chevron **shapeName**: `chev-down-thick` → `assets/icons/chev-down-thick.svg`, rendered **inside the IDS Icon Button** (ghost neutral · small — see `components/ids/icon-button/design-spec.md`), which itself draws the glyph via the shared icon mask primitive.
 - Radius/spacing/type:
+  - `var(--padding-padding-2)` (title top inset)
   - `var(--padding-padding-12)` (trigger vertical rhythm)
   - `var(--padding-padding-16)`
   - `var(--padding-padding-24)`

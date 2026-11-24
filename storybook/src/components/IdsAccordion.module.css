@@ -54,6 +54,8 @@
   font-size: var(--font-size-body-2);
   line-height: var(--font-line-height-line-height-20);
   font-weight: 400;
+  /* Spec: padding-2 top inset on the title text (header is top-aligned). */
+  padding-top: var(--padding-padding-2);
   max-width: 900px;
   display: -webkit-box;
   -webkit-line-clamp: 2;

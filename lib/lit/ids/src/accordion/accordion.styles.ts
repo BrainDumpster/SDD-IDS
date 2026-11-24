@@ -80,6 +80,8 @@ export const accordionTitleStyles = css`
     line-height: var(--font-line-height-line-height-20);
     font-weight: 400;
     color: var(--color-text-gray-neutral-strong);
+    /* Design-spec: padding-2 top inset on the title text. */
+    padding-top: var(--padding-padding-2, 2px);
     max-width: 900px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
@@ -90,12 +92,11 @@ export const accordionTitleStyles = css`
   }
 
   /* Design-spec: the chevron is an ids-icon-button (ghost neutral, small).
-     It owns its own state colors — this class only sets layout offsets and
-     the expanded rotation. padding-2 top offset implemented as margin-top. */
+     It owns its own state colors — this class only sets layout and the
+     expanded rotation. No top offset — the padding-2 inset sits on the title. */
   .accordion-chevron {
     display: inline-flex;
     flex-shrink: 0;
-    margin-top: var(--padding-padding-2, 2px);
     transition: transform 120ms ease;
   }
 
