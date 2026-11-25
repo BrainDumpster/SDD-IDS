@@ -34,8 +34,8 @@ import React, {
 } from "react";
 import { createPortal } from "react-dom";
 import { IdsBadge } from "../badge";
-import { IdsButton, IdsButtonLeadingIcon } from "../button";
 import { IdsIcon } from "../icon";
+import { IdsIconButton } from "../icon-button";
 import styles from "./IdsTabs.module.css";
 
 /* -------------------------------------------------------------------------- */
@@ -795,25 +795,22 @@ function TabButtonView({ item }: { item: IdsTabItemInput }) {
         ) : null}
       </span>
       {item.closable ? (
-        <IdsButton
+        /* Design-spec TabClose: IDS Icon Button (ghost neutral · small).
+           stopPropagation on click + keydown so the close control doesn't
+           bubble to the tab's select/Enter-Space handlers. */
+        <IdsIconButton
           className={styles["ids-tab-button-close"]}
-          variant="tertiary"
-          size="medium"
-          iconOnly
+          variant="ghostNeutral"
+          size="small"
+          shape="ctrl-close-16"
           ariaLabel={`Close ${item.label}`}
+          data-slot="ids-tab-button-close"
           onClick={(event) => {
             event.stopPropagation();
             root.closeTab(item.id);
           }}
-        >
-          <IdsButtonLeadingIcon>
-            <IdsIcon
-              shape="ctrl-close-16"
-              size={16}
-              color="var(--color-icon-gray-neutral-base)"
-            />
-          </IdsButtonLeadingIcon>
-        </IdsButton>
+          onKeyDown={(event) => event.stopPropagation()}
+        />
       ) : null}
     </button>
   );

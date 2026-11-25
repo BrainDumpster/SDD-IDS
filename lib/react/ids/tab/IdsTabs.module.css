@@ -227,13 +227,11 @@
   line-height: var(--font-line-height-line-height-20);
 }
 
+/* TabClose — IdsIconButton (ghostNeutral · small): owns the 24×24 shell,
+   ctrl-close-16 glyph, states, and focus ring; no forced sizing needed. */
 .ids-tab-button-close {
-  box-sizing: border-box;
-  width: var(--sizing-size-24) !important;
-  min-width: var(--sizing-size-24) !important;
-  height: var(--sizing-size-24) !important;
-  min-height: var(--sizing-size-24) !important;
-  padding: var(--padding-padding-4) !important;
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .ids-tabs-overflow-trigger {

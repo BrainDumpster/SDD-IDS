@@ -227,42 +227,11 @@ export const tabsStyles = css`
     line-height: var(--font-line-height-line-height-20);
   }
 
-  /* TabClose: 24×24 tertiary icon-only with 16px ctrl-close (design-spec).
-     Native control — IdsButton shadow root cannot inherit these overrides. */
-  .ids-tab-button-close {
-    all: unset;
-    box-sizing: border-box;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
+  /* TabClose — ids-icon-button (ghost neutral · small): owns the 24×24 shell,
+     ctrl-close-16 glyph, states, and focus ring; only flex positioning here. */
+  ids-icon-button[data-slot="ids-tab-button-close"] {
     flex-shrink: 0;
     align-self: center;
-    width: var(--sizing-size-24);
-    min-width: var(--sizing-size-24);
-    height: var(--sizing-size-24);
-    min-height: var(--sizing-size-24);
-    padding: var(--padding-padding-4);
-    border-radius: var(--corner-radius-radius-2);
-    color: var(--color-icon-gray-neutral-base);
-    cursor: pointer;
-    line-height: 0;
-  }
-
-  .ids-tab-button-close:hover {
-    background: var(--color-background-brand-lighter-slate);
-  }
-
-  .ids-tab-button-close:focus-visible {
-    outline: none;
-    box-shadow:
-      0 0 0 var(--scale-2) var(--color-background-surface-component),
-      0 0 0 var(--scale-4) var(--color-border-brand-base);
-  }
-
-  .ids-tab-button-close ids-icon {
-    display: block;
-    width: 16px;
-    height: 16px;
   }
 
   .ids-tabs-overflow-trigger {

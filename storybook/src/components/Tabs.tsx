@@ -7,6 +7,7 @@ import shapeXIcon from "../../../assets/icons/shape-x.svg";
 import synapseMenuStyles from "./SynapseDropdownActionMenu.module.css";
 import styles from "./Tabs.module.css";
 import { Icon } from "./Icon";
+import { IdsIconButton } from "./IdsIconButton";
 import { Badge } from "./Badge";
 import {
   computeTabOverflowMenuItems,
@@ -174,25 +175,44 @@ export function Tabs({
                 ) : null}
               </span>
               {(item.closable ?? isSynapse) ? (
-                <span
-                  className={styles.close}
-                  role="button"
-                  aria-label={`Close ${item.label}`}
-                  tabIndex={0}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    closeTab(item.id);
-                  }}
-                  onKeyDown={(e) => {
-                    if (e.key === "Enter" || e.key === " ") {
-                      e.preventDefault();
+                isSynapse ? (
+                  /* Synapse keeps the spec's padded shape-x span close. */
+                  <span
+                    className={styles.close}
+                    role="button"
+                    aria-label={`Close ${item.label}`}
+                    tabIndex={0}
+                    onClick={(e) => {
                       e.stopPropagation();
                       closeTab(item.id);
-                    }
-                  }}
-                >
-                  <img src={shapeXIcon} alt="" className={styles.closeIcon} />
-                </span>
+                    }}
+                    onKeyDown={(e) => {
+                      if (e.key === "Enter" || e.key === " ") {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        closeTab(item.id);
+                      }
+                    }}
+                  >
+                    <img src={shapeXIcon} alt="" className={styles.closeIcon} />
+                  </span>
+                ) : (
+                  /* Design-spec TabClose: IDS Icon Button (ghost neutral · small).
+                     click + keydown stopped so the tab doesn't select. */
+                  <IdsIconButton
+                    className={styles.closeButton}
+                    variant="ghostNeutral"
+                    size="small"
+                    shape="ctrl-close-16"
+                    ariaLabel={`Close ${item.label}`}
+                    data-slot="ids-tab-button-close"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      closeTab(item.id);
+                    }}
+                    onKeyDown={(e) => e.stopPropagation()}
+                  />
+                )
               ) : null}
             </button>
           ))}

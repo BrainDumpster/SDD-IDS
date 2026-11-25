@@ -27,6 +27,7 @@ import { repeat } from "lit/directives/repeat.js";
 import { unsafeHTML } from "lit/directives/unsafe-html.js";
 import "../badge/register.js";
 import "../icon/register.js";
+import "../icon-button/register.js";
 import type { IdsTab } from "./tab-item.element.js";
 import {
   PLACEHOLDER_ITEM,
@@ -719,22 +720,21 @@ export class IdsTabs extends LitElement {
         </span>
         ${item.closable
           ? html`
-              <button
-                type="button"
-                class="ids-tab-button-close"
-                data-ids="ids-tab-button-close"
+              <!-- Design-spec TabClose: ids-icon-button (ghost neutral · small).
+                   data-slot keeps the toast marker; the host overwrites
+                   data-ids. click + keydown stopped so the close control
+                   doesn't bubble to the tab's select/Enter-Space handlers. -->
+              <ids-icon-button
+                variant="ghostNeutral"
+                size="small"
+                shape=${TAB_CLOSE_ICON_SLUG}
+                arialabel=${`Close ${item.label}`}
                 aria-label=${`Close ${item.label}`}
-                @click=${(e: Event) => {
-                  e.stopPropagation();
-                  this.closeTab(item.id);
-                }}
-              >
-                <ids-icon
-                  shape=${TAB_CLOSE_ICON_SLUG}
-                  size="16"
-                  color="var(--color-icon-gray-neutral-base)"
-                ></ids-icon>
-              </button>
+                data-slot="ids-tab-button-close"
+                @click=${(e: Event) => e.stopPropagation()}
+                @keydown=${(e: Event) => e.stopPropagation()}
+                @ids-icon-button-click=${() => this.closeTab(item.id)}
+              ></ids-icon-button>
             `
           : nothing}
       </button>
