@@ -210,6 +210,7 @@
   white-space: nowrap;
 }
 
+/* Synapse-only close (padded shape-x span per spec); IDS uses .closeButton. */
 .close {
   width: 16px;
   height: 16px;
@@ -226,13 +227,11 @@
   display: block;
 }
 
-.tab .closeButton {
-  box-sizing: border-box;
-  width: var(--sizing-size-24);
-  min-width: var(--sizing-size-24);
-  height: var(--sizing-size-24);
-  min-height: var(--sizing-size-24);
-  padding: var(--padding-padding-4) !important;
+/* TabClose — IdsIconButton (ghostNeutral · small): owns the 24×24 shell,
+   ctrl-close-16 glyph, states, and focus ring; only flex positioning here. */
+.closeButton {
+  flex-shrink: 0;
+  align-self: center;
 }
 
 .tab.hasClose {

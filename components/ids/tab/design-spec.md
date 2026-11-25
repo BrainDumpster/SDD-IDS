@@ -162,7 +162,7 @@ Runtime rules:
 - `TabLabel`: Body 2 tokenized typography.
 - `SelectedIndicator`: `2px`, placement depends on variant (`primary=top`, `secondary=bottom` in validated IDS examples).
 - `FocusRing`: `box-shadow` double ring — `var(--scale-2)` `var(--color-background-surface-component)` inner band + `var(--scale-4)` `var(--color-border-brand-base)` outer ring, `radius-2`, tinted `var(--color-background-brand-lighter-slate)` background. Ring is drawn **outside** the full-`38px` element (list-wrap padding keeps it unclipped); the focused tab's bottom border stays aligned with the row baseline.
-- `TabClose` (IDS tabs only): rendered as an `IdsButton` tertiary icon-only control (`variant="tertiary"`, `size="sm"`, `iconOnly`, `iconSlug="ctrl-close-16"`). The control is `24px` × `24px` (`var(--sizing-size-24)`) with `var(--padding-padding-4)` padding on all sides; the icon is tinted `var(--color-icon-gray-neutral-base)`. Synapse tabs continue to use the previous `shape-x` 12px icon in a padded span.
+- `TabClose` (IDS tabs only): rendered as an IDS Icon Button (`variant="ghostNeutral"`, `size="small"`, `shape="ctrl-close-16"`). The control is `24px` × `24px` (`var(--sizing-size-24)`) — the icon button's small shell — with its small-size `ctrl-close-16` glyph tinted `var(--color-icon-gray-neutral-base)`; hover/press/focus states and the focus ring come from the icon button. Synapse tabs continue to use the previous `shape-x` 12px icon in a padded span.
 - `OverflowTrigger`: same sizing and tab affordance as peer tab items; selected overflow trigger also uses `border-bottom: none`.
 - `AddTabTrigger`: visual parity with tab row controls; keeps accessible baseline.
 - `TabList` trailing filler: flex-grow pseudo/spacer with the same accessible `border-bottom` to continue the baseline past the last control.
@@ -218,10 +218,12 @@ Runtime rules:
 - [ ] `surface=elevated` + selected likewise shows no accessible baseline under the selected tab.
 - [ ] `ActiveTabPanel` does not use `border-top` + negative margin as a baseline underlay.
 - [ ] Tab list trailing filler (or equivalent) continues the baseline only in non-selected remaining width.
+- [ ] `TabClose` is an IDS Icon Button (`variant="ghostNeutral"`, `size="small"`, `shape="ctrl-close-16"`) — `24×24` shell, `Close <label>` accessible name, dismissal does not activate the tab.
 ## Source Mapping
 - **Component map entry:** `data/component-figma-map.json` -> `Tab`.
 - **Validated Figma node:** `30681:9530` (IDS Design Library, text and annotation board for primary/secondary, overflow, add-tab, and state examples).
 - **Figma MCP evidence:** `get_design_context(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`, `get_variable_defs(fileKey=0bHk3XhrjFhowgFkz9yLr4,nodeId=30681:9530)`.
 ## Implementation Notes
+- **TabClose → IDS Icon Button (2026-11-25)**: Replaced the tertiary icon-only `IdsButton` close with an IDS Icon Button (`variant="ghostNeutral"`, `size="small"`, `shape="ctrl-close-16"`) — 24×24 shell, ghost-neutral glyph (`var(--color-icon-gray-neutral-base)`), states and focus ring from the component. Both React and Lit stop click + keydown propagation on the close control so it can't trigger the tab's select/Enter-Space handlers (Lit uses `data-slot="ids-tab-button-close"` since the icon button host owns `data-ids`). Synapse tabs keep the padded `shape-x` span. Angular is unchanged. Changed in `lib/react/ids/tab/IdsTabs.tsx`, `IdsTabs.module.css`, `lib/lit/ids/src/tab/tabs.element.ts`, `tab.styles.ts`, `storybook/src/components/Tabs.tsx`, `Tabs.module.css`.
 - **Caret icon size:** Overflow trigger caret icon (`moreIcon`) is set to `var(--sizing-size-10, 10px)` width and height.
 - **Selected baseline (Storybook reference):** `storybook/src/components/Tabs.module.css` — selected / overflow-selected use `border-bottom: none`; panel has no top border underlay; `.list::after` continues the row baseline. Required so Primary + dark + `surface=transparent` does not show a bottom line under the selected tab.
