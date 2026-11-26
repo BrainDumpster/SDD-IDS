@@ -4,8 +4,8 @@ ids-dropdown-button-menu {
   top: 100%;
   left: 0;
   z-index: 1060;
-  /* overlap the trigger's bottom border by 1px — matches single-select sideOffset: -1 */
-  margin-top: -1px;
+  /* 1px gap below the trigger */
+  margin-top: 1px;
   min-width: 100%;
 }
 
@@ -14,7 +14,7 @@ ids-dropdown-button-menu {
   flex-direction: column;
   box-sizing: border-box;
   background: var(--color-background-surface-component);
-  /* full 4-sided 1px border — top overlaps trigger bottom via margin-top: -1px */
+  /* full 4-sided 1px border */
   border: var(--border-width-border-default, 1px) solid var(--color-border-gray-neutral-base);
   /* 0px radius matching dropdown-menu-radius = radius-none (same as single-select menu) */
   border-radius: var(--dropdown-menu-radius, 0);

@@ -43,6 +43,12 @@ interface MenuRootContextValue {
   menuId: string;
   nestingLevel: number;
   closeRoot: () => void;
+  /** MenuPopup registers its DOM node so item focus can be managed. */
+  registerPopup: (el: HTMLDivElement | null) => void;
+  /** Focus the first/last enabled menuitem once the popup is mounted. */
+  requestItemFocus: (which: "first" | "last") => void;
+  /** Move focus to the next/previous enabled menuitem (wraps around). */
+  moveItemFocus: (dir: 1 | -1) => void;
 }
 
 const MenuRootContext = createContext<MenuRootContextValue | null>(null);
@@ -53,6 +59,77 @@ function useMenuRoot(optional = false): MenuRootContextValue | null {
     throw new Error("Menu compound parts must be used within Menu.Root");
   }
   return ctx;
+}
+
+const MENUITEM_SELECTOR = '[role="menuitem"]:not([aria-disabled="true"])';
+
+/**
+ * Focus management for a menu's popup: registers the popup node, focuses the
+ * first/last item on keyboard open, and provides roving arrow-key navigation.
+ * Used by both Menu.Root and Menu.SubmenuRoot (each owns its own popup).
+ */
+function useMenuItemFocus() {
+  const popupNodeRef = useRef<HTMLDivElement | null>(null);
+  const pendingFocusRef = useRef<"first" | "last" | null>(null);
+
+  const enabledItems = useCallback((): HTMLElement[] => {
+    const popup = popupNodeRef.current;
+    if (!popup) return [];
+    return Array.from(popup.querySelectorAll<HTMLElement>(MENUITEM_SELECTOR));
+  }, []);
+
+  const focusItem = useCallback(
+    (which: "first" | "last"): boolean => {
+      const items = enabledItems();
+      if (!items.length) return false;
+      (which === "first" ? items[0] : items[items.length - 1])?.focus();
+      return true;
+    },
+    [enabledItems],
+  );
+
+  const registerPopup = useCallback(
+    (el: HTMLDivElement | null) => {
+      popupNodeRef.current = el;
+      if (el && pendingFocusRef.current) {
+        const which = pendingFocusRef.current;
+        pendingFocusRef.current = null;
+        focusItem(which);
+      }
+    },
+    [focusItem],
+  );
+
+  const requestItemFocus = useCallback(
+    (which: "first" | "last") => {
+      // Popup may already be mounted (menu reopened) or mount after this frame.
+      pendingFocusRef.current = which;
+      requestAnimationFrame(() => {
+        if (pendingFocusRef.current && focusItem(pendingFocusRef.current)) {
+          pendingFocusRef.current = null;
+        }
+      });
+    },
+    [focusItem],
+  );
+
+  const moveItemFocus = useCallback(
+    (dir: 1 | -1) => {
+      const items = enabledItems();
+      if (!items.length) return;
+      const idx = items.indexOf(document.activeElement as HTMLElement);
+      const next =
+        idx === -1
+          ? dir === 1
+            ? 0
+            : items.length - 1
+          : (idx + dir + items.length) % items.length;
+      items[next]?.focus();
+    },
+    [enabledItems],
+  );
+
+  return { registerPopup, requestItemFocus, moveItemFocus, focusItem };
 }
 
 interface SubmenuContextValue {
@@ -98,6 +175,7 @@ function MenuRoot({
   const triggerRef = useRef<HTMLElement | null>(null);
   const menuId = useId();
   const parent = useMenuRoot(true);
+  const { registerPopup, requestItemFocus, moveItemFocus } = useMenuItemFocus();
 
   const [open, setOpenRaw] = useControllableState({
     value: openProp,
@@ -128,8 +206,22 @@ function MenuRoot({
       menuId,
       nestingLevel: parent ? parent.nestingLevel + 1 : 0,
       closeRoot,
+      registerPopup,
+      requestItemFocus,
+      moveItemFocus,
     }),
-    [open, setOpen, disabled, modal, menuId, parent, closeRoot],
+    [
+      open,
+      setOpen,
+      disabled,
+      modal,
+      menuId,
+      parent,
+      closeRoot,
+      registerPopup,
+      requestItemFocus,
+      moveItemFocus,
+    ],
   );
 
   return (
@@ -207,9 +299,18 @@ function MenuTrigger({
     onKeyDown: (event: React.KeyboardEvent<HTMLElement>) => {
       onKeyDown?.(event as React.KeyboardEvent<HTMLButtonElement>);
       if (disabled) return;
-      if (event.key === "ArrowDown" || event.key === "Enter" || event.key === " ") {
+      if (event.key === "ArrowDown") {
         event.preventDefault();
         root.setOpen(true);
+        root.requestItemFocus("first");
+      } else if (event.key === "ArrowUp") {
+        event.preventDefault();
+        root.setOpen(true);
+        root.requestItemFocus("last");
+      } else if (event.key === "Enter" || event.key === " ") {
+        event.preventDefault();
+        root.setOpen(true);
+        root.requestItemFocus("first");
       }
     },
     onMouseEnter: (event: React.MouseEvent<HTMLElement>) => {
@@ -372,6 +473,7 @@ export interface MenuPopupProps extends HTMLAttributes<HTMLDivElement> {
 
 function MenuPopup({ children, className, style, id, onKeyDown, onBlur, ...rest }: MenuPopupProps) {
   const root = useMenuRoot()!;
+  const submenu = useContext(SubmenuContext);
   const popupRef = useRef<HTMLDivElement | null>(null);
   // Pressing the trigger pulls focus out of the popup before the trigger's click
   // toggles the menu. Closing on that blur would let the click reopen it.
@@ -423,7 +525,7 @@ function MenuPopup({ children, className, style, id, onKeyDown, onBlur, ...rest 
   return (
     <div
       {...rest}
-      ref={popupRef}
+      ref={mergeRefs(popupRef, root.registerPopup)}
       id={id ?? root.menuId}
       tabIndex={-1}
       className={className}
@@ -433,6 +535,23 @@ function MenuPopup({ children, className, style, id, onKeyDown, onBlur, ...rest 
         onKeyDown?.(event);
         if (event.key === "Escape") {
           root.setOpen(false);
+        } else if (event.key === "ArrowDown") {
+          event.preventDefault();
+          root.moveItemFocus(1);
+        } else if (event.key === "ArrowUp") {
+          event.preventDefault();
+          root.moveItemFocus(-1);
+        } else if (event.key === "Home") {
+          event.preventDefault();
+          root.requestItemFocus("first");
+        } else if (event.key === "End") {
+          event.preventDefault();
+          root.requestItemFocus("last");
+        } else if (event.key === "ArrowLeft" && submenu) {
+          // Inside a submenu popup: back out to the parent item.
+          event.preventDefault();
+          root.setOpen(false);
+          root.triggerRef.current?.focus?.();
         }
       }}
       onBlur={(event) => {
@@ -546,6 +665,7 @@ function MenuSubmenuRoot({
   const openTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hoverConfigRef = useRef({ openOnHover: true, delay: 100, closeDelay: 0 });
+  const { registerPopup, requestItemFocus, moveItemFocus } = useMenuItemFocus();
 
   const [open, setOpen] = useControllableState({
     value: openProp,
@@ -615,8 +735,11 @@ function MenuSubmenuRoot({
       menuId: `${parent.menuId}-sub`,
       nestingLevel: parent.nestingLevel + 1,
       closeRoot: parent.closeRoot,
+      registerPopup,
+      requestItemFocus,
+      moveItemFocus,
     }),
-    [open, setOpen, parent],
+    [open, setOpen, parent, registerPopup, requestItemFocus, moveItemFocus],
   );
 
   return (
@@ -690,6 +813,8 @@ function MenuSubmenuTrigger({
         if (event.key === "ArrowRight" || event.key === "Enter" || event.key === " ") {
           event.preventDefault();
           submenu.setOpen(true);
+          // `parent` here is the nested root — focuses the submenu's first item.
+          parent.requestItemFocus("first");
         }
         if (event.key === "ArrowLeft") {
           event.preventDefault();

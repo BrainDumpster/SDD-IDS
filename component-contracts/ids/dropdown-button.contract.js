@@ -17,7 +17,6 @@ export const DROPDOWN_BUTTON_SPEC_ACCURATE_DEFAULTS = {
     defaultOpen: false,
     label: "Dropdown Button",
     showLeadingIcon: false,
-    iconOnly: false,
     ariaLabel: "Dropdown Button",
     items: DROPDOWN_BUTTON_SPEC_MENU_ITEMS,
 };
