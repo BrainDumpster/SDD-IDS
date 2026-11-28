@@ -5,6 +5,7 @@ import {
   useRef,
   useState,
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
 } from "react";
 import { Icon } from "./Icon";
@@ -29,6 +30,8 @@ interface MainMenuTopMenuProps {
   triggerAriaCurrent?: "page" | undefined;
   onTriggerFocus?: () => void;
   onTriggerKeyDown?: (event: KeyboardEvent<HTMLButtonElement>) => void;
+  onTriggerMouseDownCapture?: (event: MouseEvent<HTMLButtonElement>) => void;
+  onTriggerClick?: () => void;
   open?: boolean;
   onOpenChange?: (open: boolean) => void;
   onOptionSelect?: (optionId: string) => void;
@@ -88,14 +91,17 @@ function SubmenuFlyout({
     };
   }, [submenuOpen, syncChevronSide]);
 
-  const chevronSlug = chevronSide === "left" ? "chev-left-thick" : "chev-right-thick";
+  const chevronSlug = chevronSide === "left" ? "chev-left" : "chev-right";
   const childSelected = node.children.some(
     (child) => "id" in child && child.id === selectedOptionId,
   );
 
   return (
     <Menu.SubmenuRoot
-      onOpenChange={(nextOpen) => {
+      open={submenuOpen}
+      onOpenChange={(nextOpen, eventDetails) => {
+        // Keep the flyout open when the pointer leaves; only dismiss/close intents apply.
+        if (!nextOpen && eventDetails?.reason === "trigger-hover") return;
         setSubmenuOpen(nextOpen);
         if (nextOpen) {
           requestAnimationFrame(syncChevronSide);
@@ -122,7 +128,7 @@ function SubmenuFlyout({
       <Menu.Portal>
         <Menu.Positioner
           ref={positionerRef}
-          className={menuStyles.positioner}
+          className={[menuStyles.positioner, menuStyles.submenuFlyoutPositioner].join(" ")}
           side={chevronSide}
           align="start"
           sideOffset={MAIN_MENU_TOP_SUBMENU_SIDE_OFFSET}
@@ -219,6 +225,8 @@ export function MainMenuTopMenuPanel({
   triggerAriaCurrent,
   onTriggerFocus,
   onTriggerKeyDown,
+  onTriggerMouseDownCapture,
+  onTriggerClick,
   open,
   onOpenChange,
   onOptionSelect,
@@ -226,7 +234,15 @@ export function MainMenuTopMenuPanel({
   menuMinWidth = MAIN_MENU_TOP_DROPDOWN_MIN_WIDTH,
 }: MainMenuTopMenuProps) {
   return (
-    <Menu.Root open={open} onOpenChange={onOpenChange} modal={false}>
+    <Menu.Root
+      open={open}
+      onOpenChange={(nextOpen, eventDetails) => {
+        // Keep the dropdown open when the pointer leaves; only dismiss/close intents apply.
+        if (!nextOpen && eventDetails?.reason === "trigger-hover") return;
+        onOpenChange?.(nextOpen);
+      }}
+      modal={false}
+    >
       <Menu.Trigger
         id={triggerId}
         type="button"
@@ -237,6 +253,8 @@ export function MainMenuTopMenuPanel({
         aria-current={triggerAriaCurrent}
         onFocus={onTriggerFocus}
         onKeyDown={onTriggerKeyDown}
+        onMouseDownCapture={onTriggerMouseDownCapture}
+        onClick={onTriggerClick}
       >
         {trigger}
       </Menu.Trigger>
@@ -244,9 +262,9 @@ export function MainMenuTopMenuPanel({
         <Menu.Positioner
           className={menuStyles.positioner}
           side="bottom"
-          align="center"
-          sideOffset={10}
-          collisionAvoidance={{ side: "flip", align: "shift" }}
+          align="start"
+          sideOffset={1}
+          collisionAvoidance={{ side: "flip", align: "flip" }}
           collisionPadding={8}
         >
           <Menu.Popup

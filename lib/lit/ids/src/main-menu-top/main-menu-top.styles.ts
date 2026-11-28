@@ -74,14 +74,14 @@ export const mainMenuTopStyles = css`
   color: inherit;
   height: 40px;
   min-height: 40px;
-  padding: 0 var(--padding-padding-12);
+  padding: var(--padding-padding-8) var(--padding-padding-12);
   position: relative;
 }
 
 .itemSmall {
-  height: 36px;
-  min-height: 36px;
-  padding-inline: var(--padding-padding-8);
+  height: 40px;
+  min-height: 40px;
+  padding: var(--padding-padding-10) var(--padding-padding-8);
 }
 
 .item:hover:not(.itemSelected) {
@@ -120,9 +120,14 @@ export const mainMenuTopStyles = css`
 }
 
 .item:focus-visible {
-  outline: var(--border-width-border-strong, 4px) solid var(--color-border-brand-base);
+  outline: var(--border-width-border-1, 1px) solid var(--color-border-brand-base);
   outline-offset: 0;
   border-radius: var(--corner-radius-radius-4);
+}
+
+/* Selected-Focus: 1px ring replaces the selected underline (Figma 12016:228243) */
+.itemSelected:focus-visible {
+  box-shadow: none;
 }
 
 .itemCluster {
@@ -176,7 +181,7 @@ export const mainMenuTopStyles = css`
   font-family: var(--typography-font-style-primary, Roboto, sans-serif);
   font-size: var(--font-size-body-1, 16px);
   line-height: var(--font-line-height-line-height-24, 24px);
-  font-weight: 500;
+  font-weight: 400;
   color: var(--color-text-gray-neutral-strong);
   white-space: nowrap;
 }

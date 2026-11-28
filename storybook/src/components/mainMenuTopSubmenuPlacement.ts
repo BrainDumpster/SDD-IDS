@@ -2,7 +2,7 @@
 export const MAIN_MENU_TOP_DROPDOWN_MIN_WIDTH = 181;
 
 /** Gap between primary dropdown panel and nested submenu flyout. */
-export const MAIN_MENU_TOP_SUBMENU_SIDE_OFFSET = 4;
+export const MAIN_MENU_TOP_SUBMENU_SIDE_OFFSET = -1;
 
 export type SubmenuSide = "left" | "right";
 
