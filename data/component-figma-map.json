@@ -234,10 +234,26 @@
     "fileKey": "0bHk3XhrjFhowgFkz9yLr4",
     "mainComponentNodeId": "10189:30280",
     "primaryElementNodeId": "11099:56576",
+    "primaryElementFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-56576&m=dev",
+    "dropdownElementsNodeId": "51176:249376",
+    "dropdownElementsFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-249376&m=dev",
+    "dropdownItemsNodeId": "51176:243662",
+    "dropdownItemsFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-243662&m=dev",
+    "menuOptionsNodeId": "51176:243930",
+    "menuOptionsFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-243930&m=dev",
+    "focusBorderNodeId": "51176:242975",
+    "focusBorderFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-242975&m=dev",
     "specAccurateDesignNodeId": "10189:30280",
     "useCaseNodeId": "42136:57443",
     "useCaseFigmaUrl": "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=42136-57443&m=dev",
-    "elementNodeIds": ["11099:56576", "12579:19717", "12380:16525"]
+    "elementNodeIds": ["11099:56576", "51176:249376", "51176:243662", "51176:243930", "51176:242975"],
+    "elementFigmaUrls": [
+      "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=11099-56576&m=dev",
+      "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-249376&m=dev",
+      "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-243662&m=dev",
+      "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-243930&m=dev",
+      "https://www.figma.com/design/0bHk3XhrjFhowgFkz9yLr4/IDS-Design-Library?node-id=51176-242975&m=dev"
+    ]
   },
   {
     "category": "Navigation",

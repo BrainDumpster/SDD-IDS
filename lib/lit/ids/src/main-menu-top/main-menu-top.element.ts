@@ -247,14 +247,6 @@ export class IdsMainMenuTop extends LitElement {
       this.openMenuId = null;
       this.openSubmenuId = null;
     }
-    if (this.selectedId === undefined && this.selectedIdInternal === target) {
-      this.selectedIdInternal = undefined;
-    }
-    if (target in this.selectedOptionByItemId) {
-      const next = { ...this.selectedOptionByItemId };
-      delete next[target];
-      this.selectedOptionByItemId = next;
-    }
   }
 
   private selectNavItem(
@@ -622,10 +614,8 @@ export class IdsMainMenuTop extends LitElement {
   ) {
     const menuOpen = this.openMenuId === config.id;
     const hasMenu = Boolean(config.menuNodes?.length);
-    /** Menu items: underline only while dropdown is open. Plain items: when selected. */
-    const showUnderline = hasMenu
-      ? menuOpen
-      : this.effectiveSelectedId === config.id;
+    /** Underline marks the selected item — persists after a dropdown option is chosen. An open-but-unselected menu shows the open fill instead. */
+    const showUnderline = this.effectiveSelectedId === config.id;
     const showMenuOpenFill = menuOpen && !showUnderline;
     const buttonClass = classMap({
       item: true,

@@ -15,9 +15,9 @@ export interface MainMenuTopContextValue {
   selectedOptionByItemId: Record<string, string>;
   focusedId: string | null;
   setFocusedId: (id: string | null) => void;
-  /** Opens dropdown for `id` and clears any other top selection (single active item). */
+  /** Opens dropdown for `id` without changing the committed top selection. */
   openTopMenu: (id: string) => void;
-  /** Closes dropdown for `id` and clears its transient selection. */
+  /** Closes dropdown for `id`; committed option selection is preserved. */
   closeTopMenu: (id: string) => void;
   selectNavItem: (id: string, name: string, link?: MainMenuTopLink, menuOptionId?: string) => void;
   clearNavItemSelection: (id: string) => void;
@@ -61,31 +61,13 @@ export function MainMenuTopProvider({
 
   const selectedId = selectedIdProp ?? selectedIdInternal;
 
-  const openTopMenu = useCallback(
-    (id: string) => {
-      setOpenMenuId(id);
-      if (selectedIdProp === undefined) {
-        setSelectedIdInternal(undefined);
-      }
-    },
-    [selectedIdProp],
-  );
+  const openTopMenu = useCallback((id: string) => {
+    setOpenMenuId(id);
+  }, []);
 
-  const closeTopMenu = useCallback(
-    (id: string) => {
-      setOpenMenuId((prev) => (prev === id ? null : prev));
-      if (selectedIdProp === undefined) {
-        setSelectedIdInternal((prev) => (prev === id ? undefined : prev));
-      }
-      setSelectedOptionByItemId((prev) => {
-        if (!(id in prev)) return prev;
-        const next = { ...prev };
-        delete next[id];
-        return next;
-      });
-    },
-    [selectedIdProp],
-  );
+  const closeTopMenu = useCallback((id: string) => {
+    setOpenMenuId((prev) => (prev === id ? null : prev));
+  }, []);
 
   const selectNavItem = useCallback(
     (id: string, name: string, link?: MainMenuTopLink, menuOptionId?: string) => {

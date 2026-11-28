@@ -3,7 +3,9 @@ import {
   isValidElement,
   useCallback,
   useMemo,
+  useRef,
   type KeyboardEvent,
+  type MouseEvent,
   type ReactNode,
 } from "react";
 import { extractMenuNodesFromItemChildren } from "./MainMenuTop.compose";
@@ -101,12 +103,8 @@ function NavItemLabel({
           <Icon
             className={styles.chevronGlyph}
             shapeName="chev-down-thick"
-            style={{ width: 12, height: 12, display: "block" }}
-            color={
-              isSelected
-                ? "var(--color-icon-brand-strong)"
-                : "var(--color-icon-gray-neutral-strong)"
-            }
+            size={16}
+            color="var(--color-icon-brand-base)"
           />
         </span>
       ) : null}
@@ -136,10 +134,10 @@ function MainMenuTopNavItem({
 }) {
   const ctx = useMainMenuTopContext();
   const menuOpen = ctx.openMenuId === config.id;
-  const hasMenu = Boolean(config.menuNodes?.length);
-  const showDropdown = config.dropdown !== false || hasMenu;
-  /** Menu items: underline only while dropdown is open. Plain items: underline when selected. */
-  const showUnderline = hasMenu ? menuOpen : ctx.selectedId === config.id;
+  const hasMenu = config.dropdown !== false && Boolean(config.menuNodes?.length);
+  const showDropdown = config.dropdown === true || hasMenu;
+  /** Underline marks the selected item — persists after a dropdown option is chosen. An open-but-unselected menu shows the open fill instead. */
+  const showUnderline = ctx.selectedId === config.id;
   const showActiveChrome = showUnderline;
   const buttonClass = itemButtonClass(
     ctx.size,
@@ -149,6 +147,25 @@ function MainMenuTopNavItem({
 
   const openMenu = useCallback(() => {
     ctx.openTopMenu(config.id);
+  }, [ctx, config.id]);
+
+  // Base UI opens standalone menus on mousedown; suppress it so the menu opens on release.
+  const pressStartedOpenRef = useRef(false);
+  const handleTriggerMouseDownCapture = useCallback(
+    (event: MouseEvent<HTMLButtonElement>) => {
+      pressStartedOpenRef.current = menuOpen;
+      event.preventDefault();
+      event.stopPropagation();
+    },
+    [menuOpen],
+  );
+
+  const handleTriggerClick = useCallback(() => {
+    if (pressStartedOpenRef.current) {
+      ctx.closeTopMenu(config.id);
+    } else {
+      ctx.openTopMenu(config.id);
+    }
   }, [ctx, config.id]);
 
   const handleMenuOpenChange = useCallback(
@@ -240,6 +257,8 @@ function MainMenuTopNavItem({
           triggerAriaCurrent={showUnderline ? "page" : undefined}
           onTriggerFocus={() => ctx.setFocusedId(config.id)}
           onTriggerKeyDown={handleKeyDown}
+          onTriggerMouseDownCapture={handleTriggerMouseDownCapture}
+          onTriggerClick={handleTriggerClick}
           trigger={label}
         />
       </li>
