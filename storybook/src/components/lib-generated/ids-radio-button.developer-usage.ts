@@ -76,7 +76,7 @@ import {
 ### Usage
 
 \`\`\`tsx
-<IdsRadioGroup name="demo" label="Radio Group">
+<IdsRadioGroup name="demo" label="Group label:">
   <IdsRadioButton value="a">
     <IdsRadioLabel>Option A</IdsRadioLabel>
   </IdsRadioButton>

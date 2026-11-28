@@ -22,7 +22,6 @@ import {
   type IdsRadioDataState,
   type IdsRadioGroupProps,
 } from "@ids/react/radio-button";
-import { IdsError, IdsErrorText } from "@ids/react/error";
 import { IdsHelper, IdsHelperText } from "@ids/react/helper";
 import { IdsIcon } from "@ids/react/icon";
 
@@ -208,12 +207,12 @@ export const WithHelperAndError: Story = {
         </IdsRadioButton>
       </IdsRadioGroup>
 
-      <IdsRadioGroup name="err">
+      <IdsRadioGroup name="err" error errorText="You must select an option to continue.">
         <IdsRadioButton value="accept">
           <IdsRadioLabel>Accept terms</IdsRadioLabel>
-          <IdsError>
-            <IdsErrorText>You must select an option to continue.</IdsErrorText>
-          </IdsError>
+        </IdsRadioButton>
+        <IdsRadioButton value="decline">
+          <IdsRadioLabel>Decline</IdsRadioLabel>
         </IdsRadioButton>
       </IdsRadioGroup>
     </div>
@@ -250,6 +249,7 @@ export const RadioButtonGroup: StoryObj<
 > = {
   name: "Radio Button Group",
   argTypes: {
+    showLabel: { control: "boolean" },
     required: { control: "boolean" },
     showIcon: { control: "boolean" },
     labelPosition: { control: "radio", options: ["left", "top"] },
@@ -261,6 +261,7 @@ export const RadioButtonGroup: StoryObj<
   },
   args: {
     label: "Notifications:",
+    showLabel: true,
     required: false,
     showIcon: false,
     labelPosition: "left",

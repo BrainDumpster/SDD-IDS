@@ -246,6 +246,7 @@ export const Controlled: Story = {
 export const CheckboxGroup: StoryObj<IdsCheckboxGroupProps & { showIcon?: boolean }> = {
   name: "Checkbox Group",
   argTypes: {
+    showLabel: { control: "boolean" },
     required: { control: "boolean" },
     showIcon: { control: "boolean" },
     labelPosition: { control: "radio", options: ["left", "top"] },
@@ -255,6 +256,7 @@ export const CheckboxGroup: StoryObj<IdsCheckboxGroupProps & { showIcon?: boolea
   },
   args: {
     label: "Notifications:",
+    showLabel: true,
     required: false,
     showIcon: false,
     labelPosition: "left",
